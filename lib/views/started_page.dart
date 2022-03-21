@@ -9,6 +9,7 @@ import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/state_controllers/started_page_state_controller.dart';
 import 'package:ventes/views/regular_view.dart';
+import 'package:ventes/views/signin.dart';
 
 class StartedPageView extends RegularView<StartedPageStateController> {
   static const route = "/started-page";
@@ -164,7 +165,9 @@ class StartedPageView extends RegularView<StartedPageStateController> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Get.toNamed(SigninView.route);
+                    },
                     child: Text("Skip"),
                     style: TextButton.styleFrom(
                       primary: RegularColor.gray_3,
@@ -174,6 +177,8 @@ class StartedPageView extends RegularView<StartedPageStateController> {
                     onPressed: () {
                       if ($.activeIndex != 2) {
                         $.movePage($.activeIndex + 1);
+                      } else {
+                        Get.toNamed(SigninView.route);
                       }
                     },
                     child: Obx(() {

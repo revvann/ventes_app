@@ -11,4 +11,6 @@ class RegularColor {
   static const gray_1 = Color(0xFF333333);
   static const gray_2 = Color(0xFF4F4F4F);
   static const gray_3 = Color(0xFF828282);
+  static const gray_4 = Color(0xFFBDBDBD);
+  static const gray_5 = Color(0xFFE0E0E0);
 }
