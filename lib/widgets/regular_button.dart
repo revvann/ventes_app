@@ -37,11 +37,20 @@ class RegularButton extends StatelessWidget {
                 color: Colors.white,
               ),
             ),
-      style: ElevatedButton.styleFrom(
-        primary: primary,
-        minimumSize: Size(
-          width,
-          height,
+      style: ButtonStyle(
+        elevation: MaterialStateProperty.all<double?>(0),
+        shadowColor: MaterialStateProperty.all<Color?>(Colors.transparent),
+        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+        ),
+        backgroundColor: MaterialStateProperty.all<Color?>(primary),
+        minimumSize: MaterialStateProperty.all<Size?>(
+          Size(
+            width,
+            height,
+          ),
         ),
       ),
     );

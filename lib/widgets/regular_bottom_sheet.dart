@@ -28,10 +28,10 @@ class RegularBottomSheet {
               color: backgroundColor,
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(
-                  RegularSize.m,
+                  RegularSize.xl,
                 ),
                 topRight: Radius.circular(
-                  RegularSize.m,
+                  RegularSize.xl,
                 ),
               ),
             ),

@@ -21,8 +21,8 @@ class RegularInput extends StatelessWidget {
           label ?? "",
           style: TextStyle(
             fontSize: 12,
-            fontWeight: FontWeight.w900,
-            color: RegularColor.gray,
+            fontWeight: FontWeight.w600,
+            color: RegularColor.dark,
           ),
         ),
         TextFormField(
@@ -51,21 +51,25 @@ class RegularInput extends StatelessWidget {
             border: UnderlineInputBorder(
               borderSide: BorderSide(
                 color: RegularColor.gray,
+                width: 2,
               ),
             ),
             enabledBorder: UnderlineInputBorder(
               borderSide: BorderSide(
                 color: RegularColor.gray,
+                width: 2,
               ),
             ),
             focusedBorder: UnderlineInputBorder(
               borderSide: BorderSide(
                 color: RegularColor.primary,
+                width: 2,
               ),
             ),
             errorBorder: UnderlineInputBorder(
               borderSide: BorderSide(
                 color: RegularColor.red,
+                width: 2,
               ),
             ),
           ),
