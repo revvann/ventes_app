@@ -4,10 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:ventes/constants/regular_color.dart';
 
 class RegularInput extends StatelessWidget {
-  RegularInput({Key? key, this.label, this.isPassword = false, this.inputType}) : super(key: key);
+  RegularInput({Key? key, this.label, this.isPassword = false, this.inputType, this.validator, this.controller}) : super(key: key);
   String? label;
   bool isPassword;
   TextInputType? inputType;
+  String? Function(String?)? validator;
+  TextEditingController? controller;
+  final GlobalKey<FormFieldState> _key = GlobalKey<FormFieldState>();
 
   @override
   Widget build(BuildContext context) {
@@ -19,18 +22,27 @@ class RegularInput extends StatelessWidget {
           style: TextStyle(
             fontSize: 12,
             fontWeight: FontWeight.w900,
-            color: RegularColor.gray_3,
+            color: RegularColor.gray,
           ),
         ),
         TextFormField(
+          key: _key,
+          controller: controller,
           keyboardType: inputType,
           obscureText: isPassword,
           enableSuggestions: !isPassword,
           autocorrect: !isPassword,
+          validator: validator,
           style: TextStyle(
             fontSize: 14,
-            color: RegularColor.dark_2,
+            color: RegularColor.dark,
           ),
+          onChanged: (value) {
+            _key.currentState?.validate();
+          },
+          onFieldSubmitted: (value) {
+            _key.currentState?.validate();
+          },
           decoration: InputDecoration(
             isDense: true,
             contentPadding: EdgeInsets.symmetric(
@@ -38,12 +50,12 @@ class RegularInput extends StatelessWidget {
             ),
             border: UnderlineInputBorder(
               borderSide: BorderSide(
-                color: RegularColor.gray_4,
+                color: RegularColor.gray,
               ),
             ),
             enabledBorder: UnderlineInputBorder(
               borderSide: BorderSide(
-                color: RegularColor.gray_4,
+                color: RegularColor.gray,
               ),
             ),
             focusedBorder: UnderlineInputBorder(

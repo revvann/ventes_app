@@ -70,7 +70,7 @@ class StartedPageView extends RegularView<StartedPageStateController> {
                                 style: TextStyle(
                                   fontSize: 24,
                                   fontWeight: FontWeight.bold,
-                                  color: RegularColor.dark_1,
+                                  color: RegularColor.dark,
                                 ),
                               ),
                               SizedBox(
@@ -85,7 +85,7 @@ class StartedPageView extends RegularView<StartedPageStateController> {
                                   style: TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w600,
-                                    color: RegularColor.gray_3,
+                                    color: RegularColor.gray,
                                     height: 1.5,
                                   ),
                                 ),
@@ -170,7 +170,7 @@ class StartedPageView extends RegularView<StartedPageStateController> {
                     },
                     child: Text("Skip"),
                     style: TextButton.styleFrom(
-                      primary: RegularColor.gray_3,
+                      primary: RegularColor.gray,
                     ),
                   ),
                   TextButton(
@@ -185,7 +185,7 @@ class StartedPageView extends RegularView<StartedPageStateController> {
                       return Text($.activeIndex != 2 ? "Next" : "Start");
                     }),
                     style: TextButton.styleFrom(
-                      primary: RegularColor.primary,
+                      primary: RegularColor.secondary,
                     ),
                   ),
                 ],

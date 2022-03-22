@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
 
 class RegularColor {
-  static const primary = Color(0xFF32B768);
-  static const red = Color(0xFFEB5757);
-  static const blue = Color(0xFF2F80ED);
-  static const yellow = Color(0xFFE2B93B);
-  static const orange = Color(0xFFFE813A);
-  static const dark_1 = Color(0xFF1D1D1D);
-  static const dark_2 = Color(0xFF282828);
-  static const gray_1 = Color(0xFF333333);
-  static const gray_2 = Color(0xFF4F4F4F);
-  static const gray_3 = Color(0xFF828282);
-  static const gray_4 = Color(0xFFBDBDBD);
-  static const gray_5 = Color(0xFFE0E0E0);
+  static const primary = Color(0xFFC0D8C0);
+  static const secondary = Color(0xFFECB390);
+  static const red = Color(0xFFDD4A48);
+  static const indigo = Color(0xFF708DED);
+  static const purple = Color(0xFF8149FA);
+  static const yellow = Color(0xFFFFB100);
+  static const cyan = Color(0xFF01CAE4);
+  static const pink = Color(0xFFBE63F2);
+  static const dark = Color(0xFF363636);
+  static const gray = Color(0xFF9F9F9F);
 }

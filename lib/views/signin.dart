@@ -5,14 +5,22 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
+import 'package:ventes/contracts/auth_contract.dart';
 import 'package:ventes/state_controllers/signin_state_controller.dart';
+import 'package:ventes/views/main.dart';
 import 'package:ventes/views/regular_view.dart';
 import 'package:ventes/widgets/regular_bottom_sheet.dart';
 import 'package:ventes/widgets/regular_button.dart';
+import 'package:ventes/widgets/regular_dialog.dart';
 import 'package:ventes/widgets/regular_input.dart';
 
-class SigninView extends RegularView<SigninStateController> {
+class SigninView extends RegularView<SigninStateController> implements AuthContract {
   static const String route = "/signin";
+
+  SigninView() {
+    $.presenter.authContract = this;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,7 +55,7 @@ class SigninView extends RegularView<SigninStateController> {
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
-                      color: RegularColor.dark_1,
+                      color: RegularColor.dark,
                     ),
                   ),
                   SizedBox(
@@ -62,7 +70,7 @@ class SigninView extends RegularView<SigninStateController> {
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
-                        color: RegularColor.gray_3,
+                        color: RegularColor.gray,
                         height: 1.5,
                       ),
                     ),
@@ -73,47 +81,80 @@ class SigninView extends RegularView<SigninStateController> {
                 height: RegularSize.m,
               ),
               RegularButton(
+                primary: RegularColor.secondary,
                 label: "Sign In",
                 height: RegularSize.xxl,
                 onPressed: () {
                   RegularBottomSheet(
                     backgroundColor: Colors.white,
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: RegularSize.m,
-                        ),
-                        Text(
-                          "Sign In",
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: RegularColor.primary,
+                    child: Form(
+                      key: $.formKey,
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            height: RegularSize.m,
                           ),
-                        ),
-                        SizedBox(
-                          height: RegularSize.m,
-                        ),
-                        RegularInput(
-                          label: "Email",
-                          inputType: TextInputType.emailAddress,
-                        ),
-                        SizedBox(
-                          height: RegularSize.m,
-                        ),
-                        RegularInput(
-                          label: "Password",
-                          isPassword: true,
-                        ),
-                        SizedBox(
-                          height: RegularSize.xl,
-                        ),
-                        RegularButton(
-                          label: "Sign In",
-                          height: RegularSize.xxl,
-                          onPressed: () {},
-                        ),
-                      ],
+                          Text(
+                            "Sign In",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: RegularColor.secondary,
+                            ),
+                          ),
+                          SizedBox(
+                            height: RegularSize.m,
+                          ),
+                          RegularInput(
+                            controller: $.usernameTEC,
+                            label: "Username",
+                            inputType: TextInputType.name,
+                            validator: (value) {
+                              if (value != null) {
+                                if (!(value.isBlank ?? true)) {
+                                  return null;
+                                }
+                              }
+                              return "Username can't be empty";
+                            },
+                          ),
+                          SizedBox(
+                            height: RegularSize.m,
+                          ),
+                          RegularInput(
+                            controller: $.passwordTEC,
+                            label: "Password",
+                            isPassword: true,
+                            validator: (value) {
+                              if (value != null) {
+                                if (!(value.isBlank ?? true)) {
+                                  return null;
+                                }
+                              }
+                              return "Password can't be empty";
+                            },
+                          ),
+                          SizedBox(
+                            height: RegularSize.xl,
+                          ),
+                          Obx(() {
+                            return RegularButton(
+                              primary: RegularColor.secondary,
+                              isLoading: $.authProcessing,
+                              label: "Sign In",
+                              height: RegularSize.xxl,
+                              onPressed: () {
+                                if ($.formKey.currentState?.validate() ?? false) {
+                                  String password = $.passwordTEC.text;
+                                  String username = $.usernameTEC.text;
+                                  $.authProcessing = true;
+                                  $.presenter.signIn(username, password);
+                                }
+                              },
+                            );
+                          }),
+                        ],
+                      ),
                     ),
                   ).show();
                 },
@@ -123,5 +164,60 @@ class SigninView extends RegularView<SigninStateController> {
         ),
       ),
     );
+  }
+
+  @override
+  void onAuthFailed(String message) {
+    $.authProcessing = false;
+    RegularDialog(
+      width: Get.width * 0.7,
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Container(
+                  alignment: Alignment.center,
+                  child: Text(
+                    "Sign In Failed",
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: RegularColor.red,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  Get.close(1);
+                },
+                child: SvgPicture.asset(
+                  'assets/svg/close.svg',
+                  width: 15,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(
+            height: RegularSize.m,
+          ),
+          Text(
+            "Credentials not found, make sure your username and password are correct.",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: RegularColor.dark,
+              fontSize: 14,
+            ),
+          )
+        ],
+      ),
+    ).show();
+  }
+
+  @override
+  void onAuthSuccess(String message) {
+    $.authProcessing = false;
+    Get.offAllNamed(MainView.route);
   }
 }

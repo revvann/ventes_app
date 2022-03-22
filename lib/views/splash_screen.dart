@@ -12,13 +12,29 @@ class SplashScreenView extends RegularView<SplashScreenStateController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SafeArea(
-        child: SizedBox(
+        child: Container(
           width: double.infinity,
           height: double.infinity,
           child: Stack(
             alignment: Alignment.center,
             children: [
+              AnimatedBuilder(
+                animation: $.bubbleController1,
+                builder: (_, __) => Positioned(
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  child: Container(
+                    height: $.bubblePos1.value,
+                    decoration: BoxDecoration(
+                      color: RegularColor.secondary,
+                      // shape: BoxShape.circle,
+                    ),
+                  ),
+                ),
+              ),
               AnimatedBuilder(
                 animation: $.logoController,
                 builder: (_, __) => Positioned(
@@ -29,70 +45,10 @@ class SplashScreenView extends RegularView<SplashScreenStateController> {
                     child: Text(
                       "VENTES",
                       style: TextStyle(
-                        color: RegularColor.primary,
+                        color: RegularColor.dark,
                         fontSize: 48,
                         fontWeight: FontWeight.bold,
                       ),
-                    ),
-                  ),
-                ),
-              ),
-              AnimatedBuilder(
-                animation: $.bubbleController1,
-                builder: (_, __) => Positioned(
-                  left: $.bubblePos1.value.get("left"),
-                  top: $.bubblePos1.value.get("top"),
-                  child: Container(
-                    width: 210,
-                    height: 210,
-                    decoration: BoxDecoration(
-                      color: RegularColor.blue,
-                      shape: BoxShape.circle,
-                    ),
-                  ),
-                ),
-              ),
-              AnimatedBuilder(
-                animation: $.bubbleController2,
-                builder: (_, __) => Positioned(
-                  right: $.bubblePos2.value,
-                  top: (Get.height / 2) - 210,
-                  child: Container(
-                    width: 170,
-                    height: 170,
-                    decoration: BoxDecoration(
-                      color: RegularColor.yellow,
-                      shape: BoxShape.circle,
-                    ),
-                  ),
-                ),
-              ),
-              AnimatedBuilder(
-                animation: $.bubbleController3,
-                builder: (_, __) => Positioned(
-                  left: $.bubblePos3.value,
-                  top: (Get.height / 2) + 20,
-                  child: Container(
-                    width: 150,
-                    height: 150,
-                    decoration: BoxDecoration(
-                      color: RegularColor.red,
-                      shape: BoxShape.circle,
-                    ),
-                  ),
-                ),
-              ),
-              AnimatedBuilder(
-                animation: $.bubbleController4,
-                builder: (_, __) => Positioned(
-                  bottom: $.bubblePos4.value.get("bottom"),
-                  right: $.bubblePos4.value.get("right"),
-                  child: Container(
-                    width: 190,
-                    height: 190,
-                    decoration: BoxDecoration(
-                      color: RegularColor.orange,
-                      shape: BoxShape.circle,
                     ),
                   ),
                 ),
