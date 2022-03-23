@@ -55,7 +55,7 @@ class SigninView extends RegularView<SigninStateController> implements AuthContr
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
-                      color: RegularColor.dark,
+                      color: RegularColor.secondary,
                     ),
                   ),
                   SizedBox(
@@ -85,78 +85,7 @@ class SigninView extends RegularView<SigninStateController> implements AuthContr
                 label: "Sign In",
                 height: RegularSize.xxl,
                 onPressed: () {
-                  RegularBottomSheet(
-                    backgroundColor: Colors.white,
-                    child: Form(
-                      key: $.formKey,
-                      child: Column(
-                        children: [
-                          SizedBox(
-                            height: RegularSize.m,
-                          ),
-                          Text(
-                            "Sign In",
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: RegularColor.secondary,
-                            ),
-                          ),
-                          SizedBox(
-                            height: RegularSize.m,
-                          ),
-                          RegularInput(
-                            controller: $.usernameTEC,
-                            label: "Username",
-                            inputType: TextInputType.name,
-                            validator: (value) {
-                              if (value != null) {
-                                if (!(value.isBlank ?? true)) {
-                                  return null;
-                                }
-                              }
-                              return "Username can't be empty";
-                            },
-                          ),
-                          SizedBox(
-                            height: RegularSize.m,
-                          ),
-                          RegularInput(
-                            controller: $.passwordTEC,
-                            label: "Password",
-                            isPassword: true,
-                            validator: (value) {
-                              if (value != null) {
-                                if (!(value.isBlank ?? true)) {
-                                  return null;
-                                }
-                              }
-                              return "Password can't be empty";
-                            },
-                          ),
-                          SizedBox(
-                            height: RegularSize.xl,
-                          ),
-                          Obx(() {
-                            return RegularButton(
-                              primary: RegularColor.secondary,
-                              isLoading: $.authProcessing,
-                              label: "Sign In",
-                              height: RegularSize.xxl,
-                              onPressed: () {
-                                if ($.formKey.currentState?.validate() ?? false) {
-                                  String password = $.passwordTEC.text;
-                                  String username = $.usernameTEC.text;
-                                  $.authProcessing = true;
-                                  $.presenter.signIn(username, password);
-                                }
-                              },
-                            );
-                          }),
-                        ],
-                      ),
-                    ),
-                  ).show();
+                  _showBottomSheet();
                 },
               ),
             ],
@@ -164,6 +93,74 @@ class SigninView extends RegularView<SigninStateController> implements AuthContr
         ),
       ),
     );
+  }
+
+  void _showBottomSheet() {
+    RegularBottomSheet(
+      backgroundColor: Colors.white,
+      child: Form(
+        key: $.formKey,
+        child: Column(
+          children: [
+            SizedBox(
+              height: RegularSize.m,
+            ),
+            Text(
+              "Sign In",
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: RegularColor.secondary,
+              ),
+            ),
+            SizedBox(
+              height: RegularSize.m,
+            ),
+            RegularInput(
+              controller: $.usernameTEC,
+              label: "Username",
+              inputType: TextInputType.name,
+              validator: (value) {
+                if (value != null) {
+                  if (!(value.isBlank ?? true)) {
+                    return null;
+                  }
+                }
+                return "Username can't be empty";
+              },
+            ),
+            SizedBox(
+              height: RegularSize.m,
+            ),
+            RegularInput(
+              controller: $.passwordTEC,
+              label: "Password",
+              isPassword: true,
+              validator: (value) {
+                if (value != null) {
+                  if (!(value.isBlank ?? true)) {
+                    return null;
+                  }
+                }
+                return "Password can't be empty";
+              },
+            ),
+            SizedBox(
+              height: RegularSize.xl,
+            ),
+            Obx(() {
+              return RegularButton(
+                primary: RegularColor.secondary,
+                isLoading: $.authProcessing,
+                label: "Sign In",
+                height: RegularSize.xxl,
+                onPressed: $.formSubmit,
+              );
+            }),
+          ],
+        ),
+      ),
+    ).show();
   }
 
   @override

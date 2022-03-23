@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:get/get.dart';
+import 'package:ventes/middlewares/auth_middleware.dart';
 import 'package:ventes/routes/regular_get_page.dart';
 import 'package:ventes/services/auth_service.dart';
 import 'package:ventes/state_controllers/main_state_controller.dart';
@@ -24,6 +25,9 @@ class RegularRoute {
               },
             )
           ],
+          middlewares: [
+            AuthMiddleware(),
+          ],
         ),
         RegularGetPage(
           name: StartedPageView.route,
@@ -34,6 +38,9 @@ class RegularRoute {
                 Get.lazyPut(() => StartedPageStateController()),
               },
             )
+          ],
+          middlewares: [
+            AuthMiddleware(),
           ],
         ),
         RegularGetPage(
@@ -46,6 +53,9 @@ class RegularRoute {
                 Get.lazyPut(() => SigninStateController()),
               },
             )
+          ],
+          middlewares: [
+            AuthMiddleware(),
           ],
         ),
         RegularGetPage(

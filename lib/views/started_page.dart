@@ -38,64 +38,7 @@ class StartedPageView extends RegularView<StartedPageStateController> {
                     height: Get.height * 0.6,
                     viewportFraction: 1,
                   ),
-                  items: $.carouselData.map((i) {
-                    return Builder(
-                      builder: (BuildContext context) {
-                        return Container(
-                          width: Get.width,
-                          height: double.infinity,
-                          alignment: Alignment.center,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Container(
-                                margin: EdgeInsets.only(top: RegularSize.xl),
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                    image: AssetImage("assets/images/bg2.png"),
-                                    fit: BoxFit.contain,
-                                  ),
-                                ),
-                                child: SvgPicture.asset(
-                                  i['image'],
-                                  width: Get.width * 0.80,
-                                ),
-                              ),
-                              SizedBox(
-                                height: RegularSize.xxl,
-                              ),
-                              Text(
-                                i["title"],
-                                style: TextStyle(
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold,
-                                  color: RegularColor.dark,
-                                ),
-                              ),
-                              SizedBox(
-                                height: RegularSize.m,
-                              ),
-                              Container(
-                                width: Get.width * 0.80,
-                                alignment: Alignment.center,
-                                child: Text(
-                                  i["subtitle"],
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600,
-                                    color: RegularColor.gray,
-                                    height: 1.5,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    );
-                  }).toList(),
+                  items: _buildCarouselList(),
                 ),
               ),
               SizedBox(
@@ -104,59 +47,26 @@ class StartedPageView extends RegularView<StartedPageStateController> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  GestureDetector(
-                    onTap: () {
-                      $.movePage(0);
-                    },
-                    child: AnimatedBuilder(
-                      animation: $.indicatorController1,
-                      builder: (_, __) => Container(
-                        width: $.indicator1.value.get("width"),
-                        height: 8,
-                        decoration: BoxDecoration(
-                          color: RegularColor.primary.withAlpha($.indicator1.value.get("opacity").toInt()),
-                          borderRadius: BorderRadius.circular(50),
-                        ),
-                      ),
-                    ),
+                  _buildIndicator(
+                    0,
+                    $.indicatorController1,
+                    $.indicator1,
                   ),
                   SizedBox(
                     width: 5,
                   ),
-                  GestureDetector(
-                    onTap: () {
-                      $.movePage(1);
-                    },
-                    child: AnimatedBuilder(
-                      animation: $.indicatorController2,
-                      builder: (_, __) => Container(
-                        width: $.indicator2.value.get("width"),
-                        height: 8,
-                        decoration: BoxDecoration(
-                          color: RegularColor.primary.withAlpha($.indicator2.value.get("opacity").toInt()),
-                          borderRadius: BorderRadius.circular(50),
-                        ),
-                      ),
-                    ),
+                  _buildIndicator(
+                    1,
+                    $.indicatorController2,
+                    $.indicator2,
                   ),
                   SizedBox(
                     width: 5,
                   ),
-                  GestureDetector(
-                    onTap: () {
-                      $.movePage(2);
-                    },
-                    child: AnimatedBuilder(
-                      animation: $.indicatorController3,
-                      builder: (_, __) => Container(
-                        width: $.indicator3.value.get("width"),
-                        height: 8,
-                        decoration: BoxDecoration(
-                          color: RegularColor.primary.withAlpha($.indicator3.value.get("opacity").toInt()),
-                          borderRadius: BorderRadius.circular(50),
-                        ),
-                      ),
-                    ),
+                  _buildIndicator(
+                    2,
+                    $.indicatorController3,
+                    $.indicator3,
                   ),
                 ],
               ),
@@ -191,6 +101,90 @@ class StartedPageView extends RegularView<StartedPageStateController> {
                 ],
               ),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  List<Widget>? _buildCarouselList() {
+    return $.carouselData.map((i) {
+      return Builder(
+        builder: (BuildContext context) {
+          return Container(
+            width: Get.width,
+            height: double.infinity,
+            alignment: Alignment.center,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  margin: EdgeInsets.only(top: RegularSize.xl),
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage("assets/images/bg2.png"),
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                  child: SvgPicture.asset(
+                    i['image'],
+                    width: Get.width * 0.80,
+                  ),
+                ),
+                SizedBox(
+                  height: RegularSize.xxl,
+                ),
+                Text(
+                  i["title"],
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: RegularColor.secondary,
+                  ),
+                ),
+                SizedBox(
+                  height: RegularSize.m,
+                ),
+                Container(
+                  width: Get.width * 0.80,
+                  alignment: Alignment.center,
+                  child: Text(
+                    i["subtitle"],
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: RegularColor.gray,
+                      height: 1.5,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      );
+    }).toList();
+  }
+
+  Widget _buildIndicator(
+    int index,
+    AnimationController controller,
+    Animation<MultiTweenValues<String>> animation,
+  ) {
+    return GestureDetector(
+      onTap: () {
+        $.movePage(index);
+      },
+      child: AnimatedBuilder(
+        animation: controller,
+        builder: (_, __) => Container(
+          width: animation.value.get("width"),
+          height: 8,
+          decoration: BoxDecoration(
+            color: RegularColor.secondary.withAlpha(animation.value.get("opacity").toInt()),
+            borderRadius: BorderRadius.circular(50),
           ),
         ),
       ),

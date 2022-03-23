@@ -2,36 +2,34 @@ import 'package:get_storage/get_storage.dart';
 import 'package:ventes/models/auth_model.dart';
 
 class AuthHelper {
-  static const String container = "VentesAuth";
+  static GetStorage get container => GetStorage("VentesAuth");
   static const String idKey = "userId";
   static const String tokenKey = "jwtToken";
+  static var userId = ReadWriteValue<int?>(AuthHelper.idKey, null, () => AuthHelper.container);
+  static var jwtToken = ReadWriteValue<String?>(AuthHelper.tokenKey, null, () => AuthHelper.container);
 
-  static Future<bool> save(AuthModel authModel) async {
-    GetStorage storage = GetStorage(AuthHelper.container);
-    await storage.write(AuthHelper.idKey, authModel.userId);
-    await storage.write(AuthHelper.tokenKey, authModel.jwtToken);
+  Future<bool> save(AuthModel authModel) async {
+    userId.val = authModel.userId;
+    jwtToken.val = authModel.jwtToken;
     return check();
   }
 
-  static bool check() {
-    GetStorage storage = GetStorage(AuthHelper.container);
-    return storage.hasData(AuthHelper.tokenKey);
+  bool check() {
+    return jwtToken.val != null;
   }
 
-  static Future<AuthModel?> get() async {
-    GetStorage storage = GetStorage(AuthHelper.container);
+  Future<AuthModel?> get() async {
     if (check()) {
-      int userId = await storage.read(AuthHelper.idKey);
-      String jwtToken = await storage.read(AuthHelper.tokenKey);
-      return AuthModel(userId: userId, jwtToken: jwtToken);
+      int? _userId = userId.val;
+      String? _jwtToken = jwtToken.val;
+      return AuthModel(userId: _userId, jwtToken: _jwtToken);
     }
     return null;
   }
 
-  static Future<bool> destroy() async {
-    GetStorage storage = GetStorage(AuthHelper.container);
-    await storage.remove(AuthHelper.idKey);
-    await storage.remove(AuthHelper.tokenKey);
+  Future<bool> destroy() async {
+    userId.val = null;
+    jwtToken.val = null;
     return check();
   }
 }

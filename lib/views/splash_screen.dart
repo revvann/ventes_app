@@ -14,46 +14,54 @@ class SplashScreenView extends RegularView<SplashScreenStateController> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: Container(
+        child: SizedBox(
           width: double.infinity,
           height: double.infinity,
           child: Stack(
             alignment: Alignment.center,
             children: [
-              AnimatedBuilder(
-                animation: $.bubbleController1,
-                builder: (_, __) => Positioned(
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  child: Container(
-                    height: $.bubblePos1.value,
-                    decoration: BoxDecoration(
-                      color: RegularColor.secondary,
-                      // shape: BoxShape.circle,
-                    ),
-                  ),
-                ),
-              ),
-              AnimatedBuilder(
-                animation: $.logoController,
-                builder: (_, __) => Positioned(
-                  right: $.logoPos.value,
-                  child: Container(
-                    width: 200,
-                    alignment: Alignment.center,
-                    child: Text(
-                      "VENTES",
-                      style: TextStyle(
-                        color: RegularColor.dark,
-                        fontSize: 48,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
+              _buildDownScreen(),
+              _buildLogo(),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDownScreen() {
+    return AnimatedBuilder(
+      animation: $.bubbleController1,
+      builder: (_, __) => Positioned(
+        top: 0,
+        left: 0,
+        right: 0,
+        child: Container(
+          height: $.bubblePos1.value,
+          decoration: BoxDecoration(
+            color: RegularColor.secondary,
+            // shape: BoxShape.circle,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLogo() {
+    return AnimatedBuilder(
+      animation: $.logoController,
+      builder: (_, __) => Positioned(
+        right: $.logoPos.value,
+        child: Container(
+          width: 200,
+          alignment: Alignment.center,
+          child: Text(
+            "VENTES",
+            style: TextStyle(
+              color: RegularColor.dark,
+              fontSize: 48,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
       ),

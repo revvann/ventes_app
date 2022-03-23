@@ -2,14 +2,14 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:ventes/constants/regular_color.dart';
+import 'package:ventes/helpers/auth_helper.dart';
 import 'package:ventes/helpers/function_helpers.dart';
+import 'package:ventes/middlewares/auth_middleware.dart';
 import 'package:ventes/routes/regular_route.dart';
 import 'package:ventes/views/splash_screen.dart';
 
 void main() async {
-  await GetStorage.init();
   runApp(const MyApp());
 }
 
@@ -27,6 +27,7 @@ class MyApp extends StatelessWidget {
       ),
       getPages: RegularRoute.routes,
       initialRoute: SplashScreenView.route,
+      initialBinding: BindingsBuilder.put(() => AuthHelper()),
     );
   }
 }

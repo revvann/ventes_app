@@ -10,7 +10,7 @@ class RegularService extends GetConnect {
   void onInit() {
     httpClient.baseUrl = RegularString.api;
     httpClient.addRequestModifier<dynamic>((request) async {
-      AuthModel? session = await AuthHelper.get();
+      AuthModel? session = await Get.find<AuthHelper>().get();
       if (session?.jwtToken != null) request.headers['Authorization'] = "Bearer ${session?.jwtToken}";
       return request;
     });
