@@ -20,7 +20,7 @@ class RegularInput extends StatelessWidget {
         Text(
           label ?? "",
           style: TextStyle(
-            fontSize: 12,
+            fontSize: 16,
             fontWeight: FontWeight.w600,
             color: RegularColor.dark,
           ),

@@ -4,10 +4,14 @@ import 'package:get/get.dart';
 import 'package:ventes/middlewares/auth_middleware.dart';
 import 'package:ventes/routes/regular_get_page.dart';
 import 'package:ventes/services/auth_service.dart';
+import 'package:ventes/state_controllers/contact_state_controller.dart';
+import 'package:ventes/state_controllers/customer_state_controller.dart';
 import 'package:ventes/state_controllers/main_state_controller.dart';
 import 'package:ventes/state_controllers/signin_state_controller.dart';
 import 'package:ventes/state_controllers/splash_screen_state_controller.dart';
 import 'package:ventes/state_controllers/started_page_state_controller.dart';
+import 'package:ventes/views/contact.dart';
+import 'package:ventes/views/customer.dart';
 import 'package:ventes/views/main.dart';
 import 'package:ventes/views/signin.dart';
 import 'package:ventes/views/started_page.dart';
@@ -65,6 +69,28 @@ class RegularRoute {
             BindingsBuilder(
               () => {
                 Get.lazyPut(() => MainStateController()),
+              },
+            )
+          ],
+        ),
+        RegularGetPage(
+          name: ContactView.route,
+          page: () => ContactView(),
+          bindings: [
+            BindingsBuilder(
+              () => {
+                Get.lazyPut(() => ContactStateController()),
+              },
+            )
+          ],
+        ),
+        RegularGetPage(
+          name: CustomerView.route,
+          page: () => CustomerView(),
+          bindings: [
+            BindingsBuilder(
+              () => {
+                Get.lazyPut(() => CustomerStateController()),
               },
             )
           ],

@@ -2,11 +2,15 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/state_controllers/main_state_controller.dart';
+import 'package:ventes/views/contact.dart';
+import 'package:ventes/views/customer.dart';
 import 'package:ventes/views/regular_view.dart';
 import 'package:ventes/widgets/bottom_navigation.dart';
+import 'package:ventes/widgets/customer_card.dart';
 
 class MainView extends RegularView<MainStateController> {
   static const route = "/";
@@ -49,7 +53,14 @@ class MainView extends RegularView<MainStateController> {
                         SizedBox(
                           width: RegularSize.s,
                         ),
-                        _buildMenuItem(RegularColor.cyan, "assets/svg/building.svg", "Customer"),
+                        _buildMenuItem(
+                          RegularColor.cyan,
+                          "assets/svg/building.svg",
+                          "Customer",
+                          () {
+                            Get.toNamed(CustomerView.route);
+                          },
+                        ),
                       ],
                     ),
                     SizedBox(
@@ -57,7 +68,12 @@ class MainView extends RegularView<MainStateController> {
                     ),
                     Row(
                       children: [
-                        _buildMenuItem(RegularColor.pink, "assets/svg/contact.svg", "Contact"),
+                        _buildMenuItem(
+                          RegularColor.pink,
+                          "assets/svg/contact.svg",
+                          "Contact",
+                          () => Get.toNamed(ContactView.route),
+                        ),
                         SizedBox(
                           width: RegularSize.s,
                         ),
@@ -65,11 +81,109 @@ class MainView extends RegularView<MainStateController> {
                         SizedBox(
                           width: RegularSize.s,
                         ),
-                        _buildMenuItem(RegularColor.gray, "assets/svg/more.svg", "More"),
+                        _buildMenuItem(RegularColor.gray, "assets/svg/settings.svg", "Settings"),
                       ],
                     ),
                   ],
                 ),
+              ),
+              Container(
+                padding: EdgeInsets.symmetric(
+                  horizontal: RegularSize.m,
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    SizedBox(
+                      height: RegularSize.l,
+                    ),
+                    Text(
+                      "Plan For You",
+                      textAlign: TextAlign.start,
+                      style: TextStyle(
+                        color: RegularColor.primary,
+                        fontSize: 28,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    SizedBox(
+                      height: RegularSize.m,
+                    ),
+                    _buildTitleHeader("Nearby Customers"),
+                  ],
+                ),
+              ),
+              Container(
+                height: 250,
+                child: ListView.builder(
+                  physics: BouncingScrollPhysics(),
+                  itemCount: 10,
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (_, index) {
+                    double mRight = 0;
+                    if (index == 9) {
+                      mRight = 16;
+                    }
+                    return CustomerCard(
+                      image: AssetImage('assets/images/dummybg.jpg'),
+                      margin: EdgeInsets.only(
+                        left: 16,
+                        right: mRight,
+                        top: 24,
+                        bottom: 24,
+                      ),
+                      width: 220,
+                      title: "PT. Ibu dan Anak",
+                      type: "Manufacture Industry",
+                      radius: "320 M",
+                      workTime: "08.00-16.00",
+                    );
+                  },
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.symmetric(
+                  horizontal: RegularSize.m,
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    _buildTitleHeader("Upcoming Visit"),
+                  ],
+                ),
+              ),
+              Container(
+                height: 250,
+                child: ListView.builder(
+                  physics: BouncingScrollPhysics(),
+                  itemCount: 10,
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (_, index) {
+                    double mRight = 0;
+                    if (index == 9) {
+                      mRight = 16;
+                    }
+                    return CustomerCard(
+                      image: AssetImage('assets/images/dummybg.jpg'),
+                      margin: EdgeInsets.only(
+                        left: 16,
+                        right: mRight,
+                        top: 24,
+                        bottom: 24,
+                      ),
+                      width: 220,
+                      title: "PT. Ibu dan Anak",
+                      type: "Manufacture Industry",
+                      radius: "320 M",
+                      workTime: "08.00-16.00",
+                    );
+                  },
+                ),
+              ),
+              SizedBox(
+                height: RegularSize.xl,
               ),
             ],
           ),
@@ -284,55 +398,82 @@ class MainView extends RegularView<MainStateController> {
     );
   }
 
-  Widget _buildMenuItem(Color color, String icon, String text) {
+  Widget _buildMenuItem(Color color, String icon, String text, [Function()? onTap]) {
     return Expanded(
-      child: Container(
-        height: 100,
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(RegularSize.m),
-          border: Border.all(
-            color: RegularColor.disable,
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          height: 100,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(RegularSize.m),
+            border: Border.all(
+              color: RegularColor.disable,
+            ),
+            boxShadow: [
+              BoxShadow(
+                offset: Offset(0, 4),
+                blurRadius: 30,
+                color: Color(0xFF0157E4).withOpacity(0.1),
+              ),
+            ],
           ),
-          boxShadow: [
-            BoxShadow(
-              offset: Offset(0, 4),
-              blurRadius: 25,
-              color: Color(0xFF0157E4).withOpacity(0.1),
-            ),
-          ],
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: RegularSize.xxl,
-              height: RegularSize.xxl,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: color,
-                shape: BoxShape.circle,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: RegularSize.xxl,
+                height: RegularSize.xxl,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: color,
+                  shape: BoxShape.circle,
+                ),
+                child: SvgPicture.asset(
+                  icon,
+                  width: RegularSize.l,
+                  color: Colors.white,
+                ),
               ),
-              child: SvgPicture.asset(
-                icon,
-                width: RegularSize.l,
-                color: Colors.white,
+              SizedBox(
+                height: RegularSize.s,
               ),
-            ),
-            SizedBox(
-              height: RegularSize.s,
-            ),
-            Text(
-              text,
-              style: TextStyle(
-                color: RegularColor.dark,
-                fontSize: 14,
+              Text(
+                text,
+                style: TextStyle(
+                  color: RegularColor.dark,
+                  fontSize: 14,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
+    );
+  }
+
+  Widget _buildTitleHeader(String title) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          title,
+          style: TextStyle(
+            color: RegularColor.dark,
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        Text(
+          "See All",
+          style: TextStyle(
+            color: RegularColor.secondary,
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ],
     );
   }
 }
