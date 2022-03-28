@@ -2,20 +2,20 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
-import 'package:ventes/state_controllers/contact_state_controller.dart';
+import 'package:ventes/state_controllers/customer_state_controller.dart';
+import 'package:ventes/state_controllers/nearby_state_controller.dart';
 import 'package:ventes/views/regular_view.dart';
 import 'package:ventes/widgets/IconInput.dart';
-import 'package:ventes/widgets/contact_card.dart';
+import 'package:ventes/widgets/customer_card.dart';
 import 'package:ventes/widgets/top_navigation.dart';
 
-class ContactView extends RegularView<ContactStateController> {
-  static const String route = "/contact";
-  ContactView() {
+class NearbyView extends RegularView<NearbyStateController> {
+  static const String route = "/nearby";
+  NearbyView() {
     $ = controller;
   }
 
@@ -28,7 +28,8 @@ class ContactView extends RegularView<ContactStateController> {
       backgroundColor: RegularColor.primary,
       extendBodyBehindAppBar: true,
       appBar: TopNavigation(
-        title: "Contact",
+        title: "Nearby",
+        height: 80,
         appBarKey: $.appBarKey,
         leading: GestureDetector(
           child: Container(
@@ -52,15 +53,27 @@ class ContactView extends RegularView<ContactStateController> {
               color: Colors.white,
             ),
           ),
-          Container(
-            padding: EdgeInsets.all(RegularSize.xs),
-            child: SvgPicture.asset(
-              "assets/svg/plus-bold.svg",
-              width: RegularSize.l,
-              color: Colors.white,
-            ),
-          ),
         ],
+        below: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              padding: EdgeInsets.all(RegularSize.xs),
+              child: SvgPicture.asset(
+                "assets/svg/marker.svg",
+                width: RegularSize.m,
+                color: Colors.white,
+              ),
+            ),
+            Text(
+              "Cangkring, Klojen, Lamongan",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 14,
+              ),
+            ),
+          ],
+        ),
       ).build(context),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -95,11 +108,21 @@ class ContactView extends RegularView<ContactStateController> {
                       height: RegularSize.m,
                     ),
                     Text(
-                      "Contacts List",
+                      "Customers List",
                       style: TextStyle(
                         fontSize: 20,
                         color: RegularColor.primary,
                         fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    SizedBox(
+                      height: RegularSize.xs,
+                    ),
+                    Text(
+                      "10 Found",
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: RegularColor.dark,
                       ),
                     ),
                     SizedBox(
@@ -110,11 +133,18 @@ class ContactView extends RegularView<ContactStateController> {
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
                       itemBuilder: (_, index) {
-                        return ContactCard(
-                          avatar: 'assets/images/dummyavatar.jpg',
-                          name: "Christian Jono S.H",
-                          job: "Security",
-                          company: "Realless Corp.",
+                        return CustomerCard(
+                          image: AssetImage('assets/images/dummybg.jpg'),
+                          margin: EdgeInsets.only(
+                            bottom: 16,
+                          ),
+                          width: 220,
+                          height: 270,
+                          title: "PT. Ibu dan Anak",
+                          type: "Manufacture Industry",
+                          radius: "320 M",
+                          workTime: "08.00-16.00",
+                          place: "Periuk, Tangerang, Banten",
                         );
                       },
                     ),

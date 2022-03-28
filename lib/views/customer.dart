@@ -51,9 +51,6 @@ class CustomerView extends RegularView<CustomerStateController> {
               color: Colors.white,
             ),
           ),
-          SizedBox(
-            width: RegularSize.m,
-          ),
         ],
       ).build(context),
       body: SafeArea(

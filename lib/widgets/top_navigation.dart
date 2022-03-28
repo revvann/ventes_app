@@ -12,29 +12,66 @@ class TopNavigation {
     this.leading,
     required this.title,
     this.actions,
+    this.height = 60,
+    this.below,
   });
   GlobalKey? appBarKey;
   Widget? leading;
   String title;
   List<Widget>? actions;
+  double height;
+  Widget? below;
 
   PreferredSizeWidget build(BuildContext context) {
     return AppBar(
       key: appBarKey,
-      toolbarHeight: 60,
-      centerTitle: true,
+      toolbarHeight: height,
       backgroundColor: RegularColor.primary,
       elevation: 0,
-      leading: leading,
-      title: Text(
-        title,
-        style: TextStyle(
-          fontSize: 28,
-          fontWeight: FontWeight.w600,
-          color: Colors.white,
-        ),
+      automaticallyImplyLeading: false,
+      flexibleSpace: Column(
+        children: [
+          SizedBox(
+            height: RegularSize.xl,
+          ),
+          Row(
+            children: [
+              SizedBox(
+                width: RegularSize.s,
+              ),
+              Container(
+                width: 75,
+                alignment: Alignment.centerLeft,
+                child: leading,
+              ),
+              Expanded(
+                child: Container(
+                  alignment: Alignment.center,
+                  child: Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(
+                width: 75,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: actions ?? [],
+                ),
+              ),
+              SizedBox(
+                width: RegularSize.s,
+              ),
+            ],
+          ),
+          below ?? Container(),
+        ],
       ),
-      actions: actions,
     );
   }
 }

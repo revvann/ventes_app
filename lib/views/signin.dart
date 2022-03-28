@@ -7,7 +7,7 @@ import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/contracts/auth_contract.dart';
 import 'package:ventes/state_controllers/signin_state_controller.dart';
-import 'package:ventes/views/main.dart';
+import 'package:ventes/views/dashboard.dart';
 import 'package:ventes/views/regular_view.dart';
 import 'package:ventes/widgets/regular_bottom_sheet.dart';
 import 'package:ventes/widgets/regular_button.dart';
@@ -215,6 +215,6 @@ class SigninView extends RegularView<SigninStateController> implements AuthContr
   @override
   void onAuthSuccess(String message) {
     $.authProcessing = false;
-    Get.offAllNamed(MainView.route);
+    Get.offAllNamed(DashboardView.route);
   }
 }

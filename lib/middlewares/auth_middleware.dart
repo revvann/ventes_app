@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ventes/helpers/auth_helper.dart';
-import 'package:ventes/views/main.dart';
+import 'package:ventes/views/dashboard.dart';
 import 'package:ventes/views/signin.dart';
 import 'package:ventes/views/started_page.dart';
 
@@ -12,7 +12,7 @@ class AuthMiddleware extends GetMiddleware {
   RouteSettings? redirect(String? route) {
     RouteSettings? routeSettings;
     bool isLogin = Get.find<AuthHelper>().check();
-    if (route == MainView.route) {
+    if (route == DashboardView.route) {
       if (!isLogin) {
         routeSettings = RouteSettings(name: SigninView.route);
       } else {
@@ -20,13 +20,13 @@ class AuthMiddleware extends GetMiddleware {
       }
     } else if (route == SigninView.route) {
       if (isLogin) {
-        routeSettings = RouteSettings(name: MainView.route);
+        routeSettings = RouteSettings(name: DashboardView.route);
       } else {
         routeSettings = null;
       }
     } else if (route == StartedPageView.route) {
       if (isLogin) {
-        routeSettings = RouteSettings(name: MainView.route);
+        routeSettings = RouteSettings(name: DashboardView.route);
       } else {
         routeSettings = null;
       }

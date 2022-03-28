@@ -15,3 +15,16 @@ class RegularGetPage extends GetPage {
           middlewares: middlewares,
         );
 }
+
+class RegularGetRoute extends GetPageRoute {
+  RegularGetRoute({
+    required Widget Function() page,
+    List<Bindings> bindings = const [],
+    List<GetMiddleware>? middlewares,
+  }) : super(
+          page: page,
+          transition: Transition.fade,
+          bindings: bindings,
+          middlewares: middlewares,
+        );
+}

@@ -4,15 +4,23 @@ import 'package:get/get.dart';
 import 'package:ventes/middlewares/auth_middleware.dart';
 import 'package:ventes/routes/regular_get_page.dart';
 import 'package:ventes/services/auth_service.dart';
+import 'package:ventes/state_controllers/bottom_navigation_state_controller.dart';
 import 'package:ventes/state_controllers/contact_state_controller.dart';
 import 'package:ventes/state_controllers/customer_state_controller.dart';
-import 'package:ventes/state_controllers/main_state_controller.dart';
+import 'package:ventes/state_controllers/history_state_controller.dart';
+import 'package:ventes/state_controllers/dashboard_state_controller.dart';
+import 'package:ventes/state_controllers/nearby_state_controller.dart';
+import 'package:ventes/state_controllers/schedule_state_controller.dart';
 import 'package:ventes/state_controllers/signin_state_controller.dart';
 import 'package:ventes/state_controllers/splash_screen_state_controller.dart';
 import 'package:ventes/state_controllers/started_page_state_controller.dart';
+import 'package:ventes/views/Schedule.dart';
 import 'package:ventes/views/contact.dart';
 import 'package:ventes/views/customer.dart';
+import 'package:ventes/views/history.dart';
+import 'package:ventes/views/dashboard.dart';
 import 'package:ventes/views/main.dart';
+import 'package:ventes/views/nearby.dart';
 import 'package:ventes/views/signin.dart';
 import 'package:ventes/views/started_page.dart';
 import 'package:ventes/views/splash_screen.dart';
@@ -68,29 +76,7 @@ class RegularRoute {
           bindings: [
             BindingsBuilder(
               () => {
-                Get.lazyPut(() => MainStateController()),
-              },
-            )
-          ],
-        ),
-        RegularGetPage(
-          name: ContactView.route,
-          page: () => ContactView(),
-          bindings: [
-            BindingsBuilder(
-              () => {
-                Get.lazyPut(() => ContactStateController()),
-              },
-            )
-          ],
-        ),
-        RegularGetPage(
-          name: CustomerView.route,
-          page: () => CustomerView(),
-          bindings: [
-            BindingsBuilder(
-              () => {
-                Get.lazyPut(() => CustomerStateController()),
+                Get.lazyPut(() => BottomNavigationStateController()),
               },
             )
           ],
