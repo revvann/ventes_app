@@ -8,8 +8,10 @@ import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/state_controllers/schedule_state_controller.dart';
 import 'package:ventes/views/regular_view.dart';
-import 'package:ventes/widgets/IconInput.dart';
-import 'package:ventes/widgets/customer_card.dart';
+import 'package:ventes/widgets/icon_input.dart';
+import 'package:ventes/widgets/regular_button.dart';
+import 'package:ventes/widgets/regular_dialog.dart';
+import 'package:ventes/widgets/regular_select_pill.dart';
 import 'package:ventes/widgets/schedule_card.dart';
 import 'package:ventes/widgets/top_navigation.dart';
 
@@ -30,26 +32,16 @@ class ScheduleView extends RegularView<ScheduleStateController> {
       appBar: TopNavigation(
         title: "Schedule",
         appBarKey: $.appBarKey,
-        leading: GestureDetector(
-          child: Container(
-            padding: EdgeInsets.all(RegularSize.xs),
-            child: SvgPicture.asset(
-              "assets/svg/arrow-left.svg",
-              width: RegularSize.xl,
-              color: Colors.white,
-            ),
-          ),
-          onTap: () {
-            Get.back();
-          },
-        ),
         actions: [
-          Container(
-            padding: EdgeInsets.all(RegularSize.xs),
-            child: SvgPicture.asset(
-              "assets/svg/filter.svg",
-              width: RegularSize.l,
-              color: Colors.white,
+          GestureDetector(
+            onTap: _showFilter,
+            child: Container(
+              padding: EdgeInsets.all(RegularSize.xs),
+              child: SvgPicture.asset(
+                "assets/svg/filter.svg",
+                width: RegularSize.l,
+                color: Colors.white,
+              ),
             ),
           ),
           Container(
@@ -93,17 +85,33 @@ class ScheduleView extends RegularView<ScheduleStateController> {
                     SizedBox(
                       height: RegularSize.m,
                     ),
-                    Container(
-                      padding: EdgeInsets.symmetric(horizontal: RegularSize.m),
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        "Schedule List",
-                        style: TextStyle(
-                          fontSize: 20,
-                          color: RegularColor.primary,
-                          fontWeight: FontWeight.w600,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          padding: EdgeInsets.symmetric(horizontal: RegularSize.m),
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            "Schedule List",
+                            style: TextStyle(
+                              fontSize: 20,
+                              color: RegularColor.primary,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
                         ),
-                      ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: RegularSize.m),
+                          child: Text(
+                            "May 22, 2022",
+                            style: TextStyle(
+                              color: RegularColor.dark,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                     SizedBox(
                       height: RegularSize.m,
@@ -119,11 +127,10 @@ class ScheduleView extends RegularView<ScheduleStateController> {
                             Padding(
                               padding: EdgeInsets.symmetric(horizontal: RegularSize.m),
                               child: Text(
-                                "May 22, 2022",
+                                "10.00 AM",
                                 style: TextStyle(
-                                  color: RegularColor.dark,
+                                  color: RegularColor.gray,
                                   fontSize: 16,
-                                  fontWeight: FontWeight.w600,
                                 ),
                               ),
                             ),
@@ -138,7 +145,7 @@ class ScheduleView extends RegularView<ScheduleStateController> {
                                   if (index == 9) {
                                     mRight = 16;
                                   }
-                                  String media = index % 2 == 1 ? "By Phone" : "In Place";
+                                  String media = index % 2 == 1 ? "By Phone" : "On Site";
                                   return ScheduleCard(
                                     image: AssetImage('assets/images/dummybg.jpg'),
                                     margin: EdgeInsets.only(
@@ -168,5 +175,59 @@ class ScheduleView extends RegularView<ScheduleStateController> {
         ),
       ),
     );
+  }
+
+  void _showFilter() {
+    RegularDialog(
+      width: Get.width * 0.9,
+      child: Column(
+        children: [
+          GestureDetector(
+            onTap: $.changeTime,
+            child: IconInput(
+              label: "Visit Time",
+              icon: "assets/svg/history.svg",
+              hintText: "Visit Time",
+              enabled: false,
+              controller: $.filterTimeInputController,
+            ),
+          ),
+          SizedBox(
+            height: RegularSize.m,
+          ),
+          RegularSelectPill(
+            label: "Visit Type",
+            items: [
+              RegularSelectPillItem(text: "On Site", value: "1"),
+              RegularSelectPillItem(text: "By Phone", value: "2"),
+            ],
+            onSelected: (val) {
+              print(val);
+            },
+          ),
+          SizedBox(
+            height: RegularSize.m,
+          ),
+          RegularSelectPill(
+            label: "Group By",
+            items: [
+              RegularSelectPillItem(text: "Date", value: "1"),
+              RegularSelectPillItem(text: "Customer", value: "2"),
+            ],
+            onSelected: (val) {
+              print(val);
+            },
+          ),
+          SizedBox(
+            height: RegularSize.m,
+          ),
+          RegularButton(
+            label: "Apply",
+            primary: RegularColor.secondary,
+            height: RegularSize.xxl,
+          ),
+        ],
+      ),
+    ).show();
   }
 }

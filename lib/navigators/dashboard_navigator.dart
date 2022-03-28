@@ -3,7 +3,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ventes/routes/regular_get_page.dart';
+import 'package:ventes/state_controllers/contact_state_controller.dart';
+import 'package:ventes/state_controllers/customer_state_controller.dart';
 import 'package:ventes/state_controllers/dashboard_state_controller.dart';
+import 'package:ventes/views/contact.dart';
+import 'package:ventes/views/customer.dart';
 import 'package:ventes/views/dashboard.dart';
 
 class DashboardNavigator extends StatelessWidget {
@@ -23,6 +27,28 @@ class DashboardNavigator extends StatelessWidget {
             bindings: [
               BindingsBuilder(() {
                 Get.put(DashboardStateController());
+              })
+            ],
+          );
+        }
+
+        if (routeSettings.name == ContactView.route) {
+          return RegularGetRoute(
+            page: () => ContactView(),
+            bindings: [
+              BindingsBuilder(() {
+                Get.put(ContactStateController());
+              })
+            ],
+          );
+        }
+
+        if (routeSettings.name == CustomerView.route) {
+          return RegularGetRoute(
+            page: () => CustomerView(),
+            bindings: [
+              BindingsBuilder(() {
+                Get.put(CustomerStateController());
               })
             ],
           );

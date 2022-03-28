@@ -37,6 +37,7 @@ class MainView extends RegularView<BottomNavigationStateController> {
         return isFirstRouteInCurrentTab;
       },
       child: Scaffold(
+        // resizeToAvoidBottomInset: false,
         backgroundColor: Colors.white,
         body: Obx(
           () => Stack(
@@ -75,37 +76,6 @@ class MainView extends RegularView<BottomNavigationStateController> {
           ),
         ),
         bottomNavigationBar: BottomNavigation(),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            $.currentIndex = Views.schedule;
-          },
-          splashColor: null,
-          elevation: 0,
-          hoverElevation: 0,
-          focusElevation: 0,
-          disabledElevation: 0,
-          highlightElevation: 0,
-          child: Container(
-            padding: EdgeInsets.all(3),
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.white,
-            ),
-            child: Container(
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: RegularColor.primary,
-              ),
-              child: SvgPicture.asset(
-                'assets/svg/plus.svg',
-                color: Colors.white,
-                width: RegularSize.l,
-              ),
-            ),
-          ),
-        ),
       ),
     );
   }

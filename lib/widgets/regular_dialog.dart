@@ -17,6 +17,7 @@ class RegularDialog {
   Future show() {
     return Get.dialog(
       Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(RegularSize.m)),
         insetPadding: EdgeInsets.symmetric(horizontal: (Get.width - width) / 2),
         child: Column(
           mainAxisSize: MainAxisSize.min,

@@ -7,9 +7,10 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
+import 'package:ventes/navigators/dashboard_navigator.dart';
 import 'package:ventes/state_controllers/contact_state_controller.dart';
 import 'package:ventes/views/regular_view.dart';
-import 'package:ventes/widgets/IconInput.dart';
+import 'package:ventes/widgets/icon_input.dart';
 import 'package:ventes/widgets/contact_card.dart';
 import 'package:ventes/widgets/top_navigation.dart';
 
@@ -40,7 +41,7 @@ class ContactView extends RegularView<ContactStateController> {
             ),
           ),
           onTap: () {
-            Get.back();
+            Get.back(id: DashboardNavigator.id);
           },
         ),
         actions: [

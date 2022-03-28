@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/constants/views.dart';
@@ -23,26 +24,54 @@ class BottomNavigation extends RegularView<BottomNavigationStateController> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          BottomNavigationItem(
-            icon: 'assets/svg/home.svg',
-            title: "Home",
-            view: Views.dashboard,
+          Expanded(
+            child: BottomNavigationItem(
+              icon: 'assets/svg/home.svg',
+              title: "Home",
+              view: Views.dashboard,
+            ),
           ),
-          BottomNavigationItem(
-            icon: 'assets/svg/marker.svg',
-            title: "Nearby",
-            view: Views.nearby,
+          Expanded(
+            child: BottomNavigationItem(
+              icon: 'assets/svg/marker.svg',
+              title: "Nearby",
+              view: Views.nearby,
+            ),
           ),
-          SizedBox(),
-          BottomNavigationItem(
-            icon: 'assets/svg/history.svg',
-            title: "History",
-            view: Views.history,
+          Expanded(
+            child: GestureDetector(
+              child: Container(
+                width: RegularSize.xxl,
+                height: RegularSize.xxl,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: RegularColor.primary,
+                ),
+                child: SvgPicture.asset(
+                  'assets/svg/plus.svg',
+                  color: Colors.white,
+                  width: RegularSize.l,
+                ),
+              ),
+              onTap: () {
+                $.currentIndex = Views.schedule;
+              },
+            ),
           ),
-          BottomNavigationItem(
-            icon: 'assets/svg/user.svg',
-            title: "Settings",
-            view: Views.settings,
+          Expanded(
+            child: BottomNavigationItem(
+              icon: 'assets/svg/history.svg',
+              title: "History",
+              view: Views.history,
+            ),
+          ),
+          Expanded(
+            child: BottomNavigationItem(
+              icon: 'assets/svg/user.svg',
+              title: "Settings",
+              view: Views.settings,
+            ),
           ),
         ],
       ),
@@ -68,26 +97,30 @@ class BottomNavigationItem extends RegularView<BottomNavigationStateController> 
         controller.currentIndex = view;
       },
       child: Container(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            SvgPicture.asset(
-              icon,
-              color: RegularColor.primary,
-              width: RegularSize.l,
-            ),
-            SizedBox(
-              height: RegularSize.xs,
-            ),
-            Text(
-              title,
-              style: TextStyle(
-                fontSize: 12,
-                color: RegularColor.gray,
+        alignment: Alignment.center,
+        child: Obx(() {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SvgPicture.asset(
+                icon,
+                color: RegularColor.primary,
+                width: RegularSize.l,
               ),
-            ),
-          ],
-        ),
+              SizedBox(
+                height: RegularSize.xs,
+              ),
+              if ($.currentIndex == view)
+                Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: RegularColor.gray,
+                  ),
+                ),
+            ],
+          );
+        }),
       ),
     );
   }

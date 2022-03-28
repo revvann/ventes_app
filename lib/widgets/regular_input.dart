@@ -4,8 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:ventes/constants/regular_color.dart';
 
 class RegularInput extends StatelessWidget {
-  RegularInput({Key? key, this.label, this.isPassword = false, this.inputType, this.validator, this.controller}) : super(key: key);
+  RegularInput({
+    Key? key,
+    this.label,
+    this.isPassword = false,
+    this.inputType,
+    this.validator,
+    this.controller,
+    this.hintText,
+  }) : super(key: key);
   String? label;
+  String? hintText;
   bool isPassword;
   TextInputType? inputType;
   String? Function(String?)? validator;
@@ -22,7 +31,7 @@ class RegularInput extends StatelessWidget {
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w600,
-            color: RegularColor.dark,
+            color: RegularColor.gray,
           ),
         ),
         TextFormField(
@@ -44,6 +53,10 @@ class RegularInput extends StatelessWidget {
             _key.currentState?.validate();
           },
           decoration: InputDecoration(
+            hintText: hintText,
+            hintStyle: TextStyle(
+              color: RegularColor.gray,
+            ),
             isDense: true,
             contentPadding: EdgeInsets.symmetric(
               vertical: 10,

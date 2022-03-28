@@ -6,6 +6,8 @@ import 'package:get/get.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/constants/views.dart';
+import 'package:ventes/helpers/auth_helper.dart';
+import 'package:ventes/navigators/dashboard_navigator.dart';
 import 'package:ventes/state_controllers/dashboard_state_controller.dart';
 import 'package:ventes/views/Schedule.dart';
 import 'package:ventes/views/contact.dart';
@@ -72,7 +74,7 @@ class DashboardView extends RegularView<DashboardStateController> {
                           RegularColor.cyan,
                           "assets/svg/building.svg",
                           "Customer",
-                          () => Get.toNamed(CustomerView.route),
+                          () => Get.toNamed(CustomerView.route, id: DashboardNavigator.id),
                         ),
                       ],
                     ),
@@ -85,7 +87,7 @@ class DashboardView extends RegularView<DashboardStateController> {
                           RegularColor.pink,
                           "assets/svg/contact.svg",
                           "Contact",
-                          () => Get.toNamed(ContactView.route),
+                          () => Get.toNamed(ContactView.route, id: DashboardNavigator.id),
                         ),
                         SizedBox(
                           width: RegularSize.s,
@@ -258,22 +260,125 @@ class DashboardView extends RegularView<DashboardStateController> {
                 ),
               ],
             ),
-            Container(
-              width: RegularSize.xxl,
-              height: RegularSize.xxl,
-              alignment: Alignment.center,
-              child: Text(
-                "RR",
-                style: TextStyle(
-                  color: RegularColor.cream,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
+            PopupMenuButton<String>(
+              elevation: 0.3,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(RegularSize.m),
+              ),
+              padding: EdgeInsets.zero,
+              child: Container(
+                width: RegularSize.xxl,
+                height: RegularSize.xxl,
+                alignment: Alignment.center,
+                child: Text(
+                  "RR",
+                  style: TextStyle(
+                    color: RegularColor.cream,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: RegularColor.secondary,
                 ),
               ),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: RegularColor.secondary,
-              ),
+              itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                PopupMenuItem<String>(
+                  value: "edit",
+                  child: Row(
+                    children: [
+                      Container(
+                        width: RegularSize.xl,
+                        height: RegularSize.xl,
+                        alignment: Alignment.center,
+                        child: Text(
+                          "RR",
+                          style: TextStyle(
+                            color: RegularColor.cream,
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: RegularColor.secondary,
+                        ),
+                      ),
+                      SizedBox(
+                        width: RegularSize.s,
+                      ),
+                      Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Risca Revan",
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: RegularColor.dark,
+                            ),
+                          ),
+                          Text(
+                            "Teknisi",
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: RegularColor.gray,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                PopupMenuItem<String>(
+                  value: "delete",
+                  child: Row(
+                    children: [
+                      Container(
+                        width: RegularSize.xl,
+                        height: RegularSize.xl,
+                        alignment: Alignment.center,
+                        child: Text(
+                          "RR",
+                          style: TextStyle(
+                            color: RegularColor.cream,
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: RegularColor.secondary,
+                        ),
+                      ),
+                      SizedBox(
+                        width: RegularSize.s,
+                      ),
+                      Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Risca Revan",
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: RegularColor.dark,
+                            ),
+                          ),
+                          Text(
+                            "Direktur",
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: RegularColor.gray,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ],
         ),

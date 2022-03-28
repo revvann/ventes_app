@@ -8,7 +8,7 @@ import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/state_controllers/customer_state_controller.dart';
 import 'package:ventes/views/regular_view.dart';
-import 'package:ventes/widgets/IconInput.dart';
+import 'package:ventes/widgets/icon_input.dart';
 import 'package:ventes/widgets/customer_card.dart';
 import 'package:ventes/widgets/top_navigation.dart';
 

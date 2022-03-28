@@ -6,11 +6,13 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
-import 'package:ventes/state_controllers/customer_state_controller.dart';
 import 'package:ventes/state_controllers/nearby_state_controller.dart';
 import 'package:ventes/views/regular_view.dart';
-import 'package:ventes/widgets/IconInput.dart';
+import 'package:ventes/widgets/icon_input.dart';
 import 'package:ventes/widgets/customer_card.dart';
+import 'package:ventes/widgets/regular_button.dart';
+import 'package:ventes/widgets/regular_dialog.dart';
+import 'package:ventes/widgets/regular_time_picker.dart';
 import 'package:ventes/widgets/top_navigation.dart';
 
 class NearbyView extends RegularView<NearbyStateController> {
@@ -31,27 +33,17 @@ class NearbyView extends RegularView<NearbyStateController> {
         title: "Nearby",
         height: 80,
         appBarKey: $.appBarKey,
-        leading: GestureDetector(
-          child: Container(
-            padding: EdgeInsets.all(RegularSize.xs),
-            child: SvgPicture.asset(
-              "assets/svg/arrow-left.svg",
-              width: RegularSize.xl,
-              color: Colors.white,
-            ),
-          ),
-          onTap: () {
-            Get.back();
-          },
-        ),
         actions: [
-          Container(
-            padding: EdgeInsets.all(RegularSize.xs),
-            child: SvgPicture.asset(
-              "assets/svg/filter.svg",
-              width: RegularSize.l,
-              color: Colors.white,
+          GestureDetector(
+            child: Container(
+              padding: EdgeInsets.all(RegularSize.xs),
+              child: SvgPicture.asset(
+                "assets/svg/filter.svg",
+                width: RegularSize.l,
+                color: Colors.white,
+              ),
             ),
+            onTap: _showFilter,
           ),
         ],
         below: Row(
@@ -159,5 +151,33 @@ class NearbyView extends RegularView<NearbyStateController> {
         ),
       ),
     );
+  }
+
+  void _showFilter() {
+    RegularDialog(
+      width: Get.width * 0.9,
+      child: Column(
+        children: [
+          GestureDetector(
+            onTap: $.changeTime,
+            child: IconInput(
+              label: "Visit Time",
+              icon: "assets/svg/history.svg",
+              hintText: "Visit Time",
+              enabled: false,
+              controller: $.filterTimeInputController,
+            ),
+          ),
+          SizedBox(
+            height: RegularSize.m,
+          ),
+          RegularButton(
+            label: "Apply",
+            primary: RegularColor.secondary,
+            height: RegularSize.xxl,
+          ),
+        ],
+      ),
+    ).show();
   }
 }

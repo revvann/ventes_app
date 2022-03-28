@@ -28,7 +28,7 @@ class AuthPresenter {
         _authContract.onAuthFailed(response.body['message']);
       }
     } catch (err) {
-      _authContract.onAuthSuccess(err.toString());
+      _authContract.onAuthFailed(err.toString());
     }
   }
 }
