@@ -18,7 +18,6 @@ class HistoryStateController extends RegularStateController {
   @override
   void onInit() {
     super.onInit();
-    print(Get.deviceLocale);
     filterTimeInputController.text = MaterialLocalizations.of(Get.context!).formatTimeOfDay(TimeOfDay.now());
   }
 

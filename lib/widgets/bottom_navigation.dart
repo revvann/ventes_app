@@ -49,7 +49,7 @@ class BottomNavigation extends RegularView<BottomNavigationStateController> {
                   color: RegularColor.primary,
                 ),
                 child: SvgPicture.asset(
-                  'assets/svg/plus.svg',
+                  'assets/svg/calendar.svg',
                   color: Colors.white,
                   width: RegularSize.l,
                 ),

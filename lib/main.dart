@@ -12,7 +12,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() async {
   runApp(const MyApp());
-  Intl.defaultLocale = 'id_ID';
+  Intl.defaultLocale = 'en_ID';
 }
 
 class MyApp extends StatelessWidget {
@@ -28,9 +28,9 @@ class MyApp extends StatelessWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
       supportedLocales: [
-        Locale('id'),
+        Locale('en'),
       ],
-      locale: Locale('id'),
+      locale: Locale('en'),
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: createSwatch(RegularColor.primary),

@@ -58,7 +58,7 @@ class NearbyView extends RegularView<NearbyStateController> {
               ),
             ),
             Text(
-              "Cangkring, Klojen, Lamongan",
+              "Brooklyn, New York, USA",
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 14,
@@ -132,11 +132,11 @@ class NearbyView extends RegularView<NearbyStateController> {
                           ),
                           width: 220,
                           height: 270,
-                          title: "PT. Ibu dan Anak",
-                          type: "Manufacture Industry",
+                          title: "S.H.I.E.L.D",
+                          type: "Human Resource",
                           radius: "320 M",
                           workTime: "08.00-16.00",
-                          place: "Periuk, Tangerang, Banten",
+                          place: "Brooklyn, New York, USA",
                         );
                       },
                     ),

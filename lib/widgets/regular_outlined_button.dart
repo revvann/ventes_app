@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 
-class RegularButton extends StatelessWidget {
-  RegularButton({
+class RegularOutlinedButton extends StatelessWidget {
+  RegularOutlinedButton({
     Key? key,
     this.label,
     this.height = double.infinity,
@@ -34,14 +34,18 @@ class RegularButton extends StatelessWidget {
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.bold,
-                color: Colors.white,
+                color: primary,
               ),
             ),
       style: TextButton.styleFrom(
+        splashFactory: InkSplash.splashFactory,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
         ),
-        backgroundColor: primary,
+        side: BorderSide(
+          color: primary,
+        ),
+        backgroundColor: Colors.white,
         minimumSize: Size(
           width,
           height,

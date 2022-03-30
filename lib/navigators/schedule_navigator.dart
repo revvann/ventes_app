@@ -2,7 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ventes/state_controllers/daily_schedule_state_controller.dart';
+import 'package:ventes/state_controllers/fab_state_controller.dart';
 import 'package:ventes/state_controllers/schedule_state_controller.dart';
+import 'package:ventes/views/daily_schedule.dart';
 import 'package:ventes/views/schedule.dart';
 
 class ScheduleNavigator extends StatelessWidget {
@@ -21,6 +24,17 @@ class ScheduleNavigator extends StatelessWidget {
             page: () => ScheduleView(),
             binding: BindingsBuilder(() {
               Get.put(ScheduleStateController());
+            }),
+            transition: Transition.fadeIn,
+            transitionDuration: Duration(milliseconds: 300),
+          );
+        }
+        if (routeSettings.name == DailyScheduleView.route) {
+          return GetPageRoute(
+            page: () => DailyScheduleView(),
+            binding: BindingsBuilder(() {
+              Get.put(DailyScheduleStateController());
+              Get.put(FABStateController());
             }),
             transition: Transition.fadeIn,
             transitionDuration: Duration(milliseconds: 300),

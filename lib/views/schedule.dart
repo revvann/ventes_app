@@ -4,15 +4,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
+import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
+import 'package:ventes/navigators/schedule_navigator.dart';
 import 'package:ventes/state_controllers/schedule_state_controller.dart';
+import 'package:ventes/views/daily_schedule.dart';
 import 'package:ventes/views/regular_view.dart';
-import 'package:ventes/widgets/icon_input.dart';
+import 'package:ventes/widgets/regular_appointment_card.dart';
 import 'package:ventes/widgets/regular_button.dart';
 import 'package:ventes/widgets/regular_dialog.dart';
+import 'package:ventes/widgets/regular_outlined_button.dart';
 import 'package:ventes/widgets/regular_select_pill.dart';
-import 'package:ventes/widgets/schedule_card.dart';
 import 'package:ventes/widgets/top_navigation.dart';
 
 class ScheduleView extends RegularView<ScheduleStateController> {
@@ -32,145 +36,152 @@ class ScheduleView extends RegularView<ScheduleStateController> {
       appBar: TopNavigation(
         title: "Schedule",
         appBarKey: $.appBarKey,
+        height: 90,
         actions: [
           GestureDetector(
-            onTap: _showFilter,
+            onTap: () {
+              Get.toNamed(DailyScheduleView.route, id: ScheduleNavigator.id);
+            },
             child: Container(
               padding: EdgeInsets.all(RegularSize.xs),
               child: SvgPicture.asset(
-                "assets/svg/filter.svg",
+                "assets/svg/detail.svg",
                 width: RegularSize.l,
                 color: Colors.white,
               ),
             ),
           ),
-          Container(
-            padding: EdgeInsets.all(RegularSize.xs),
-            child: SvgPicture.asset(
-              "assets/svg/plus-bold.svg",
-              width: RegularSize.l,
-              color: Colors.white,
-            ),
-          ),
         ],
-      ).build(context),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Obx(
-            () {
-              return Container(
-                width: double.infinity,
-                constraints: BoxConstraints(
-                  minHeight: $.minHeight,
-                ),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(RegularSize.xl),
-                    topRight: Radius.circular(RegularSize.xl),
+        below: Container(
+          margin: EdgeInsets.only(
+            top: RegularSize.s,
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              GestureDetector(
+                onTap: () {
+                  $.calendarController.backward?.call();
+                },
+                child: Container(
+                  alignment: Alignment.center,
+                  child: SvgPicture.asset(
+                    'assets/svg/arrow-left-sm.svg',
+                    color: Colors.white,
+                    width: RegularSize.l,
                   ),
                 ),
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: RegularSize.m,
+              ),
+              SizedBox(
+                width: RegularSize.s,
+              ),
+              Obx(() {
+                String date = DateFormat('MMMM yyyy').format($.dateShown);
+                return Container(
+                  width: Get.width * 0.5,
+                  alignment: Alignment.center,
+                  child: Text(
+                    date,
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
                     ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: RegularSize.m),
-                      child: IconInput(
-                        icon: "assets/svg/search.svg",
-                        hintText: "Search",
-                      ),
-                    ),
-                    SizedBox(
-                      height: RegularSize.m,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                          padding: EdgeInsets.symmetric(horizontal: RegularSize.m),
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            "Schedule List",
-                            style: TextStyle(
-                              fontSize: 20,
-                              color: RegularColor.primary,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: RegularSize.m),
-                          child: Text(
-                            "May 22, 2022",
-                            style: TextStyle(
-                              color: RegularColor.dark,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: RegularSize.m,
-                    ),
-                    ListView.builder(
-                      itemCount: 10,
-                      physics: NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      itemBuilder: (_, index) {
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.symmetric(horizontal: RegularSize.m),
-                              child: Text(
-                                "10.00 AM",
-                                style: TextStyle(
-                                  color: RegularColor.gray,
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ),
-                            Container(
-                              height: 250,
-                              child: ListView.builder(
-                                physics: BouncingScrollPhysics(),
-                                itemCount: 10,
-                                scrollDirection: Axis.horizontal,
-                                itemBuilder: (_, index) {
-                                  double mRight = 0;
-                                  if (index == 9) {
-                                    mRight = 16;
-                                  }
-                                  String media = index % 2 == 1 ? "By Phone" : "On Site";
-                                  return ScheduleCard(
-                                    image: AssetImage('assets/images/dummybg.jpg'),
-                                    margin: EdgeInsets.only(
-                                      left: 16,
-                                      right: mRight,
-                                      top: 24,
-                                      bottom: 24,
-                                    ),
-                                    width: 220,
-                                    title: "Appie Inc",
-                                    type: "Food Education",
-                                    time: "16.00",
-                                    media: media,
-                                  );
-                                },
-                              ),
-                            ),
-                          ],
-                        );
-                      },
-                    )
-                  ],
+                  ),
+                );
+              }),
+              SizedBox(
+                width: RegularSize.s,
+              ),
+              GestureDetector(
+                onTap: () {
+                  $.calendarController.forward?.call();
+                },
+                child: Container(
+                  alignment: Alignment.center,
+                  child: SvgPicture.asset(
+                    'assets/svg/arrow-right-sm.svg',
+                    color: Colors.white,
+                    width: RegularSize.l,
+                  ),
                 ),
-              );
-            },
+              ),
+            ],
+          ),
+        ),
+      ).build(context),
+      body: SafeArea(
+        child: Container(
+          width: double.infinity,
+          height: double.infinity,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(RegularSize.xl),
+              topRight: Radius.circular(RegularSize.xl),
+            ),
+          ),
+          child: Column(
+            children: [
+              SizedBox(
+                height: RegularSize.xl,
+              ),
+              Expanded(
+                child: SfCalendar(
+                  dataSource: RegularCalendarDataSource(getApp()),
+                  onTap: (calendarTapDetails) {
+                    List<RegularAppointment> appointments = List<RegularAppointment>.from(calendarTapDetails.appointments ?? []);
+                    _showDialogDetail(appointments);
+                  },
+                  monthViewSettings: MonthViewSettings(
+                    dayFormat: DateFormat.ABBR_WEEKDAY,
+                    appointmentDisplayMode: MonthAppointmentDisplayMode.none,
+                  ),
+                  onSelectionChanged: (details) {
+                    $.selectedDate = details.date!;
+                  },
+                  controller: $.calendarController,
+                  headerHeight: 0,
+                  view: CalendarView.month,
+                  initialSelectedDate: $.selectedDate,
+                  selectionDecoration: BoxDecoration(),
+                  monthCellBuilder: (_, details) {
+                    return Obx(() {
+                      bool selected = details.date == $.selectedDate;
+                      bool thisMonth = details.date.month == $.dateShown.month;
+
+                      Color textColor = RegularColor.gray;
+                      double fontSize = 14;
+
+                      if (thisMonth) {
+                        textColor = RegularColor.dark;
+                      }
+
+                      if (selected) {
+                        textColor = Colors.white;
+                        fontSize = 18;
+                      }
+
+                      return Container(
+                        decoration: BoxDecoration(
+                          color: selected ? RegularColor.primary : Colors.white,
+                          shape: BoxShape.circle,
+                        ),
+                        alignment: Alignment.center,
+                        child: Text(
+                          "${details.date.day}",
+                          style: TextStyle(
+                            fontSize: fontSize,
+                            color: textColor,
+                          ),
+                        ),
+                      );
+                    });
+                  },
+                ),
+              ),
+            ],
           ),
         ),
       ),
@@ -182,19 +193,6 @@ class ScheduleView extends RegularView<ScheduleStateController> {
       width: Get.width * 0.9,
       child: Column(
         children: [
-          GestureDetector(
-            onTap: $.changeTime,
-            child: IconInput(
-              label: "Visit Time",
-              icon: "assets/svg/history.svg",
-              hintText: "Visit Time",
-              enabled: false,
-              controller: $.filterTimeInputController,
-            ),
-          ),
-          SizedBox(
-            height: RegularSize.m,
-          ),
           RegularSelectPill(
             label: "Visit Type",
             items: [
@@ -208,26 +206,157 @@ class ScheduleView extends RegularView<ScheduleStateController> {
           SizedBox(
             height: RegularSize.m,
           ),
-          RegularSelectPill(
-            label: "Group By",
-            items: [
-              RegularSelectPillItem(text: "Date", value: "1"),
-              RegularSelectPillItem(text: "Customer", value: "2"),
-            ],
-            onSelected: (val) {
-              print(val);
-            },
-          ),
-          SizedBox(
-            height: RegularSize.m,
-          ),
           RegularButton(
             label: "Apply",
             primary: RegularColor.secondary,
             height: RegularSize.xxl,
+            onPressed: () {},
           ),
         ],
       ),
     ).show();
+  }
+
+  void _showDialogDetail(List<RegularAppointment> appointments) {
+    RegularDialog(
+      width: Get.width * 0.9,
+      child: Column(
+        children: [
+          SizedBox(
+            height: appointments.isEmpty ? 0 : 300,
+            child: ListView.builder(
+              itemCount: appointments.length,
+              itemBuilder: (_, index) {
+                RegularAppointment appointment = appointments[index];
+                return Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: RegularSize.m,
+                    vertical: RegularSize.s,
+                  ),
+                  margin: EdgeInsets.only(bottom: RegularSize.s),
+                  decoration: BoxDecoration(
+                    color: Color(0xffEFF5EF),
+                    borderRadius: BorderRadius.circular(RegularSize.m),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            appointment.title,
+                            style: TextStyle(
+                              color: Color(0xffADC2AD),
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: RegularSize.s,
+                              vertical: RegularSize.xs,
+                            ),
+                            child: Text(
+                              appointment.type,
+                              style: TextStyle(
+                                color: RegularColor.gray,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      if (appointment.location != null)
+                        Text(
+                          appointment.location!,
+                          maxLines: 1,
+                          style: TextStyle(
+                            color: Color(0xffADC2AD),
+                            fontSize: 10,
+                          ),
+                        ),
+                      SizedBox(
+                        height: RegularSize.xs,
+                      ),
+                      Text(
+                        appointment.subtitle,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: Color(0xffADC2AD),
+                          fontSize: 12,
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
+          if (appointments.isEmpty)
+            Text(
+              "Oops, There is nothing here",
+              style: TextStyle(
+                color: RegularColor.red,
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          SizedBox(
+            height: RegularSize.m,
+          ),
+          Row(
+            children: [
+              Expanded(
+                child: RegularOutlinedButton(
+                  label: "Cancel",
+                  primary: RegularColor.secondary,
+                  height: RegularSize.xxl,
+                  onPressed: () {
+                    Get.close(1);
+                  },
+                ),
+              ),
+              SizedBox(
+                width: RegularSize.s,
+              ),
+              Expanded(
+                child: RegularButton(
+                  label: "Detail",
+                  primary: RegularColor.secondary,
+                  height: RegularSize.xxl,
+                  onPressed: () {
+                    Get.close(1);
+                    Get.toNamed(DailyScheduleView.route, id: ScheduleNavigator.id);
+                  },
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    ).show();
+  }
+
+  List<RegularAppointment> getApp() {
+    List<RegularAppointment> appointments = [];
+    for (int i = 0; i < 5; i++) {
+      RegularAppointment appointment = RegularAppointment(
+        startTime: DateTime.now(),
+        endTime: DateTime.now().add(
+          Duration(
+            hours: 3,
+            minutes: 45,
+          ),
+        ),
+        location: "Lawrence, Massachusetts, USA",
+        title: "Visit Essex Corporation",
+        subtitle: "Watch how essex corp do their job as mutant genetic experiment.",
+        type: "On Site",
+      );
+      appointments.add(appointment);
+    }
+    return appointments;
   }
 }

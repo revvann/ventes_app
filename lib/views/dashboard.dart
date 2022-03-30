@@ -159,8 +159,8 @@ class DashboardView extends RegularView<DashboardStateController> {
                         bottom: 24,
                       ),
                       width: 220,
-                      title: "PT. Ibu dan Anak",
-                      type: "Manufacture Industry",
+                      title: "Oscorp Idustries",
+                      type: "Genetic Exploration",
                       radius: "320 M",
                       workTime: "08.00-16.00",
                     );
@@ -199,8 +199,8 @@ class DashboardView extends RegularView<DashboardStateController> {
                         bottom: 24,
                       ),
                       width: 220,
-                      title: "PT. Ibu dan Anak",
-                      type: "Manufacture Industry",
+                      title: "Oscorp Idustries",
+                      type: "Genetic Exploration",
                       radius: "320 M",
                       workTime: "08.00-16.00",
                     );
@@ -271,7 +271,7 @@ class DashboardView extends RegularView<DashboardStateController> {
                 height: RegularSize.xxl,
                 alignment: Alignment.center,
                 child: Text(
-                  "RR",
+                  "SS",
                   style: TextStyle(
                     color: RegularColor.cream,
                     fontSize: 16,
@@ -293,7 +293,7 @@ class DashboardView extends RegularView<DashboardStateController> {
                         height: RegularSize.xl,
                         alignment: Alignment.center,
                         child: Text(
-                          "RR",
+                          "SS",
                           style: TextStyle(
                             color: RegularColor.cream,
                             fontSize: 14,
@@ -313,14 +313,14 @@ class DashboardView extends RegularView<DashboardStateController> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "Risca Revan",
+                            "Stephen Strange",
                             style: TextStyle(
                               fontSize: 14,
                               color: RegularColor.dark,
                             ),
                           ),
                           Text(
-                            "Teknisi",
+                            "Sales",
                             style: TextStyle(
                               fontSize: 12,
                               color: RegularColor.gray,
@@ -340,7 +340,7 @@ class DashboardView extends RegularView<DashboardStateController> {
                         height: RegularSize.xl,
                         alignment: Alignment.center,
                         child: Text(
-                          "RR",
+                          "SS",
                           style: TextStyle(
                             color: RegularColor.cream,
                             fontSize: 14,
@@ -360,14 +360,14 @@ class DashboardView extends RegularView<DashboardStateController> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "Risca Revan",
+                            "Stephen Strange",
                             style: TextStyle(
                               fontSize: 14,
                               color: RegularColor.dark,
                             ),
                           ),
                           Text(
-                            "Direktur",
+                            "Director",
                             style: TextStyle(
                               fontSize: 12,
                               color: RegularColor.gray,
@@ -416,7 +416,7 @@ class DashboardView extends RegularView<DashboardStateController> {
         child: Column(
           children: [
             Text(
-              "Risca Revan",
+              "Norman Osborn",
               style: TextStyle(
                 fontSize: 16,
                 color: RegularColor.dark,
@@ -427,7 +427,7 @@ class DashboardView extends RegularView<DashboardStateController> {
               height: RegularSize.xs,
             ),
             Text(
-              "Periuk, Tangerang, Banten",
+              "New York City, United States",
               style: TextStyle(
                 color: RegularColor.dark,
                 fontSize: 14,
