@@ -11,6 +11,7 @@ class RegularStateController extends GetxController {
   @override
   void onReady() {
     super.onReady();
-    _minHeight.value = Get.height - (appBarKey.currentContext?.size?.height ?? 0);
+    double distraction = (appBarKey.currentContext?.size?.height ?? 0) + 70;
+    _minHeight.value = Get.height - distraction;
   }
 }

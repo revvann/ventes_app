@@ -1,23 +1,16 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
-import 'package:ventes/navigators/dashboard_navigator.dart';
 import 'package:ventes/navigators/schedule_navigator.dart';
-import 'package:ventes/state_controllers/contact_state_controller.dart';
 import 'package:ventes/state_controllers/daily_schedule_state_controller.dart';
 import 'package:ventes/views/regular_view.dart';
-import 'package:ventes/views/schedule.dart';
-import 'package:ventes/widgets/icon_input.dart';
-import 'package:ventes/widgets/contact_card.dart';
+import 'package:ventes/views/schedule_fc.dart';
 import 'package:ventes/widgets/regular_appointment_card.dart';
 import 'package:ventes/widgets/regular_fab.dart';
 import 'package:ventes/widgets/top_navigation.dart';
@@ -38,7 +31,7 @@ class DailyScheduleView extends RegularView<DailyScheduleStateController> {
       extendBodyBehindAppBar: true,
       appBar: TopNavigation(
         title: "Schedule",
-        height: 90,
+        height: 85,
         appBarKey: $.appBarKey,
         leading: GestureDetector(
           child: Container(
@@ -54,9 +47,6 @@ class DailyScheduleView extends RegularView<DailyScheduleStateController> {
           },
         ),
         below: Container(
-          margin: EdgeInsets.only(
-            top: RegularSize.s,
-          ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -97,8 +87,8 @@ class DailyScheduleView extends RegularView<DailyScheduleStateController> {
                   dataSource: RegularCalendarDataSource(getApp()),
                   headerHeight: 0,
                   view: CalendarView.day,
-                  minDate: DateTime(2022, 3, 30, 0, 0),
-                  maxDate: DateTime(2022, 3, 30, 23, 59),
+                  minDate: DateTime(2022, 4, 1, 0, 0),
+                  maxDate: DateTime(2022, 4, 1, 23, 59),
                   viewHeaderHeight: 0,
                   allowAppointmentResize: true,
                   onTap: (details) {},
@@ -111,10 +101,16 @@ class DailyScheduleView extends RegularView<DailyScheduleStateController> {
           ),
         ),
       ),
-      floatingActionButton: RegularFAB(
-        onAddClick: () {},
-        onEditClick: () {},
-        onDeleteClick: () {},
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Get.toNamed(ScheduleFormCreateView.route, id: ScheduleNavigator.id);
+        },
+        backgroundColor: RegularColor.primary,
+        child: SvgPicture.asset(
+          'assets/svg/plus.svg',
+          color: Colors.white,
+          width: RegularSize.l,
+        ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
@@ -124,8 +120,8 @@ class DailyScheduleView extends RegularView<DailyScheduleStateController> {
     List<RegularAppointment> appointments = [];
     for (int i = 0; i < 10; i++) {
       RegularAppointment appointment = RegularAppointment(
-        startTime: DateTime(2022, 3, 30, 1).add(Duration(hours: 1 + i)),
-        endTime: DateTime(2022, 3, 30, 1).add(
+        startTime: DateTime(2022, 4, 1, 1).add(Duration(hours: 1 + i)),
+        endTime: DateTime(2022, 4, 1, 1).add(
           Duration(
             hours: (1 + i) + 3,
           ),

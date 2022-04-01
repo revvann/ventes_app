@@ -12,9 +12,13 @@ class RegularInput extends StatelessWidget {
     this.validator,
     this.controller,
     this.hintText,
+    this.value,
+    this.enabled,
   }) : super(key: key);
   String? label;
   String? hintText;
+  String? value;
+  bool? enabled;
   bool isPassword;
   TextInputType? inputType;
   String? Function(String?)? validator;
@@ -29,13 +33,15 @@ class RegularInput extends StatelessWidget {
         Text(
           label ?? "",
           style: TextStyle(
-            fontSize: 16,
+            fontSize: 12,
             fontWeight: FontWeight.w600,
-            color: RegularColor.gray,
+            color: RegularColor.dark,
           ),
         ),
         TextFormField(
           key: _key,
+          initialValue: value,
+          enabled: enabled,
           controller: controller,
           keyboardType: inputType,
           obscureText: isPassword,
@@ -63,13 +69,13 @@ class RegularInput extends StatelessWidget {
             ),
             border: UnderlineInputBorder(
               borderSide: BorderSide(
-                color: RegularColor.gray,
+                color: RegularColor.disable,
                 width: 2,
               ),
             ),
             enabledBorder: UnderlineInputBorder(
               borderSide: BorderSide(
-                color: RegularColor.gray,
+                color: RegularColor.disable,
                 width: 2,
               ),
             ),

@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ventes/constants/regular_color.dart';
+import 'package:ventes/helpers/auth_helper.dart';
 import 'package:ventes/state_controllers/splash_screen_state_controller.dart';
 import 'package:ventes/views/regular_view.dart';
 

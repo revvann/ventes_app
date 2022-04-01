@@ -118,6 +118,7 @@ class SigninView extends RegularView<SigninStateController> implements AuthContr
             ),
             RegularInput(
               controller: $.usernameTEC,
+              hintText: "Enter your username",
               label: "Username",
               inputType: TextInputType.name,
               validator: (value) {
@@ -134,6 +135,7 @@ class SigninView extends RegularView<SigninStateController> implements AuthContr
             ),
             RegularInput(
               controller: $.passwordTEC,
+              hintText: "Enter your password",
               label: "Password",
               isPassword: true,
               validator: (value) {
