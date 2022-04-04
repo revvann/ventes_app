@@ -17,6 +17,7 @@ class IconInput extends StatelessWidget {
     required this.icon,
     this.hintText,
     this.enabled = true,
+    this.value,
   }) : super(key: key);
   String? label;
   bool isPassword;
@@ -28,6 +29,7 @@ class IconInput extends StatelessWidget {
   String? hintText;
   final GlobalKey<FormFieldState> _key = GlobalKey<FormFieldState>();
   Color _activeColor = RegularColor.primary;
+  String? value;
 
   @override
   Widget build(BuildContext context) {
@@ -55,6 +57,7 @@ class IconInput extends StatelessWidget {
             child: TextFormField(
               enabled: enabled,
               key: _key,
+              initialValue: value,
               controller: controller,
               keyboardType: inputType,
               obscureText: isPassword,

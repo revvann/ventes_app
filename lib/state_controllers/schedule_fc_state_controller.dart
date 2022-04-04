@@ -1,5 +1,13 @@
+// ignore_for_file: prefer_const_constructors
+
+import 'dart:async';
+
+import 'package:flutter/cupertino.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:ventes/helpers/function_helpers.dart';
 import 'package:ventes/state_controllers/regular_state_controller.dart';
 import 'package:ventes/widgets/regular_dropdown.dart';
 
@@ -11,13 +19,14 @@ class ScheduleFormCreateStateController extends RegularStateController {
   final timeStartSelectController = DropdownController<String?>(null);
   final timeEndSelectController = DropdownController<String?>(null);
 
-  final _timeStartList = Rx<List<Map>>([]);
-  List<Map> get timeStartList => _timeStartList.value;
-  set timeStartList(List<Map> value) => _timeStartList.value = value;
+  final Completer<GoogleMapController> mapsController = Completer();
+  late CameraPosition currentPos;
 
-  final _timeEndList = Rx<List<Map>>([]);
-  List<Map> get timeEndList => _timeEndList.value;
-  set timeEndList(List<Map> value) => _timeEndList.value = value;
+  final Rx<Set<Marker>> _markers = Rx<Set<Marker>>({});
+  Set<Marker> get markers => _markers.value;
+  set markers(Set<Marker> value) => _markers.value = value;
+
+  final locationTED = TextEditingController();
 
   @override
   void onReady() {
@@ -25,16 +34,28 @@ class ScheduleFormCreateStateController extends RegularStateController {
     createStartTimeList();
   }
 
+  @override
+  void onInit() async {
+    super.onInit();
+    Position pos = await getCurrentPosition();
+    currentPos = CameraPosition(target: LatLng(pos.latitude, pos.longitude), zoom: 14.4764);
+  }
+
   void createStartTimeList() {
-    timeStartList = _createItems();
-    timeStartSelectController.value = timeStartList.first['value'];
+    timeStartSelectController.items = _createItems();
+    timeStartSelectController.value ??= timeStartSelectController.items.first['value'];
     createEndTimeList();
   }
 
   void createEndTimeList() {
     DateTime time = DateTime.parse("0000-00-00 ${timeStartSelectController.value}");
-    timeEndList = _createItems(time.hour, time.minute);
-    timeEndSelectController.value = timeEndList.first['value'];
+    timeEndSelectController.items = _createItems(time.hour, time.minute);
+    timeEndSelectController.value ??= timeEndSelectController.items.first['value'];
+
+    DateTime endTime = DateTime.parse("0000-00-00 ${timeEndSelectController.value}");
+    if (time.millisecondsSinceEpoch > endTime.millisecondsSinceEpoch) {
+      timeEndSelectController.value = timeStartSelectController.value;
+    }
   }
 
   List<Map<String, dynamic>> _createItems([int? minHour, int? minMinutes]) {

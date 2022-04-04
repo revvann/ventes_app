@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -10,7 +12,10 @@ class RegularGetPage extends GetPage {
   }) : super(
           name: name,
           page: page,
-          transition: Transition.fade,
+          transition: Transition.rightToLeft,
+          transitionDuration: Duration(
+            seconds: 1,
+          ),
           bindings: bindings,
           middlewares: middlewares,
         );
@@ -23,7 +28,10 @@ class RegularGetRoute extends GetPageRoute {
     List<GetMiddleware>? middlewares,
   }) : super(
           page: page,
-          transition: Transition.fade,
+          transition: Transition.rightToLeft,
+          transitionDuration: Duration(
+            seconds: 1,
+          ),
           bindings: bindings,
           middlewares: middlewares,
         );

@@ -4,13 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/navigators/schedule_navigator.dart';
 import 'package:ventes/state_controllers/schedule_fc_state_controller.dart';
 import 'package:ventes/views/regular_view.dart';
+import 'package:ventes/widgets/regular_bottom_sheet.dart';
+import 'package:ventes/widgets/regular_button.dart';
 import 'package:ventes/widgets/regular_dropdown.dart';
+import 'package:ventes/widgets/regular_outlined_button.dart';
 import 'package:ventes/widgets/regular_select_box.dart';
 import 'package:ventes/widgets/icon_input.dart';
 import 'package:ventes/widgets/regular_input.dart';
@@ -28,6 +31,7 @@ class ScheduleFormCreateView extends RegularView<ScheduleFormCreateStateControll
       statusBarColor: RegularColor.primary,
     ));
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: RegularColor.primary,
       extendBodyBehindAppBar: true,
       appBar: TopNavigation(
@@ -165,42 +169,128 @@ class ScheduleFormCreateView extends RegularView<ScheduleFormCreateStateControll
           height: RegularSize.m,
         ),
         IconInput(
-          icon: "assets/svg/history.svg",
+          icon: "assets/svg/calendar.svg",
           label: "Date",
+          enabled: false,
+          value: "March 22, 2022",
         ),
         SizedBox(
           height: RegularSize.m,
         ),
         Row(
           children: [
-            Obx(() {
-              return Expanded(
-                child: RegularDropdown<String?>(
-                  label: "Time Start",
-                  controller: $.timeStartSelectController,
-                  items: $.timeStartList,
-                  onSelected: (value) {
-                    $.createStartTimeList();
-                    print($.timeStartSelectController.value);
-                  },
-                ),
-              );
-            }),
+            Expanded(
+              child: RegularDropdown<String?>(
+                label: "Time Start",
+                controller: $.timeStartSelectController,
+                icon: "assets/svg/history.svg",
+                onSelected: (value) {
+                  $.createStartTimeList();
+                },
+              ),
+            ),
             SizedBox(
               width: RegularSize.s,
             ),
-            Obx(() {
-              return Expanded(
-                child: RegularDropdown<String?>(
-                  label: "Time End",
-                  controller: $.timeEndSelectController,
-                  items: $.timeEndList,
-                ),
-              );
-            }),
+            Expanded(
+              child: RegularDropdown<String?>(
+                label: "Time End",
+                icon: "assets/svg/history.svg",
+                controller: $.timeEndSelectController,
+              ),
+            ),
           ],
+        ),
+        SizedBox(
+          height: RegularSize.m,
+        ),
+        GestureDetector(
+          onTap: () {
+            _showMapBottomSheet();
+          },
+          child: IconInput(
+            icon: "assets/svg/marker.svg",
+            label: "Location",
+            hintText: "Choose location",
+            controller: $.locationTED,
+            enabled: false,
+          ),
         ),
       ],
     );
+  }
+
+  void _showMapBottomSheet() {
+    RegularBottomSheet(
+      backgroundColor: Colors.white,
+      enableDrag: false,
+      child: Column(
+        children: [
+          SizedBox(
+            height: RegularSize.m,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                "Choose Location",
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: RegularColor.secondary,
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  $.currentPos = CameraPosition(target: $.markers.first.position, zoom: $.currentPos.zoom);
+                  Get.close(1);
+                },
+                child: Text(
+                  "Close",
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: RegularColor.red,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(
+            height: RegularSize.m,
+          ),
+          Container(
+            height: Get.height * 0.4,
+            child: _buildMap(),
+          ),
+          SizedBox(
+            height: RegularSize.m,
+          ),
+        ],
+      ),
+    ).show();
+  }
+
+  Widget _buildMap() {
+    return Obx(() {
+      return GoogleMap(
+        mapType: MapType.hybrid,
+        initialCameraPosition: $.currentPos,
+        markers: $.markers,
+        onMapCreated: (GoogleMapController controller) {
+          if (!$.mapsController.isCompleted) {
+            $.mapsController.complete(controller);
+          }
+        },
+        onTap: (latLng) {
+          Marker marker = Marker(
+            markerId: MarkerId("selectedloc"),
+            infoWindow: InfoWindow(title: "Selected Location"),
+            position: latLng,
+          );
+          $.locationTED.text = "https://maps.google.com?q=${latLng.latitude},${latLng.longitude}";
+          $.markers = {marker};
+        },
+      );
+    });
   }
 }
