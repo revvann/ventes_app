@@ -5,6 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:intl/intl.dart';
+import 'package:ventes/constants/app.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/navigators/schedule_navigator.dart';
@@ -12,6 +14,8 @@ import 'package:ventes/state_controllers/schedule_fc_state_controller.dart';
 import 'package:ventes/views/regular_view.dart';
 import 'package:ventes/widgets/regular_bottom_sheet.dart';
 import 'package:ventes/widgets/regular_button.dart';
+import 'package:ventes/widgets/regular_checkbox.dart';
+import 'package:ventes/widgets/regular_date_picker.dart';
 import 'package:ventes/widgets/regular_dropdown.dart';
 import 'package:ventes/widgets/regular_outlined_button.dart';
 import 'package:ventes/widgets/regular_select_box.dart';
@@ -168,11 +172,46 @@ class ScheduleFormCreateView extends RegularView<ScheduleFormCreateStateControll
         SizedBox(
           height: RegularSize.m,
         ),
-        IconInput(
-          icon: "assets/svg/calendar.svg",
-          label: "Date",
-          enabled: false,
-          value: "March 22, 2022",
+        GestureDetector(
+          onTap: () {
+            RegularDatePicker(
+              onSelected: (value) {
+                if (value != null) {
+                  $.dateStart = value;
+                  $.dateStartTEC.text = DateFormat(viewDateFormat).format(value);
+                }
+              },
+              initialdate: $.dateStart,
+            ).show();
+          },
+          child: IconInput(
+            icon: "assets/svg/calendar.svg",
+            label: "Date Start",
+            enabled: false,
+            controller: $.dateStartTEC,
+          ),
+        ),
+        SizedBox(
+          height: RegularSize.m,
+        ),
+        GestureDetector(
+          onTap: () {
+            RegularDatePicker(
+              onSelected: (value) {
+                if (value != null) {
+                  $.dateEnd = value;
+                  $.dateEndTEC.text = DateFormat(viewDateFormat).format(value);
+                }
+              },
+              initialdate: $.dateEnd,
+            ).show();
+          },
+          child: IconInput(
+            icon: "assets/svg/calendar.svg",
+            label: "Date End",
+            enabled: false,
+            controller: $.dateEndTEC,
+          ),
         ),
         SizedBox(
           height: RegularSize.m,
@@ -185,7 +224,7 @@ class ScheduleFormCreateView extends RegularView<ScheduleFormCreateStateControll
                 controller: $.timeStartSelectController,
                 icon: "assets/svg/history.svg",
                 onSelected: (value) {
-                  $.createStartTimeList();
+                  $.createEndTimeList();
                 },
               ),
             ),
@@ -197,9 +236,21 @@ class ScheduleFormCreateView extends RegularView<ScheduleFormCreateStateControll
                 label: "Time End",
                 icon: "assets/svg/history.svg",
                 controller: $.timeEndSelectController,
+                onSelected: (value) {
+                  DateTime time = DateTime.parse("0000-00-00 $value");
+                  $.dateEnd = $.dateEnd.subtract(Duration(hours: $.dateEnd.hour, minutes: $.dateEnd.minute));
+                  $.dateEnd = $.dateEnd.add(Duration(hours: time.hour, minutes: time.minute));
+                },
               ),
             ),
           ],
+        ),
+        SizedBox(
+          height: RegularSize.m,
+        ),
+        RegularCheckbox(
+          label: "All Day",
+          onChecked: $.allDayToggle,
         ),
         SizedBox(
           height: RegularSize.m,
@@ -212,7 +263,7 @@ class ScheduleFormCreateView extends RegularView<ScheduleFormCreateStateControll
             icon: "assets/svg/marker.svg",
             label: "Location",
             hintText: "Choose location",
-            controller: $.locationTED,
+            controller: $.locationTEC,
             enabled: false,
           ),
         ),
@@ -287,7 +338,7 @@ class ScheduleFormCreateView extends RegularView<ScheduleFormCreateStateControll
             infoWindow: InfoWindow(title: "Selected Location"),
             position: latLng,
           );
-          $.locationTED.text = "https://maps.google.com?q=${latLng.latitude},${latLng.longitude}";
+          $.locationTEC.text = "https://maps.google.com?q=${latLng.latitude},${latLng.longitude}";
           $.markers = {marker};
         },
       );

@@ -11,7 +11,6 @@ class RegularDropdown<T> extends StatelessWidget {
     Key? key,
     List? items,
     value,
-    this.enabled = true,
     DropdownController<T>? controller,
     this.label,
     this.onSelected,
@@ -33,7 +32,6 @@ class RegularDropdown<T> extends StatelessWidget {
   late DropdownController controller;
   String? label;
   void Function(T)? onSelected;
-  bool enabled;
   String? icon;
 
   @override
@@ -108,7 +106,7 @@ class RegularDropdown<T> extends StatelessWidget {
                           value: item["value"],
                         ),
                     ],
-                    onChanged: enabled
+                    onChanged: controller.enabled
                         ? (value) {
                             controller.value = value;
                             onSelected?.call(value!);
@@ -133,6 +131,10 @@ class DropdownController<T> {
   final Rx<List> _items = Rx<List>([]);
   List get items => _items.value;
   set items(List value) => _items.value = value;
+
+  final Rx<bool> _enabled = Rx<bool>(true);
+  bool get enabled => _enabled.value;
+  set enabled(bool value) => _enabled.value = value;
 
   late final Rx<T> _value;
   T get value => _value.value;
