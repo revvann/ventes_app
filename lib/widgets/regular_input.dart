@@ -14,12 +14,14 @@ class RegularInput extends StatelessWidget {
     this.hintText,
     this.value,
     this.enabled,
+    this.maxLines,
   }) : super(key: key);
   String? label;
   String? hintText;
   String? value;
   bool? enabled;
   bool isPassword;
+  int? maxLines;
   TextInputType? inputType;
   String? Function(String?)? validator;
   TextEditingController? controller;
@@ -40,6 +42,7 @@ class RegularInput extends StatelessWidget {
         ),
         TextFormField(
           key: _key,
+          maxLines: maxLines,
           initialValue: value,
           enabled: enabled,
           controller: controller,

@@ -12,6 +12,7 @@ import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/navigators/schedule_navigator.dart';
 import 'package:ventes/state_controllers/schedule_fc_state_controller.dart';
 import 'package:ventes/views/regular_view.dart';
+import 'package:ventes/widgets/editor_input.dart';
 import 'package:ventes/widgets/regular_bottom_sheet.dart';
 import 'package:ventes/widgets/regular_button.dart';
 import 'package:ventes/widgets/regular_checkbox.dart';
@@ -149,13 +150,15 @@ class ScheduleFormCreateView extends RegularView<ScheduleFormCreateStateControll
               ),
               Expanded(
                 child: Obx(() {
-                  return Stack(
-                    children: [
-                      Offstage(
-                        offstage: $.typeActive != 0,
-                        child: _buildEventForm(),
-                      )
-                    ],
+                  return SingleChildScrollView(
+                    child: Stack(
+                      children: [
+                        Offstage(
+                          offstage: $.typeActive != 0,
+                          child: _buildEventForm(),
+                        )
+                      ],
+                    ),
                   );
                 }),
               ),
@@ -257,7 +260,9 @@ class ScheduleFormCreateView extends RegularView<ScheduleFormCreateStateControll
         ),
         GestureDetector(
           onTap: () {
-            _showMapBottomSheet();
+            if (!$.isOnline) {
+              _showMapBottomSheet();
+            }
           },
           child: IconInput(
             icon: "assets/svg/marker.svg",
@@ -266,6 +271,44 @@ class ScheduleFormCreateView extends RegularView<ScheduleFormCreateStateControll
             controller: $.locationTEC,
             enabled: false,
           ),
+        ),
+        SizedBox(
+          height: RegularSize.m,
+        ),
+        RegularCheckbox(
+          label: "Online",
+          onChecked: $.onlineToggle,
+        ),
+        SizedBox(
+          height: RegularSize.m,
+        ),
+        IconInput(
+          icon: "assets/svg/share.svg",
+          label: "Meeting Link",
+          hintText: "Enter meeting link",
+          controller: $.linkTEC,
+          enabled: $.isOnline,
+        ),
+        SizedBox(
+          height: RegularSize.m,
+        ),
+        IconInput(
+          icon: "assets/svg/alarm.svg",
+          label: "Remind (In Minute)",
+          hintText: "try 5",
+          controller: $.remindTEC,
+          inputType: TextInputType.number,
+        ),
+        SizedBox(
+          height: RegularSize.m,
+        ),
+        EditorInput(
+          label: "Description",
+          hintText: "Write about this event",
+          controller: $.descriptionTEC,
+        ),
+        SizedBox(
+          height: RegularSize.m,
         ),
       ],
     );
@@ -293,7 +336,9 @@ class ScheduleFormCreateView extends RegularView<ScheduleFormCreateStateControll
               ),
               GestureDetector(
                 onTap: () {
-                  $.currentPos = CameraPosition(target: $.markers.first.position, zoom: $.currentPos.zoom);
+                  if ($.markers.isNotEmpty) {
+                    $.currentPos = CameraPosition(target: $.markers.first.position, zoom: $.currentPos.zoom);
+                  }
                   Get.close(1);
                 },
                 child: Text(

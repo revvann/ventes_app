@@ -87,8 +87,8 @@ class DailyScheduleView extends RegularView<DailyScheduleStateController> {
                   dataSource: RegularCalendarDataSource(getApp()),
                   headerHeight: 0,
                   view: CalendarView.day,
-                  minDate: DateTime(2022, 4, 5, 0, 0),
-                  maxDate: DateTime(2022, 4, 5, 23, 59),
+                  minDate: DateTime(2022, 4, 6, 0, 0),
+                  maxDate: DateTime(2022, 4, 6, 23, 59),
                   viewHeaderHeight: 0,
                   allowAppointmentResize: true,
                   onTap: (details) {},
@@ -120,8 +120,8 @@ class DailyScheduleView extends RegularView<DailyScheduleStateController> {
     List<RegularAppointment> appointments = [];
     for (int i = 0; i < 10; i++) {
       RegularAppointment appointment = RegularAppointment(
-        startTime: DateTime(2022, 4, 5, 1).add(Duration(hours: 1 + i)),
-        endTime: DateTime(2022, 4, 5, 1).add(
+        startTime: DateTime(2022, 4, 6, 1).add(Duration(hours: 1 + i)),
+        endTime: DateTime(2022, 4, 6, 1).add(
           Duration(
             hours: (1 + i) + 3,
           ),

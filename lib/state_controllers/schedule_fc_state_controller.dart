@@ -26,6 +26,9 @@ class ScheduleFormCreateStateController extends RegularStateController {
 
   final dateStartTEC = TextEditingController();
   final dateEndTEC = TextEditingController();
+  final linkTEC = TextEditingController();
+  final remindTEC = TextEditingController();
+  final descriptionTEC = TextEditingController();
   late DateTime dateStart;
   late DateTime dateEnd;
 
@@ -34,6 +37,10 @@ class ScheduleFormCreateStateController extends RegularStateController {
 
   int get typeActive => _typeActive.value;
   set typeActive(int value) => _typeActive.value = value;
+
+  final Rx<bool> _isOnline = Rx<bool>(false);
+  bool get isOnline => _isOnline.value;
+  set isOnline(bool value) => _isOnline.value = value;
 
   void createEndTimeList() {
     String timeStartValue = "${DateFormat('MMMM dd, yyyy').format(dateStart)} ${timeStartSelectController.value}";
@@ -82,6 +89,10 @@ class ScheduleFormCreateStateController extends RegularStateController {
       timeEndSelectController.value = DateFormat(DateFormat.HOUR24_MINUTE_SECOND).format(dateEnd);
       timeEndSelectController.enabled = true;
     }
+  }
+
+  void onlineToggle(value) {
+    isOnline = value;
   }
 
   @override
