@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -13,6 +14,7 @@ import 'package:ventes/navigators/schedule_navigator.dart';
 import 'package:ventes/state_controllers/schedule_fc_state_controller.dart';
 import 'package:ventes/views/regular_view.dart';
 import 'package:ventes/widgets/editor_input.dart';
+import 'package:ventes/widgets/field_dropdown.dart';
 import 'package:ventes/widgets/regular_bottom_sheet.dart';
 import 'package:ventes/widgets/regular_button.dart';
 import 'package:ventes/widgets/regular_checkbox.dart';
@@ -306,6 +308,21 @@ class ScheduleFormCreateView extends RegularView<ScheduleFormCreateStateControll
           label: "Description",
           hintText: "Write about this event",
           controller: $.descriptionTEC,
+        ),
+        SizedBox(
+          height: RegularSize.m,
+        ),
+        FieldDropdown<String>(
+          label: "Guest",
+          hintText: "Invite guest",
+          items: [
+            "Marc Spector",
+            "Steven Grant",
+            "Arthur Harrow",
+            "Jack Lockly",
+            "Layla El Faoula",
+            "Date Whiteman",
+          ],
         ),
         SizedBox(
           height: RegularSize.m,

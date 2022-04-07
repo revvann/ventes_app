@@ -52,7 +52,7 @@ class RegularInput extends StatelessWidget {
           autocorrect: !isPassword,
           validator: validator,
           style: TextStyle(
-            fontSize: 14,
+            fontSize: 16,
             color: RegularColor.dark,
           ),
           onChanged: (value) {

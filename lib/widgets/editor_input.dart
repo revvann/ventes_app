@@ -23,19 +23,17 @@ class EditorInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: RegularInput(
-        key: _key,
-        maxLines: null,
-        label: label,
-        isPassword: isPassword,
-        inputType: TextInputType.multiline,
-        validator: validator,
-        controller: controller,
-        hintText: hintText,
-        value: value,
-        enabled: enabled,
-      ),
+    return RegularInput(
+      key: _key,
+      maxLines: null,
+      label: label,
+      isPassword: isPassword,
+      inputType: TextInputType.multiline,
+      validator: validator,
+      controller: controller,
+      hintText: hintText,
+      value: value,
+      enabled: enabled,
     );
   }
 }
