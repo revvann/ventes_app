@@ -18,7 +18,7 @@ class RegularService extends GetConnect {
   }
 
   Future<Response> select(Map<String, dynamic> params) {
-    return get('$api/select', query: params);
+    return get(api, query: params);
   }
 
   Future<Response> store(Map<String, dynamic> body) {

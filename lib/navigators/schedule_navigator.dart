@@ -2,6 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ventes/routes/regular_get_page.dart';
+import 'package:ventes/services/user_service.dart';
 import 'package:ventes/state_controllers/daily_schedule_state_controller.dart';
 import 'package:ventes/state_controllers/fab_state_controller.dart';
 import 'package:ventes/state_controllers/schedule_fc_state_controller.dart';
@@ -23,34 +25,29 @@ class ScheduleNavigator extends StatelessWidget {
       initialRoute: ScheduleView.route,
       onGenerateRoute: (routeSettings) {
         if (routeSettings.name == ScheduleView.route) {
-          return GetPageRoute(
+          return RegularGetRoute(
             page: () => ScheduleView(),
             binding: BindingsBuilder(() {
               Get.lazyPut(() => ScheduleStateController());
             }),
-            transition: Transition.fadeIn,
-            transitionDuration: Duration(milliseconds: 300),
           );
         }
         if (routeSettings.name == DailyScheduleView.route) {
-          return GetPageRoute(
+          return RegularGetRoute(
             page: () => DailyScheduleView(),
             binding: BindingsBuilder(() {
               Get.lazyPut(() => DailyScheduleStateController());
               Get.lazyPut(() => FABStateController());
             }),
-            transition: Transition.fadeIn,
-            transitionDuration: Duration(milliseconds: 300),
           );
         }
         if (routeSettings.name == ScheduleFormCreateView.route) {
-          return GetPageRoute(
+          return RegularGetRoute(
             page: () => ScheduleFormCreateView(),
             binding: BindingsBuilder(() {
+              Get.lazyPut(() => UserService());
               Get.lazyPut(() => ScheduleFormCreateStateController());
             }),
-            transition: Transition.fadeIn,
-            transitionDuration: Duration(milliseconds: 300),
           );
         }
       },

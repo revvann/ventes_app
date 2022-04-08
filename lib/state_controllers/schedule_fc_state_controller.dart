@@ -10,10 +10,13 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:ventes/constants/app.dart';
 import 'package:ventes/helpers/function_helpers.dart';
+import 'package:ventes/presenters/schedule_fc_presenter.dart';
 import 'package:ventes/state_controllers/regular_state_controller.dart';
 import 'package:ventes/widgets/regular_dropdown.dart';
 
 class ScheduleFormCreateStateController extends RegularStateController {
+  ScheduleFormCreatePresenter presenter = ScheduleFormCreatePresenter();
+
   final _typeActive = 0.obs;
   final timeStartSelectController = DropdownController<String?>(null);
   final timeEndSelectController = DropdownController<String?>(null);
@@ -112,6 +115,8 @@ class ScheduleFormCreateStateController extends RegularStateController {
 
     Position pos = await getCurrentPosition();
     currentPos = CameraPosition(target: LatLng(pos.latitude, pos.longitude), zoom: 14.4764);
+
+    presenter.fetchUser();
   }
 
   @override

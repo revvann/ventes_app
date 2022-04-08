@@ -19,6 +19,7 @@ class AuthPresenter {
         AuthModel authData = AuthModel(
           jwtToken: data['jwt_token'],
           userId: data['userid'],
+          accountActive: data['userdetails'][0]['userdtid'],
         );
         Get.find<AuthHelper>().save(authData);
 

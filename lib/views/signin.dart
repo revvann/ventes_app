@@ -117,6 +117,7 @@ class SigninView extends RegularView<SigninStateController> implements AuthContr
               height: RegularSize.m,
             ),
             RegularInput(
+              maxLines: 1,
               controller: $.usernameTEC,
               hintText: "Enter your username",
               label: "Username",
@@ -134,6 +135,7 @@ class SigninView extends RegularView<SigninStateController> implements AuthContr
               height: RegularSize.m,
             ),
             RegularInput(
+              maxLines: 1,
               controller: $.passwordTEC,
               hintText: "Enter your password",
               label: "Password",

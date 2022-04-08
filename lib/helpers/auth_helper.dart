@@ -5,12 +5,15 @@ class AuthHelper {
   static GetStorage get container => GetStorage("VentesAuth");
   static const String idKey = "userId";
   static const String tokenKey = "jwtToken";
+  static const String accountKey = "accountActive";
   static var userId = ReadWriteValue<int?>(AuthHelper.idKey, null, () => AuthHelper.container);
   static var jwtToken = ReadWriteValue<String?>(AuthHelper.tokenKey, null, () => AuthHelper.container);
+  static var accountActive = ReadWriteValue<int?>(AuthHelper.accountKey, null, () => AuthHelper.container);
 
   Future<bool> save(AuthModel authModel) async {
     userId.val = authModel.userId;
     jwtToken.val = authModel.jwtToken;
+    accountActive.val = authModel.accountActive;
     return check();
   }
 
@@ -22,7 +25,8 @@ class AuthHelper {
     if (check()) {
       int? _userId = userId.val;
       String? _jwtToken = jwtToken.val;
-      return AuthModel(userId: _userId, jwtToken: _jwtToken);
+      int? _accountActive = accountActive.val;
+      return AuthModel(userId: _userId, jwtToken: _jwtToken, accountActive: _accountActive);
     }
     return null;
   }

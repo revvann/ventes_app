@@ -1,4 +1,7 @@
-class User {
+import 'package:ventes/models/regular_model.dart';
+import 'package:ventes/models/user_detail_model.dart';
+
+class User extends RegularModel {
   int? userid;
   String? username;
   String? userpassword;
@@ -6,25 +9,31 @@ class User {
   String? useremail;
   String? userphone;
   int? userdeviceid;
-  int? createdby;
-  String? createddate;
-  int? updatedby;
-  String? updateddate;
-  bool? isactive;
+  String? userfcmtoken;
+  List<UserDetail>? userdetails;
 
-  User(
-      {this.userid,
-      this.username,
-      this.userpassword,
-      this.userfullname,
-      this.useremail,
-      this.userphone,
-      this.userdeviceid,
-      this.createdby,
-      this.createddate,
-      this.updatedby,
-      this.updateddate,
-      this.isactive});
+  User({
+    this.userid,
+    this.username,
+    this.userpassword,
+    this.userfullname,
+    this.useremail,
+    this.userphone,
+    this.userdeviceid,
+    this.userfcmtoken,
+    int? createdby,
+    String? createddate,
+    int? updatedby,
+    String? updateddate,
+    bool? isactive,
+    this.userdetails,
+  }) : super(
+          createdby: createdby,
+          updatedby: updatedby,
+          createddate: createddate,
+          updateddate: updateddate,
+          isactive: isactive,
+        );
 
   User.fromJson(Map<String, dynamic> json) {
     userid = json['userid'];
@@ -34,15 +43,19 @@ class User {
     useremail = json['useremail'];
     userphone = json['userphone'];
     userdeviceid = json['userdeviceid'];
-    createdby = json['createdby'];
-    createddate = json['createddate'];
-    updatedby = json['updatedby'];
-    updateddate = json['updateddate'];
-    isactive = json['isactive'];
+    userfcmtoken = json['userfcmtoken'];
+    if (json['userdetails'] != null) {
+      userdetails = <UserDetail>[];
+      json['userdetails'].forEach((v) {
+        userdetails!.add(UserDetail.fromJson(v));
+      });
+    }
+    super.fromJson(json);
   }
 
+  @override
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
+    final Map<String, dynamic> data = super.toJson();
     data['userid'] = userid;
     data['username'] = username;
     data['userpassword'] = userpassword;
@@ -50,11 +63,10 @@ class User {
     data['useremail'] = useremail;
     data['userphone'] = userphone;
     data['userdeviceid'] = userdeviceid;
-    data['createdby'] = createdby;
-    data['createddate'] = createddate;
-    data['updatedby'] = updatedby;
-    data['updateddate'] = updateddate;
-    data['isactive'] = isactive;
+    data['userfcmtoken'] = userfcmtoken;
+    if (userdetails != null) {
+      data['userdetails'] = userdetails!.map((v) => v.toJson()).toList();
+    }
     return data;
   }
 }

@@ -14,7 +14,7 @@ class RegularGetPage extends GetPage {
           page: page,
           transition: Transition.rightToLeft,
           transitionDuration: Duration(
-            seconds: 1,
+            milliseconds: 300,
           ),
           bindings: bindings,
           middlewares: middlewares,
@@ -26,13 +26,15 @@ class RegularGetRoute extends GetPageRoute {
     required Widget Function() page,
     List<Bindings> bindings = const [],
     List<GetMiddleware>? middlewares,
+    Bindings? binding,
   }) : super(
           page: page,
           transition: Transition.rightToLeft,
           transitionDuration: Duration(
-            seconds: 1,
+            milliseconds: 300,
           ),
           bindings: bindings,
+          binding: binding,
           middlewares: middlewares,
         );
 }

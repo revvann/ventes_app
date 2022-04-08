@@ -10,6 +10,7 @@ import 'package:intl/intl.dart';
 import 'package:ventes/constants/app.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
+import 'package:ventes/contracts/fetch_data_contract.dart';
 import 'package:ventes/navigators/schedule_navigator.dart';
 import 'package:ventes/state_controllers/schedule_fc_state_controller.dart';
 import 'package:ventes/views/regular_view.dart';
@@ -26,10 +27,11 @@ import 'package:ventes/widgets/icon_input.dart';
 import 'package:ventes/widgets/regular_input.dart';
 import 'package:ventes/widgets/top_navigation.dart';
 
-class ScheduleFormCreateView extends RegularView<ScheduleFormCreateStateController> {
+class ScheduleFormCreateView extends RegularView<ScheduleFormCreateStateController> implements FetchDataContract {
   static const String route = "/schedule/create";
   ScheduleFormCreateView() {
     $ = controller;
+    $.presenter.fetchDataContract = this;
   }
 
   @override
@@ -406,4 +408,10 @@ class ScheduleFormCreateView extends RegularView<ScheduleFormCreateStateControll
       );
     });
   }
+
+  @override
+  onLoadFailed(String message) {}
+
+  @override
+  onLoadSuccess(Map data) {}
 }
