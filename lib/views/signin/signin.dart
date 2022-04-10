@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/contracts/auth_contract.dart';
-import 'package:ventes/state_controllers/signin_state_controller.dart';
+import 'package:ventes/views/signin/signin_state_controller.dart';
 import 'package:ventes/views/dashboard.dart';
 import 'package:ventes/views/regular_view.dart';
 import 'package:ventes/widgets/regular_bottom_sheet.dart';
@@ -14,7 +14,8 @@ import 'package:ventes/widgets/regular_button.dart';
 import 'package:ventes/widgets/regular_dialog.dart';
 import 'package:ventes/widgets/regular_input.dart';
 
-class SigninView extends RegularView<SigninStateController> implements AuthContract {
+class SigninView extends RegularView<SigninStateController>
+    implements AuthContract {
   static const String route = "/signin";
 
   SigninView() {
@@ -99,7 +100,7 @@ class SigninView extends RegularView<SigninStateController> implements AuthContr
     RegularBottomSheet(
       backgroundColor: Colors.white,
       child: Form(
-        key: $.formKey,
+        key: $.formSource.key,
         child: Column(
           children: [
             SizedBox(
@@ -116,39 +117,11 @@ class SigninView extends RegularView<SigninStateController> implements AuthContr
             SizedBox(
               height: RegularSize.m,
             ),
-            RegularInput(
-              maxLines: 1,
-              controller: $.usernameTEC,
-              hintText: "Enter your username",
-              label: "Username",
-              inputType: TextInputType.name,
-              validator: (value) {
-                if (value != null) {
-                  if (!(value.isBlank ?? true)) {
-                    return null;
-                  }
-                }
-                return "Username can't be empty";
-              },
-            ),
+            $.formSource.usernameInput,
             SizedBox(
               height: RegularSize.m,
             ),
-            RegularInput(
-              maxLines: 1,
-              controller: $.passwordTEC,
-              hintText: "Enter your password",
-              label: "Password",
-              isPassword: true,
-              validator: (value) {
-                if (value != null) {
-                  if (!(value.isBlank ?? true)) {
-                    return null;
-                  }
-                }
-                return "Password can't be empty";
-              },
-            ),
+            $.formSource.passwordInput,
             SizedBox(
               height: RegularSize.xl,
             ),

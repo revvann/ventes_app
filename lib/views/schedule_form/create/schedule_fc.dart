@@ -12,7 +12,7 @@ import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/contracts/fetch_data_contract.dart';
 import 'package:ventes/navigators/schedule_navigator.dart';
-import 'package:ventes/state_controllers/schedule_fc_state_controller.dart';
+import 'package:ventes/views/schedule_form/create/schedule_fc_state_controller.dart';
 import 'package:ventes/views/regular_view.dart';
 import 'package:ventes/widgets/editor_input.dart';
 import 'package:ventes/widgets/field_dropdown.dart';
@@ -27,7 +27,9 @@ import 'package:ventes/widgets/icon_input.dart';
 import 'package:ventes/widgets/regular_input.dart';
 import 'package:ventes/widgets/top_navigation.dart';
 
-class ScheduleFormCreateView extends RegularView<ScheduleFormCreateStateController> implements FetchDataContract {
+class ScheduleFormCreateView
+    extends RegularView<ScheduleFormCreateStateController>
+    implements FetchDataContract {
   static const String route = "/schedule/create";
   ScheduleFormCreateView() {
     $ = controller;
@@ -122,25 +124,11 @@ class ScheduleFormCreateView extends RegularView<ScheduleFormCreateStateControll
               SizedBox(
                 height: RegularSize.m,
               ),
-              RegularInput(
-                label: "Title",
-                hintText: "Enter title",
-              ),
+              $.formSource.titleInput,
               SizedBox(
                 height: RegularSize.m,
               ),
-              RegularSelectBox(
-                label: "Type",
-                onSelected: (value) {
-                  $.typeActive = value;
-                },
-                activeIndex: $.typeActive,
-                items: [
-                  "Event",
-                  "Task",
-                  "Reminder",
-                ],
-              ),
+              $.formSource.scheduleTypeSelectbox,
               SizedBox(
                 height: RegularSize.l,
               ),
@@ -158,7 +146,7 @@ class ScheduleFormCreateView extends RegularView<ScheduleFormCreateStateControll
                     child: Stack(
                       children: [
                         Offstage(
-                          offstage: $.typeActive != 0,
+                          offstage: $.formSource.scheduleType.index != 0,
                           child: _buildEventForm(),
                         )
                       ],
@@ -179,153 +167,50 @@ class ScheduleFormCreateView extends RegularView<ScheduleFormCreateStateControll
         SizedBox(
           height: RegularSize.m,
         ),
-        GestureDetector(
-          onTap: () {
-            RegularDatePicker(
-              onSelected: (value) {
-                if (value != null) {
-                  $.dateStart = value;
-                  $.dateStartTEC.text = DateFormat(viewDateFormat).format(value);
-                }
-              },
-              initialdate: $.dateStart,
-            ).show();
-          },
-          child: IconInput(
-            icon: "assets/svg/calendar.svg",
-            label: "Date Start",
-            enabled: false,
-            controller: $.dateStartTEC,
-          ),
+        $.formSource.dateStartInput,
+        SizedBox(
+          height: RegularSize.m,
         ),
+        $.formSource.dateEndInput,
+        SizedBox(
+          height: RegularSize.m,
+        ),
+        $.formSource.twinTimeInput,
+        SizedBox(
+          height: RegularSize.m,
+        ),
+        $.formSource.allDayCheckbox,
         SizedBox(
           height: RegularSize.m,
         ),
         GestureDetector(
           onTap: () {
-            RegularDatePicker(
-              onSelected: (value) {
-                if (value != null) {
-                  $.dateEnd = value;
-                  $.dateEndTEC.text = DateFormat(viewDateFormat).format(value);
-                }
-              },
-              initialdate: $.dateEnd,
-            ).show();
-          },
-          child: IconInput(
-            icon: "assets/svg/calendar.svg",
-            label: "Date End",
-            enabled: false,
-            controller: $.dateEndTEC,
-          ),
-        ),
-        SizedBox(
-          height: RegularSize.m,
-        ),
-        Row(
-          children: [
-            Expanded(
-              child: RegularDropdown<String?>(
-                label: "Time Start",
-                controller: $.timeStartSelectController,
-                icon: "assets/svg/history.svg",
-                onSelected: (value) {
-                  $.createEndTimeList();
-                },
-              ),
-            ),
-            SizedBox(
-              width: RegularSize.s,
-            ),
-            Expanded(
-              child: RegularDropdown<String?>(
-                label: "Time End",
-                icon: "assets/svg/history.svg",
-                controller: $.timeEndSelectController,
-                onSelected: (value) {
-                  DateTime time = DateTime.parse("0000-00-00 $value");
-                  $.dateEnd = $.dateEnd.subtract(Duration(hours: $.dateEnd.hour, minutes: $.dateEnd.minute));
-                  $.dateEnd = $.dateEnd.add(Duration(hours: time.hour, minutes: time.minute));
-                },
-              ),
-            ),
-          ],
-        ),
-        SizedBox(
-          height: RegularSize.m,
-        ),
-        RegularCheckbox(
-          label: "All Day",
-          onChecked: $.allDayToggle,
-        ),
-        SizedBox(
-          height: RegularSize.m,
-        ),
-        GestureDetector(
-          onTap: () {
-            if (!$.isOnline) {
+            if (!$.formSource.online) {
               _showMapBottomSheet();
             }
           },
-          child: IconInput(
-            icon: "assets/svg/marker.svg",
-            label: "Location",
-            hintText: "Choose location",
-            controller: $.locationTEC,
-            enabled: false,
-          ),
+          child: $.formSource.locationInput,
         ),
         SizedBox(
           height: RegularSize.m,
         ),
-        RegularCheckbox(
-          label: "Online",
-          onChecked: $.onlineToggle,
-        ),
+        $.formSource.onlineCheckbox,
         SizedBox(
           height: RegularSize.m,
         ),
-        IconInput(
-          icon: "assets/svg/share.svg",
-          label: "Meeting Link",
-          hintText: "Enter meeting link",
-          controller: $.linkTEC,
-          enabled: $.isOnline,
-        ),
+        $.formSource.linkInput,
         SizedBox(
           height: RegularSize.m,
         ),
-        IconInput(
-          icon: "assets/svg/alarm.svg",
-          label: "Remind (In Minute)",
-          hintText: "try 5",
-          controller: $.remindTEC,
-          inputType: TextInputType.number,
-        ),
+        $.formSource.remindInput,
         SizedBox(
           height: RegularSize.m,
         ),
-        EditorInput(
-          label: "Description",
-          hintText: "Write about this event",
-          controller: $.descriptionTEC,
-        ),
+        $.formSource.descriptionInput,
         SizedBox(
           height: RegularSize.m,
         ),
-        FieldDropdown<String>(
-          label: "Guest",
-          hintText: "Invite guest",
-          items: [
-            "Marc Spector",
-            "Steven Grant",
-            "Arthur Harrow",
-            "Jack Lockly",
-            "Layla El Faoula",
-            "Date Whiteman",
-          ],
-        ),
+        $.formSource.guestDropdown,
         SizedBox(
           height: RegularSize.m,
         ),
@@ -356,7 +241,9 @@ class ScheduleFormCreateView extends RegularView<ScheduleFormCreateStateControll
               GestureDetector(
                 onTap: () {
                   if ($.markers.isNotEmpty) {
-                    $.currentPos = CameraPosition(target: $.markers.first.position, zoom: $.currentPos.zoom);
+                    $.currentPos = CameraPosition(
+                        target: $.markers.first.position,
+                        zoom: $.currentPos.zoom);
                   }
                   Get.close(1);
                 },
@@ -402,7 +289,8 @@ class ScheduleFormCreateView extends RegularView<ScheduleFormCreateStateControll
             infoWindow: InfoWindow(title: "Selected Location"),
             position: latLng,
           );
-          $.locationTEC.text = "https://maps.google.com?q=${latLng.latitude},${latLng.longitude}";
+          $.formSource.location =
+              "https://maps.google.com?q=${latLng.latitude},${latLng.longitude}";
           $.markers = {marker};
         },
       );

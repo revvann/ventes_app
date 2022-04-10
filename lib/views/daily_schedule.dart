@@ -10,7 +10,7 @@ import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/navigators/schedule_navigator.dart';
 import 'package:ventes/state_controllers/daily_schedule_state_controller.dart';
 import 'package:ventes/views/regular_view.dart';
-import 'package:ventes/views/schedule_fc.dart';
+import 'package:ventes/views/schedule_form/create/schedule_fc.dart';
 import 'package:ventes/widgets/regular_appointment_card.dart';
 import 'package:ventes/widgets/regular_fab.dart';
 import 'package:ventes/widgets/top_navigation.dart';
@@ -93,7 +93,8 @@ class DailyScheduleView extends RegularView<DailyScheduleStateController> {
                   allowAppointmentResize: true,
                   onTap: (details) {},
                   appointmentBuilder: (context, detail) {
-                    return RegularAppointmentCard(appointment: detail.appointments.first);
+                    return RegularAppointmentCard(
+                        appointment: detail.appointments.first);
                   },
                 ),
               )
@@ -128,7 +129,8 @@ class DailyScheduleView extends RegularView<DailyScheduleStateController> {
         ),
         location: "headquarter of hydra, Germany",
         title: "Monitoring hydra activity",
-        subtitle: "Ask to Johan Schmidt as Hydra Owner for what they working on.",
+        subtitle:
+            "Ask to Johan Schmidt as Hydra Owner for what they working on.",
         type: "By Phone",
       );
       appointments.add(appointment);

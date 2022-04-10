@@ -1,23 +1,27 @@
-import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:ventes/presenters/auth_presenter.dart';
+import 'package:ventes/views/signin/signin_form_source.dart';
 
 class SigninStateController extends GetxController {
   AuthPresenter presenter = AuthPresenter();
-  GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  TextEditingController passwordTEC = TextEditingController();
-  TextEditingController usernameTEC = TextEditingController();
+  SigninFormSource formSource = SigninFormSource();
 
   final _authProcessing = false.obs;
   bool get authProcessing => _authProcessing.value;
   set authProcessing(bool value) => _authProcessing.value = value;
 
   void formSubmit() {
-    if (formKey.currentState?.validate() ?? false) {
-      String password = passwordTEC.text;
-      String username = usernameTEC.text;
+    if (formSource.formValid) {
+      String password = formSource.password;
+      String username = formSource.username;
       authProcessing = true;
       presenter.signIn(username, password);
     }
+  }
+
+  @override
+  dispose() {
+    formSource.dispose();
+    super.dispose();
   }
 }

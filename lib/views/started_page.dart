@@ -9,7 +9,7 @@ import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/state_controllers/started_page_state_controller.dart';
 import 'package:ventes/views/regular_view.dart';
-import 'package:ventes/views/signin.dart';
+import 'package:ventes/views/signin/signin.dart';
 
 class StartedPageView extends RegularView<StartedPageStateController> {
   static const route = "/started-page";
@@ -183,7 +183,8 @@ class StartedPageView extends RegularView<StartedPageStateController> {
           width: animation.value.get("width"),
           height: 8,
           decoration: BoxDecoration(
-            color: RegularColor.secondary.withAlpha(animation.value.get("opacity").toInt()),
+            color: RegularColor.secondary
+                .withAlpha(animation.value.get("opacity").toInt()),
             borderRadius: BorderRadius.circular(50),
           ),
         ),

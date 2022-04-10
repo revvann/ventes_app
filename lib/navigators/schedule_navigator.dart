@@ -6,11 +6,11 @@ import 'package:ventes/routes/regular_get_page.dart';
 import 'package:ventes/services/user_service.dart';
 import 'package:ventes/state_controllers/daily_schedule_state_controller.dart';
 import 'package:ventes/state_controllers/fab_state_controller.dart';
-import 'package:ventes/state_controllers/schedule_fc_state_controller.dart';
+import 'package:ventes/views/schedule_form/create/schedule_fc_state_controller.dart';
 import 'package:ventes/state_controllers/schedule_state_controller.dart';
 import 'package:ventes/views/daily_schedule.dart';
 import 'package:ventes/views/schedule.dart';
-import 'package:ventes/views/schedule_fc.dart';
+import 'package:ventes/views/schedule_form/create/schedule_fc.dart';
 import 'package:ventes/widgets/regular_dropdown.dart';
 
 class ScheduleNavigator extends StatelessWidget {
