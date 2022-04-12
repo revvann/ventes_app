@@ -9,17 +9,17 @@ class _PasswordInput extends StatelessWidget {
     return RegularInput(
       maxLines: 1,
       controller: controller,
-      hintText: "Enter your password",
-      label: "Password",
+      hintText: SigninString.passwordHint,
+      label: SigninString.passwordLabel,
       isPassword: true,
       validator: (value) {
         if (value != null && value.isNotEmpty) {
           if (value.length >= 6) {
             return null;
           }
-          return "Password must be at least 6 characters";
+          return SigninString.passwordNotValid;
         }
-        return "Password can't be empty";
+        return SigninString.passwordNotValid;
       },
     );
   }

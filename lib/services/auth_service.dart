@@ -5,11 +5,8 @@ class AuthService extends RegularService {
   @override
   String get api => "/auth";
 
-  Future<Response> signIn(String username, String password) async {
-    return await post('$api/signin', {
-      "username": username,
-      "password": password,
-    });
+  Future<Response> signIn(Map<String, dynamic> credentials) async {
+    return await post('$api/signin', credentials);
   }
 
   Future<Response> verify() async {

@@ -34,7 +34,11 @@ class AuthHelper {
 
   Future retry() async {
     if (check()) {
-      Response response = await _authService.signIn(username.val!, password.val!);
+      Map<String, dynamic> credentials = {
+        'username': username.val,
+        'password': password.val,
+      };
+      Response response = await _authService.signIn(credentials);
       if (response.statusCode == 200) {
         jwtToken.val = response.body['jwt_token'];
       }

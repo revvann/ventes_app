@@ -11,17 +11,17 @@ class AuthPresenter {
   late AuthContract _authContract;
   set authContract(AuthContract contract) => _authContract = contract;
 
-  void signIn(String username, String password) async {
+  void signIn(Map<String, dynamic> credentials) async {
     try {
-      Response response = await _authService.signIn(username, password);
+      Response response = await _authService.signIn(credentials);
       if (response.statusCode == 200) {
         Map data = response.body;
         AuthModel authData = AuthModel(
           jwtToken: data['jwt_token'],
           userId: data['userid'],
           accountActive: data['userdetails'][0]['userdtid'],
-          password: password,
-          username: username,
+          password: credentials['password'],
+          username: credentials['username'],
         );
         Get.find<AuthHelper>().save(authData);
 

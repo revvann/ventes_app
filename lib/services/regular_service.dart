@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:ventes/constants/regular_string.dart';
+import 'package:ventes/constants/strings/regular_string.dart';
 import 'package:ventes/helpers/auth_helper.dart';
 import 'package:ventes/models/auth_model.dart';
 

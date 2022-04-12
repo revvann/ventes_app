@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
+import 'package:ventes/constants/strings/signin_string.dart';
 import 'package:ventes/contracts/auth_contract.dart';
 import 'package:ventes/state_controllers/signin_state_controller.dart';
 import 'package:ventes/views/dashboard.dart';
@@ -21,7 +22,7 @@ class SigninView extends RegularView<SigninStateController> implements AuthContr
   static const String route = "/signin";
 
   SigninView() {
-    $.presenter.authContract = this;
+    $.dataSource.authContract = this;
   }
 
   @override
@@ -120,13 +121,13 @@ class SigninView extends RegularView<SigninStateController> implements AuthContr
               height: RegularSize.m,
             ),
             _UsernameInput(
-              controller: $.usernameTEC,
+              controller: $.formSource.usernameTEC,
             ),
             SizedBox(
               height: RegularSize.m,
             ),
             _PasswordInput(
-              controller: $.passwordTEC,
+              controller: $.formSource.passwordTEC,
             ),
             SizedBox(
               height: RegularSize.xl,
@@ -134,8 +135,8 @@ class SigninView extends RegularView<SigninStateController> implements AuthContr
             Obx(() {
               return RegularButton(
                 primary: RegularColor.secondary,
-                isLoading: $.authProcessing,
-                label: "Sign In",
+                isLoading: $.dataSource.isLoading,
+                label: SigninString.signinButton,
                 height: RegularSize.xxl,
                 onPressed: $.formSubmit,
               );
@@ -148,7 +149,7 @@ class SigninView extends RegularView<SigninStateController> implements AuthContr
 
   @override
   void onAuthFailed(String message) {
-    $.authProcessing = false;
+    $.dataSource.isLoading = false;
     RegularDialog(
       width: Get.width * 0.7,
       child: Column(
@@ -197,7 +198,7 @@ class SigninView extends RegularView<SigninStateController> implements AuthContr
 
   @override
   void onAuthSuccess(String message) {
-    $.authProcessing = false;
+    $.dataSource.isLoading = false;
     Get.offAllNamed(DashboardView.route);
   }
 }

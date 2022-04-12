@@ -10,14 +10,14 @@ class _UsernameInput extends StatelessWidget {
     return RegularInput(
       maxLines: 1,
       controller: controller,
-      hintText: "Enter your username",
-      label: "Username",
+      hintText: SigninString.usernameHint,
+      label: SigninString.usernameLabel,
       inputType: TextInputType.name,
       validator: (value) {
         if (value != null && value.isNotEmpty) {
           return null;
         }
-        return "Username can't be empty";
+        return SigninString.usernameNotValid;
       },
     );
   }
