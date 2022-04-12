@@ -11,20 +11,24 @@ class RegularCheckbox extends StatelessWidget {
     required this.label,
     bool value = false,
     this.onChecked,
+    this.enabled = true,
   }) {
     this.value = Rx<bool>(value);
   }
   String label;
   late Rx<bool> value;
   void Function(bool value)? onChecked;
+  bool enabled;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       child: GestureDetector(
         onTap: () {
-          value.value = !value.value;
-          onChecked?.call(value.value);
+          if (enabled) {
+            value.value = !value.value;
+            onChecked?.call(value.value);
+          }
         },
         child: Row(
           children: [
@@ -56,7 +60,7 @@ class RegularCheckbox extends StatelessWidget {
             Text(
               label,
               style: TextStyle(
-                color: RegularColor.dark,
+                color: enabled ? RegularColor.dark : RegularColor.gray,
                 fontSize: 14,
               ),
             ),

@@ -1,10 +1,14 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ventes/presenters/auth_presenter.dart';
-import 'package:ventes/views/signin/signin_form_source.dart';
+import 'package:ventes/form_sources/signin_form_source.dart';
 
 class SigninStateController extends GetxController {
   AuthPresenter presenter = AuthPresenter();
   SigninFormSource formSource = SigninFormSource();
+
+  final TextEditingController passwordTEC = TextEditingController();
+  final TextEditingController usernameTEC = TextEditingController();
 
   final _authProcessing = false.obs;
   bool get authProcessing => _authProcessing.value;
@@ -20,8 +24,15 @@ class SigninStateController extends GetxController {
   }
 
   @override
+  onInit() {
+    super.onInit();
+    formSource.stateController = this;
+  }
+
+  @override
   dispose() {
-    formSource.dispose();
+    usernameTEC.dispose();
+    passwordTEC.dispose();
     super.dispose();
   }
 }

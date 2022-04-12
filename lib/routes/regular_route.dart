@@ -11,7 +11,7 @@ import 'package:ventes/state_controllers/history_state_controller.dart';
 import 'package:ventes/state_controllers/dashboard_state_controller.dart';
 import 'package:ventes/state_controllers/nearby_state_controller.dart';
 import 'package:ventes/state_controllers/schedule_state_controller.dart';
-import 'package:ventes/views/signin/signin_state_controller.dart';
+import 'package:ventes/state_controllers/signin_state_controller.dart';
 import 'package:ventes/state_controllers/splash_screen_state_controller.dart';
 import 'package:ventes/state_controllers/started_page_state_controller.dart';
 import 'package:ventes/views/Schedule.dart';
@@ -61,7 +61,6 @@ class RegularRoute {
           bindings: [
             BindingsBuilder(
               () => {
-                Get.lazyPut(() => AuthService()),
                 Get.lazyPut(() => SigninStateController()),
               },
             )

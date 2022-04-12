@@ -7,6 +7,7 @@ import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/helpers/auth_helper.dart';
 import 'package:ventes/helpers/function_helpers.dart';
 import 'package:ventes/routes/regular_route.dart';
+import 'package:ventes/services/auth_service.dart';
 import 'package:ventes/views/splash_screen.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
@@ -38,7 +39,10 @@ class MyApp extends StatelessWidget {
       ),
       getPages: RegularRoute.routes,
       initialRoute: SplashScreenView.route,
-      initialBinding: BindingsBuilder.put(() => AuthHelper()),
+      initialBinding: BindingsBuilder(() {
+        Get.lazyPut(() => AuthService());
+        Get.lazyPut(() => AuthHelper());
+      }),
     );
   }
 }

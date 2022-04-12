@@ -10,9 +10,13 @@ import 'package:intl/intl.dart';
 import 'package:ventes/constants/app.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
+import 'package:ventes/contracts/create_contract.dart';
 import 'package:ventes/contracts/fetch_data_contract.dart';
+import 'package:ventes/helpers/auth_helper.dart';
+import 'package:ventes/models/auth_model.dart';
+import 'package:ventes/models/user_detail_model.dart';
 import 'package:ventes/navigators/schedule_navigator.dart';
-import 'package:ventes/views/schedule_form/create/schedule_fc_state_controller.dart';
+import 'package:ventes/state_controllers/schedule_fc_state_controller.dart';
 import 'package:ventes/views/regular_view.dart';
 import 'package:ventes/widgets/editor_input.dart';
 import 'package:ventes/widgets/field_dropdown.dart';
@@ -27,13 +31,30 @@ import 'package:ventes/widgets/icon_input.dart';
 import 'package:ventes/widgets/regular_input.dart';
 import 'package:ventes/widgets/top_navigation.dart';
 
-class ScheduleFormCreateView
-    extends RegularView<ScheduleFormCreateStateController>
-    implements FetchDataContract {
+part 'package:ventes/views/schedule_form/create/components/_allday_checkbox.dart';
+part 'package:ventes/views/schedule_form/create/components/_dateend_input.dart';
+part 'package:ventes/views/schedule_form/create/components/_datestart_input.dart';
+part 'package:ventes/views/schedule_form/create/components/_description_input.dart';
+part 'package:ventes/views/schedule_form/create/components/_guest_dropdown.dart';
+part 'package:ventes/views/schedule_form/create/components/_link_input.dart';
+part 'package:ventes/views/schedule_form/create/components/_location_input.dart';
+part 'package:ventes/views/schedule_form/create/components/_online_checkbox.dart';
+part 'package:ventes/views/schedule_form/create/components/_remind_input.dart';
+part 'package:ventes/views/schedule_form/create/components/_scheduletype_selectbox.dart';
+part 'package:ventes/views/schedule_form/create/components/_title_input.dart';
+part 'package:ventes/views/schedule_form/create/components/_twintime_input.dart';
+part 'package:ventes/views/schedule_form/create/components/_event_form.dart';
+part "package:ventes/views/schedule_form/create/components/_guest_list.dart";
+part 'package:ventes/views/schedule_form/create/components/_readonly_checkbox.dart';
+part 'package:ventes/views/schedule_form/create/components/_sharelink_checkbox.dart';
+part 'package:ventes/views/schedule_form/create/components/_addmember_checkbox.dart';
+
+class ScheduleFormCreateView extends RegularView<ScheduleFormCreateStateController> implements FetchDataContract, CreateContract {
   static const String route = "/schedule/create";
   ScheduleFormCreateView() {
     $ = controller;
     $.presenter.fetchDataContract = this;
+    $.presenter.createContract = this;
   }
 
   @override
@@ -63,16 +84,23 @@ class ScheduleFormCreateView
           },
         ),
         actions: [
-          Container(
-            padding: EdgeInsets.symmetric(
-              vertical: RegularSize.s,
-              horizontal: RegularSize.m,
-            ),
-            child: Text(
-              "Save",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 16,
+          GestureDetector(
+            onTap: () {
+              if ($.formKey.currentState?.validate() ?? false) {
+                $.createSchedule();
+              }
+            },
+            child: Container(
+              padding: EdgeInsets.symmetric(
+                vertical: RegularSize.s,
+                horizontal: RegularSize.m,
+              ),
+              child: Text(
+                "Save",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                ),
               ),
             ),
           ),
@@ -107,199 +135,87 @@ class ScheduleFormCreateView
               topRight: Radius.circular(RegularSize.xl),
             ),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
-                height: RegularSize.l,
-              ),
-              Text(
-                "General",
-                style: TextStyle(
-                  color: RegularColor.primary,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
+          child: Form(
+            key: $.formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  height: RegularSize.l,
                 ),
-              ),
-              SizedBox(
-                height: RegularSize.m,
-              ),
-              $.formSource.titleInput,
-              SizedBox(
-                height: RegularSize.m,
-              ),
-              $.formSource.scheduleTypeSelectbox,
-              SizedBox(
-                height: RegularSize.l,
-              ),
-              Text(
-                "More Options",
-                style: TextStyle(
-                  color: RegularColor.primary,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                ),
-              ),
-              Expanded(
-                child: Obx(() {
-                  return SingleChildScrollView(
-                    child: Stack(
-                      children: [
-                        Offstage(
-                          offstage: $.formSource.scheduleType.index != 0,
-                          child: _buildEventForm(),
-                        )
-                      ],
-                    ),
-                  );
-                }),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildEventForm() {
-    return Column(
-      children: [
-        SizedBox(
-          height: RegularSize.m,
-        ),
-        $.formSource.dateStartInput,
-        SizedBox(
-          height: RegularSize.m,
-        ),
-        $.formSource.dateEndInput,
-        SizedBox(
-          height: RegularSize.m,
-        ),
-        $.formSource.twinTimeInput,
-        SizedBox(
-          height: RegularSize.m,
-        ),
-        $.formSource.allDayCheckbox,
-        SizedBox(
-          height: RegularSize.m,
-        ),
-        GestureDetector(
-          onTap: () {
-            if (!$.formSource.online) {
-              _showMapBottomSheet();
-            }
-          },
-          child: $.formSource.locationInput,
-        ),
-        SizedBox(
-          height: RegularSize.m,
-        ),
-        $.formSource.onlineCheckbox,
-        SizedBox(
-          height: RegularSize.m,
-        ),
-        $.formSource.linkInput,
-        SizedBox(
-          height: RegularSize.m,
-        ),
-        $.formSource.remindInput,
-        SizedBox(
-          height: RegularSize.m,
-        ),
-        $.formSource.descriptionInput,
-        SizedBox(
-          height: RegularSize.m,
-        ),
-        $.formSource.guestDropdown,
-        SizedBox(
-          height: RegularSize.m,
-        ),
-      ],
-    );
-  }
-
-  void _showMapBottomSheet() {
-    RegularBottomSheet(
-      backgroundColor: Colors.white,
-      enableDrag: false,
-      child: Column(
-        children: [
-          SizedBox(
-            height: RegularSize.m,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                "Choose Location",
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: RegularColor.secondary,
-                ),
-              ),
-              GestureDetector(
-                onTap: () {
-                  if ($.markers.isNotEmpty) {
-                    $.currentPos = CameraPosition(
-                        target: $.markers.first.position,
-                        zoom: $.currentPos.zoom);
-                  }
-                  Get.close(1);
-                },
-                child: Text(
-                  "Close",
+                Text(
+                  "General",
                   style: TextStyle(
-                    fontSize: 16,
-                    color: RegularColor.red,
+                    color: RegularColor.primary,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
                   ),
                 ),
-              ),
-            ],
+                SizedBox(
+                  height: RegularSize.m,
+                ),
+                _TitleInput(controller: $.titleTEC),
+                SizedBox(
+                  height: RegularSize.m,
+                ),
+                _ScheduletypeSelectbox(
+                  onSelected: (value) {
+                    $.formSource.scheduleType = value + $.formSource.eventId;
+                  },
+                  activeIndex: $.formSource.scheduleType - $.formSource.eventId,
+                ),
+                SizedBox(
+                  height: RegularSize.l,
+                ),
+                Text(
+                  "More Options",
+                  style: TextStyle(
+                    color: RegularColor.primary,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                  ),
+                ),
+                Expanded(
+                  child: Obx(() {
+                    return SingleChildScrollView(
+                      child: Stack(
+                        children: [
+                          Offstage(
+                            offstage: $.formSource.scheduleType != $.formSource.eventId,
+                            child: _EventForm($),
+                          )
+                        ],
+                      ),
+                    );
+                  }),
+                ),
+              ],
+            ),
           ),
-          SizedBox(
-            height: RegularSize.m,
-          ),
-          Container(
-            height: Get.height * 0.4,
-            child: _buildMap(),
-          ),
-          SizedBox(
-            height: RegularSize.m,
-          ),
-        ],
+        ),
       ),
-    ).show();
-  }
-
-  Widget _buildMap() {
-    return Obx(() {
-      return GoogleMap(
-        mapType: MapType.hybrid,
-        initialCameraPosition: $.currentPos,
-        markers: $.markers,
-        onMapCreated: (GoogleMapController controller) {
-          if (!$.mapsController.isCompleted) {
-            $.mapsController.complete(controller);
-          }
-        },
-        onTap: (latLng) {
-          Marker marker = Marker(
-            markerId: MarkerId("selectedloc"),
-            infoWindow: InfoWindow(title: "Selected Location"),
-            position: latLng,
-          );
-          $.formSource.location =
-              "https://maps.google.com?q=${latLng.latitude},${latLng.longitude}";
-          $.markers = {marker};
-        },
-      );
-    });
+    );
   }
 
   @override
   onLoadFailed(String message) {}
 
   @override
-  onLoadSuccess(Map data) {}
+  onLoadSuccess(Map data) async {
+    AuthModel? auth = await Get.find<AuthHelper>().get();
+    if (auth != null) {
+      data['users'] = data['users'].where((user) {
+        bool isNotSelected = $.formSource.guestsSelected.where((element) => element.userdtid == user.userdtid).isEmpty;
+        bool isNotMe = user.userdtid != auth.accountActive;
+        return isNotMe && isNotSelected;
+      }).toList();
+      $.guests = List<UserDetail>.from(data['users']);
+    }
+  }
+
+  @override
+  void onCreateFailed(String message) {}
+
+  @override
+  void onCreateSuccess(String message) {}
 }

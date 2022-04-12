@@ -10,11 +10,21 @@ class FieldDropdown<T> extends StatelessWidget {
     Key? key,
     this.label,
     this.hintText,
+    this.onChanged,
     required this.items,
+    required this.popupItemBuilder,
+    this.itemAsString,
+    this.filterFn,
+    required this.dropdownKey,
   }) : super(key: key);
   String? label;
   String? hintText;
   List<T> items;
+  Function(T? value)? onChanged;
+  Widget Function(BuildContext, T, bool) popupItemBuilder;
+  String Function(T? item)? itemAsString;
+  bool Function(T? item, String? filter)? filterFn;
+  GlobalKey<DropdownSearchState> dropdownKey;
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +42,7 @@ class FieldDropdown<T> extends StatelessWidget {
             ),
           ),
         DropdownSearch<T>(
+          key: dropdownKey,
           dropdownSearchDecoration: InputDecoration(
             border: UnderlineInputBorder(
               borderSide: BorderSide(
@@ -71,60 +82,14 @@ class FieldDropdown<T> extends StatelessWidget {
           mode: Mode.BOTTOM_SHEET,
           showSelectedItems: false,
           items: items,
-          onChanged: print,
+          onChanged: onChanged,
           showSearchBox: true,
           showAsSuffixIcons: true,
-          popupItemBuilder: _buildDropdownItem,
+          popupItemBuilder: popupItemBuilder,
+          itemAsString: itemAsString ?? (item) => item.toString(),
+          filterFn: filterFn,
         ),
       ],
-    );
-  }
-
-  Widget _buildDropdownItem(BuildContext context, T item, bool isSelected) {
-    return Container(
-      padding: EdgeInsets.symmetric(
-        vertical: RegularSize.s,
-        horizontal: RegularSize.s,
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: EdgeInsets.all(RegularSize.s),
-            child: Text(
-              "WK",
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 14,
-              ),
-            ),
-            decoration: BoxDecoration(
-              color: RegularColor.purple,
-              shape: BoxShape.circle,
-            ),
-          ),
-          SizedBox(width: RegularSize.xs),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                item.toString(),
-                style: TextStyle(
-                  color: RegularColor.dark,
-                  fontSize: 16,
-                ),
-              ),
-              Text(
-                "Teknisi",
-                style: TextStyle(
-                  color: RegularColor.gray,
-                  fontSize: 14,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
     );
   }
 }

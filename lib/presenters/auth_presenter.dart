@@ -20,6 +20,8 @@ class AuthPresenter {
           jwtToken: data['jwt_token'],
           userId: data['userid'],
           accountActive: data['userdetails'][0]['userdtid'],
+          password: password,
+          username: username,
         );
         Get.find<AuthHelper>().save(authData);
 

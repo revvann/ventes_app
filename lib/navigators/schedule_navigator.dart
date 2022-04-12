@@ -3,10 +3,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ventes/routes/regular_get_page.dart';
+import 'package:ventes/services/schedule_service.dart';
 import 'package:ventes/services/user_service.dart';
 import 'package:ventes/state_controllers/daily_schedule_state_controller.dart';
 import 'package:ventes/state_controllers/fab_state_controller.dart';
-import 'package:ventes/views/schedule_form/create/schedule_fc_state_controller.dart';
+import 'package:ventes/state_controllers/schedule_fc_state_controller.dart';
 import 'package:ventes/state_controllers/schedule_state_controller.dart';
 import 'package:ventes/views/daily_schedule.dart';
 import 'package:ventes/views/schedule.dart';
@@ -46,6 +47,7 @@ class ScheduleNavigator extends StatelessWidget {
             page: () => ScheduleFormCreateView(),
             binding: BindingsBuilder(() {
               Get.lazyPut(() => UserService());
+              Get.lazyPut(() => ScheduleService());
               Get.lazyPut(() => ScheduleFormCreateStateController());
             }),
           );

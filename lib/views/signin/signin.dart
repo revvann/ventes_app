@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/contracts/auth_contract.dart';
-import 'package:ventes/views/signin/signin_state_controller.dart';
+import 'package:ventes/state_controllers/signin_state_controller.dart';
 import 'package:ventes/views/dashboard.dart';
 import 'package:ventes/views/regular_view.dart';
 import 'package:ventes/widgets/regular_bottom_sheet.dart';
@@ -14,8 +14,10 @@ import 'package:ventes/widgets/regular_button.dart';
 import 'package:ventes/widgets/regular_dialog.dart';
 import 'package:ventes/widgets/regular_input.dart';
 
-class SigninView extends RegularView<SigninStateController>
-    implements AuthContract {
+part 'package:ventes/views/signin/components/_username_input.dart';
+part 'package:ventes/views/signin/components/_password_input.dart';
+
+class SigninView extends RegularView<SigninStateController> implements AuthContract {
   static const String route = "/signin";
 
   SigninView() {
@@ -117,11 +119,15 @@ class SigninView extends RegularView<SigninStateController>
             SizedBox(
               height: RegularSize.m,
             ),
-            $.formSource.usernameInput,
+            _UsernameInput(
+              controller: $.usernameTEC,
+            ),
             SizedBox(
               height: RegularSize.m,
             ),
-            $.formSource.passwordInput,
+            _PasswordInput(
+              controller: $.passwordTEC,
+            ),
             SizedBox(
               height: RegularSize.xl,
             ),

@@ -11,4 +11,8 @@ class AuthService extends RegularService {
       "password": password,
     });
   }
+
+  Future<Response> verify() async {
+    return await get('/RJXvksjS');
+  }
 }

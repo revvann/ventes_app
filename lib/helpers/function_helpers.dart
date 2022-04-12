@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:intl/intl.dart';
 
 MaterialColor createSwatch(Color color) {
   final hslColor = HSLColor.fromColor(color);
@@ -45,4 +46,55 @@ Future<Position> getCurrentPosition() async {
     return Future.error('Location permissions are permanently denied, we cannot request permissions.');
   }
   return await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+}
+
+DateTime parseDate(String date) {
+  return DateFormat('MMMM dd, yyyy').parse(date);
+}
+
+DateTime parseTime(String time) {
+  return DateFormat('HH:mm:ss').parse(time);
+}
+
+DateTime parseDateTime(String dateTime) {
+  return DateFormat('MMMM dd, yyyy HH:mm:ss').parse(dateTime);
+}
+
+String formatDate(DateTime date) {
+  return DateFormat('MMMM dd, yyyy').format(date);
+}
+
+String formatTime(DateTime time) {
+  return DateFormat('HH:mm:ss').format(time);
+}
+
+String formatDateTime(DateTime dateTime) {
+  return DateFormat('MMMM dd, yyyy HH:mm:ss').format(dateTime);
+}
+
+String dbDateFormat(DateTime date) {
+  return DateFormat('yyyy-MM-dd').format(date);
+}
+
+List<Map<String, dynamic>> createTimeList([int? minHour, int? minMinutes]) {
+  List<Map<String, dynamic>> items = [];
+  DateTime time = DateTime(0, 0, 0, minHour ?? 0, minMinutes ?? 0);
+  int limit = DateTime(0, 0, 0, 23, 59).difference(time).inMinutes ~/ 15;
+  String text = DateFormat(DateFormat.HOUR_MINUTE).format(time);
+  String value = formatTime(time);
+  items.add({
+    "text": text,
+    "value": value,
+  });
+
+  for (int i = 1; i <= limit; i++) {
+    time = time.add(Duration(minutes: 15));
+    String text = DateFormat(DateFormat.HOUR_MINUTE).format(time);
+    String value = formatTime(time);
+    items.add({
+      "text": text,
+      "value": value,
+    });
+  }
+  return items;
 }
