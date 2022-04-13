@@ -6,12 +6,14 @@ class _DatestartInput extends StatelessWidget {
     required this.initialDate,
     required this.controller,
     this.minDate,
+    this.validator,
   });
 
   void Function(DateTime? value) onSelected;
   DateTime initialDate;
   TextEditingController controller;
   DateTime? minDate;
+  String? Function(String?)? validator;
 
   @override
   Widget build(BuildContext context) {
@@ -25,9 +27,10 @@ class _DatestartInput extends StatelessWidget {
       },
       child: IconInput(
         icon: "assets/svg/calendar.svg",
-        label: "Start Date",
+        label: ScheduleString.schestartdateLabel,
         enabled: false,
         controller: controller,
+        validator: validator,
       ),
     );
   }

@@ -21,7 +21,7 @@ class _TwintimeInput extends StatelessWidget {
       children: [
         Expanded(
           child: RegularDropdown<String?>(
-            label: "Start Time",
+            label: ScheduleString.schestarttimeLabel,
             controller: timeStartController,
             icon: "assets/svg/history.svg",
             onSelected: onTimeStartSelected,
@@ -32,7 +32,7 @@ class _TwintimeInput extends StatelessWidget {
         ),
         Expanded(
           child: RegularDropdown<String?>(
-            label: "End Time",
+            label: ScheduleString.scheendtimeLabel,
             icon: "assets/svg/history.svg",
             controller: timeEndController,
             onSelected: onTimeEndSelected,

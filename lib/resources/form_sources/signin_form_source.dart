@@ -8,8 +8,8 @@ class SigninFormSource {
   late String _username;
   late String _password;
 
-  String get password => _username;
-  String get username => _password;
+  String get password => _password;
+  String get username => _username;
   bool get formValid => key.currentState?.validate() ?? false;
 
   init() {

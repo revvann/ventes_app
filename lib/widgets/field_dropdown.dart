@@ -24,7 +24,7 @@ class FieldDropdown<T> extends StatelessWidget {
   Widget Function(BuildContext, T, bool) popupItemBuilder;
   String Function(T? item)? itemAsString;
   bool Function(T? item, String? filter)? filterFn;
-  GlobalKey<DropdownSearchState> dropdownKey;
+  GlobalKey<DropdownSearchState>? dropdownKey;
 
   @override
   Widget build(BuildContext context) {

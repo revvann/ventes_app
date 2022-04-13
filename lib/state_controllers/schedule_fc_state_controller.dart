@@ -15,26 +15,15 @@ import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/helpers/function_helpers.dart';
 import 'package:ventes/models/user_detail_model.dart';
 import 'package:ventes/presenters/schedule_fc_presenter.dart';
+import 'package:ventes/resources/data_sources/schedule_fc_data_source.dart';
 import 'package:ventes/state_controllers/regular_state_controller.dart';
 import 'package:ventes/resources/form_sources/schedule_fc_form_source.dart';
 import 'package:ventes/widgets/regular_bottom_sheet.dart';
 import 'package:ventes/widgets/regular_dropdown.dart';
 
 class ScheduleFormCreateStateController extends RegularStateController {
-  ScheduleFormCreatePresenter presenter = ScheduleFormCreatePresenter();
-  ScheduleFormCreateSource formSource = ScheduleFormCreateSource();
-
-  final titleTEC = TextEditingController();
-  final dateStartTEC = TextEditingController();
-  final dateEndTEC = TextEditingController();
-  final timeStartSelectController = DropdownController<String?>(null);
-  final timeEndSelectController = DropdownController<String?>(null);
-  final locationTEC = TextEditingController();
-  final linkTEC = TextEditingController();
-  final remindTEC = TextEditingController();
-  final descriptionTEC = TextEditingController();
-  GlobalKey<DropdownSearchState> dropdownKey = GlobalKey<DropdownSearchState>();
-  GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  ScheduleFormCreateFormSource formSource = ScheduleFormCreateFormSource();
+  ScheduleFormCreateDataSource dataSource = ScheduleFormCreateDataSource();
 
   final Completer<GoogleMapController> mapsController = Completer();
   late CameraPosition currentPos;
@@ -49,25 +38,19 @@ class ScheduleFormCreateStateController extends RegularStateController {
 
   @override
   void dispose() {
-    titleTEC.dispose();
-    dateStartTEC.dispose();
-    dateEndTEC.dispose();
-    locationTEC.dispose();
-    linkTEC.dispose();
-    remindTEC.dispose();
-    descriptionTEC.dispose();
+    formSource.dispose();
     super.dispose();
   }
 
   @override
   void onInit() async {
     super.onInit();
-    formSource.stateController = this;
-    formSource.createStartTimeList();
+    formSource.dataSource = dataSource;
+    formSource.init();
 
     Position pos = await getCurrentPosition();
     currentPos = CameraPosition(target: LatLng(pos.latitude, pos.longitude), zoom: 14.4764);
-    presenter.fetchUser();
+    dataSource.fetchUser();
   }
 
   void showMapBottomSheet() {
@@ -139,7 +122,7 @@ class ScheduleFormCreateStateController extends RegularStateController {
             infoWindow: InfoWindow(title: "Selected Location"),
             position: latLng,
           );
-          formSource.location = "https://maps.google.com?q=${latLng.latitude},${latLng.longitude}";
+          formSource.scheloc = "https://maps.google.com?q=${latLng.latitude},${latLng.longitude}";
           markers = {marker};
         },
       );
@@ -148,7 +131,6 @@ class ScheduleFormCreateStateController extends RegularStateController {
 
   void createSchedule() {
     Map<String, dynamic> data = formSource.toJson();
-    print(data);
-    presenter.createSchedule(data);
+    dataSource.createSchedule(data);
   }
 }

@@ -12,7 +12,7 @@ class _ScheduletypeSelectbox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RegularSelectBox<String>(
-      label: "Type",
+      label: ScheduleString.schetypeLabel,
       onSelected: onSelected,
       activeIndex: activeIndex,
       items: [
