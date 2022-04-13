@@ -10,12 +10,15 @@ import 'package:intl/intl.dart';
 import 'package:ventes/constants/app.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
+import 'package:ventes/constants/strings/schedule_string.dart';
 import 'package:ventes/contracts/create_contract.dart';
 import 'package:ventes/contracts/fetch_data_contract.dart';
 import 'package:ventes/helpers/auth_helper.dart';
 import 'package:ventes/models/auth_model.dart';
+import 'package:ventes/models/schedule_guest_model.dart';
 import 'package:ventes/models/user_detail_model.dart';
 import 'package:ventes/navigators/schedule_navigator.dart';
+import 'package:ventes/resources/form_sources/schedule_fc_form_source.dart';
 import 'package:ventes/state_controllers/schedule_fc_state_controller.dart';
 import 'package:ventes/views/regular_view.dart';
 import 'package:ventes/widgets/editor_input.dart';
@@ -53,8 +56,8 @@ class ScheduleFormCreateView extends RegularView<ScheduleFormCreateStateControll
   static const String route = "/schedule/create";
   ScheduleFormCreateView() {
     $ = controller;
-    $.presenter.fetchDataContract = this;
-    $.presenter.createContract = this;
+    $.dataSource.fetchDataContract = this;
+    $.dataSource.createContract = this;
   }
 
   @override
@@ -86,7 +89,7 @@ class ScheduleFormCreateView extends RegularView<ScheduleFormCreateStateControll
         actions: [
           GestureDetector(
             onTap: () {
-              if ($.formKey.currentState?.validate() ?? false) {
+              if ($.formSource.isValid()) {
                 $.createSchedule();
               }
             },
@@ -136,7 +139,7 @@ class ScheduleFormCreateView extends RegularView<ScheduleFormCreateStateControll
             ),
           ),
           child: Form(
-            key: $.formKey,
+            key: $.formSource.formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -154,15 +157,18 @@ class ScheduleFormCreateView extends RegularView<ScheduleFormCreateStateControll
                 SizedBox(
                   height: RegularSize.m,
                 ),
-                _TitleInput(controller: $.titleTEC),
+                _TitleInput(
+                  controller: $.formSource.schenmTEC,
+                  validator: $.formSource.schenmValidator,
+                ),
                 SizedBox(
                   height: RegularSize.m,
                 ),
                 _ScheduletypeSelectbox(
                   onSelected: (value) {
-                    $.formSource.scheduleType = value + $.formSource.eventId;
+                    $.formSource.schetype = value + $.formSource.eventId;
                   },
-                  activeIndex: $.formSource.scheduleType - $.formSource.eventId,
+                  activeIndex: $.formSource.schetype - $.formSource.eventId,
                 ),
                 SizedBox(
                   height: RegularSize.l,
@@ -181,7 +187,7 @@ class ScheduleFormCreateView extends RegularView<ScheduleFormCreateStateControll
                       child: Stack(
                         children: [
                           Offstage(
-                            offstage: $.formSource.scheduleType != $.formSource.eventId,
+                            offstage: $.formSource.schetype != $.formSource.eventId,
                             child: _EventForm($),
                           )
                         ],
@@ -205,7 +211,7 @@ class ScheduleFormCreateView extends RegularView<ScheduleFormCreateStateControll
     AuthModel? auth = await Get.find<AuthHelper>().get();
     if (auth != null) {
       data['users'] = data['users'].where((user) {
-        bool isNotSelected = $.formSource.guestsSelected.where((element) => element.userdtid == user.userdtid).isEmpty;
+        bool isNotSelected = $.formSource.guests.where((element) => element.userdtid == user.userdtid).isEmpty;
         bool isNotMe = user.userdtid != auth.accountActive;
         return isNotMe && isNotSelected;
       }).toList();

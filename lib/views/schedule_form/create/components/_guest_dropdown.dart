@@ -3,16 +3,16 @@
 part of 'package:ventes/views/schedule_form/create/schedule_fc.dart';
 
 class _GuestDropdown extends StatelessWidget {
-  _GuestDropdown({required this.guests, this.onChanged, required this.dropdownKey});
+  _GuestDropdown({required this.guests, this.onChanged, this.dropdownKey});
   List<UserDetail> guests;
   void Function(UserDetail?)? onChanged;
-  GlobalKey<DropdownSearchState> dropdownKey;
+  GlobalKey<DropdownSearchState>? dropdownKey;
 
   @override
   Widget build(BuildContext context) {
     return FieldDropdown<UserDetail>(
       dropdownKey: dropdownKey,
-      label: "Guest",
+      label: ScheduleString.scheguestLabel,
       hintText: "Invite guest",
       items: guests,
       onChanged: onChanged,

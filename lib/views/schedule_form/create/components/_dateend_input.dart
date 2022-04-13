@@ -25,7 +25,7 @@ class _DateendInput extends StatelessWidget {
       },
       child: IconInput(
         icon: "assets/svg/calendar.svg",
-        label: "End Date",
+        label: ScheduleString.scheenddateLabel,
         enabled: false,
         controller: controller,
       ),

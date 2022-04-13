@@ -10,7 +10,7 @@ class _RemindInput extends StatelessWidget {
   Widget build(BuildContext context) {
     return IconInput(
       icon: "assets/svg/alarm.svg",
-      label: "Remind (In Minute)",
+      label: ScheduleString.scheremindLabel,
       hintText: "try 5",
       controller: controller,
       inputType: TextInputType.number,

@@ -10,7 +10,7 @@ class _DescriptionInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return EditorInput(
-      label: "Description",
+      label: ScheduleString.schedescLabel,
       hintText: "Write about this event",
       controller: controller,
     );

@@ -10,7 +10,7 @@ class _OnlineCheckbox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RegularCheckbox(
-      label: "Online",
+      label: ScheduleString.scheonlineLabel,
       onChecked: onChecked,
     );
   }

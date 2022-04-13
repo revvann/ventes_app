@@ -9,7 +9,7 @@ class _AlldayCheckbox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RegularCheckbox(
-      label: "All Day",
+      label: ScheduleString.schealldayLabel,
       onChecked: onChecked,
     );
   }

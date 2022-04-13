@@ -14,29 +14,30 @@ class _EventForm extends StatelessWidget {
           height: RegularSize.m,
         ),
         _DatestartInput(
-          controller: controller.dateStartTEC,
-          initialDate: controller.formSource.dateStart,
+          controller: controller.formSource.schestartdateTEC,
+          initialDate: controller.formSource.schestartdate,
           onSelected: controller.formSource.onDateStartSelected,
         ),
         SizedBox(
           height: RegularSize.m,
         ),
-        Obx(() {
-          return _DateendInput(
-            controller: controller.dateEndTEC,
-            initialDate: controller.formSource.dateEnd,
-            onSelected: controller.formSource.onDateEndSelected,
-            minDate: controller.formSource.dateStart,
-          );
-        }),
+        Obx( () {
+            return _DateendInput(
+              controller: controller.formSource.scheenddateTEC,
+              initialDate: controller.formSource.scheenddate,
+              onSelected: controller.formSource.onDateEndSelected,
+              minDate: controller.formSource.schestartdate,
+            );
+          }
+        ),
         SizedBox(
           height: RegularSize.m,
         ),
         _TwintimeInput(
           onTimeEndSelected: controller.formSource.onTimeEndSelected,
           onTimeStartSelected: controller.formSource.onTimeStartSelected,
-          timeStartController: controller.timeStartSelectController,
-          timeEndController: controller.timeEndSelectController,
+          timeStartController: controller.formSource.schestarttimeDC,
+          timeEndController: controller.formSource.scheendtimeDC,
         ),
         SizedBox(
           height: RegularSize.m,
@@ -49,11 +50,14 @@ class _EventForm extends StatelessWidget {
         ),
         GestureDetector(
           onTap: () {
-            if (!controller.formSource.online) {
+            if (!controller.formSource.scheonline) {
               controller.showMapBottomSheet();
             }
           },
-          child: _LocationInput(controller: controller.locationTEC),
+          child: _LocationInput(
+            controller: controller.formSource.schelocTEC,
+            validator: controller.formSource.schelocValidator,
+          ),
         ),
         SizedBox(
           height: RegularSize.m,
@@ -66,18 +70,19 @@ class _EventForm extends StatelessWidget {
         ),
         Obx(() {
           return _LinkInput(
-            controller: controller.linkTEC,
-            enabled: controller.formSource.online,
+            controller: controller.formSource.scheonlinkTEC,
+            enabled: controller.formSource.scheonline,
+            validator: controller.formSource.scheonlinkValidator,
           );
         }),
         SizedBox(
           height: RegularSize.m,
         ),
-        _RemindInput(controller: controller.remindTEC),
+        _RemindInput(controller: controller.formSource.scheremindTEC),
         SizedBox(
           height: RegularSize.m,
         ),
-        _DescriptionInput(controller: controller.descriptionTEC),
+        _DescriptionInput(controller: controller.formSource.schedescTEC),
         SizedBox(
           height: RegularSize.m,
         ),
@@ -85,7 +90,6 @@ class _EventForm extends StatelessWidget {
           return _GuestDropdown(
             guests: controller.guests,
             onChanged: controller.formSource.onGuestChanged,
-            dropdownKey: controller.dropdownKey,
           );
         }),
         SizedBox(
@@ -94,11 +98,11 @@ class _EventForm extends StatelessWidget {
         Obx(() {
           return Column(
             children: [
-              if (controller.formSource.guestsSelected.isNotEmpty)
+              if (controller.formSource.guests.isNotEmpty)
                 Container(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    "Selected Guests",
+                    ScheduleString.selectedGuestLabel,
                     style: TextStyle(
                       fontSize: 12,
                       color: RegularColor.dark,
@@ -110,7 +114,7 @@ class _EventForm extends StatelessWidget {
                 height: RegularSize.s,
               ),
               _GuestList(
-                guests: controller.formSource.guestsSelected,
+                guests: controller.formSource.guests,
                 onRemove: controller.formSource.onRemoveGuest,
               ),
             ],
@@ -122,11 +126,11 @@ class _EventForm extends StatelessWidget {
         Obx(() {
           return Column(
             children: [
-              if (controller.formSource.guestsSelected.isNotEmpty)
+              if (controller.formSource.guests.isNotEmpty)
                 Container(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    "Guest Permission",
+                    ScheduleString.schepermisLabel,
                     style: TextStyle(
                       fontSize: 12,
                       color: RegularColor.dark,
@@ -137,14 +141,14 @@ class _EventForm extends StatelessWidget {
               SizedBox(
                 height: RegularSize.m,
               ),
-              if (controller.formSource.guestsSelected.isNotEmpty)
+              if (controller.formSource.guests.isNotEmpty)
                 Row(
                   children: [
                     Obx(() {
                       return Expanded(
                         child: _ReadOnlyCheckbox(
                           onChecked: controller.formSource.readOnlyToggle,
-                          value: controller.formSource.guestPermission.contains(controller.formSource.readOnlyId),
+                          value: controller.formSource.schepermisid.contains(controller.formSource.readOnlyId),
                         ),
                       );
                     }),
@@ -152,8 +156,8 @@ class _EventForm extends StatelessWidget {
                       return Expanded(
                         child: _SharelinkCheckbox(
                           onChecked: controller.formSource.shareLinkToggle,
-                          enabled: !controller.formSource.guestPermission.contains(controller.formSource.readOnlyId),
-                          value: controller.formSource.guestPermission.contains(controller.formSource.shareLinkId),
+                          enabled: !controller.formSource.schepermisid.contains(controller.formSource.readOnlyId),
+                          value: controller.formSource.schepermisid.contains(controller.formSource.shareLinkId),
                         ),
                       );
                     }),
@@ -161,8 +165,8 @@ class _EventForm extends StatelessWidget {
                       return Expanded(
                         child: _AddmemberCheckbox(
                           onChecked: controller.formSource.addMemberToggle,
-                          enabled: !controller.formSource.guestPermission.contains(controller.formSource.readOnlyId),
-                          value: controller.formSource.guestPermission.contains(controller.formSource.addMemberId),
+                          enabled: !controller.formSource.schepermisid.contains(controller.formSource.readOnlyId),
+                          value: controller.formSource.schepermisid.contains(controller.formSource.addMemberId),
                         ),
                       );
                     }),
