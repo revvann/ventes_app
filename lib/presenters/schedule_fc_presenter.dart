@@ -53,4 +53,28 @@ class ScheduleFormCreatePresenter {
       _createContract.onCreateFailed(err.toString());
     }
   }
+
+  Future<List<UserDetail>> filterUser(String? search) async {
+    AuthModel? authModel = await Get.find<AuthHelper>().get();
+    Response response = await _userService.show(authModel!.accountActive!);
+
+    Map<String, dynamic> params = {
+      'userdtbpid': response.body['userdtbpid'].toString(),
+      'search': search,
+    };
+    Response usersResponse = await _userService.select(params);
+    if (usersResponse.statusCode == 200) {
+      List<UserDetail> userDetails = List<UserDetail>.from(usersResponse.body.map((e) => UserDetail.fromJson(e)));
+      userDetails = userDetails.where((e) => e.userdtid != authModel.accountActive).toList();
+      Map<int, int> userIds = userDetails.asMap().map((k, v) => MapEntry(v.userid ?? 0, v.userdtid ?? 0));
+      userDetails = userDetails.where((e) {
+        bool isExist = userIds.containsKey(e.userid);
+        int userdtid = userIds[e.userid] ?? 0;
+        return isExist && e.userdtid == userdtid;
+      }).toList();
+
+      return userDetails;
+    }
+    return [];
+  }
 }

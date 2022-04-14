@@ -4,8 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ventes/constants/strings/schedule_string.dart';
 import 'package:ventes/helpers/function_helpers.dart';
+import 'package:ventes/models/schedule_guest_model.dart';
 import 'package:ventes/models/user_detail_model.dart';
 import 'package:ventes/resources/data_sources/schedule_fc_data_source.dart';
+import 'package:ventes/resources/form_listeners/schedule_fc_listener.dart';
+import 'package:ventes/resources/form_validators/schedule_fc_validator.dart';
 import 'package:ventes/widgets/regular_dropdown.dart';
 
 class ScheduleFormCreateFormSource {
@@ -18,6 +21,8 @@ class ScheduleFormCreateFormSource {
   int reminderId = 12;
 
   late ScheduleFormCreateDataSource dataSource;
+  late ScheduleFormCreateValidator validator;
+  late ScheduleFormCreateListener listener;
 
   final schenmTEC = TextEditingController();
   final schestartdateTEC = TextEditingController();
@@ -42,8 +47,7 @@ class ScheduleFormCreateFormSource {
   final Rx<int> _schetype = Rx<int>(11);
   final Rx<bool> _scheallday = Rx<bool>(false);
   final Rx<bool> _scheonline = Rx<bool>(false);
-  final Rx<List<UserDetail>> _guests = Rx<List<UserDetail>>([]);
-  final Rx<List<int>> _schepermisid = Rx<List<int>>([]);
+  final Rx<List<ScheduleGuest>> _guests = Rx<List<ScheduleGuest>>([]);
 
   String get schenm => _schenm;
   set schenm(String value) {
@@ -74,6 +78,14 @@ class ScheduleFormCreateFormSource {
     }
   }
 
+  set schestarttimequiet(DateTime? value) {
+    if (value == null) {
+      _schestarttime.value = null;
+    } else {
+      _schestarttime.value = value;
+    }
+  }
+
   DateTime? get scheendtime => _scheendtime.value;
   set scheendtime(DateTime? value) {
     if (value == null) {
@@ -82,6 +94,14 @@ class ScheduleFormCreateFormSource {
     } else {
       scheendtimeDC.items = createTimeList(value.hour, value.minute);
       scheendtimeDC.value = formatTime(value);
+      _scheendtime.value = value;
+    }
+  }
+
+  set scheendtimequiet(DateTime? value) {
+    if (value == null) {
+      _scheendtime.value = null;
+    } else {
       _scheendtime.value = value;
     }
   }
@@ -119,11 +139,8 @@ class ScheduleFormCreateFormSource {
     _scheonlink = value;
   }
 
-  List<UserDetail> get guests => _guests.value;
-  set guests(List<UserDetail> value) => _guests.value = value;
-
-  List<int> get schepermisid => _schepermisid.value;
-  set schepermisid(List<int> value) => _schepermisid.value = value;
+  List<ScheduleGuest> get guests => _guests.value;
+  set guests(List<ScheduleGuest> value) => _guests.value = value;
 
   DateTime get fullStartDate {
     return DateTime(
@@ -148,26 +165,67 @@ class ScheduleFormCreateFormSource {
   }
 
   void addGuest(UserDetail guest) {
-    _guests.update((value) => value!..add(guest));
+    _guests.update((value) => value!
+      ..add(
+        ScheduleGuest(
+          userid: guest.userid,
+          schebpid: guest.userdtbpid,
+          user: guest.user,
+          businesspartner: guest.businesspartner,
+        ),
+      ));
   }
 
-  void removeGuest(UserDetail guest) {
-    _guests.update((value) => value!..remove(guest));
+  void removeGuest(guest) {
+    _guests.update((value) => value!..removeWhere((g) => g.userid == guest.userid));
   }
 
-  void addPermission(int permissionId) {
-    _schepermisid.update((value) => value!..add(permissionId));
+  void setPermission(int userid, List<int> permission) {
+    _guests.update((value) => value!..firstWhere((g) => g.userid == userid).schepermisid = permission);
   }
 
-  void removePermission(int permissionId) {
-    _schepermisid.update((value) => value!..remove(permissionId));
+  void removePermission(int userid, int permission) {
+    _guests.update((value) {
+      if (value != null) {
+        var guest = value.firstWhere((g) => g.userid == userid);
+        if (guest.schepermisid != null) {
+          guest.schepermisid!.remove(permission);
+        }
+      }
+    });
+  }
+
+  void addPermission(int userid, int permission) {
+    _guests.update((value) {
+      if (value != null) {
+        var guest = value.firstWhere((g) => g.userid == userid);
+        if (guest.schepermisid != null) {
+          guest.schepermisid!.add(permission);
+        } else {
+          guest.schepermisid = [permission];
+        }
+      }
+    });
+  }
+
+  bool hasPermission(int userid, SchedulePermission permission) {
+    switch (permission) {
+      case SchedulePermission.readOnly:
+        return _guests.value.firstWhere((g) => g.userid == userid).schepermisid?.contains(readOnlyId) ?? false;
+      case SchedulePermission.addMember:
+        return _guests.value.firstWhere((g) => g.userid == userid).schepermisid?.contains(addMemberId) ?? false;
+      case SchedulePermission.shareLink:
+        return _guests.value.firstWhere((g) => g.userid == userid).schepermisid?.contains(shareLinkId) ?? false;
+      default:
+        return false;
+    }
   }
 
   bool isValid() {
     return formKey.currentState?.validate() ?? false;
   }
 
-  void _setEndTimeList() {
+  void setEndTimeList() {
     DateTime maxDate = DateTime(scheenddate.year, scheenddate.month, scheenddate.day, 23, 59);
     bool hasMoreTime = maxDate.difference(fullStartDate).inMinutes >= 15;
     if (hasMoreTime) {
@@ -187,7 +245,7 @@ class ScheduleFormCreateFormSource {
     }
   }
 
-  void _setStartTimeList() {
+  void setStartTimeList() {
     DateTime date = DateTime.now();
     schestarttimeDC.items = createTimeList();
     scheendtimeDC.items = createTimeList(date.hour, date.minute);
@@ -196,160 +254,7 @@ class ScheduleFormCreateFormSource {
 
     schestartdate = schestarttime = DateTime(date.year, date.month, date.day, 0, 0);
     scheenddate = scheendtime = DateTime(date.year, date.month, date.day, 0, 0);
-    _setEndTimeList();
-  }
-
-  void allDayToggle(value) {
-    if (value) {
-      schestarttimeDC.enabled = false;
-      scheendtimeDC.enabled = false;
-    } else {
-      schestarttimeDC.enabled = true;
-      scheendtimeDC.enabled = true;
-    }
-    scheallday = value;
-  }
-
-  void onlineToggle(value) {
-    scheonline = value;
-  }
-
-  void onDateStartSelected(DateTime? value) {
-    if (value != null) {
-      schestartdate = value.add(Duration(
-        hours: value.hour - schestartdate.hour,
-        minutes: value.minute - schestartdate.minute,
-        seconds: value.second - schestartdate.second,
-      ));
-      if (schestartdate.isAfter(scheenddate)) {
-        scheenddate = schestartdate;
-      }
-    }
-  }
-
-  void onDateEndSelected(DateTime? value) {
-    if (value != null) {
-      scheenddate = value.add(Duration(
-        hours: value.hour - scheenddate.hour,
-        minutes: value.minute - scheenddate.minute,
-        seconds: value.second - scheenddate.second,
-      ));
-    }
-  }
-
-  void onTimeStartSelected(String? value) {
-    if (value != null) {
-      DateTime time = parseTime(value);
-      if (schestarttime != null) {
-        DateTime _dateStart = schestarttime!.subtract(Duration(
-          hours: schestartdate.hour,
-          minutes: schestartdate.minute,
-          seconds: schestartdate.second,
-        ));
-        _schestarttime.value = _dateStart.add(Duration(
-          hours: time.hour,
-          minutes: time.minute,
-          seconds: time.second,
-        ));
-      } else {
-        _schestarttime.value = DateTime(
-          schestartdate.year,
-          schestartdate.month,
-          schestartdate.day,
-          time.hour,
-          time.minute,
-          time.second,
-        );
-      }
-    }
-    _setEndTimeList();
-  }
-
-  void onTimeEndSelected(String? value) {
-    if (value != null) {
-      DateTime time = parseTime(value);
-      if (scheendtime != null) {
-        DateTime _dateEnd = scheendtime!.subtract(Duration(
-          hours: scheenddate.hour,
-          minutes: scheenddate.minute,
-          seconds: scheenddate.second,
-        ));
-        _scheendtime.value = _dateEnd.add(Duration(
-          hours: time.hour,
-          minutes: time.minute,
-          seconds: time.second,
-        ));
-      } else {
-        _scheendtime.value = DateTime(
-          scheenddate.year,
-          scheenddate.month,
-          scheenddate.day,
-          time.hour,
-          time.minute,
-          time.second,
-        );
-      }
-    }
-  }
-
-  void onGuestChanged(UserDetail? user) {
-    if (user != null) {
-      addGuest(user);
-      dataSource.fetchUser();
-    }
-  }
-
-  void onRemoveGuest(UserDetail? item) {
-    if (item != null) {
-      removeGuest(item);
-      dataSource.fetchUser();
-    }
-  }
-
-  void readOnlyToggle(bool value) {
-    if (value) {
-      schepermisid = [readOnlyId];
-    } else {
-      removePermission(readOnlyId);
-    }
-  }
-
-  void shareLinkToggle(bool value) {
-    if (value) {
-      addPermission(shareLinkId);
-    } else {
-      removePermission(shareLinkId);
-    }
-  }
-
-  void addMemberToggle(bool value) {
-    if (value) {
-      addPermission(addMemberId);
-    } else {
-      removePermission(addMemberId);
-    }
-  }
-
-  String? schenmValidator(String? value) {
-    if (value == null || value.isEmpty) {
-      return ScheduleString.schenmInvalid;
-    }
-  }
-
-  String? scheonlinkValidator(String? value) {
-    if (scheonline) {
-      if (value == null || value.isEmpty) {
-        return ScheduleString.scheonlinkInvalid;
-      }
-    }
-  }
-
-  String? schelocValidator(String? value) {
-    if (!scheonline) {
-      if (value == null || value.isEmpty) {
-        return ScheduleString.schelocInvalid;
-      }
-    }
+    setEndTimeList();
   }
 
   dispose() {
@@ -363,7 +268,9 @@ class ScheduleFormCreateFormSource {
   }
 
   init() {
-    _setStartTimeList();
+    validator = ScheduleFormCreateValidator(this);
+    listener = ScheduleFormCreateListener(this);
+    setStartTimeList();
     scheremindTEC.text = _scheremind.toString();
     _scheonline.stream.listen((value) {
       if (value) {
@@ -409,4 +316,10 @@ class ScheduleFormCreateFormSource {
       "schetype": schetype,
     };
   }
+}
+
+enum SchedulePermission {
+  readOnly,
+  shareLink,
+  addMember,
 }

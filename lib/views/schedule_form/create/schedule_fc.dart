@@ -32,6 +32,7 @@ import 'package:ventes/widgets/regular_outlined_button.dart';
 import 'package:ventes/widgets/regular_select_box.dart';
 import 'package:ventes/widgets/icon_input.dart';
 import 'package:ventes/widgets/regular_input.dart';
+import 'package:ventes/widgets/search_list.dart';
 import 'package:ventes/widgets/top_navigation.dart';
 
 part 'package:ventes/views/schedule_form/create/components/_allday_checkbox.dart';
@@ -51,6 +52,7 @@ part "package:ventes/views/schedule_form/create/components/_guest_list.dart";
 part 'package:ventes/views/schedule_form/create/components/_readonly_checkbox.dart';
 part 'package:ventes/views/schedule_form/create/components/_sharelink_checkbox.dart';
 part 'package:ventes/views/schedule_form/create/components/_addmember_checkbox.dart';
+part 'package:ventes/views/schedule_form/create/components/_guest_item.dart';
 
 class ScheduleFormCreateView extends RegularView<ScheduleFormCreateStateController> implements FetchDataContract, CreateContract {
   static const String route = "/schedule/create";
@@ -159,7 +161,7 @@ class ScheduleFormCreateView extends RegularView<ScheduleFormCreateStateControll
                 ),
                 _TitleInput(
                   controller: $.formSource.schenmTEC,
-                  validator: $.formSource.schenmValidator,
+                  validator: $.formSource.validator.schenm,
                 ),
                 SizedBox(
                   height: RegularSize.m,
@@ -207,17 +209,7 @@ class ScheduleFormCreateView extends RegularView<ScheduleFormCreateStateControll
   onLoadFailed(String message) {}
 
   @override
-  onLoadSuccess(Map data) async {
-    AuthModel? auth = await Get.find<AuthHelper>().get();
-    if (auth != null) {
-      data['users'] = data['users'].where((user) {
-        bool isNotSelected = $.formSource.guests.where((element) => element.userdtid == user.userdtid).isEmpty;
-        bool isNotMe = user.userdtid != auth.accountActive;
-        return isNotMe && isNotSelected;
-      }).toList();
-      $.guests = List<UserDetail>.from(data['users']);
-    }
-  }
+  onLoadSuccess(Map data) async {}
 
   @override
   void onCreateFailed(String message) {}

@@ -7,30 +7,30 @@ import 'package:ventes/models/user_model.dart';
 class ScheduleGuest extends RegularModel {
   int? scheguestid;
   int? scheid;
-  int? scheuserid;
+  int? userid;
   int? schebpid;
   List<int>? schepermisid;
   Schedule? schedule;
-  User? scheuser;
-  BusinessPartner? schebp;
+  User? user;
+  BusinessPartner? businesspartner;
   List<DBType>? schepermis;
 
-  ScheduleGuest(
+  ScheduleGuest({
     this.scheguestid,
     this.scheid,
-    this.scheuserid,
+    this.userid,
     this.schebpid,
     this.schepermisid,
     this.schedule,
-    this.scheuser,
-    this.schebp,
+    this.user,
+    this.businesspartner,
     this.schepermis,
     String? createddate,
     String? updateddate,
     int? createdby,
     int? updatedby,
     bool? isactive,
-  ) : super(
+  }) : super(
           createdby: createdby,
           updatedby: updatedby,
           createddate: createddate,
@@ -41,17 +41,17 @@ class ScheduleGuest extends RegularModel {
   ScheduleGuest.fromJson(Map<String, dynamic> json) {
     scheguestid = json['scheguestid'];
     scheid = json['scheid'];
-    scheuserid = json['scheuserid'];
+    userid = json['userid'];
     schebpid = json['schebpid'];
     schepermisid = json['schepermisid'];
     if (json['schedule'] != null) {
       schedule = Schedule.fromJson(json['schedule']);
     }
     if (json['scheuser'] != null) {
-      scheuser = User.fromJson(json['scheuser']);
+      user = User.fromJson(json['scheuser']);
     }
     if (json['schebp'] != null) {
-      schebp = BusinessPartner.fromJson(json['schebp']);
+      businesspartner = BusinessPartner.fromJson(json['schebp']);
     }
     if (json['schepermis'] != null && json['schepermis'].isNotEmpty) {
       schepermis = List<DBType>.from(json['schepermis'].map((e) => DBType.fromJson(e)).toList());
@@ -64,17 +64,17 @@ class ScheduleGuest extends RegularModel {
     Map<String, dynamic> data = super.toJson();
     data['scheguestid'] = scheguestid;
     data['scheid'] = scheid;
-    data['scheuserid'] = scheuserid;
+    data['userid'] = userid;
     data['schebpid'] = schebpid;
     data['schepermisid'] = schepermisid;
     if (schedule != null) {
       data['schedule'] = schedule!.toJson();
     }
-    if (scheuser != null) {
-      data['scheuser'] = scheuser!.toJson();
+    if (user != null) {
+      data['scheuser'] = user!.toJson();
     }
-    if (schebp != null) {
-      data['schebp'] = schebp!.toJson();
+    if (businesspartner != null) {
+      data['schebp'] = businesspartner!.toJson();
     }
     if (schepermis != null) {
       data['schepermis'] = schepermis!.map((e) => e.toJson()).toList();
