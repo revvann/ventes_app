@@ -4,7 +4,6 @@ import 'package:ventes/network/contracts/fetch_data_contract.dart';
 import 'package:ventes/helpers/auth_helper.dart';
 import 'package:ventes/app/models/auth_model.dart';
 import 'package:ventes/app/models/user_detail_model.dart';
-import 'package:ventes/app/models/user_model.dart';
 import 'package:ventes/network/services/schedule_service.dart';
 import 'package:ventes/network/services/user_service.dart';
 
@@ -35,7 +34,6 @@ class ScheduleFormCreatePresenter {
         _fetchDataContract.onLoadFailed(usersResponse.body['message']);
       }
     } catch (err) {
-      print(err.toString());
       _fetchDataContract.onLoadFailed(err.toString());
     }
   }
@@ -49,7 +47,6 @@ class ScheduleFormCreatePresenter {
         _createContract.onCreateFailed(response.body['message']);
       }
     } catch (err) {
-      print(err.toString());
       _createContract.onCreateFailed(err.toString());
     }
   }
