@@ -6,9 +6,9 @@ import 'package:intl/intl.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/helpers/auth_helper.dart';
 import 'package:ventes/helpers/function_helpers.dart';
-import 'package:ventes/routes/regular_route.dart';
-import 'package:ventes/services/auth_service.dart';
-import 'package:ventes/views/splash_screen.dart';
+import 'package:ventes/routing/routes/regular_route.dart';
+import 'package:ventes/network/services/auth_service.dart';
+import 'package:ventes/app/resources/views/splash_screen.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() async {

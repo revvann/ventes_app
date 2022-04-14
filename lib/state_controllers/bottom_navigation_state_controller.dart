@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ventes/constants/views.dart';
-import 'package:ventes/navigators/dashboard_navigator.dart';
-import 'package:ventes/navigators/history_navigator.dart';
-import 'package:ventes/navigators/nearby_navigator.dart';
-import 'package:ventes/navigators/schedule_navigator.dart';
-import 'package:ventes/navigators/settings_navigator.dart';
+import 'package:ventes/routing/navigators/dashboard_navigator.dart';
+import 'package:ventes/routing/navigators/history_navigator.dart';
+import 'package:ventes/routing/navigators/nearby_navigator.dart';
+import 'package:ventes/routing/navigators/schedule_navigator.dart';
+import 'package:ventes/routing/navigators/settings_navigator.dart';
 
 class BottomNavigationStateController extends GetxController {
   final _currentIndex = Views.dashboard.obs;

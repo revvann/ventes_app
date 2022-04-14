@@ -1,8 +1,8 @@
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:ventes/models/auth_model.dart';
-import 'package:ventes/services/auth_service.dart';
-import 'package:ventes/services/user_service.dart';
+import 'package:ventes/app/models/auth_model.dart';
+import 'package:ventes/network/services/auth_service.dart';
+import 'package:ventes/network/services/user_service.dart';
 
 class AuthHelper {
   final _authService = Get.find<AuthService>();
