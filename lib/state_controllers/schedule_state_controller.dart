@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:ventes/state_controllers/regular_state_controller.dart';
-import 'package:ventes/widgets/regular_time_picker.dart';
+import 'package:ventes/app/resources/widgets/regular_time_picker.dart';
 
 class ScheduleStateController extends RegularStateController {
   final filterTimeInputController = TextEditingController();

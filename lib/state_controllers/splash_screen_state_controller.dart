@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:simple_animations/simple_animations.dart';
-import 'package:ventes/views/started_page.dart';
+import 'package:ventes/app/resources/views/started_page.dart';
 
 class SplashScreenStateController extends GetxController with GetTickerProviderStateMixin {
   late Animation<double> _logoPos;

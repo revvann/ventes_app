@@ -13,13 +13,13 @@ import 'package:ventes/constants/app.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/helpers/function_helpers.dart';
-import 'package:ventes/models/user_detail_model.dart';
-import 'package:ventes/presenters/schedule_fc_presenter.dart';
-import 'package:ventes/resources/data_sources/schedule_fc_data_source.dart';
+import 'package:ventes/app/models/user_detail_model.dart';
+import 'package:ventes/app/presenters/schedule_fc_presenter.dart';
+import 'package:ventes/state_sources/data_sources/schedule_fc_data_source.dart';
 import 'package:ventes/state_controllers/regular_state_controller.dart';
-import 'package:ventes/resources/form_sources/schedule_fc_form_source.dart';
-import 'package:ventes/widgets/regular_bottom_sheet.dart';
-import 'package:ventes/widgets/regular_dropdown.dart';
+import 'package:ventes/state_sources/form_sources/schedule_fc_form_source.dart';
+import 'package:ventes/app/resources/widgets/regular_bottom_sheet.dart';
+import 'package:ventes/app/resources/widgets/regular_dropdown.dart';
 
 class ScheduleFormCreateStateController extends RegularStateController {
   ScheduleFormCreateFormSource formSource = ScheduleFormCreateFormSource();
