@@ -1,12 +1,22 @@
+// ignore_for_file: prefer_const_constructors
+
 part of "package:ventes/views/schedule_form/create/schedule_fc.dart";
 
 class _GuestList extends StatelessWidget {
   _GuestList({
     required this.guests,
     this.onRemove,
+    required this.onReadOnlyChanged,
+    required this.onAddMemberChanged,
+    required this.onShareLinkChanged,
+    required this.checkPermission,
   });
-  List<UserDetail> guests;
-  void Function(UserDetail item)? onRemove;
+  List<ScheduleGuest> guests;
+  void Function(dynamic)? onRemove;
+  void Function(int, bool) onReadOnlyChanged;
+  void Function(int, bool) onAddMemberChanged;
+  void Function(int, bool) onShareLinkChanged;
+  bool Function(int, SchedulePermission) checkPermission;
 
   @override
   Widget build(BuildContext context) {
@@ -15,70 +25,52 @@ class _GuestList extends StatelessWidget {
       physics: NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       itemBuilder: (context, index) {
-        UserDetail item = guests[index];
-        return Container(
-          padding: EdgeInsets.symmetric(
-            vertical: RegularSize.s,
-            horizontal: RegularSize.s,
-          ),
-          child: Row(
-            children: [
-              Expanded(
-                child: Row(
-                  children: [
-                    Container(
-                      padding: EdgeInsets.all(RegularSize.s),
-                      child: Text(
-                        item.user?.username?.substring(0, 2) ?? "",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14,
-                        ),
-                      ),
-                      decoration: BoxDecoration(
-                        color: RegularColor.purple,
-                        shape: BoxShape.circle,
-                      ),
-                    ),
-                    SizedBox(width: RegularSize.xs),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          item.user?.username ?? "",
-                          style: TextStyle(
-                            color: RegularColor.dark,
-                            fontSize: 16,
-                          ),
-                        ),
-                        Text(
-                          item.usertype?.typename ?? "",
-                          style: TextStyle(
-                            color: RegularColor.gray,
-                            fontSize: 14,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+        ScheduleGuest item = guests[index];
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (index > 0)
+              SizedBox(
+                height: RegularSize.s,
               ),
-              GestureDetector(
-                onTap: () {
-                  if (onRemove != null) {
-                    onRemove!.call(item);
-                  }
-                },
-                child: SvgPicture.asset(
-                  "assets/svg/close.svg",
-                  color: RegularColor.dark,
-                  height: RegularSize.s,
-                  width: RegularSize.s,
-                ),
-              ),
-            ],
-          ),
+            _GuestListItem(
+              guest: item,
+              removable: true,
+              onRemove: onRemove,
+            ),
+            Obx(() {
+              bool readOnlyValue = checkPermission(item.userid ?? 0, SchedulePermission.readOnly);
+              bool addMemberValue = checkPermission(item.userid ?? 0, SchedulePermission.addMember);
+              bool shareLinkValue = checkPermission(item.userid ?? 0, SchedulePermission.shareLink);
+              return Row(
+                children: [
+                  Expanded(
+                    child: _ReadOnlyCheckbox(
+                      onChecked: (value) => onReadOnlyChanged(item.userid ?? 0, value),
+                      value: readOnlyValue,
+                    ),
+                  ),
+                  Expanded(
+                    child: _SharelinkCheckbox(
+                      onChecked: (value) => onShareLinkChanged(item.userid ?? 0, value),
+                      enabled: !readOnlyValue,
+                      value: shareLinkValue,
+                    ),
+                  ),
+                  Expanded(
+                    child: _AddmemberCheckbox(
+                      onChecked: (value) => onAddMemberChanged(item.userid ?? 0, value),
+                      enabled: !readOnlyValue,
+                      value: addMemberValue,
+                    ),
+                  ),
+                ],
+              );
+            }),
+            SizedBox(
+              height: RegularSize.s,
+            ),
+          ],
         );
       },
     );

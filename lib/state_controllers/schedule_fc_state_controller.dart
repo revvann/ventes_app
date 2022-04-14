@@ -29,12 +29,9 @@ class ScheduleFormCreateStateController extends RegularStateController {
   late CameraPosition currentPos;
 
   final Rx<Set<Marker>> _markers = Rx<Set<Marker>>({});
-  final Rx<List<UserDetail>> _guests = Rx<List<UserDetail>>([]);
 
   Set<Marker> get markers => _markers.value;
   set markers(Set<Marker> value) => _markers.value = value;
-  List<UserDetail> get guests => _guests.value;
-  set guests(List<UserDetail> value) => _guests.value = value;
 
   @override
   void dispose() {

@@ -1,5 +1,6 @@
 import 'package:ventes/contracts/create_contract.dart';
 import 'package:ventes/contracts/fetch_data_contract.dart';
+import 'package:ventes/models/user_detail_model.dart';
 import 'package:ventes/presenters/schedule_fc_presenter.dart';
 
 class ScheduleFormCreateDataSource {
@@ -11,5 +12,9 @@ class ScheduleFormCreateDataSource {
 
   void createSchedule(Map<String, dynamic> data) {
     _presenter.createSchedule(data);
+  }
+
+  Future<List<UserDetail>> filterUser(String? search) async {
+    return _presenter.filterUser(search);
   }
 }

@@ -12,6 +12,7 @@ class SigninDataSource {
   set isLoading(bool value) => _isLoading.value = value;
 
   void signin(Map<String, dynamic> credentials) {
+    isLoading = true;
     presenter.signIn(credentials);
   }
 }

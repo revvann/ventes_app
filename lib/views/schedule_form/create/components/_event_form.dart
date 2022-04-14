@@ -16,26 +16,25 @@ class _EventForm extends StatelessWidget {
         _DatestartInput(
           controller: controller.formSource.schestartdateTEC,
           initialDate: controller.formSource.schestartdate,
-          onSelected: controller.formSource.onDateStartSelected,
+          onSelected: controller.formSource.listener.onDateStartSelected,
         ),
         SizedBox(
           height: RegularSize.m,
         ),
-        Obx( () {
-            return _DateendInput(
-              controller: controller.formSource.scheenddateTEC,
-              initialDate: controller.formSource.scheenddate,
-              onSelected: controller.formSource.onDateEndSelected,
-              minDate: controller.formSource.schestartdate,
-            );
-          }
-        ),
+        Obx(() {
+          return _DateendInput(
+            controller: controller.formSource.scheenddateTEC,
+            initialDate: controller.formSource.scheenddate,
+            onSelected: controller.formSource.listener.onDateEndSelected,
+            minDate: controller.formSource.fullStartDate.add(Duration(minutes: 15)),
+          );
+        }),
         SizedBox(
           height: RegularSize.m,
         ),
         _TwintimeInput(
-          onTimeEndSelected: controller.formSource.onTimeEndSelected,
-          onTimeStartSelected: controller.formSource.onTimeStartSelected,
+          onTimeEndSelected: controller.formSource.listener.onTimeEndSelected,
+          onTimeStartSelected: controller.formSource.listener.onTimeStartSelected,
           timeStartController: controller.formSource.schestarttimeDC,
           timeEndController: controller.formSource.scheendtimeDC,
         ),
@@ -43,7 +42,7 @@ class _EventForm extends StatelessWidget {
           height: RegularSize.m,
         ),
         _AlldayCheckbox(
-          onChecked: controller.formSource.allDayToggle,
+          onChecked: controller.formSource.listener.onAlldayValueChanged,
         ),
         SizedBox(
           height: RegularSize.m,
@@ -56,14 +55,14 @@ class _EventForm extends StatelessWidget {
           },
           child: _LocationInput(
             controller: controller.formSource.schelocTEC,
-            validator: controller.formSource.schelocValidator,
+            validator: controller.formSource.validator.scheloc,
           ),
         ),
         SizedBox(
           height: RegularSize.m,
         ),
         _OnlineCheckbox(
-          onChecked: controller.formSource.onlineToggle,
+          onChecked: controller.formSource.listener.onOnlineValueChanged,
         ),
         SizedBox(
           height: RegularSize.m,
@@ -72,7 +71,7 @@ class _EventForm extends StatelessWidget {
           return _LinkInput(
             controller: controller.formSource.scheonlinkTEC,
             enabled: controller.formSource.scheonline,
-            validator: controller.formSource.scheonlinkValidator,
+            validator: controller.formSource.validator.scheonlink,
           );
         }),
         SizedBox(
@@ -86,94 +85,54 @@ class _EventForm extends StatelessWidget {
         SizedBox(
           height: RegularSize.m,
         ),
-        Obx(() {
-          return _GuestDropdown(
-            guests: controller.guests,
-            onChanged: controller.formSource.onGuestChanged,
-          );
-        }),
-        SizedBox(
-          height: RegularSize.m,
+        _GuestDropdown(
+          onFilter: controller.dataSource.filterUser,
+          onItemSelected: controller.formSource.listener.onGuestSelected,
+          itemBuilder: (UserDetail user) {
+            return Obx(
+              () {
+                List<ScheduleGuest> guestsSelected = controller.formSource.guests;
+                bool isSelected = guestsSelected.where((g) => g.userid == user.userid).isNotEmpty;
+                return _GuestListItem(
+                  userDetail: user,
+                  isSelected: isSelected,
+                );
+              },
+            );
+          },
         ),
         Obx(() {
-          return Column(
-            children: [
-              if (controller.formSource.guests.isNotEmpty)
-                Container(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    ScheduleString.selectedGuestLabel,
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: RegularColor.dark,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              SizedBox(
-                height: RegularSize.s,
-              ),
-              _GuestList(
-                guests: controller.formSource.guests,
-                onRemove: controller.formSource.onRemoveGuest,
-              ),
-            ],
-          );
-        }),
-        SizedBox(
-          height: RegularSize.m,
-        ),
-        Obx(() {
-          return Column(
-            children: [
-              if (controller.formSource.guests.isNotEmpty)
-                Container(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    ScheduleString.schepermisLabel,
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: RegularColor.dark,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              SizedBox(
-                height: RegularSize.m,
-              ),
-              if (controller.formSource.guests.isNotEmpty)
-                Row(
+          return controller.formSource.guests.isNotEmpty
+              ? Column(
                   children: [
-                    Obx(() {
-                      return Expanded(
-                        child: _ReadOnlyCheckbox(
-                          onChecked: controller.formSource.readOnlyToggle,
-                          value: controller.formSource.schepermisid.contains(controller.formSource.readOnlyId),
+                    SizedBox(
+                      height: RegularSize.m,
+                    ),
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        ScheduleString.selectedGuestLabel,
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: RegularColor.dark,
+                          fontWeight: FontWeight.bold,
                         ),
-                      );
-                    }),
-                    Obx(() {
-                      return Expanded(
-                        child: _SharelinkCheckbox(
-                          onChecked: controller.formSource.shareLinkToggle,
-                          enabled: !controller.formSource.schepermisid.contains(controller.formSource.readOnlyId),
-                          value: controller.formSource.schepermisid.contains(controller.formSource.shareLinkId),
-                        ),
-                      );
-                    }),
-                    Obx(() {
-                      return Expanded(
-                        child: _AddmemberCheckbox(
-                          onChecked: controller.formSource.addMemberToggle,
-                          enabled: !controller.formSource.schepermisid.contains(controller.formSource.readOnlyId),
-                          value: controller.formSource.schepermisid.contains(controller.formSource.addMemberId),
-                        ),
-                      );
-                    }),
+                      ),
+                    ),
+                    SizedBox(
+                      height: RegularSize.s,
+                    ),
+                    _GuestList(
+                      guests: controller.formSource.guests,
+                      onRemove: controller.formSource.listener.onRemoveGuest,
+                      onAddMemberChanged: controller.formSource.listener.onAddMemberValueChanged,
+                      onReadOnlyChanged: controller.formSource.listener.onReadOnlyValueChanged,
+                      onShareLinkChanged: controller.formSource.listener.onShareLinkValueChanged,
+                      checkPermission: controller.formSource.hasPermission,
+                    ),
                   ],
-                ),
-            ],
-          );
+                )
+              : Container();
         }),
         SizedBox(
           height: RegularSize.m,
