@@ -12,17 +12,21 @@ class ScheduleFormCreateValidator {
   }
 
   String? scheonlink(String? value) {
-    if (formSource.scheonline) {
-      if (value == null || value.isEmpty) {
-        return ScheduleString.scheonlinkInvalid;
+    if (formSource.isEvent) {
+      if (formSource.scheonline) {
+        if (value == null || value.isEmpty) {
+          return ScheduleString.scheonlinkInvalid;
+        }
       }
     }
   }
 
   String? scheloc(String? value) {
-    if (!formSource.scheonline) {
-      if (value == null || value.isEmpty) {
-        return ScheduleString.schelocInvalid;
+    if (formSource.isEvent) {
+      if (!formSource.scheonline) {
+        if (value == null || value.isEmpty) {
+          return ScheduleString.schelocInvalid;
+        }
       }
     }
   }

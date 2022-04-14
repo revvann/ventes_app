@@ -14,6 +14,8 @@ class ScheduleString {
   static const scheguestLabel = "Guests";
   static const schepermisLabel = "Guest Permission";
   static const selectedGuestLabel = "Selected Guests";
+  static const schetzLabel = "Timezone";
+  static const scheprivateLabel = "Private";
 
   static const schenmInvalid = "Title is required";
   static const scheonlinkInvalid = "Meeting Link is required";

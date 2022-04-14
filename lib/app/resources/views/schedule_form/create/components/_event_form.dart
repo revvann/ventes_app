@@ -13,11 +13,13 @@ class _EventForm extends StatelessWidget {
         SizedBox(
           height: RegularSize.m,
         ),
-        _DatestartInput(
-          controller: controller.formSource.schestartdateTEC,
-          initialDate: controller.formSource.schestartdate,
-          onSelected: controller.formSource.listener.onDateStartSelected,
-        ),
+        Obx(() {
+          return _DatestartInput(
+            controller: controller.formSource.schestartdateTEC,
+            initialDate: controller.formSource.schestartdate,
+            onSelected: controller.formSource.listener.onDateStartSelected,
+          );
+        }),
         SizedBox(
           height: RegularSize.m,
         ),
@@ -37,6 +39,12 @@ class _EventForm extends StatelessWidget {
           onTimeStartSelected: controller.formSource.listener.onTimeStartSelected,
           timeStartController: controller.formSource.schestarttimeDC,
           timeEndController: controller.formSource.scheendtimeDC,
+        ),
+        SizedBox(
+          height: RegularSize.m,
+        ),
+        _TimezoneDropdown(
+          controller: controller.formSource.schetzDC,
         ),
         SizedBox(
           height: RegularSize.m,
@@ -85,14 +93,39 @@ class _EventForm extends StatelessWidget {
         SizedBox(
           height: RegularSize.m,
         ),
+        _PrivateCheckbox(onChecked: controller.formSource.listener.onPrivateValueChanged),
+        SizedBox(
+          height: RegularSize.m,
+        ),
+        Obx(() {
+          return _TowardDropdown(
+            selected: controller.formSource.schetoward?.user?.userfullname,
+            onFilter: controller.formSource.listener.onTowardFilter,
+            onItemSelected: controller.formSource.listener.onTowardSelected,
+            itemBuilder: (UserDetail user) {
+              return Obx(
+                () {
+                  bool isSelected = controller.formSource.schetoward?.userid == user.userid;
+                  return _GuestListItem(
+                    userDetail: user,
+                    isSelected: isSelected,
+                  );
+                },
+              );
+            },
+          );
+        }),
+        SizedBox(
+          height: RegularSize.m,
+        ),
         _GuestDropdown(
-          onFilter: controller.dataSource.filterUser,
+          onFilter: controller.formSource.listener.onGuestFilter,
           onItemSelected: controller.formSource.listener.onGuestSelected,
           itemBuilder: (UserDetail user) {
             return Obx(
               () {
                 List<ScheduleGuest> guestsSelected = controller.formSource.guests;
-                bool isSelected = guestsSelected.where((g) => g.userid == user.userid).isNotEmpty;
+                bool isSelected = guestsSelected.where((g) => g.scheuserid == user.userid).isNotEmpty;
                 return _GuestListItem(
                   userDetail: user,
                   isSelected: isSelected,

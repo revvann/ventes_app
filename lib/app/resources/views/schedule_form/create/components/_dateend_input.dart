@@ -3,12 +3,12 @@ part of 'package:ventes/app/resources/views/schedule_form/create/schedule_fc.dar
 class _DateendInput extends StatelessWidget {
   _DateendInput({
     required this.onSelected,
-    required this.initialDate,
+    this.initialDate,
     required this.controller,
     this.minDate,
   });
 
-  DateTime initialDate;
+  DateTime? initialDate;
   TextEditingController controller;
   void Function(DateTime? value) onSelected;
   DateTime? minDate;

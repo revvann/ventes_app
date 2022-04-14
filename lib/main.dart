@@ -10,8 +10,10 @@ import 'package:ventes/routing/routes/regular_route.dart';
 import 'package:ventes/network/services/auth_service.dart';
 import 'package:ventes/app/resources/views/splash_screen.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:timezone/data/latest.dart' as tz;
 
 void main() async {
+  tz.initializeTimeZones();
   runApp(const MyApp());
   Intl.defaultLocale = 'en_ID';
 }

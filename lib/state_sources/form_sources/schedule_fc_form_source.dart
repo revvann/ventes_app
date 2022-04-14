@@ -1,15 +1,18 @@
 // ignore_for_file: unnecessary_getters_setters, prefer_const_constructors
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:get/get.dart';
-import 'package:ventes/constants/strings/schedule_string.dart';
-import 'package:ventes/helpers/function_helpers.dart';
 import 'package:ventes/app/models/schedule_guest_model.dart';
 import 'package:ventes/app/models/user_detail_model.dart';
+import 'package:ventes/app/resources/widgets/regular_dropdown.dart';
+import 'package:ventes/helpers/function_helpers.dart';
 import 'package:ventes/state_sources/data_sources/schedule_fc_data_source.dart';
 import 'package:ventes/state_sources/form_listeners/schedule_fc_listener.dart';
 import 'package:ventes/state_sources/form_validators/schedule_fc_validator.dart';
-import 'package:ventes/app/resources/widgets/regular_dropdown.dart';
+import 'package:timezone/timezone.dart' as tz;
 
 class ScheduleFormCreateFormSource {
   int readOnlyId = 14;
@@ -33,13 +36,12 @@ class ScheduleFormCreateFormSource {
   final scheonlinkTEC = TextEditingController();
   final schestarttimeDC = DropdownController<String?>(null);
   final scheendtimeDC = DropdownController<String?>(null);
+  final schetzDC = DropdownController<String?>(null);
   final formKey = GlobalKey<FormState>();
 
-  String _schenm = "";
-  String _scheloc = "";
-  String _schedesc = "";
   String _scheonlink = "";
-  int _scheremind = 0;
+  String _scheloc = "";
+  bool _scheprivate = false;
   final Rx<DateTime> _schestartdate = Rx<DateTime>(DateTime.now());
   final Rx<DateTime> _scheenddate = Rx<DateTime>(DateTime.now());
   final Rx<DateTime?> _schestarttime = Rx<DateTime?>(null);
@@ -48,23 +50,31 @@ class ScheduleFormCreateFormSource {
   final Rx<bool> _scheallday = Rx<bool>(false);
   final Rx<bool> _scheonline = Rx<bool>(false);
   final Rx<List<ScheduleGuest>> _guests = Rx<List<ScheduleGuest>>([]);
+  final Rx<UserDetail?> _schetoward = Rx<UserDetail?>(null);
 
-  String get schenm => _schenm;
+  bool get isEvent => _schetype.value == eventId;
+  bool get isTask => _schetype.value == taskId;
+  bool get isReminder => _schetype.value == reminderId;
+
+  String get schenm => schenmTEC.text;
   set schenm(String value) {
     schenmTEC.text = value;
-    _schenm = value;
   }
 
   DateTime get schestartdate => _schestartdate.value;
-  set schestartdate(DateTime value) {
-    schestartdateTEC.text = formatDate(value);
-    _schestartdate.value = value;
+  set schestartdate(DateTime? value) {
+    if (value != null) {
+      schestartdateTEC.text = formatDate(value);
+      _schestartdate.value = value;
+    }
   }
 
   DateTime get scheenddate => _scheenddate.value;
-  set scheenddate(DateTime value) {
-    scheenddateTEC.text = formatDate(value);
-    _scheenddate.value = value;
+  set scheenddate(DateTime? value) {
+    if (value != null) {
+      _scheenddate.value = value;
+      scheenddateTEC.text = formatDate(value);
+    }
   }
 
   DateTime? get schestarttime => _schestarttime.value;
@@ -79,31 +89,22 @@ class ScheduleFormCreateFormSource {
   }
 
   set schestarttimequiet(DateTime? value) {
-    if (value == null) {
-      _schestarttime.value = null;
-    } else {
-      _schestarttime.value = value;
-    }
+    _schestarttime.value = value;
   }
 
   DateTime? get scheendtime => _scheendtime.value;
   set scheendtime(DateTime? value) {
     if (value == null) {
       scheendtimeDC.value = null;
-      _scheendtime.value = null;
     } else {
       scheendtimeDC.items = createTimeList(value.hour, value.minute);
       scheendtimeDC.value = formatTime(value);
-      _scheendtime.value = value;
     }
+    _scheendtime.value = value;
   }
 
   set scheendtimequiet(DateTime? value) {
-    if (value == null) {
-      _scheendtime.value = null;
-    } else {
-      _scheendtime.value = value;
-    }
+    _scheendtime.value = value;
   }
 
   int get schetype => _schetype.value;
@@ -118,29 +119,48 @@ class ScheduleFormCreateFormSource {
     _scheloc = value;
   }
 
+  set schelocquiet(String value) {
+    _scheloc = value;
+  }
+
+  String? get schedesc => schedescTEC.text;
+  set schedesc(String? value) {
+    schedescTEC.text = value ?? "";
+  }
+
   bool get scheonline => _scheonline.value;
   set scheonline(bool value) => _scheonline.value = value;
 
-  int get scheremind => _scheremind;
-  set scheremind(int value) {
-    scheremindTEC.text = value.toString();
-    _scheremind = value;
-  }
+  bool get scheprivate => _scheprivate;
+  set scheprivate(bool value) => _scheprivate = value;
 
-  String get schedescription => _schedesc;
-  set schedescription(String value) {
-    schedescTEC.text = value;
-    _schedesc = value;
+  int get scheremind => int.tryParse(scheremindTEC.text) ?? 0;
+  set scheremind(int? value) {
+    scheremindTEC.text = (value ?? 0).toString();
   }
 
   String get scheonlink => _scheonlink;
-  set scheonlink(String value) {
-    scheonlinkTEC.text = value;
+  set scheonlink(String? value) {
+    if (value != null) {
+      scheonlinkTEC.text = value;
+      _scheonlink = value;
+    }
+  }
+
+  set scheonlinkquiet(String value) {
     _scheonlink = value;
+  }
+
+  String? get schetz => schetzDC.value;
+  set schetz(String? value) {
+    schetzDC.value = value;
   }
 
   List<ScheduleGuest> get guests => _guests.value;
   set guests(List<ScheduleGuest> value) => _guests.value = value;
+
+  UserDetail? get schetoward => _schetoward.value;
+  set schetoward(UserDetail? value) => _schetoward.value = value;
 
   DateTime get fullStartDate {
     return DateTime(
@@ -168,26 +188,27 @@ class ScheduleFormCreateFormSource {
     _guests.update((value) => value!
       ..add(
         ScheduleGuest(
-          userid: guest.userid,
+          scheuserid: guest.userid,
           schebpid: guest.userdtbpid,
-          user: guest.user,
+          scheuser: guest.user,
           businesspartner: guest.businesspartner,
         ),
       ));
   }
 
   void removeGuest(guest) {
-    _guests.update((value) => value!..removeWhere((g) => g.userid == guest.userid));
+    int? userid = guest is UserDetail ? guest.userid : guest.scheuserid;
+    _guests.update((value) => value!..removeWhere((g) => g.scheuserid == userid));
   }
 
   void setPermission(int userid, List<int> permission) {
-    _guests.update((value) => value!..firstWhere((g) => g.userid == userid).schepermisid = permission);
+    _guests.update((value) => value!..firstWhere((g) => g.scheuserid == userid).schepermisid = permission);
   }
 
   void removePermission(int userid, int permission) {
     _guests.update((value) {
       if (value != null) {
-        var guest = value.firstWhere((g) => g.userid == userid);
+        var guest = value.firstWhere((g) => g.scheuserid == userid);
         if (guest.schepermisid != null) {
           guest.schepermisid!.remove(permission);
         }
@@ -198,7 +219,7 @@ class ScheduleFormCreateFormSource {
   void addPermission(int userid, int permission) {
     _guests.update((value) {
       if (value != null) {
-        var guest = value.firstWhere((g) => g.userid == userid);
+        var guest = value.firstWhere((g) => g.scheuserid == userid);
         if (guest.schepermisid != null) {
           guest.schepermisid!.add(permission);
         } else {
@@ -211,11 +232,11 @@ class ScheduleFormCreateFormSource {
   bool hasPermission(int userid, SchedulePermission permission) {
     switch (permission) {
       case SchedulePermission.readOnly:
-        return _guests.value.firstWhere((g) => g.userid == userid).schepermisid?.contains(readOnlyId) ?? false;
+        return _guests.value.firstWhere((g) => g.scheuserid == userid).schepermisid?.contains(readOnlyId) ?? false;
       case SchedulePermission.addMember:
-        return _guests.value.firstWhere((g) => g.userid == userid).schepermisid?.contains(addMemberId) ?? false;
+        return _guests.value.firstWhere((g) => g.scheuserid == userid).schepermisid?.contains(addMemberId) ?? false;
       case SchedulePermission.shareLink:
-        return _guests.value.firstWhere((g) => g.userid == userid).schepermisid?.contains(shareLinkId) ?? false;
+        return _guests.value.firstWhere((g) => g.scheuserid == userid).schepermisid?.contains(shareLinkId) ?? false;
       default:
         return false;
     }
@@ -267,53 +288,39 @@ class ScheduleFormCreateFormSource {
     scheonlinkTEC.dispose();
   }
 
-  init() {
+  init() async {
     validator = ScheduleFormCreateValidator(this);
     listener = ScheduleFormCreateListener(this);
+
     setStartTimeList();
-    scheremindTEC.text = _scheremind.toString();
-    _scheonline.stream.listen((value) {
-      if (value) {
-        scheonlinkTEC.text = _scheonlink;
-        schelocTEC.text = "";
-      } else {
-        scheonlinkTEC.text = "";
-        schelocTEC.text = _scheloc;
-      }
-    });
-    _scheallday.stream.listen((value) {
-      if (value) {
-        schestarttimeDC.enabled = false;
-        scheendtimeDC.enabled = false;
-        schestarttimeDC.value = null;
-        scheendtimeDC.value = null;
-      } else {
-        schestarttimeDC.enabled = true;
-        scheendtimeDC.enabled = true;
-        if (_schestarttime.value != null) {
-          schestarttimeDC.value = formatTime(_schestarttime.value!);
-        }
-        if (_scheendtime.value != null) {
-          scheendtimeDC.value = formatTime(_scheendtime.value!);
-        }
-      }
-    });
+
+    scheremindTEC.text = "0";
+    scheonlinkTEC.addListener(listener.onOnlineLinkChanged);
+    schelocTEC.addListener(listener.onLocationChanged);
+
+    schetzDC.items = getTimezoneList();
+    String currentTimeZone = await FlutterNativeTimezone.getLocalTimezone();
+    schetzDC.value = currentTimeZone;
   }
 
   Map<String, dynamic> toJson() {
     return {
       "schenm": schenm,
-      "schestartdate": formatDate(_schestartdate.value),
-      "scheenddate": formatDate(_scheenddate.value),
+      "schestartdate": formatDate(schestartdate),
+      "scheenddate": isEvent ? formatDate(scheenddate) : null,
       "schestarttime": _schestarttime.value != null ? formatTime(_schestarttime.value!) : null,
-      "scheendtime": _scheendtime.value != null ? formatTime(_scheendtime.value!) : null,
-      "scheloc": scheloc,
-      "scheremind": scheremind,
-      "schedescription": schedescription,
-      "scheonline": scheonline,
-      "scheonlink": scheonlink,
+      "scheendtime": isEvent ? (_scheendtime.value != null ? formatTime(_scheendtime.value!) : null) : null,
+      "scheloc": isEvent ? scheloc : null,
+      "scheremind": isEvent ? scheremind : null,
+      "schedesc": !isReminder ? schedesc : null,
+      "scheonline": isEvent ? scheonline : false,
+      "scheonlink": isEvent ? scheonlink : null,
       "scheallday": scheallday,
       "schetype": schetype,
+      "schetz": isEvent ? schetz : null,
+      "scheprivate": isEvent ? scheprivate : false,
+      "schetoward": isEvent ? schetoward?.userid : null,
+      "members": isEvent ? jsonEncode(guests.map((g) => g.toJson()).toList()) : null,
     };
   }
 }

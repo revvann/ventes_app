@@ -3,14 +3,14 @@ part of 'package:ventes/app/resources/views/schedule_form/create/schedule_fc.dar
 class _DatestartInput extends StatelessWidget {
   _DatestartInput({
     required this.onSelected,
-    required this.initialDate,
+    this.initialDate,
     required this.controller,
     this.minDate,
     this.validator,
   });
 
   void Function(DateTime? value) onSelected;
-  DateTime initialDate;
+  DateTime? initialDate;
   TextEditingController controller;
   DateTime? minDate;
   String? Function(String?)? validator;

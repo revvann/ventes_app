@@ -2,24 +2,18 @@
 
 import 'dart:async';
 
-import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:intl/intl.dart';
-import 'package:ventes/constants/app.dart';
+import 'package:ventes/app/resources/widgets/regular_bottom_sheet.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/helpers/function_helpers.dart';
-import 'package:ventes/app/models/user_detail_model.dart';
-import 'package:ventes/app/presenters/schedule_fc_presenter.dart';
-import 'package:ventes/state_sources/data_sources/schedule_fc_data_source.dart';
 import 'package:ventes/state_controllers/regular_state_controller.dart';
+import 'package:ventes/state_sources/data_sources/schedule_fc_data_source.dart';
 import 'package:ventes/state_sources/form_sources/schedule_fc_form_source.dart';
-import 'package:ventes/app/resources/widgets/regular_bottom_sheet.dart';
-import 'package:ventes/app/resources/widgets/regular_dropdown.dart';
 
 class ScheduleFormCreateStateController extends RegularStateController {
   ScheduleFormCreateFormSource formSource = ScheduleFormCreateFormSource();
@@ -127,7 +121,10 @@ class ScheduleFormCreateStateController extends RegularStateController {
   }
 
   void createSchedule() {
-    Map<String, dynamic> data = formSource.toJson();
-    dataSource.createSchedule(data);
+    if (formSource.isValid()) {
+      Map<String, dynamic> data = formSource.toJson();
+      print(data);
+      dataSource.createSchedule(data);
+    }
   }
 }
