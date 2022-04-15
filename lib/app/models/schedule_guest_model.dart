@@ -7,22 +7,22 @@ import 'package:ventes/app/models/user_model.dart';
 class ScheduleGuest extends RegularModel {
   int? scheguestid;
   int? scheid;
-  int? userid;
+  int? scheuserid;
   int? schebpid;
   List<int>? schepermisid;
   Schedule? schedule;
-  User? user;
+  User? scheuser;
   BusinessPartner? businesspartner;
   List<DBType>? schepermis;
 
   ScheduleGuest({
     this.scheguestid,
     this.scheid,
-    this.userid,
+    this.scheuserid,
     this.schebpid,
     this.schepermisid,
     this.schedule,
-    this.user,
+    this.scheuser,
     this.businesspartner,
     this.schepermis,
     String? createddate,
@@ -41,14 +41,14 @@ class ScheduleGuest extends RegularModel {
   ScheduleGuest.fromJson(Map<String, dynamic> json) {
     scheguestid = json['scheguestid'];
     scheid = json['scheid'];
-    userid = json['userid'];
+    scheuserid = json['scheuserid'];
     schebpid = json['schebpid'];
     schepermisid = json['schepermisid'];
     if (json['schedule'] != null) {
       schedule = Schedule.fromJson(json['schedule']);
     }
     if (json['scheuser'] != null) {
-      user = User.fromJson(json['scheuser']);
+      scheuser = User.fromJson(json['scheuser']);
     }
     if (json['schebp'] != null) {
       businesspartner = BusinessPartner.fromJson(json['schebp']);
@@ -64,14 +64,14 @@ class ScheduleGuest extends RegularModel {
     Map<String, dynamic> data = super.toJson();
     data['scheguestid'] = scheguestid;
     data['scheid'] = scheid;
-    data['userid'] = userid;
+    data['scheuserid'] = scheuserid;
     data['schebpid'] = schebpid;
-    data['schepermisid'] = schepermisid;
+    data['schepermisid'] = schepermisid != null ? "{${schepermisid?.join(',')}}" : null;
     if (schedule != null) {
       data['schedule'] = schedule!.toJson();
     }
-    if (user != null) {
-      data['scheuser'] = user!.toJson();
+    if (scheuser != null) {
+      data['scheuser'] = scheuser!.toJson();
     }
     if (businesspartner != null) {
       data['schebp'] = businesspartner!.toJson();

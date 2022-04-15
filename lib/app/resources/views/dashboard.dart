@@ -72,9 +72,9 @@ class DashboardView extends RegularView<DashboardStateController> {
                         ),
                         _buildMenuItem(
                           RegularColor.cyan,
-                          "assets/svg/building.svg",
-                          "Customer",
-                          () => Get.toNamed(CustomerView.route, id: DashboardNavigator.id),
+                          "assets/svg/attendance.svg",
+                          "Attendance",
+                          () {},
                         ),
                       ],
                     ),
@@ -85,9 +85,9 @@ class DashboardView extends RegularView<DashboardStateController> {
                       children: [
                         _buildMenuItem(
                           RegularColor.pink,
-                          "assets/svg/contact.svg",
-                          "Contact",
-                          () => Get.toNamed(ContactView.route, id: DashboardNavigator.id),
+                          "assets/svg/daily-visit.svg",
+                          "Daily Visit",
+                          () {},
                         ),
                         SizedBox(
                           width: RegularSize.s,
@@ -103,9 +103,9 @@ class DashboardView extends RegularView<DashboardStateController> {
                         ),
                         _buildMenuItem(
                           RegularColor.gray,
-                          "assets/svg/settings.svg",
-                          "Settings",
-                          () => $.bottomNavigation.currentIndex = Views.settings,
+                          "assets/svg/prospect.svg",
+                          "Prospect",
+                          () {},
                         ),
                       ],
                     ),

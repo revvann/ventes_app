@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+
+import 'package:timezone/timezone.dart';
 import 'package:intl/intl.dart';
 
 MaterialColor createSwatch(Color color) {
@@ -23,6 +25,25 @@ MaterialColor createSwatch(Color color) {
     800: (hslColor.withLightness(lightness - (highStep * 3))).toColor(),
     900: (hslColor.withLightness(lightness - (highStep * 4))).toColor(),
   });
+}
+
+List<Location> getTimezoneLocation() {
+  LocationDatabase tzDb = timeZoneDatabase;
+  return tzDb.locations.values.toList();
+}
+
+List<Map<String, String>> getTimezoneList() {
+  List<Location> locations = getTimezoneLocation();
+  locations = locations..sort((a, b) => a.currentTimeZone.offset.compareTo(b.currentTimeZone.offset));
+  return locations.map((location) {
+    int offset = location.currentTimeZone.offset ~/ (1000 * 60 * 60);
+    String sign = offset >= 0 ? '+' : '-';
+    String gmt = "GMT$sign$offset";
+    return {
+      'value': location.name,
+      'text': "($gmt) ${location.name}",
+    };
+  }).toList();
 }
 
 Future<Position> getCurrentPosition() async {

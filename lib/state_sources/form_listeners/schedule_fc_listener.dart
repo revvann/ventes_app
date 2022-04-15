@@ -6,28 +6,51 @@ class ScheduleFormCreateListener {
   ScheduleFormCreateListener(this.formSource);
   ScheduleFormCreateFormSource formSource;
 
+  void onLocationChanged() {
+    formSource.schelocquiet = formSource.schelocTEC.text;
+  }
+
+  void onOnlineLinkChanged() {
+    formSource.scheonlinkquiet = formSource.scheonlinkTEC.text;
+  }
+
   void onAlldayValueChanged(value) {
     if (value) {
       formSource.schestarttimeDC.enabled = false;
       formSource.scheendtimeDC.enabled = false;
+      formSource.schestarttimeDC.value = null;
+      formSource.scheendtimeDC.value = null;
     } else {
       formSource.schestarttimeDC.enabled = true;
       formSource.scheendtimeDC.enabled = true;
+      if (formSource.schestarttime != null) {
+        formSource.schestarttimeDC.value = formatTime(formSource.schestarttime!);
+      }
+      if (formSource.scheendtime != null) {
+        formSource.scheendtimeDC.value = formatTime(formSource.scheendtime!);
+      }
     }
     formSource.scheallday = value;
   }
 
+  void onPrivateValueChanged(value) {
+    formSource.scheprivate = value;
+  }
+
   void onOnlineValueChanged(value) {
     formSource.scheonline = value;
+    if (value) {
+      formSource.scheonlinkTEC.text = formSource.scheonlink;
+      formSource.schelocTEC.text = "";
+    } else {
+      formSource.scheonlinkTEC.text = "";
+      formSource.schelocTEC.text = formSource.scheloc;
+    }
   }
 
   void onDateStartSelected(DateTime? value) {
     if (value != null) {
-      formSource.schestartdate = value.subtract(Duration(
-        hours: value.hour,
-        minutes: value.minute,
-        seconds: value.second,
-      ));
+      formSource.schestartdate = value;
       if (formSource.schestartdate.isAfter(formSource.scheenddate)) {
         formSource.scheenddate = formSource.schestartdate;
       }
@@ -36,11 +59,7 @@ class ScheduleFormCreateListener {
 
   void onDateEndSelected(DateTime? value) {
     if (value != null) {
-      formSource.scheenddate = value.subtract(Duration(
-        hours: value.hour,
-        minutes: value.minute,
-        seconds: value.second,
-      ));
+      formSource.scheenddate = value;
     }
   }
 
@@ -49,9 +68,9 @@ class ScheduleFormCreateListener {
       DateTime time = parseTime(value);
       if (formSource.schestarttime != null) {
         DateTime _dateStart = formSource.schestarttime!.subtract(Duration(
-          hours: formSource.schestartdate.hour,
-          minutes: formSource.schestartdate.minute,
-          seconds: formSource.schestartdate.second,
+          hours: formSource.schestarttime!.hour,
+          minutes: formSource.schestarttime!.minute,
+          seconds: formSource.schestarttime!.second,
         ));
         formSource.schestarttimequiet = _dateStart.add(Duration(
           hours: time.hour,
@@ -77,9 +96,9 @@ class ScheduleFormCreateListener {
       DateTime time = parseTime(value);
       if (formSource.scheendtime != null) {
         DateTime _dateEnd = formSource.scheendtime!.subtract(Duration(
-          hours: formSource.scheenddate.hour,
-          minutes: formSource.scheenddate.minute,
-          seconds: formSource.scheenddate.second,
+          hours: formSource.scheendtime!.hour,
+          minutes: formSource.scheendtime!.minute,
+          seconds: formSource.scheendtime!.second,
         ));
         formSource.scheendtimequiet = _dateEnd.add(Duration(
           hours: time.hour,
@@ -137,10 +156,31 @@ class ScheduleFormCreateListener {
   }
 
   void onGuestSelected(UserDetail user) {
-    if (formSource.guests.where((item) => item.userid == user.userid).isEmpty) {
+    if (formSource.guests.where((item) => item.scheuserid == user.userid).isEmpty) {
       formSource.addGuest(user);
     } else {
       formSource.removeGuest(user);
     }
+  }
+
+  void onTowardSelected(UserDetail value) {
+    if (formSource.schetoward == null) {
+      formSource.schetoward = value;
+    } else {
+      formSource.schetoward = null;
+    }
+  }
+
+  Future<List<UserDetail>> onGuestFilter(String? search) async {
+    List<UserDetail> userDetails = await formSource.dataSource.filterUser(search);
+    userDetails = userDetails.where((item) => item.userid != formSource.schetoward?.userid).toList();
+    return userDetails;
+  }
+
+  Future<List<UserDetail>> onTowardFilter(String? search) async {
+    List<UserDetail> userDetails = await formSource.dataSource.filterUser(search);
+    List<int?> guestIds = formSource.guests.map((item) => item.scheuserid).toList();
+    userDetails = userDetails.where((item) => !guestIds.contains(item.userid)).toList();
+    return userDetails;
   }
 }

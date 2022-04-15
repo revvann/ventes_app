@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:get/get.dart';
 import 'package:ventes/network/contracts/auth_contract.dart';
 import 'package:ventes/helpers/auth_helper.dart';

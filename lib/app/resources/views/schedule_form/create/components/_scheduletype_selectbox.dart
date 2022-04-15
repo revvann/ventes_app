@@ -16,8 +16,8 @@ class _ScheduletypeSelectbox extends StatelessWidget {
       onSelected: onSelected,
       activeIndex: activeIndex,
       items: [
-        "Event",
         "Task",
+        "Event",
         "Reminder",
       ],
     );

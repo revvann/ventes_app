@@ -123,7 +123,10 @@ class ScheduleFormCreateStateController extends RegularStateController {
   }
 
   void createSchedule() {
-    Map<String, dynamic> data = formSource.toJson();
-    dataSource.createSchedule(data);
+    if (formSource.isValid()) {
+      Map<String, dynamic> data = formSource.toJson();
+      print(data);
+      dataSource.createSchedule(data);
+    }
   }
 }

@@ -17,6 +17,13 @@ class _GuestListItem extends StatelessWidget {
   void Function(dynamic)? onRemove;
 
   dynamic get item => userDetail ?? guest;
+  dynamic get user {
+    if (userDetail != null) {
+      return userDetail!.user;
+    } else if (guest != null) {
+      return guest!.scheuser;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +38,7 @@ class _GuestListItem extends StatelessWidget {
             height: 40,
             alignment: Alignment.center,
             child: Text(
-              item.user?.userfullname?.substring(0, 2).toUpperCase() ?? "",
+              user?.userfullname?.substring(0, 2).toUpperCase() ?? "",
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
@@ -48,7 +55,7 @@ class _GuestListItem extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                item.user?.userfullname ?? "",
+                user?.userfullname ?? "",
                 style: TextStyle(
                   color: RegularColor.dark,
                   fontSize: 16,

@@ -39,27 +39,27 @@ class _GuestList extends StatelessWidget {
               onRemove: onRemove,
             ),
             Obx(() {
-              bool readOnlyValue = checkPermission(item.userid ?? 0, SchedulePermission.readOnly);
-              bool addMemberValue = checkPermission(item.userid ?? 0, SchedulePermission.addMember);
-              bool shareLinkValue = checkPermission(item.userid ?? 0, SchedulePermission.shareLink);
+              bool readOnlyValue = checkPermission(item.scheuserid ?? 0, SchedulePermission.readOnly);
+              bool addMemberValue = checkPermission(item.scheuserid ?? 0, SchedulePermission.addMember);
+              bool shareLinkValue = checkPermission(item.scheuserid ?? 0, SchedulePermission.shareLink);
               return Row(
                 children: [
                   Expanded(
                     child: _ReadOnlyCheckbox(
-                      onChecked: (value) => onReadOnlyChanged(item.userid ?? 0, value),
+                      onChecked: (value) => onReadOnlyChanged(item.scheuserid ?? 0, value),
                       value: readOnlyValue,
                     ),
                   ),
                   Expanded(
                     child: _SharelinkCheckbox(
-                      onChecked: (value) => onShareLinkChanged(item.userid ?? 0, value),
+                      onChecked: (value) => onShareLinkChanged(item.scheuserid ?? 0, value),
                       enabled: !readOnlyValue,
                       value: shareLinkValue,
                     ),
                   ),
                   Expanded(
                     child: _AddmemberCheckbox(
-                      onChecked: (value) => onAddMemberChanged(item.userid ?? 0, value),
+                      onChecked: (value) => onAddMemberChanged(item.scheuserid ?? 0, value),
                       enabled: !readOnlyValue,
                       value: addMemberValue,
                     ),
