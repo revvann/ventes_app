@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:ventes/app/models/auth_model.dart';
 import 'package:ventes/app/models/schedule_guest_model.dart';
 import 'package:ventes/app/models/user_detail_model.dart';
 import 'package:ventes/app/resources/views/regular_view.dart';
@@ -19,6 +20,7 @@ import 'package:ventes/app/resources/widgets/top_navigation.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/constants/strings/schedule_string.dart';
+import 'package:ventes/helpers/auth_helper.dart';
 import 'package:ventes/network/contracts/create_contract.dart';
 import 'package:ventes/network/contracts/fetch_data_contract.dart';
 import 'package:ventes/routing/navigators/schedule_navigator.dart';
@@ -182,7 +184,7 @@ class ScheduleFormCreateView extends RegularView<ScheduleFormCreateStateControll
                         children: [
                           Offstage(
                             offstage: $.formSource.schetype != $.formSource.eventId,
-                            child: _EventForm($),
+                            child: _EventForm(),
                           ),
                           Offstage(
                             offstage: $.formSource.schetype != $.formSource.taskId,

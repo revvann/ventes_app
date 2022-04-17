@@ -10,7 +10,7 @@ import 'package:ventes/state_controllers/fab_state_controller.dart';
 import 'package:ventes/state_controllers/schedule_fc_state_controller.dart';
 import 'package:ventes/state_controllers/schedule_state_controller.dart';
 import 'package:ventes/app/resources/views/daily_schedule.dart';
-import 'package:ventes/app/resources/views/schedule.dart';
+import 'package:ventes/app/resources/views/schedule/schedule.dart';
 import 'package:ventes/app/resources/views/schedule_form/create/schedule_fc.dart';
 import 'package:ventes/app/resources/widgets/regular_dropdown.dart';
 

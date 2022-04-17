@@ -2,12 +2,14 @@
 
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
+import 'package:ventes/app/models/schedule_model.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
+import 'package:ventes/helpers/function_helpers.dart';
 
 class RegularAppointmentCard extends StatelessWidget {
-  RegularAppointment appointment;
-  RegularAppointmentCard({required this.appointment});
+  Schedule schedule;
+  RegularAppointmentCard({required this.schedule});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +20,7 @@ class RegularAppointmentCard extends StatelessWidget {
       ),
       padding: EdgeInsets.all(RegularSize.xs),
       child: Text(
-        appointment.title,
+        schedule.schenm ?? "",
         style: TextStyle(
           color: Colors.white,
           fontSize: 12,
@@ -28,29 +30,33 @@ class RegularAppointmentCard extends StatelessWidget {
   }
 }
 
-class RegularCalendarDataSource extends CalendarDataSource<RegularAppointment> {
-  RegularCalendarDataSource(List<Appointment> source) {
+class RegularCalendarDataSource extends CalendarDataSource<Schedule> {
+  RegularCalendarDataSource(List<Schedule> source) {
     appointments = source;
   }
-}
 
-class RegularAppointment extends Appointment {
-  String type;
-  String title;
-  String subtitle;
-  RegularAppointment({
-    required DateTime endTime,
-    required DateTime startTime,
-    required this.subtitle,
-    required this.title,
-    required String location,
-    required this.type,
-  }) : super(
-          endTime: endTime,
-          startTime: startTime,
-          notes: subtitle,
-          subject: title,
-          location: location,
-          color: RegularColor.primary,
-        );
+  @override
+  DateTime getStartTime(int index) {
+    return parseDate(appointments![index].schestartdate!);
+  }
+
+  @override
+  DateTime getEndTime(int index) {
+    return parseDate(appointments![index].scheenddate!);
+  }
+
+  @override
+  String getSubject(int index) {
+    return appointments![index].schetoward.userfullname;
+  }
+
+  @override
+  Color getColor(int index) {
+    return RegularColor.primary;
+  }
+
+  @override
+  bool isAllDay(int index) {
+    return appointments![index].scheallday;
+  }
 }

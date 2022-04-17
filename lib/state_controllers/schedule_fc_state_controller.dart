@@ -39,9 +39,7 @@ class ScheduleFormCreateStateController extends RegularStateController {
     formSource.init();
 
     Position pos = await getCurrentPosition();
-    currentPos = CameraPosition(
-        target: LatLng(pos.latitude, pos.longitude), zoom: 14.4764);
-    dataSource.fetchUser();
+    currentPos = CameraPosition(target: LatLng(pos.latitude, pos.longitude), zoom: 14.4764);
   }
 
   void showMapBottomSheet() {
@@ -67,8 +65,7 @@ class ScheduleFormCreateStateController extends RegularStateController {
               GestureDetector(
                 onTap: () {
                   if (markers.isNotEmpty) {
-                    currentPos = CameraPosition(
-                        target: markers.first.position, zoom: currentPos.zoom);
+                    currentPos = CameraPosition(target: markers.first.position, zoom: currentPos.zoom);
                   }
                   Get.close(1);
                 },
@@ -114,8 +111,7 @@ class ScheduleFormCreateStateController extends RegularStateController {
             infoWindow: InfoWindow(title: "Selected Location"),
             position: latLng,
           );
-          formSource.scheloc =
-              "https://maps.google.com?q=${latLng.latitude},${latLng.longitude}";
+          formSource.scheloc = "https://maps.google.com?q=${latLng.latitude},${latLng.longitude}";
           markers = {marker};
         },
       );
@@ -125,7 +121,6 @@ class ScheduleFormCreateStateController extends RegularStateController {
   void createSchedule() {
     if (formSource.isValid()) {
       Map<String, dynamic> data = formSource.toJson();
-      print(data);
       dataSource.createSchedule(data);
     }
   }

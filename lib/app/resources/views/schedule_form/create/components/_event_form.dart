@@ -3,8 +3,7 @@
 part of 'package:ventes/app/resources/views/schedule_form/create/schedule_fc.dart';
 
 class _EventForm extends StatelessWidget {
-  _EventForm(this.controller);
-  ScheduleFormCreateStateController controller;
+  ScheduleFormCreateStateController $ = Get.find<ScheduleFormCreateStateController>();
 
   @override
   Widget build(BuildContext context) {
@@ -15,9 +14,9 @@ class _EventForm extends StatelessWidget {
         ),
         Obx(() {
           return _DatestartInput(
-            controller: controller.formSource.schestartdateTEC,
-            initialDate: controller.formSource.schestartdate,
-            onSelected: controller.formSource.listener.onDateStartSelected,
+            controller: $.formSource.schestartdateTEC,
+            initialDate: $.formSource.schestartdate,
+            onSelected: $.formSource.listener.onDateStartSelected,
           );
         }),
         SizedBox(
@@ -25,87 +24,87 @@ class _EventForm extends StatelessWidget {
         ),
         Obx(() {
           return _DateendInput(
-            controller: controller.formSource.scheenddateTEC,
-            initialDate: controller.formSource.scheenddate,
-            onSelected: controller.formSource.listener.onDateEndSelected,
-            minDate: controller.formSource.fullStartDate.add(Duration(minutes: 15)),
+            controller: $.formSource.scheenddateTEC,
+            initialDate: $.formSource.scheenddate,
+            onSelected: $.formSource.listener.onDateEndSelected,
+            minDate: $.formSource.fullStartDate.add(Duration(minutes: 15)),
           );
         }),
         SizedBox(
           height: RegularSize.m,
         ),
         _TwintimeInput(
-          onTimeEndSelected: controller.formSource.listener.onTimeEndSelected,
-          onTimeStartSelected: controller.formSource.listener.onTimeStartSelected,
-          timeStartController: controller.formSource.schestarttimeDC,
-          timeEndController: controller.formSource.scheendtimeDC,
+          onTimeEndSelected: $.formSource.listener.onTimeEndSelected,
+          onTimeStartSelected: $.formSource.listener.onTimeStartSelected,
+          timeStartController: $.formSource.schestarttimeDC,
+          timeEndController: $.formSource.scheendtimeDC,
         ),
         SizedBox(
           height: RegularSize.m,
         ),
         _TimezoneDropdown(
-          controller: controller.formSource.schetzDC,
+          controller: $.formSource.schetzDC,
         ),
         SizedBox(
           height: RegularSize.m,
         ),
         _AlldayCheckbox(
-          onChecked: controller.formSource.listener.onAlldayValueChanged,
+          onChecked: $.formSource.listener.onAlldayValueChanged,
         ),
         SizedBox(
           height: RegularSize.m,
         ),
         GestureDetector(
           onTap: () {
-            if (!controller.formSource.scheonline) {
-              controller.showMapBottomSheet();
+            if (!$.formSource.scheonline) {
+              $.showMapBottomSheet();
             }
           },
           child: _LocationInput(
-            controller: controller.formSource.schelocTEC,
-            validator: controller.formSource.validator.scheloc,
+            controller: $.formSource.schelocTEC,
+            validator: $.formSource.validator.scheloc,
           ),
         ),
         SizedBox(
           height: RegularSize.m,
         ),
         _OnlineCheckbox(
-          onChecked: controller.formSource.listener.onOnlineValueChanged,
+          onChecked: $.formSource.listener.onOnlineValueChanged,
         ),
         SizedBox(
           height: RegularSize.m,
         ),
         Obx(() {
           return _LinkInput(
-            controller: controller.formSource.scheonlinkTEC,
-            enabled: controller.formSource.scheonline,
-            validator: controller.formSource.validator.scheonlink,
+            controller: $.formSource.scheonlinkTEC,
+            enabled: $.formSource.scheonline,
+            validator: $.formSource.validator.scheonlink,
           );
         }),
         SizedBox(
           height: RegularSize.m,
         ),
-        _RemindInput(controller: controller.formSource.scheremindTEC),
+        _RemindInput(controller: $.formSource.scheremindTEC),
         SizedBox(
           height: RegularSize.m,
         ),
-        _DescriptionInput(controller: controller.formSource.schedescTEC),
+        _DescriptionInput(controller: $.formSource.schedescTEC),
         SizedBox(
           height: RegularSize.m,
         ),
-        _PrivateCheckbox(onChecked: controller.formSource.listener.onPrivateValueChanged),
+        _PrivateCheckbox(onChecked: $.formSource.listener.onPrivateValueChanged),
         SizedBox(
           height: RegularSize.m,
         ),
         Obx(() {
           return _TowardDropdown(
-            selected: controller.formSource.schetoward?.user?.userfullname,
-            onFilter: controller.formSource.listener.onTowardFilter,
-            onItemSelected: controller.formSource.listener.onTowardSelected,
+            selected: $.formSource.schetoward?.user?.userfullname,
+            onFilter: $.formSource.listener.onTowardFilter,
+            onItemSelected: $.formSource.listener.onTowardSelected,
             itemBuilder: (UserDetail user) {
               return Obx(
                 () {
-                  bool isSelected = controller.formSource.schetoward?.userid == user.userid;
+                  bool isSelected = $.formSource.schetoward?.userid == user.userid;
                   return _GuestListItem(
                     userDetail: user,
                     isSelected: isSelected,
@@ -119,12 +118,12 @@ class _EventForm extends StatelessWidget {
           height: RegularSize.m,
         ),
         _GuestDropdown(
-          onFilter: controller.formSource.listener.onGuestFilter,
-          onItemSelected: controller.formSource.listener.onGuestSelected,
+          onFilter: $.formSource.listener.onGuestFilter,
+          onItemSelected: $.formSource.listener.onGuestSelected,
           itemBuilder: (UserDetail user) {
             return Obx(
               () {
-                List<ScheduleGuest> guestsSelected = controller.formSource.guests;
+                List<ScheduleGuest> guestsSelected = $.formSource.guests;
                 bool isSelected = guestsSelected.where((g) => g.scheuserid == user.userid).isNotEmpty;
                 return _GuestListItem(
                   userDetail: user,
@@ -135,7 +134,7 @@ class _EventForm extends StatelessWidget {
           },
         ),
         Obx(() {
-          return controller.formSource.guests.isNotEmpty
+          return $.formSource.guests.isNotEmpty
               ? Column(
                   children: [
                     SizedBox(
@@ -156,12 +155,12 @@ class _EventForm extends StatelessWidget {
                       height: RegularSize.s,
                     ),
                     _GuestList(
-                      guests: controller.formSource.guests,
-                      onRemove: controller.formSource.listener.onRemoveGuest,
-                      onAddMemberChanged: controller.formSource.listener.onAddMemberValueChanged,
-                      onReadOnlyChanged: controller.formSource.listener.onReadOnlyValueChanged,
-                      onShareLinkChanged: controller.formSource.listener.onShareLinkValueChanged,
-                      checkPermission: controller.formSource.hasPermission,
+                      guests: $.formSource.guests,
+                      onRemove: $.formSource.listener.onRemoveGuest,
+                      onAddMemberChanged: $.formSource.listener.onAddMemberValueChanged,
+                      onReadOnlyChanged: $.formSource.listener.onReadOnlyValueChanged,
+                      onShareLinkChanged: $.formSource.listener.onShareLinkValueChanged,
+                      checkPermission: $.formSource.hasPermission,
                     ),
                   ],
                 )

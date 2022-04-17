@@ -24,7 +24,8 @@ class ScheduleFormCreateListener {
       formSource.schestarttimeDC.enabled = true;
       formSource.scheendtimeDC.enabled = true;
       if (formSource.schestarttime != null) {
-        formSource.schestarttimeDC.value = formatTime(formSource.schestarttime!);
+        formSource.schestarttimeDC.value =
+            formatTime(formSource.schestarttime!);
       }
       if (formSource.scheendtime != null) {
         formSource.scheendtimeDC.value = formatTime(formSource.scheendtime!);
@@ -121,7 +122,6 @@ class ScheduleFormCreateListener {
   void onGuestChanged(UserDetail? user) {
     if (user != null) {
       formSource.addGuest(user);
-      formSource.dataSource.fetchUser();
     }
   }
 
@@ -156,7 +156,9 @@ class ScheduleFormCreateListener {
   }
 
   void onGuestSelected(UserDetail user) {
-    if (formSource.guests.where((item) => item.scheuserid == user.userid).isEmpty) {
+    if (formSource.guests
+        .where((item) => item.scheuserid == user.userid)
+        .isEmpty) {
       formSource.addGuest(user);
     } else {
       formSource.removeGuest(user);
@@ -164,23 +166,28 @@ class ScheduleFormCreateListener {
   }
 
   void onTowardSelected(UserDetail value) {
-    if (formSource.schetoward == null) {
+    if (formSource.schetoward?.userdtid != value.userdtid) {
       formSource.schetoward = value;
     } else {
-      formSource.schetoward = null;
+      formSource.schetoward = formSource.userDefault;
     }
   }
 
   Future<List<UserDetail>> onGuestFilter(String? search) async {
-    List<UserDetail> userDetails = await formSource.dataSource.filterUser(search);
-    userDetails = userDetails.where((item) => item.userid != formSource.schetoward?.userid).toList();
+    List<UserDetail> userDetails =
+        await formSource.dataSource.filterUser(search);
+    userDetails = userDetails
+        .where((item) => item.userid != formSource.schetoward?.userid)
+        .toList();
     return userDetails;
   }
 
   Future<List<UserDetail>> onTowardFilter(String? search) async {
-    List<UserDetail> userDetails = await formSource.dataSource.filterUser(search);
-    List<int?> guestIds = formSource.guests.map((item) => item.scheuserid).toList();
-    userDetails = userDetails.where((item) => !guestIds.contains(item.userid)).toList();
+    List<UserDetail> userDetails = await formSource.dataSource.allUser(search);
+    List<int?> guestIds =
+        formSource.guests.map((item) => item.scheuserid).toList();
+    userDetails =
+        userDetails.where((item) => !guestIds.contains(item.userid)).toList();
     return userDetails;
   }
 }

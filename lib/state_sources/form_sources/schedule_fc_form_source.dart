@@ -10,9 +10,8 @@ import 'package:ventes/app/models/user_detail_model.dart';
 import 'package:ventes/app/resources/widgets/regular_dropdown.dart';
 import 'package:ventes/helpers/function_helpers.dart';
 import 'package:ventes/state_sources/data_sources/schedule_fc_data_source.dart';
-import 'package:ventes/state_sources/form_listeners/schedule_fc_listener.dart';
+import 'package:ventes/state_sources/state_listeners/schedule_fc_listener.dart';
 import 'package:ventes/state_sources/form_validators/schedule_fc_validator.dart';
-import 'package:timezone/timezone.dart' as tz;
 
 class ScheduleFormCreateFormSource {
   int readOnlyId = 14;
@@ -26,6 +25,8 @@ class ScheduleFormCreateFormSource {
   late ScheduleFormCreateDataSource dataSource;
   late ScheduleFormCreateValidator validator;
   late ScheduleFormCreateListener listener;
+
+  UserDetail? userDefault;
 
   final schenmTEC = TextEditingController();
   final schestartdateTEC = TextEditingController();
@@ -55,6 +56,8 @@ class ScheduleFormCreateFormSource {
   bool get isEvent => _schetype.value == eventId;
   bool get isTask => _schetype.value == taskId;
   bool get isReminder => _schetype.value == reminderId;
+
+  int? get schebpid => schetoward?.userdtbpid;
 
   String get schenm => schenmTEC.text;
   set schenm(String value) {
@@ -198,11 +201,13 @@ class ScheduleFormCreateFormSource {
 
   void removeGuest(guest) {
     int? userid = guest is UserDetail ? guest.userid : guest.scheuserid;
-    _guests.update((value) => value!..removeWhere((g) => g.scheuserid == userid));
+    _guests
+        .update((value) => value!..removeWhere((g) => g.scheuserid == userid));
   }
 
   void setPermission(int userid, List<int> permission) {
-    _guests.update((value) => value!..firstWhere((g) => g.scheuserid == userid).schepermisid = permission);
+    _guests.update((value) => value!
+      ..firstWhere((g) => g.scheuserid == userid).schepermisid = permission);
   }
 
   void removePermission(int userid, int permission) {
@@ -232,11 +237,23 @@ class ScheduleFormCreateFormSource {
   bool hasPermission(int userid, SchedulePermission permission) {
     switch (permission) {
       case SchedulePermission.readOnly:
-        return _guests.value.firstWhere((g) => g.scheuserid == userid).schepermisid?.contains(readOnlyId) ?? false;
+        return _guests.value
+                .firstWhere((g) => g.scheuserid == userid)
+                .schepermisid
+                ?.contains(readOnlyId) ??
+            false;
       case SchedulePermission.addMember:
-        return _guests.value.firstWhere((g) => g.scheuserid == userid).schepermisid?.contains(addMemberId) ?? false;
+        return _guests.value
+                .firstWhere((g) => g.scheuserid == userid)
+                .schepermisid
+                ?.contains(addMemberId) ??
+            false;
       case SchedulePermission.shareLink:
-        return _guests.value.firstWhere((g) => g.scheuserid == userid).schepermisid?.contains(shareLinkId) ?? false;
+        return _guests.value
+                .firstWhere((g) => g.scheuserid == userid)
+                .schepermisid
+                ?.contains(shareLinkId) ??
+            false;
       default:
         return false;
     }
@@ -247,7 +264,8 @@ class ScheduleFormCreateFormSource {
   }
 
   void setEndTimeList() {
-    DateTime maxDate = DateTime(scheenddate.year, scheenddate.month, scheenddate.day, 23, 59);
+    DateTime maxDate =
+        DateTime(scheenddate.year, scheenddate.month, scheenddate.day, 23, 59);
     bool hasMoreTime = maxDate.difference(fullStartDate).inMinutes >= 15;
     if (hasMoreTime) {
       if (fullStartDate.difference(fullEndDate).inSeconds >= 0) {
@@ -261,7 +279,8 @@ class ScheduleFormCreateFormSource {
         ));
       }
     } else {
-      DateTime dateEnd = fullEndDate.subtract(Duration(minutes: fullEndDate.minute, hours: fullEndDate.hour));
+      DateTime dateEnd = fullEndDate.subtract(
+          Duration(minutes: fullEndDate.minute, hours: fullEndDate.hour));
       scheenddate = scheendtime = dateEnd.add(Duration(days: 1, minutes: 15));
     }
   }
@@ -273,7 +292,8 @@ class ScheduleFormCreateFormSource {
     schestarttimeDC.value = schestarttimeDC.items.first['value'];
     scheendtimeDC.value = scheendtimeDC.items.first['value'];
 
-    schestartdate = schestarttime = DateTime(date.year, date.month, date.day, 0, 0);
+    schestartdate =
+        schestarttime = DateTime(date.year, date.month, date.day, 0, 0);
     scheenddate = scheendtime = DateTime(date.year, date.month, date.day, 0, 0);
     setEndTimeList();
   }
@@ -298,6 +318,8 @@ class ScheduleFormCreateFormSource {
     scheonlinkTEC.addListener(listener.onOnlineLinkChanged);
     schelocTEC.addListener(listener.onLocationChanged);
 
+    userDefault = await dataSource.userActive;
+    schetoward = userDefault;
     schetzDC.items = getTimezoneList();
     String currentTimeZone = await FlutterNativeTimezone.getLocalTimezone();
     schetzDC.value = currentTimeZone;
@@ -308,8 +330,14 @@ class ScheduleFormCreateFormSource {
       "schenm": schenm,
       "schestartdate": formatDate(schestartdate),
       "scheenddate": isEvent ? formatDate(scheenddate) : null,
-      "schestarttime": _schestarttime.value != null ? formatTime(_schestarttime.value!) : null,
-      "scheendtime": isEvent ? (_scheendtime.value != null ? formatTime(_scheendtime.value!) : null) : null,
+      "schestarttime": _schestarttime.value != null
+          ? formatTime(_schestarttime.value!)
+          : null,
+      "scheendtime": isEvent
+          ? (_scheendtime.value != null
+              ? formatTime(_scheendtime.value!)
+              : null)
+          : null,
       "scheloc": isEvent ? scheloc : null,
       "scheremind": isEvent ? scheremind : null,
       "schedesc": !isReminder ? schedesc : null,
@@ -320,7 +348,9 @@ class ScheduleFormCreateFormSource {
       "schetz": isEvent ? schetz : null,
       "scheprivate": isEvent ? scheprivate : false,
       "schetoward": isEvent ? schetoward?.userid : null,
-      "members": isEvent ? jsonEncode(guests.map((g) => g.toJson()).toList()) : null,
+      "schebpid": isEvent ? schebpid : null,
+      "members":
+          isEvent ? jsonEncode(guests.map((g) => g.toJson()).toList()) : null,
     };
   }
 }

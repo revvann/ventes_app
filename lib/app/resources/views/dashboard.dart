@@ -2,21 +2,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:get/get.dart';
+import 'package:ventes/app/resources/views/regular_view.dart';
+import 'package:ventes/app/resources/widgets/customer_card.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/constants/views.dart';
-import 'package:ventes/helpers/auth_helper.dart';
-import 'package:ventes/routing/navigators/dashboard_navigator.dart';
 import 'package:ventes/state_controllers/dashboard_state_controller.dart';
-import 'package:ventes/app/resources/views/Schedule.dart';
-import 'package:ventes/app/resources/views/contact.dart';
-import 'package:ventes/app/resources/views/customer.dart';
-import 'package:ventes/app/resources/views/history.dart';
-import 'package:ventes/app/resources/views/nearby.dart';
-import 'package:ventes/app/resources/views/regular_view.dart';
-import 'package:ventes/app/resources/widgets/bottom_navigation.dart';
-import 'package:ventes/app/resources/widgets/customer_card.dart';
 
 class DashboardView extends RegularView<DashboardStateController> {
   static const route = "/dashboard";
@@ -65,7 +56,8 @@ class DashboardView extends RegularView<DashboardStateController> {
                           RegularColor.yellow,
                           "assets/svg/calendar.svg",
                           "Schedule",
-                          () => $.bottomNavigation.currentIndex = Views.schedule,
+                          () =>
+                              $.bottomNavigation.currentIndex = Views.schedule,
                         ),
                         SizedBox(
                           width: RegularSize.s,
@@ -494,7 +486,8 @@ class DashboardView extends RegularView<DashboardStateController> {
     );
   }
 
-  Widget _buildMenuItem(Color color, String icon, String text, [Function()? onTap]) {
+  Widget _buildMenuItem(Color color, String icon, String text,
+      [Function()? onTap]) {
     return Expanded(
       child: GestureDetector(
         onTap: onTap,

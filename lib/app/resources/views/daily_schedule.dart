@@ -84,7 +84,7 @@ class DailyScheduleView extends RegularView<DailyScheduleStateController> {
               ),
               Expanded(
                 child: SfCalendar(
-                  dataSource: RegularCalendarDataSource(getApp()),
+                  dataSource: RegularCalendarDataSource([]),
                   headerHeight: 0,
                   view: CalendarView.day,
                   minDate: DateTime(2022, 4, 6, 0, 0),
@@ -93,7 +93,9 @@ class DailyScheduleView extends RegularView<DailyScheduleStateController> {
                   allowAppointmentResize: true,
                   onTap: (details) {},
                   appointmentBuilder: (context, detail) {
-                    return RegularAppointmentCard(appointment: detail.appointments.first);
+                    return RegularAppointmentCard(
+                      schedule: detail.appointments.first,
+                    );
                   },
                 ),
               )
@@ -114,26 +116,5 @@ class DailyScheduleView extends RegularView<DailyScheduleStateController> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
-  }
-
-  List<RegularAppointment> getApp() {
-    List<RegularAppointment> appointments = [];
-    for (int i = 0; i < 10; i++) {
-      RegularAppointment appointment = RegularAppointment(
-        startTime: DateTime(2022, 4, 6, 1).add(Duration(hours: 1 + i)),
-        endTime: DateTime(2022, 4, 6, 1).add(
-          Duration(
-            hours: (1 + i) + 3,
-          ),
-        ),
-        location: "headquarter of hydra, Germany",
-        title: "Monitoring hydra activity",
-        subtitle: "Ask to Johan Schmidt as Hydra Owner for what they working on.",
-        type: "By Phone",
-      );
-      appointments.add(appointment);
-    }
-
-    return appointments;
   }
 }

@@ -13,7 +13,8 @@ class ScheduleFormCreatePresenter {
 
   late final FetchDataContract _fetchDataContract;
   late final CreateContract _createContract;
-  set fetchDataContract(FetchDataContract contract) => _fetchDataContract = contract;
+  set fetchDataContract(FetchDataContract contract) =>
+      _fetchDataContract = contract;
   set createContract(CreateContract contract) => _createContract = contract;
 
   void fetchUser() async {
@@ -26,7 +27,8 @@ class ScheduleFormCreatePresenter {
       };
       Response usersResponse = await _userService.select(params);
       if (usersResponse.statusCode == 200) {
-        List<UserDetail> users = List<UserDetail>.from(usersResponse.body.map((e) => UserDetail.fromJson(e)));
+        List<UserDetail> users = List<UserDetail>.from(
+            usersResponse.body.map((e) => UserDetail.fromJson(e)));
         _fetchDataContract.onLoadSuccess({
           'users': users,
         });
@@ -51,27 +53,27 @@ class ScheduleFormCreatePresenter {
     }
   }
 
-  Future<List<UserDetail>> filterUser(String? search) async {
-    AuthModel? authModel = await Get.find<AuthHelper>().get();
-    Response response = await _userService.show(authModel!.accountActive!);
-
+  Future<List<UserDetail>> getUsers(String? search) async {
+    UserDetail? activeUser = await findActiveUser();
     Map<String, dynamic> params = {
-      'userdtbpid': response.body['userdtbpid'].toString(),
+      'userdtbpid': activeUser?.userdtbpid,
       'search': search,
     };
     Response usersResponse = await _userService.select(params);
     if (usersResponse.statusCode == 200) {
-      List<UserDetail> userDetails = List<UserDetail>.from(usersResponse.body.map((e) => UserDetail.fromJson(e)));
-      userDetails = userDetails.where((e) => e.userdtid != authModel.accountActive).toList();
-      Map<int, int> userIds = userDetails.asMap().map((k, v) => MapEntry(v.userid ?? 0, v.userdtid ?? 0));
-      userDetails = userDetails.where((e) {
-        bool isExist = userIds.containsKey(e.userid);
-        int userdtid = userIds[e.userid] ?? 0;
-        return isExist && e.userdtid == userdtid;
-      }).toList();
-
-      return userDetails;
+      return List<UserDetail>.from(
+          usersResponse.body.map((e) => UserDetail.fromJson(e)));
     }
     return [];
+  }
+
+  Future<UserDetail?> findActiveUser() async {
+    AuthModel? authModel = await Get.find<AuthHelper>().get();
+    Response response = await _userService.show(authModel!.accountActive!);
+
+    if (response.statusCode == 200) {
+      return UserDetail.fromJson(response.body);
+    }
+    return null;
   }
 }
