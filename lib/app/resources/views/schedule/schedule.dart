@@ -10,10 +10,10 @@ import 'package:ventes/app/models/schedule_model.dart';
 import 'package:ventes/app/resources/widgets/regular_outlined_button.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
-import 'package:ventes/helpers/function_helpers.dart';
+import 'package:ventes/network/contracts/fetch_data_contract.dart';
 import 'package:ventes/routing/navigators/schedule_navigator.dart';
 import 'package:ventes/state_controllers/schedule_state_controller.dart';
-import 'package:ventes/app/resources/views/daily_schedule.dart';
+import 'package:ventes/app/resources/views/daily_schedule/daily_schedule.dart';
 import 'package:ventes/app/resources/views/regular_view.dart';
 import 'package:ventes/app/resources/widgets/regular_appointment_card.dart';
 import 'package:ventes/app/resources/widgets/regular_button.dart';
@@ -24,10 +24,11 @@ part 'package:ventes/app/resources/views/schedule/components/_calendar.dart';
 part 'package:ventes/app/resources/views/schedule/components/_appointment_item.dart';
 part 'package:ventes/app/resources/views/schedule/components/_month_cell.dart';
 
-class ScheduleView extends RegularView<ScheduleStateController> {
+class ScheduleView extends RegularView<ScheduleStateController> implements FetchDataContract {
   static const String route = "/schedule";
   ScheduleView() {
     $ = controller;
+    $.dataSource.fetchContract = this;
   }
 
   @override
@@ -44,9 +45,7 @@ class ScheduleView extends RegularView<ScheduleStateController> {
         height: 90,
         actions: [
           GestureDetector(
-            onTap: () {
-              Get.toNamed(DailyScheduleView.route, id: ScheduleNavigator.id);
-            },
+            onTap: $.listener.onDetailClick,
             child: Container(
               padding: EdgeInsets.all(RegularSize.xs),
               child: SvgPicture.asset(
@@ -129,46 +128,62 @@ class ScheduleView extends RegularView<ScheduleStateController> {
                 height: RegularSize.xl,
               ),
               Expanded(
-                child: _Calendar(
-                  appointmentDetailItemBuilder: (schedule) => _AppointmentItem(
-                    appointment: schedule,
-                  ),
-                  monthCellBuilder: (_, details) {
-                    return Obx(() {
-                      bool selected = details.date == $.selectedDate;
-                      bool thisMonth = details.date.month == $.dateShown.month;
-                      int appointmentsCount = details.appointments.length;
+                child: Obx(() {
+                  return _Calendar(
+                    appointmentDetailItemBuilder: (schedule) => _AppointmentItem(
+                      appointment: schedule,
+                    ),
+                    monthCellBuilder: (_, details) {
+                      return Obx(() {
+                        bool selected = details.date == $.selectedDate;
+                        bool thisMonth = details.date.month == $.dateShown.month;
+                        int appointmentsCount = details.appointments.length;
 
-                      Color textColor = RegularColor.gray;
-                      double fontSize = 14;
+                        Color textColor = RegularColor.gray;
+                        double fontSize = 14;
 
-                      if (thisMonth) {
-                        textColor = RegularColor.dark;
-                      }
+                        if (thisMonth) {
+                          textColor = RegularColor.dark;
+                        }
 
-                      if (selected) {
-                        textColor = Colors.white;
-                        fontSize = 18;
-                      }
-                      return _MonthCell(
-                        day: "${details.date.day}",
-                        textColor: textColor,
-                        fontSize: fontSize,
-                        appointmentsCount: appointmentsCount,
-                        isSelected: selected,
-                      );
-                    });
-                  },
-                  dataSource: RegularCalendarDataSource($.dataSource.appointments),
-                  calendarController: $.calendarController,
-                  onSelectionChanged: $.listener.onDateSelectionChanged,
-                  initialDate: $.initialDate,
-                ),
+                        if (selected) {
+                          textColor = Colors.white;
+                          fontSize = 18;
+                        }
+                        return _MonthCell(
+                          day: "${details.date.day}",
+                          textColor: textColor,
+                          fontSize: fontSize,
+                          appointmentsCount: appointmentsCount,
+                          isSelected: selected,
+                        );
+                      });
+                    },
+                    dataSource: RegularCalendarDataSource($.dataSource.appointments),
+                    calendarController: $.calendarController,
+                    onSelectionChanged: $.listener.onDateSelectionChanged,
+                    initialDate: $.initialDate,
+                  );
+                }),
               ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  @override
+  onLoadFailed(String message) {
+    print(message);
+  }
+
+  @override
+  onLoadSuccess(Map data) {
+    List<Schedule> appointments = [];
+    data["schedules"].forEach((value) {
+      appointments.add(Schedule.fromJson(value));
+    });
+    $.dataSource.appointments = appointments;
   }
 }

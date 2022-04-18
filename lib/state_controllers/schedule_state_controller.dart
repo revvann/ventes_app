@@ -1,6 +1,5 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:ventes/state_controllers/regular_state_controller.dart';
@@ -17,14 +16,16 @@ class ScheduleStateController extends RegularStateController {
   DateTime get dateShown => _dateShown.value;
   set dateShown(DateTime value) => _dateShown.value = value;
 
-  DateTime selectedDate = DateTime.now();
+  final _selectedDate = DateTime.now().obs;
+  DateTime get selectedDate => _selectedDate.value;
+  set selectedDate(DateTime value) => _selectedDate.value = value;
+
   DateTime initialDate = DateTime.now();
 
   @override
   void onInit() {
     super.onInit();
     listener = ScheduleListener(this);
-    dataSource.fetchSchedule();
   }
 
   @override
@@ -37,6 +38,7 @@ class ScheduleStateController extends RegularStateController {
     initialDate = dateShown;
 
     calendarController.addPropertyChangedListener(listener.onDateShownChanged);
+    dataSource.fetchSchedules(dateShown.month);
   }
 
   @override

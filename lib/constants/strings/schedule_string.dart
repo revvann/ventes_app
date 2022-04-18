@@ -20,4 +20,12 @@ class ScheduleString {
   static const schenmInvalid = "Title is required";
   static const scheonlinkInvalid = "Meeting Link is required";
   static const schelocInvalid = "Location is required";
+
+  static const createSuccess = "Schedule created successfully";
+  static const createFailed = "Schedule creation failed";
+  static const createError = "Schedule creation error";
+
+  static const updateSuccess = "Schedule updated successfully";
+  static const updateFailed = "Schedule update failed";
+  static const updateError = "Schedule update error";
 }

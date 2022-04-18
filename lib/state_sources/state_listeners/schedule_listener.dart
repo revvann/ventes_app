@@ -1,3 +1,6 @@
+import 'package:get/get.dart';
+import 'package:ventes/app/resources/views/daily_schedule/daily_schedule.dart';
+import 'package:ventes/routing/navigators/schedule_navigator.dart';
 import 'package:ventes/state_controllers/schedule_state_controller.dart';
 
 class ScheduleListener {
@@ -9,7 +12,7 @@ class ScheduleListener {
       if ($.calendarController.displayDate != null) {
         $.dateShown = $.calendarController.displayDate!;
       }
-      $.dataSource.fetchSchedule();
+      $.dataSource.fetchSchedules($.dateShown.month);
     }
   }
 
@@ -23,5 +26,15 @@ class ScheduleListener {
 
   void onDateSelectionChanged(details) {
     $.selectedDate = details.date!;
+  }
+
+  void onDetailClick() {
+    Get.toNamed(
+      DailyScheduleView.route,
+      id: ScheduleNavigator.id,
+      arguments: {
+        "date": $.selectedDate,
+      },
+    );
   }
 }

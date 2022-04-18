@@ -11,6 +11,12 @@ class RegularAppointmentCard extends StatelessWidget {
   Schedule schedule;
   RegularAppointmentCard({required this.schedule});
 
+  bool isSmall() {
+    int start = parseTime(schedule.schestarttime ?? "00:00:00").millisecondsSinceEpoch;
+    int end = parseTime(schedule.scheendtime ?? "00:00:00").millisecondsSinceEpoch;
+    return (end - start) <= 15 * 60 * 1000;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -18,31 +24,94 @@ class RegularAppointmentCard extends StatelessWidget {
         color: RegularColor.primary,
         borderRadius: BorderRadius.circular(RegularSize.s),
       ),
-      padding: EdgeInsets.all(RegularSize.xs),
-      child: Text(
-        schedule.schenm ?? "",
-        style: TextStyle(
-          color: Colors.white,
-          fontSize: 12,
-        ),
+      padding: !isSmall() ? EdgeInsets.all(RegularSize.xs) : EdgeInsets.only(top: 2, left: RegularSize.s, right: RegularSize.s),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            schedule.schenm ?? "",
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: !isSmall() ? 12 : 10,
+            ),
+          ),
+          RichText(
+            overflow: TextOverflow.ellipsis,
+            text: TextSpan(
+              style: TextStyle(
+                fontSize: !isSmall() ? 12 : 10,
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+              children: [
+                if (schedule.schestarttime != null)
+                  TextSpan(
+                    text: formatTime12(parseTime(schedule.schestarttime!)),
+                  ),
+                if (schedule.scheendtime != null)
+                  TextSpan(
+                    text: " - ",
+                  ),
+                if (schedule.scheendtime != null)
+                  TextSpan(
+                    text: formatTime12(parseTime(schedule.scheendtime!)),
+                  ),
+              ],
+            ),
+          )
+        ],
       ),
     );
   }
 }
 
 class RegularCalendarDataSource extends CalendarDataSource<Schedule> {
-  RegularCalendarDataSource(List<Schedule> source) {
+  RegularCalendarDataSource(
+    List<Schedule> source, {
+    this.type = CalendarDataSourceType.monthly,
+    this.date,
+  }) {
     appointments = source;
   }
+  CalendarDataSourceType type;
+  DateTime? date;
 
   @override
   DateTime getStartTime(int index) {
-    return parseDate(appointments![index].schestartdate!);
+    String? date = appointments![index].schestartdate;
+    String? time = appointments![index].schestarttime;
+    if (date != null && time != null) {
+      switch (type) {
+        case CalendarDataSourceType.monthly:
+          return dbParseDate(date);
+        case CalendarDataSourceType.daily:
+          DateTime _time = parseTime(time);
+          return DateTime(this.date!.year, this.date!.month, this.date!.day, _time.hour, _time.minute);
+        default:
+          return dbParseDate(date);
+      }
+    }
+    return DateTime(0);
   }
 
   @override
   DateTime getEndTime(int index) {
-    return parseDate(appointments![index].scheenddate!);
+    String? date = appointments![index].scheenddate;
+    String? time = appointments![index].scheendtime;
+    if (date != null && time != null) {
+      switch (type) {
+        case CalendarDataSourceType.monthly:
+          return dbParseDate(date);
+        case CalendarDataSourceType.daily:
+          DateTime _time = parseTime(time);
+          return DateTime(this.date!.year, this.date!.month, this.date!.day, _time.hour, _time.minute);
+        default:
+          return dbParseDate(date);
+      }
+    }
+    return getStartTime(index).add(Duration(minutes: 15));
   }
 
   @override
@@ -57,6 +126,8 @@ class RegularCalendarDataSource extends CalendarDataSource<Schedule> {
 
   @override
   bool isAllDay(int index) {
-    return appointments![index].scheallday;
+    return appointments![index].scheallday ?? false;
   }
 }
+
+enum CalendarDataSourceType { daily, monthly }

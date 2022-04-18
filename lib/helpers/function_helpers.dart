@@ -69,6 +69,10 @@ Future<Position> getCurrentPosition() async {
   return await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
 }
 
+DateTime dbParseDate(String date) {
+  return DateFormat('yyyy-MM-dd').parse(date);
+}
+
 DateTime parseDate(String date) {
   return DateFormat('MMMM dd, yyyy').parse(date);
 }
@@ -77,8 +81,16 @@ DateTime parseTime(String time) {
   return DateFormat('HH:mm:ss').parse(time);
 }
 
+DateTime parseTime12(String time) {
+  return DateFormat('HH:mm a').parse(time);
+}
+
 DateTime parseDateTime(String dateTime) {
   return DateFormat('MMMM dd, yyyy HH:mm:ss').parse(dateTime);
+}
+
+String dbFormatDate(DateTime date) {
+  return DateFormat('yyyy-MM-dd').format(date);
 }
 
 String formatDate(DateTime date) {
@@ -87,6 +99,10 @@ String formatDate(DateTime date) {
 
 String formatTime(DateTime time) {
   return DateFormat('HH:mm:ss').format(time);
+}
+
+String formatTime12(DateTime time) {
+  return DateFormat('HH:mm a').format(time);
 }
 
 String formatDateTime(DateTime dateTime) {

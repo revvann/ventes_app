@@ -13,10 +13,12 @@ import 'package:ventes/helpers/function_helpers.dart';
 import 'package:ventes/state_controllers/regular_state_controller.dart';
 import 'package:ventes/state_sources/data_sources/schedule_fc_data_source.dart';
 import 'package:ventes/state_sources/form_sources/schedule_fc_form_source.dart';
+import 'package:ventes/state_sources/state_listeners/schedule_fc_listener.dart';
 
 class ScheduleFormCreateStateController extends RegularStateController {
-  ScheduleFormCreateFormSource formSource = ScheduleFormCreateFormSource();
+  late ScheduleFormCreateFormSource formSource;
   ScheduleFormCreateDataSource dataSource = ScheduleFormCreateDataSource();
+  late ScheduleFormCreateListener listener;
 
   final Completer<GoogleMapController> mapsController = Completer();
   late CameraPosition currentPos;
@@ -35,6 +37,9 @@ class ScheduleFormCreateStateController extends RegularStateController {
   @override
   void onInit() async {
     super.onInit();
+    listener = ScheduleFormCreateListener(this);
+    formSource = ScheduleFormCreateFormSource(listener);
+
     formSource.dataSource = dataSource;
     formSource.init();
 
@@ -116,12 +121,5 @@ class ScheduleFormCreateStateController extends RegularStateController {
         },
       );
     });
-  }
-
-  void createSchedule() {
-    if (formSource.isValid()) {
-      Map<String, dynamic> data = formSource.toJson();
-      dataSource.createSchedule(data);
-    }
   }
 }

@@ -7,10 +7,12 @@ import 'package:ventes/constants/regular_size.dart';
 class RegularDialog {
   RegularDialog({
     required this.width,
+    this.height,
     required this.child,
     this.dismissable = true,
   });
   double width;
+  double? height;
   Widget child;
   bool dismissable;
 
@@ -18,9 +20,12 @@ class RegularDialog {
     return Get.dialog(
       Dialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(RegularSize.m)),
-        insetPadding: EdgeInsets.symmetric(horizontal: (Get.width - width) / 2),
+        insetPadding: EdgeInsets.symmetric(
+          horizontal: (Get.width - width) / 2,
+          vertical: (Get.height - (height ?? Get.height)) / 2,
+        ),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisSize: height == null ? MainAxisSize.min : MainAxisSize.max,
           children: [
             Container(
               padding: EdgeInsets.all(RegularSize.m),

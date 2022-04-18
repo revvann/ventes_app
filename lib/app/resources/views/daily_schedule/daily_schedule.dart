@@ -5,20 +5,26 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
+import 'package:ventes/app/models/schedule_model.dart';
+import 'package:ventes/app/resources/views/regular_view.dart';
+import 'package:ventes/app/resources/widgets/regular_appointment_card.dart';
+import 'package:ventes/app/resources/widgets/top_navigation.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
-import 'package:ventes/routing/navigators/schedule_navigator.dart';
+import 'package:ventes/helpers/function_helpers.dart';
+import 'package:ventes/network/contracts/fetch_data_contract.dart';
 import 'package:ventes/state_controllers/daily_schedule_state_controller.dart';
-import 'package:ventes/app/resources/views/regular_view.dart';
-import 'package:ventes/app/resources/views/schedule_form/create/schedule_fc.dart';
-import 'package:ventes/app/resources/widgets/regular_appointment_card.dart';
-import 'package:ventes/app/resources/widgets/regular_fab.dart';
-import 'package:ventes/app/resources/widgets/top_navigation.dart';
 
-class DailyScheduleView extends RegularView<DailyScheduleStateController> {
+part 'package:ventes/app/resources/views/daily_schedule/components/_calendar.dart';
+
+class DailyScheduleView extends RegularView<DailyScheduleStateController> implements FetchDataContract {
   static const String route = "/schedule/daily";
-  DailyScheduleView() {
+  DailyScheduleView({
+    required DateTime date,
+  }) {
     $ = controller;
+    $.dataSource.fetchContract = this;
+    $.date = date;
   }
 
   @override
@@ -42,25 +48,21 @@ class DailyScheduleView extends RegularView<DailyScheduleStateController> {
               color: Colors.white,
             ),
           ),
-          onTap: () {
-            Get.back(id: ScheduleNavigator.id);
-          },
+          onTap: $.listener.onArrowBackClick,
         ),
-        below: Container(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                "March 12, 2022",
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
+        below: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              formatDate($.date),
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ).build(context),
       body: SafeArea(
@@ -83,30 +85,28 @@ class DailyScheduleView extends RegularView<DailyScheduleStateController> {
                 height: RegularSize.xl,
               ),
               Expanded(
-                child: SfCalendar(
-                  dataSource: RegularCalendarDataSource([]),
-                  headerHeight: 0,
-                  view: CalendarView.day,
-                  minDate: DateTime(2022, 4, 6, 0, 0),
-                  maxDate: DateTime(2022, 4, 6, 23, 59),
-                  viewHeaderHeight: 0,
-                  allowAppointmentResize: true,
-                  onTap: (details) {},
-                  appointmentBuilder: (context, detail) {
-                    return RegularAppointmentCard(
-                      schedule: detail.appointments.first,
-                    );
-                  },
-                ),
+                child: Obx(() {
+                  return _Calendar(
+                    date: $.date,
+                    dataSource: RegularCalendarDataSource(
+                      $.dataSource.appointments,
+                      date: $.date,
+                      type: CalendarDataSourceType.daily,
+                    ),
+                    appointmentBuilder: (_, detail) {
+                      return RegularAppointmentCard(
+                        schedule: detail.appointments.first,
+                      );
+                    },
+                  );
+                }),
               )
             ],
           ),
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Get.toNamed(ScheduleFormCreateView.route, id: ScheduleNavigator.id);
-        },
+        onPressed: $.listener.onAddButtonClick,
         backgroundColor: RegularColor.primary,
         child: SvgPicture.asset(
           'assets/svg/plus.svg',
@@ -116,5 +116,17 @@ class DailyScheduleView extends RegularView<DailyScheduleStateController> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
+  }
+
+  @override
+  onLoadFailed(String message) {}
+
+  @override
+  onLoadSuccess(Map data) {
+    List<Schedule> appointments = [];
+    data["schedules"].forEach((value) {
+      appointments.add(Schedule.fromJson(value));
+    });
+    $.dataSource.appointments = appointments;
   }
 }
