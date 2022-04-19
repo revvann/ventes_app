@@ -10,12 +10,14 @@ class RegularBottomSheet {
     this.title,
     this.backgroundColor,
     this.enableDrag = true,
+    this.elevation,
   });
 
   Widget child;
   String? title;
   Color? backgroundColor;
   bool enableDrag;
+  double? elevation;
 
   Future show() {
     return Get.bottomSheet(
@@ -43,6 +45,7 @@ class RegularBottomSheet {
       ),
       backgroundColor: Colors.transparent,
       enableDrag: enableDrag,
+      elevation: 0,
     );
   }
 }

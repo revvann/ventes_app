@@ -7,10 +7,13 @@ import 'package:get/get.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:ventes/app/models/schedule_model.dart';
 import 'package:ventes/app/resources/views/regular_view.dart';
+import 'package:ventes/app/resources/widgets/error_alert.dart';
+import 'package:ventes/app/resources/widgets/failed_alert.dart';
 import 'package:ventes/app/resources/widgets/regular_appointment_card.dart';
 import 'package:ventes/app/resources/widgets/top_navigation.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
+import 'package:ventes/constants/strings/schedule_string.dart';
 import 'package:ventes/helpers/function_helpers.dart';
 import 'package:ventes/network/contracts/fetch_data_contract.dart';
 import 'package:ventes/state_controllers/daily_schedule_state_controller.dart';
@@ -36,7 +39,7 @@ class DailyScheduleView extends RegularView<DailyScheduleStateController> implem
       backgroundColor: RegularColor.primary,
       extendBodyBehindAppBar: true,
       appBar: TopNavigation(
-        title: "Schedule",
+        title: ScheduleString.appBarTitle,
         height: 85,
         appBarKey: $.appBarKey,
         leading: GestureDetector(
@@ -119,14 +122,20 @@ class DailyScheduleView extends RegularView<DailyScheduleStateController> implem
   }
 
   @override
-  onLoadFailed(String message) {}
+  onLoadFailed(String message) {
+    Get.close(1);
+    FailedAlert(message).show();
+  }
 
   @override
   onLoadSuccess(Map data) {
-    List<Schedule> appointments = [];
-    data["schedules"].forEach((value) {
-      appointments.add(Schedule.fromJson(value));
-    });
-    $.dataSource.appointments = appointments;
+    $.dataSource.listToAppointments(data['schedules']);
+    Get.close(1);
+  }
+
+  @override
+  onLoadError(String message) {
+    Get.close(1);
+    ErrorAlert(message).show();
   }
 }

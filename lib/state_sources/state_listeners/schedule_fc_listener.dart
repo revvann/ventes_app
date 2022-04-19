@@ -1,5 +1,8 @@
+import 'package:ventes/app/resources/widgets/error_alert.dart';
+import 'package:ventes/app/resources/widgets/failed_alert.dart';
 import 'package:ventes/app/resources/widgets/loader.dart';
 import 'package:ventes/app/resources/widgets/success_alert.dart';
+import 'package:ventes/constants/strings/schedule_string.dart';
 import 'package:ventes/helpers/function_helpers.dart';
 import 'package:ventes/app/models/user_detail_model.dart';
 import 'package:ventes/state_controllers/schedule_fc_state_controller.dart';
@@ -187,10 +190,10 @@ class ScheduleFormCreateListener {
   }
 
   void onFormSubmit() {
-    Loader().show();
-    // if ($.formSource.isValid()) {
-    //   Map<String, dynamic> data = $.formSource.toJson();
-    //   $.dataSource.createSchedule(data);
-    // }
+    if ($.formSource.isValid()) {
+      Map<String, dynamic> data = $.formSource.toJson();
+      Loader().show();
+      $.dataSource.createSchedule(data);
+    }
   }
 }

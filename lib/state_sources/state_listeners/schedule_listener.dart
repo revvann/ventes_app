@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:ventes/app/resources/views/daily_schedule/daily_schedule.dart';
+import 'package:ventes/app/resources/widgets/loader.dart';
 import 'package:ventes/routing/navigators/schedule_navigator.dart';
 import 'package:ventes/state_controllers/schedule_state_controller.dart';
 
@@ -13,6 +14,7 @@ class ScheduleListener {
         $.dateShown = $.calendarController.displayDate!;
       }
       $.dataSource.fetchSchedules($.dateShown.month);
+      Loader().show();
     }
   }
 

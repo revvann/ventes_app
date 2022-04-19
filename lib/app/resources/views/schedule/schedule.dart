@@ -7,9 +7,12 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:ventes/app/models/schedule_model.dart';
+import 'package:ventes/app/resources/widgets/error_alert.dart';
+import 'package:ventes/app/resources/widgets/failed_alert.dart';
 import 'package:ventes/app/resources/widgets/regular_outlined_button.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
+import 'package:ventes/constants/strings/schedule_string.dart';
 import 'package:ventes/network/contracts/fetch_data_contract.dart';
 import 'package:ventes/routing/navigators/schedule_navigator.dart';
 import 'package:ventes/state_controllers/schedule_state_controller.dart';
@@ -40,7 +43,7 @@ class ScheduleView extends RegularView<ScheduleStateController> implements Fetch
       backgroundColor: RegularColor.primary,
       extendBodyBehindAppBar: true,
       appBar: TopNavigation(
-        title: "Schedule",
+        title: ScheduleString.appBarTitle,
         appBarKey: $.appBarKey,
         height: 90,
         actions: [
@@ -175,15 +178,19 @@ class ScheduleView extends RegularView<ScheduleStateController> implements Fetch
 
   @override
   onLoadFailed(String message) {
-    print(message);
+    Get.close(1);
+    FailedAlert(message).show();
   }
 
   @override
   onLoadSuccess(Map data) {
-    List<Schedule> appointments = [];
-    data["schedules"].forEach((value) {
-      appointments.add(Schedule.fromJson(value));
-    });
-    $.dataSource.appointments = appointments;
+    $.dataSource.listToAppointments(data["schedules"]);
+    Get.close(1);
+  }
+
+  @override
+  onLoadError(String message) {
+    Get.close(1);
+    FailedAlert(message).show();
   }
 }

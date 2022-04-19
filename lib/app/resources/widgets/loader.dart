@@ -1,18 +1,16 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
-import 'package:flutter/src/scheduler/ticker.dart';
-import 'package:get/get.dart';
 import 'package:simple_animations/simple_animations.dart';
 import 'package:ventes/app/resources/widgets/regular_dialog.dart';
 import 'package:ventes/constants/regular_color.dart';
-import 'package:ventes/constants/regular_size.dart';
 
 class Loader {
   Future show() {
     return RegularDialog(
       width: 80,
       height: 100,
+      dismissable: false,
       child: Container(
         alignment: Alignment.center,
         child: LoaderAnimation(),

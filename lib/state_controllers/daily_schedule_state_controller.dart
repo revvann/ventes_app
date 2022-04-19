@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:ventes/app/resources/widgets/loader.dart';
 import 'package:ventes/helpers/function_helpers.dart';
 import 'package:ventes/state_controllers/regular_state_controller.dart';
 import 'package:ventes/state_sources/data_sources/daily_schedule_data_source.dart';
@@ -21,6 +22,7 @@ class DailyScheduleStateController extends RegularStateController {
   @override
   void onReady() {
     super.onReady();
+    Loader().show();
     dataSource.fetchSchedules(dbFormatDate(date));
   }
 }

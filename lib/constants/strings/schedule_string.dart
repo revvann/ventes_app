@@ -1,4 +1,8 @@
 class ScheduleString {
+  static const appBarTitle = "Schedule";
+  static const formCreateSubmitButton = "Save";
+  static const formCreateTitle = "Form Create";
+
   static const schenmLabel = "Title";
   static const schetypeLabel = "Type";
   static const schestartdateLabel = "Start Date";
@@ -28,4 +32,7 @@ class ScheduleString {
   static const updateSuccess = "Schedule updated successfully";
   static const updateFailed = "Schedule update failed";
   static const updateError = "Schedule update error";
+
+  static const fetchFailed = "Schedules cannot be loaded";
+  static const fetchError = "An error occurred while loading schedules, please try again";
 }

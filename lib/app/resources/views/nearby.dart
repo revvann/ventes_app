@@ -4,21 +4,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:ventes/app/resources/widgets/icon_input.dart';
+import 'package:ventes/app/resources/widgets/regular_bottom_sheet.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
+import 'package:ventes/network/contracts/fetch_data_contract.dart';
 import 'package:ventes/state_controllers/nearby_state_controller.dart';
 import 'package:ventes/app/resources/views/regular_view.dart';
-import 'package:ventes/app/resources/widgets/icon_input.dart';
-import 'package:ventes/app/resources/widgets/customer_card.dart';
-import 'package:ventes/app/resources/widgets/regular_button.dart';
-import 'package:ventes/app/resources/widgets/regular_dialog.dart';
-import 'package:ventes/app/resources/widgets/regular_time_picker.dart';
 import 'package:ventes/app/resources/widgets/top_navigation.dart';
 
-class NearbyView extends RegularView<NearbyStateController> {
+class NearbyView extends RegularView<NearbyStateController> implements FetchDataContract {
   static const String route = "/nearby";
   NearbyView() {
     $ = controller;
+    $.dataSource.fetchDataContract = this;
   }
 
   @override
@@ -27,157 +27,212 @@ class NearbyView extends RegularView<NearbyStateController> {
       statusBarColor: RegularColor.primary,
     ));
     return Scaffold(
+      key: $.scaffoldKey,
       backgroundColor: RegularColor.primary,
       extendBodyBehindAppBar: true,
       appBar: TopNavigation(
         title: "Nearby",
         height: 80,
         appBarKey: $.appBarKey,
-        actions: [
-          GestureDetector(
-            child: Container(
-              padding: EdgeInsets.all(RegularSize.xs),
-              child: SvgPicture.asset(
-                "assets/svg/filter.svg",
-                width: RegularSize.l,
-                color: Colors.white,
-              ),
+        leading: GestureDetector(
+          child: Container(
+            padding: EdgeInsets.all(RegularSize.xs),
+            child: SvgPicture.asset(
+              "assets/svg/arrow-left.svg",
+              width: RegularSize.xl,
+              color: Colors.white,
             ),
-            onTap: _showFilter,
           ),
-        ],
-        below: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              padding: EdgeInsets.all(RegularSize.xs),
-              child: SvgPicture.asset(
-                "assets/svg/marker.svg",
-                width: RegularSize.m,
-                color: Colors.white,
+          onTap: $.listener.backToDashboard,
+        ),
+        below: Container(
+          padding: EdgeInsets.symmetric(
+            horizontal: RegularSize.xl,
+          ),
+          alignment: Alignment.center,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                padding: EdgeInsets.all(RegularSize.xs),
+                child: SvgPicture.asset(
+                  "assets/svg/marker.svg",
+                  width: RegularSize.m,
+                  color: Colors.white,
+                ),
               ),
-            ),
-            Text(
-              "Brooklyn, New York, USA",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 14,
+              Expanded(
+                child: Obx(() {
+                  return Text(
+                    $.dataSource.mapsLoc.adresses?.first.formattedAddress ?? "Unknown",
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 14,
+                    ),
+                  );
+                }),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ).build(context),
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Obx(
-            () {
+        child: Stack(
+          key: $.stackKey,
+          children: [
+            Obx(() {
               return Container(
                 width: double.infinity,
-                padding: EdgeInsets.symmetric(
-                  horizontal: RegularSize.m,
-                ),
-                constraints: BoxConstraints(
-                  minHeight: $.minHeight,
-                ),
+                height: $.mapsHeight.value,
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(RegularSize.xl),
-                    topRight: Radius.circular(RegularSize.xl),
-                  ),
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      height: RegularSize.m,
-                    ),
-                    IconInput(
-                      icon: "assets/svg/search.svg",
-                      hintText: "Search",
-                    ),
-                    SizedBox(
-                      height: RegularSize.m,
-                    ),
-                    Text(
-                      "Customers List",
-                      style: TextStyle(
-                        fontSize: 20,
-                        color: RegularColor.primary,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    SizedBox(
-                      height: RegularSize.xs,
-                    ),
-                    Text(
-                      "10 Found",
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: RegularColor.dark,
-                      ),
-                    ),
-                    SizedBox(
-                      height: RegularSize.m,
-                    ),
-                    ListView.builder(
-                      itemCount: 10,
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemBuilder: (_, index) {
-                        return CustomerCard(
-                          image: AssetImage('assets/images/dummybg.jpg'),
-                          margin: EdgeInsets.only(
-                            bottom: 16,
-                          ),
-                          width: 220,
-                          height: 270,
-                          title: "S.H.I.E.L.D",
-                          type: "Human Resource",
-                          radius: "320 M",
-                          workTime: "08.00-16.00",
-                          place: "Brooklyn, New York, USA",
-                        );
-                      },
-                    ),
-                    SizedBox(
-                      height: 75,
-                    ),
-                  ],
+                child: GoogleMap(
+                  mapType: MapType.terrain,
+                  initialCameraPosition: CameraPosition(target: LatLng(0, 0), zoom: 14.4764),
+                  markers: $.markers,
+                  myLocationEnabled: true,
+                  onMapCreated: (GoogleMapController controller) {
+                    if (!$.mapsController.isCompleted) {
+                      $.mapsController.complete(controller);
+                    }
+                  },
+                  onCameraMove: (position) {
+                    $.markerLatLng = position.target;
+                  },
                 ),
               );
-            },
-          ),
+            }),
+            DraggableScrollableSheet(
+              initialChildSize: 0.3,
+              minChildSize: 0.3,
+              snap: true,
+              snapSizes: [
+                1.0,
+              ],
+              builder: (BuildContext context, myscrollController) {
+                return Container(
+                  key: $.bottomSheetKey,
+                  padding: EdgeInsets.only(
+                    top: RegularSize.l,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(RegularSize.xl),
+                      topRight: Radius.circular(RegularSize.xl),
+                    ),
+                  ),
+                  child: SingleChildScrollView(
+                    controller: myscrollController,
+                    child: Obx(() {
+                      return Container(
+                        height: $.bottomSheetHeight.value,
+                        child: Column(
+                          children: [
+                            Text(
+                              "Choose a location to visit",
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(
+                              height: RegularSize.xs,
+                            ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: RegularSize.m,
+                              ),
+                              child: IconInput(
+                                icon: "assets/svg/search.svg",
+                                hintText: "Search",
+                              ),
+                            ),
+                            SizedBox(
+                              height: RegularSize.s,
+                            ),
+                            Expanded(
+                              child: ListView.separated(
+                                itemCount: 25,
+                                separatorBuilder: (_, index) {
+                                  return Divider();
+                                },
+                                itemBuilder: (_, index) {
+                                  return Padding(
+                                    padding: EdgeInsets.only(
+                                      left: RegularSize.m,
+                                      right: RegularSize.m,
+                                      bottom: RegularSize.xs,
+                                      top: RegularSize.xs,
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: RegularSize.m,
+                                          ),
+                                          child: SvgPicture.asset(
+                                            "assets/svg/building-bold.svg",
+                                            color: RegularColor.gray,
+                                            width: RegularSize.m,
+                                          ),
+                                        ),
+                                        Expanded(
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                "PT. Bintang Jaya",
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                height: RegularSize.s,
+                                              ),
+                                              Text(
+                                                "Jl. Raya Bintang Jaya No. 1, Kec. Jatidowo, Kab. Binangun",
+                                                overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(
+                                                  fontSize: 14,
+                                                  color: RegularColor.gray,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }),
+                  ),
+                );
+              },
+            )
+          ],
         ),
       ),
     );
   }
 
-  void _showFilter() {
-    RegularDialog(
-      width: Get.width * 0.9,
-      child: Column(
-        children: [
-          GestureDetector(
-            onTap: $.changeTime,
-            child: IconInput(
-              label: "Visit Time",
-              icon: "assets/svg/history.svg",
-              hintText: "Visit Time",
-              enabled: false,
-              controller: $.filterTimeInputController,
-            ),
-          ),
-          SizedBox(
-            height: RegularSize.m,
-          ),
-          RegularButton(
-            label: "Apply",
-            primary: RegularColor.secondary,
-            height: RegularSize.xxl,
-          ),
-        ],
-      ),
-    ).show();
+  @override
+  onLoadError(String message) {}
+
+  @override
+  onLoadFailed(String message) {}
+
+  @override
+  onLoadSuccess(Map data) {
+    $.dataSource.detailLoaded(data as Map<String, dynamic>);
   }
 }

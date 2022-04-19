@@ -2,6 +2,8 @@
 
 import 'package:get/get.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
+import 'package:ventes/app/models/schedule_model.dart';
+import 'package:ventes/app/resources/widgets/loader.dart';
 import 'package:ventes/state_controllers/regular_state_controller.dart';
 import 'package:ventes/state_sources/data_sources/schedule_data_source.dart';
 import 'package:ventes/state_sources/state_listeners/schedule_listener.dart';
@@ -39,6 +41,7 @@ class ScheduleStateController extends RegularStateController {
 
     calendarController.addPropertyChangedListener(listener.onDateShownChanged);
     dataSource.fetchSchedules(dateShown.month);
+    Loader().show();
   }
 
   @override

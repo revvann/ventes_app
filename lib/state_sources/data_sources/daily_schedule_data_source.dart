@@ -10,6 +10,11 @@ class DailyScheduleDataSource {
   final Rx<List<Schedule>> _appointments = Rx<List<Schedule>>([]);
   List<Schedule> get appointments => _appointments.value;
   set appointments(List<Schedule> value) => _appointments.value = value;
+  void listToAppointments(List? value) {
+    if (value != null) {
+      appointments = List<Schedule>.from(value.map((item) => Schedule.fromJson(item)));
+    }
+  }
 
   void fetchSchedules(String date) {
     _presenter.fetchSchedules(date);

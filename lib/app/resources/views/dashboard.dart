@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:ventes/app/resources/views/regular_view.dart';
+import 'package:ventes/app/resources/widgets/bottom_navigation.dart';
 import 'package:ventes/app/resources/widgets/customer_card.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
@@ -15,6 +16,7 @@ class DashboardView extends RegularView<DashboardStateController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: BottomNavigation(),
       backgroundColor: Colors.white,
       body: SafeArea(
         child: SingleChildScrollView(
@@ -56,8 +58,7 @@ class DashboardView extends RegularView<DashboardStateController> {
                           RegularColor.yellow,
                           "assets/svg/calendar.svg",
                           "Schedule",
-                          () =>
-                              $.bottomNavigation.currentIndex = Views.schedule,
+                          () => $.bottomNavigation.currentIndex = Views.schedule,
                         ),
                         SizedBox(
                           width: RegularSize.s,
@@ -486,8 +487,7 @@ class DashboardView extends RegularView<DashboardStateController> {
     );
   }
 
-  Widget _buildMenuItem(Color color, String icon, String text,
-      [Function()? onTap]) {
+  Widget _buildMenuItem(Color color, String icon, String text, [Function()? onTap]) {
     return Expanded(
       child: GestureDetector(
         onTap: onTap,

@@ -43,7 +43,6 @@ class RegularAppointmentCard extends StatelessWidget {
               style: TextStyle(
                 fontSize: !isSmall() ? 12 : 10,
                 color: Colors.white,
-                fontWeight: FontWeight.bold,
               ),
               children: [
                 if (schedule.schestarttime != null)

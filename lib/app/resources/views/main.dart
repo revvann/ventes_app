@@ -1,10 +1,9 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:ventes/constants/regular_color.dart';
-import 'package:ventes/constants/regular_size.dart';
+import 'package:ventes/app/resources/views/regular_view.dart';
+import 'package:ventes/app/resources/widgets/bottom_navigation.dart';
 import 'package:ventes/constants/views.dart';
 import 'package:ventes/routing/navigators/dashboard_navigator.dart';
 import 'package:ventes/routing/navigators/history_navigator.dart';
@@ -12,8 +11,6 @@ import 'package:ventes/routing/navigators/nearby_navigator.dart';
 import 'package:ventes/routing/navigators/schedule_navigator.dart';
 import 'package:ventes/routing/navigators/settings_navigator.dart';
 import 'package:ventes/state_controllers/bottom_navigation_state_controller.dart';
-import 'package:ventes/app/resources/views/regular_view.dart';
-import 'package:ventes/app/resources/widgets/bottom_navigation.dart';
 
 class MainView extends RegularView<BottomNavigationStateController> {
   static const String route = "/";
@@ -75,7 +72,6 @@ class MainView extends RegularView<BottomNavigationStateController> {
             ],
           ),
         ),
-        bottomNavigationBar: BottomNavigation(),
       ),
     );
   }

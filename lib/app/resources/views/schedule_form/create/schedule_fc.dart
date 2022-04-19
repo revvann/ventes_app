@@ -70,7 +70,7 @@ class ScheduleFormCreateView extends RegularView<ScheduleFormCreateStateControll
       extendBodyBehindAppBar: true,
       appBar: TopNavigation(
         height: 85,
-        title: "Schedule",
+        title: ScheduleString.appBarTitle,
         appBarKey: $.appBarKey,
         leading: GestureDetector(
           child: Container(
@@ -94,7 +94,7 @@ class ScheduleFormCreateView extends RegularView<ScheduleFormCreateStateControll
                 horizontal: RegularSize.m,
               ),
               child: Text(
-                "Save",
+                ScheduleString.formCreateSubmitButton,
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 16,
@@ -109,7 +109,7 @@ class ScheduleFormCreateView extends RegularView<ScheduleFormCreateStateControll
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                "Form Create",
+                ScheduleString.formCreateTitle,
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -208,16 +208,19 @@ class ScheduleFormCreateView extends RegularView<ScheduleFormCreateStateControll
 
   @override
   void onCreateFailed(String message) {
+    Get.close(1);
     FailedAlert(ScheduleString.createFailed).show();
   }
 
   @override
   void onCreateSuccess(String message) {
+    Get.close(1);
     SuccessAlert(ScheduleString.createSuccess).show();
   }
 
   @override
   void onCreateError(String message) {
+    Get.close(1);
     ErrorAlert(ScheduleString.createError).show();
   }
 }

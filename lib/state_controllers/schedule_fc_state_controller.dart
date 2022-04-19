@@ -21,12 +21,20 @@ class ScheduleFormCreateStateController extends RegularStateController {
   late ScheduleFormCreateListener listener;
 
   final Completer<GoogleMapController> mapsController = Completer();
-  late CameraPosition currentPos;
+  CameraPosition currentPos = CameraPosition(target: LatLng(0, 0), zoom: 14.4764);
 
   final Rx<Set<Marker>> _markers = Rx<Set<Marker>>({});
 
   Set<Marker> get markers => _markers.value;
   set markers(Set<Marker> value) => _markers.value = value;
+  set markerLatLng(LatLng latlng) {
+    Marker marker = Marker(
+      markerId: MarkerId("selectedloc"),
+      infoWindow: InfoWindow(title: "Selected Location"),
+      position: latlng,
+    );
+    markers = {marker};
+  }
 
   @override
   void dispose() {
@@ -44,7 +52,11 @@ class ScheduleFormCreateStateController extends RegularStateController {
     formSource.init();
 
     Position pos = await getCurrentPosition();
-    currentPos = CameraPosition(target: LatLng(pos.latitude, pos.longitude), zoom: 14.4764);
+    GoogleMapController controller = await mapsController.future;
+    controller.animateCamera(
+      CameraUpdate.newLatLng(LatLng(pos.latitude, pos.longitude)),
+    );
+    markerLatLng = LatLng(pos.latitude, pos.longitude);
   }
 
   void showMapBottomSheet() {
@@ -102,22 +114,18 @@ class ScheduleFormCreateStateController extends RegularStateController {
   Widget get _gMaps {
     return Obx(() {
       return GoogleMap(
-        mapType: MapType.hybrid,
+        mapType: MapType.terrain,
         initialCameraPosition: currentPos,
         markers: markers,
+        myLocationEnabled: true,
         onMapCreated: (GoogleMapController controller) {
           if (!mapsController.isCompleted) {
             mapsController.complete(controller);
           }
         },
-        onTap: (latLng) {
-          Marker marker = Marker(
-            markerId: MarkerId("selectedloc"),
-            infoWindow: InfoWindow(title: "Selected Location"),
-            position: latLng,
-          );
-          formSource.scheloc = "https://maps.google.com?q=${latLng.latitude},${latLng.longitude}";
-          markers = {marker};
+        onCameraMove: (position) {
+          markerLatLng = position.target;
+          formSource.scheloc = "https://maps.google.com?q=${position.target.latitude},${position.target.longitude}";
         },
       );
     });

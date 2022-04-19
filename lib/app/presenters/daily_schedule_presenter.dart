@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:ventes/app/models/auth_model.dart';
+import 'package:ventes/constants/strings/schedule_string.dart';
 import 'package:ventes/helpers/auth_helper.dart';
 import 'package:ventes/network/contracts/fetch_data_contract.dart';
 import 'package:ventes/network/services/schedule_service.dart';
@@ -24,10 +25,10 @@ class DailySchedulePresenter {
           "schedules": response.body,
         });
       } else {
-        _fetchContract.onLoadFailed(response.body["message"]);
+        _fetchContract.onLoadFailed(ScheduleString.fetchFailed);
       }
     } catch (err) {
-      _fetchContract.onLoadFailed(err.toString());
+      _fetchContract.onLoadFailed(ScheduleString.fetchError);
     }
   }
 }
