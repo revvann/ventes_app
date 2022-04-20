@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
-import 'package:ventes/network/contracts/fetch_data_contract.dart';
-import 'package:ventes/network/services/gmaps_service.dart';
+import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
+import 'package:ventes/app/network/services/gmaps_service.dart';
 
 class NearbyPresenter {
   final _gmapsService = Get.find<GmapsService>();

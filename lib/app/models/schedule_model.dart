@@ -1,5 +1,6 @@
 import 'package:ventes/app/models/business_partner_model.dart';
 import 'package:ventes/app/models/regular_model.dart';
+import 'package:ventes/app/models/schedule_guest_model.dart';
 import 'package:ventes/app/models/type_model.dart';
 import 'package:ventes/app/models/user_model.dart';
 
@@ -27,6 +28,7 @@ class Schedule extends RegularModel {
   DBType? schetype;
   BusinessPartner? schebp;
   User? schetoward;
+  List<ScheduleGuest>? scheguest;
 
   Schedule({
     this.scheid,
@@ -52,6 +54,7 @@ class Schedule extends RegularModel {
     this.schetype,
     this.schebp,
     this.schetoward,
+    this.scheguest,
     String? createddate,
     String? updateddate,
     int? createdby,
@@ -95,6 +98,9 @@ class Schedule extends RegularModel {
     if (json['schetoward'] != null) {
       schetoward = User.fromJson(json['schetoward']);
     }
+    if (json['scheguest'] != null) {
+      scheguest = List<ScheduleGuest>.from(json['scheguest'].map((x) => ScheduleGuest.fromJson(x)));
+    }
     super.fromJson(json);
   }
 
@@ -129,6 +135,9 @@ class Schedule extends RegularModel {
     }
     if (schetoward != null) {
       data['schetoward'] = schetoward!.toJson();
+    }
+    if (scheguest != null) {
+      data['scheguest'] = List.from(scheguest!.map((x) => x.toJson()));
     }
     return data;
   }

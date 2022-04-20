@@ -41,6 +41,7 @@ class ScheduleStateController extends RegularStateController {
 
     calendarController.addPropertyChangedListener(listener.onDateShownChanged);
     dataSource.fetchSchedules(dateShown.month);
+    dataSource.fetchTypes();
     Loader().show();
   }
 

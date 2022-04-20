@@ -1,7 +1,11 @@
 class ScheduleString {
   static const appBarTitle = "Schedule";
+
   static const formCreateSubmitButton = "Save";
   static const formCreateTitle = "Form Create";
+
+  static const formUpdateSubmitButton = "Save";
+  static const formUpdateTitle = "Form Create";
 
   static const schenmLabel = "Title";
   static const schetypeLabel = "Type";

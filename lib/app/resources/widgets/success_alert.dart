@@ -50,7 +50,7 @@ class SuccessAlert {
               Get.close(1);
             },
             style: TextButton.styleFrom(
-              primary: RegularColor.yellow,
+              primary: RegularColor.primary,
             ),
             child: Text(
               "Okay",

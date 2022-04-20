@@ -1,8 +1,8 @@
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ventes/app/models/maps_loc.dart';
-import 'package:ventes/app/presenters/nearby_presenter.dart';
-import 'package:ventes/network/contracts/fetch_data_contract.dart';
+import 'package:ventes/app/network/presenters/nearby_presenter.dart';
+import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
 
 class NearbyDataSource {
   final NearbyPresenter _presenter = NearbyPresenter();

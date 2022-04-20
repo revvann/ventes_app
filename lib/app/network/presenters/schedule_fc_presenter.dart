@@ -1,17 +1,25 @@
 import 'package:get/get.dart';
-import 'package:ventes/network/contracts/create_contract.dart';
+import 'package:ventes/app/network/contracts/create_contract.dart';
+import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
+import 'package:ventes/app/network/services/type_service.dart';
+import 'package:ventes/constants/strings/regular_string.dart';
+import 'package:ventes/constants/strings/request_code.dart';
 import 'package:ventes/helpers/auth_helper.dart';
 import 'package:ventes/app/models/auth_model.dart';
 import 'package:ventes/app/models/user_detail_model.dart';
-import 'package:ventes/network/services/schedule_service.dart';
-import 'package:ventes/network/services/user_service.dart';
+import 'package:ventes/app/network/services/schedule_service.dart';
+import 'package:ventes/app/network/services/user_service.dart';
 
 class ScheduleFormCreatePresenter {
   final _userService = Get.find<UserService>();
   final _scheduleService = Get.find<ScheduleService>();
+  final _typeService = Get.find<TypeService>();
 
   late final CreateContract _createContract;
   set createContract(CreateContract contract) => _createContract = contract;
+
+  late final FetchDataContract _fetchDataContract;
+  set fetchDataContract(FetchDataContract contract) => _fetchDataContract = contract;
 
   void createSchedule(Map<String, dynamic> data) async {
     try {
@@ -26,7 +34,24 @@ class ScheduleFormCreatePresenter {
     }
   }
 
-  Future<List<UserDetail>> getUsers(String? search) async {
+  void fetchTypes() async {
+    try {
+      Map<String, dynamic> params = {
+        'typecd': DBTypeString.schedule,
+      };
+      Response response = await _typeService.byCode(params);
+      if (response.statusCode == 200) {
+        _fetchDataContract.onLoadSuccess({'types': response.body});
+      } else {
+        _fetchDataContract.onLoadFailed(response.body['message']);
+      }
+    } catch (err) {
+      print(err.toString());
+      _fetchDataContract.onLoadError(err.toString());
+    }
+  }
+
+  Future<List<UserDetail>> fetchUsers(String? search) async {
     UserDetail? activeUser = await findActiveUser();
     Map<String, dynamic> params = {
       'userdtbpid': activeUser?.userdtbpid.toString(),

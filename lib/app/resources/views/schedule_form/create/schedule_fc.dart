@@ -6,6 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:ventes/app/models/schedule_guest_model.dart';
 import 'package:ventes/app/models/user_detail_model.dart';
+import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
 import 'package:ventes/app/resources/views/regular_view.dart';
 import 'package:ventes/app/resources/widgets/editor_input.dart';
 import 'package:ventes/app/resources/widgets/error_alert.dart';
@@ -22,7 +23,7 @@ import 'package:ventes/app/resources/widgets/top_navigation.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/constants/strings/schedule_string.dart';
-import 'package:ventes/network/contracts/create_contract.dart';
+import 'package:ventes/app/network/contracts/create_contract.dart';
 import 'package:ventes/routing/navigators/schedule_navigator.dart';
 import 'package:ventes/state_controllers/schedule_fc_state_controller.dart';
 import 'package:ventes/state_sources/form_sources/schedule_fc_form_source.dart';
@@ -52,11 +53,12 @@ part 'package:ventes/app/resources/views/schedule_form/create/components/_title_
 part 'package:ventes/app/resources/views/schedule_form/create/components/_toward_dropdown.dart';
 part 'package:ventes/app/resources/views/schedule_form/create/components/_twintime_input.dart';
 
-class ScheduleFormCreateView extends RegularView<ScheduleFormCreateStateController> implements CreateContract {
+class ScheduleFormCreateView extends RegularView<ScheduleFormCreateStateController> implements CreateContract, FetchDataContract {
   static const String route = "/schedule/create";
   ScheduleFormCreateView() {
     $ = controller;
     $.dataSource.createContract = this;
+    $.dataSource.fetchDataContract = this;
   }
 
   @override
@@ -159,12 +161,15 @@ class ScheduleFormCreateView extends RegularView<ScheduleFormCreateStateControll
                 SizedBox(
                   height: RegularSize.m,
                 ),
-                _ScheduletypeSelectbox(
-                  onSelected: (value) {
-                    $.formSource.schetype = value + $.formSource.taskId;
-                  },
-                  activeIndex: $.formSource.schetype - $.formSource.taskId,
-                ),
+                Obx(() {
+                  return _ScheduletypeSelectbox(
+                    onSelected: (value) {
+                      $.formSource.schetype = value;
+                    },
+                    activeIndex: $.formSource.schetype,
+                    items: $.dataSource.typeNames(),
+                  );
+                }),
                 SizedBox(
                   height: RegularSize.l,
                 ),
@@ -182,16 +187,16 @@ class ScheduleFormCreateView extends RegularView<ScheduleFormCreateStateControll
                       child: Stack(
                         children: [
                           Offstage(
-                            offstage: $.formSource.schetype != $.formSource.eventId,
+                            offstage: $.dataSource.typeName($.formSource.schetype) != "Event",
                             child: _EventForm(),
                           ),
                           Offstage(
-                            offstage: $.formSource.schetype != $.formSource.taskId,
-                            child: _TaskForm($),
+                            offstage: $.dataSource.typeName($.formSource.schetype) != "Task",
+                            child: _TaskForm(),
                           ),
                           Offstage(
-                            offstage: $.formSource.schetype != $.formSource.reminderId,
-                            child: _ReminderForm($),
+                            offstage: $.dataSource.typeName($.formSource.schetype) != "Reminder",
+                            child: _ReminderForm(),
                           ),
                         ],
                       ),
@@ -222,5 +227,20 @@ class ScheduleFormCreateView extends RegularView<ScheduleFormCreateStateControll
   void onCreateError(String message) {
     Get.close(1);
     ErrorAlert(ScheduleString.createError).show();
+  }
+
+  @override
+  onLoadError(String message) {
+    ErrorAlert(ScheduleString.createError).show();
+  }
+
+  @override
+  onLoadFailed(String message) {
+    FailedAlert(ScheduleString.createFailed).show();
+  }
+
+  @override
+  onLoadSuccess(Map data) {
+    $.dataSource.insertTypes(List<Map<String, dynamic>>.from(data['types']));
   }
 }

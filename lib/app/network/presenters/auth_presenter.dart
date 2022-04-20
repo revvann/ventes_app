@@ -1,8 +1,8 @@
 import 'package:get/get.dart';
-import 'package:ventes/network/contracts/auth_contract.dart';
+import 'package:ventes/app/network/contracts/auth_contract.dart';
 import 'package:ventes/helpers/auth_helper.dart';
 import 'package:ventes/app/models/auth_model.dart';
-import 'package:ventes/network/services/auth_service.dart';
+import 'package:ventes/app/network/services/auth_service.dart';
 
 class AuthPresenter {
   final AuthService _authService = Get.find<AuthService>();

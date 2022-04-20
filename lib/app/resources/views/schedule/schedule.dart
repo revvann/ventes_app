@@ -7,13 +7,17 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:ventes/app/models/schedule_model.dart';
+import 'package:ventes/app/models/type_model.dart';
+import 'package:ventes/app/network/services/type_service.dart';
 import 'package:ventes/app/resources/widgets/error_alert.dart';
 import 'package:ventes/app/resources/widgets/failed_alert.dart';
 import 'package:ventes/app/resources/widgets/regular_outlined_button.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
+import 'package:ventes/constants/strings/regular_string.dart';
 import 'package:ventes/constants/strings/schedule_string.dart';
-import 'package:ventes/network/contracts/fetch_data_contract.dart';
+import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
+import 'package:ventes/helpers/function_helpers.dart';
 import 'package:ventes/routing/navigators/schedule_navigator.dart';
 import 'package:ventes/state_controllers/schedule_state_controller.dart';
 import 'package:ventes/app/resources/views/daily_schedule/daily_schedule.dart';
@@ -135,6 +139,7 @@ class ScheduleView extends RegularView<ScheduleStateController> implements Fetch
                   return _Calendar(
                     appointmentDetailItemBuilder: (schedule) => _AppointmentItem(
                       appointment: schedule,
+                      onFindColor: $.listener.onAppointmentFindColor,
                     ),
                     monthCellBuilder: (_, details) {
                       return Obx(() {

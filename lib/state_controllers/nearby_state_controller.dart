@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:ventes/app/resources/widgets/loader.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/helpers/function_helpers.dart';
 import 'package:ventes/state_controllers/regular_state_controller.dart';
@@ -48,6 +49,7 @@ class NearbyStateController extends RegularStateController {
       CameraUpdate.newLatLng(LatLng(position.latitude, position.longitude)),
     );
     dataSource.getDetail(LatLng(position.latitude, position.longitude));
+    Loader().show();
   }
 
   @override

@@ -8,8 +8,14 @@ import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/helpers/function_helpers.dart';
 
 class RegularAppointmentCard extends StatelessWidget {
+  RegularAppointmentCard({
+    required this.schedule,
+    this.primary = RegularColor.primary,
+    this.isSelected = false,
+  });
   Schedule schedule;
-  RegularAppointmentCard({required this.schedule});
+  Color primary;
+  bool isSelected;
 
   bool isSmall() {
     int start = parseTime(schedule.schestarttime ?? "00:00:00").millisecondsSinceEpoch;
@@ -21,8 +27,8 @@ class RegularAppointmentCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: RegularColor.primary,
-        borderRadius: BorderRadius.circular(RegularSize.s),
+        color: primary,
+        borderRadius: !isSelected ? BorderRadius.circular(RegularSize.s) : BorderRadius.circular(3),
       ),
       padding: !isSmall() ? EdgeInsets.all(RegularSize.xs) : EdgeInsets.only(top: 2, left: RegularSize.s, right: RegularSize.s),
       child: Column(

@@ -15,7 +15,7 @@ import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/constants/strings/schedule_string.dart';
 import 'package:ventes/helpers/function_helpers.dart';
-import 'package:ventes/network/contracts/fetch_data_contract.dart';
+import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
 import 'package:ventes/state_controllers/daily_schedule_state_controller.dart';
 
 part 'package:ventes/app/resources/views/daily_schedule/components/_calendar.dart';
@@ -53,6 +53,23 @@ class DailyScheduleView extends RegularView<DailyScheduleStateController> implem
           ),
           onTap: $.listener.onArrowBackClick,
         ),
+        actions: [
+          Obx(() {
+            return $.selectedAppointment != null
+                ? GestureDetector(
+                    onTap: $.listener.onEditButtonClick,
+                    child: Container(
+                      padding: EdgeInsets.all(RegularSize.xs),
+                      child: SvgPicture.asset(
+                        "assets/svg/edit.svg",
+                        width: RegularSize.l,
+                        color: Colors.white,
+                      ),
+                    ),
+                  )
+                : SizedBox();
+          }),
+        ],
         below: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -96,11 +113,8 @@ class DailyScheduleView extends RegularView<DailyScheduleStateController> implem
                       date: $.date,
                       type: CalendarDataSourceType.daily,
                     ),
-                    appointmentBuilder: (_, detail) {
-                      return RegularAppointmentCard(
-                        schedule: detail.appointments.first,
-                      );
-                    },
+                    onFindColor: $.listener.onFindAppointmentColor,
+                    onTap: $.listener.onCalendarTap,
                   );
                 }),
               )

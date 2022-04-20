@@ -42,17 +42,17 @@ class RegularSelectBox<T> extends StatelessWidget {
         ),
         Container(
           width: double.infinity,
-          child: Obx(() {
-            return Wrap(
-              spacing: RegularSize.s,
-              runSpacing: RegularSize.s,
-              children: items
-                  .asMap()
-                  .map(
-                    (key, value) {
-                      return MapEntry(
-                        key,
-                        _buildItem(
+          child: Wrap(
+            spacing: RegularSize.s,
+            runSpacing: RegularSize.s,
+            children: items
+                .asMap()
+                .map(
+                  (key, value) {
+                    return MapEntry(
+                      key,
+                      Obx(() {
+                        return _buildItem(
                           value.toString(),
                           _activeIndex.value == key,
                           () {
@@ -62,14 +62,14 @@ class RegularSelectBox<T> extends StatelessWidget {
                               onSelected?.call(key);
                             }
                           },
-                        ),
-                      );
-                    },
-                  )
-                  .values
-                  .toList(),
-            );
-          }),
+                        );
+                      }),
+                    );
+                  },
+                )
+                .values
+                .toList(),
+          ),
         )
       ],
     );

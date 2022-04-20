@@ -1,4 +1,4 @@
-import 'package:ventes/network/services/regular_service.dart';
+import 'package:ventes/app/network/services/regular_service.dart';
 
 class UserService extends RegularService {
   @override

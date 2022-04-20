@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:ventes/app/presenters/auth_presenter.dart';
+import 'package:ventes/app/network/presenters/auth_presenter.dart';
 import 'package:ventes/state_sources/data_sources/signin_data_source.dart';
 import 'package:ventes/state_sources/form_sources/signin_form_source.dart';
 

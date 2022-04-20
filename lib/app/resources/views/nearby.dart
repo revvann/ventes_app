@@ -5,11 +5,13 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:ventes/app/resources/widgets/failed_alert.dart';
 import 'package:ventes/app/resources/widgets/icon_input.dart';
 import 'package:ventes/app/resources/widgets/regular_bottom_sheet.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
-import 'package:ventes/network/contracts/fetch_data_contract.dart';
+import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
+import 'package:ventes/constants/strings/nearby_string.dart';
 import 'package:ventes/state_controllers/nearby_state_controller.dart';
 import 'package:ventes/app/resources/views/regular_view.dart';
 import 'package:ventes/app/resources/widgets/top_navigation.dart';
@@ -31,7 +33,7 @@ class NearbyView extends RegularView<NearbyStateController> implements FetchData
       backgroundColor: RegularColor.primary,
       extendBodyBehindAppBar: true,
       appBar: TopNavigation(
-        title: "Nearby",
+        title: NearbyString.appBarTitle,
         height: 80,
         appBarKey: $.appBarKey,
         leading: GestureDetector(
@@ -132,7 +134,7 @@ class NearbyView extends RegularView<NearbyStateController> implements FetchData
                         child: Column(
                           children: [
                             Text(
-                              "Choose a location to visit",
+                              NearbyString.bottomSheetTitle,
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
@@ -226,13 +228,20 @@ class NearbyView extends RegularView<NearbyStateController> implements FetchData
   }
 
   @override
-  onLoadError(String message) {}
+  onLoadError(String message) {
+    Get.close(1);
+    FailedAlert(NearbyString.fetchError).show();
+  }
 
   @override
-  onLoadFailed(String message) {}
+  onLoadFailed(String message) {
+    Get.close(1);
+    FailedAlert(NearbyString.fetchFailed).show();
+  }
 
   @override
   onLoadSuccess(Map data) {
     $.dataSource.detailLoaded(data as Map<String, dynamic>);
+    Get.close(1);
   }
 }

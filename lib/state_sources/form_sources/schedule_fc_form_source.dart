@@ -21,10 +21,6 @@ class ScheduleFormCreateFormSource {
   int addMemberId = 15;
   int shareLinkId = 16;
 
-  int eventId = 11;
-  int taskId = 10;
-  int reminderId = 12;
-
   late ScheduleFormCreateDataSource dataSource;
   late ScheduleFormCreateValidator validator;
 
@@ -49,15 +45,15 @@ class ScheduleFormCreateFormSource {
   final Rx<DateTime> _scheenddate = Rx<DateTime>(DateTime.now());
   final Rx<DateTime?> _schestarttime = Rx<DateTime?>(null);
   final Rx<DateTime?> _scheendtime = Rx<DateTime?>(null);
-  final Rx<int> _schetype = Rx<int>(11);
+  final Rx<int> _schetype = Rx<int>(0);
   final Rx<bool> _scheallday = Rx<bool>(false);
   final Rx<bool> _scheonline = Rx<bool>(false);
   final Rx<List<ScheduleGuest>> _guests = Rx<List<ScheduleGuest>>([]);
   final Rx<UserDetail?> _schetoward = Rx<UserDetail?>(null);
 
-  bool get isEvent => _schetype.value == eventId;
-  bool get isTask => _schetype.value == taskId;
-  bool get isReminder => _schetype.value == reminderId;
+  bool get isEvent => dataSource.typeName(schetype) == "Event";
+  bool get isTask => dataSource.typeName(schetype) == "Task";
+  bool get isReminder => dataSource.typeName(schetype) == "Reminder";
 
   int? get schebpid => schetoward?.userdtbpid;
 
@@ -322,7 +318,7 @@ class ScheduleFormCreateFormSource {
       "scheonline": isEvent ? scheonline : false,
       "scheonlink": isEvent ? scheonlink : null,
       "scheallday": scheallday,
-      "schetypeid": schetype,
+      "schetypeid": dataSource.typeId(schetype),
       "schetz": isEvent ? schetz : null,
       "scheprivate": isEvent ? scheprivate : false,
       "schetowardid": isEvent ? schetoward?.userid : userDefault?.userid,

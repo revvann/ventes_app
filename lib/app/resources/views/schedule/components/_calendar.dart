@@ -78,20 +78,6 @@ class _Calendar extends StatelessWidget {
                   },
                 ),
               ),
-              SizedBox(
-                width: RegularSize.s,
-              ),
-              Expanded(
-                child: RegularButton(
-                  label: "Detail",
-                  primary: RegularColor.secondary,
-                  height: RegularSize.xxl,
-                  onPressed: () {
-                    Get.close(1);
-                    Get.toNamed(DailyScheduleView.route, id: ScheduleNavigator.id);
-                  },
-                ),
-              ),
             ],
           ),
         ],

@@ -59,6 +59,12 @@ class ScheduleFormCreateStateController extends RegularStateController {
     markerLatLng = LatLng(pos.latitude, pos.longitude);
   }
 
+  @override
+  void onReady() {
+    super.onReady();
+    dataSource.fetchTypes();
+  }
+
   void showMapBottomSheet() {
     RegularBottomSheet(
       backgroundColor: Colors.white,

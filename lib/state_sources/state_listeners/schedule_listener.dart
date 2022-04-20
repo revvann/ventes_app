@@ -1,6 +1,9 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ventes/app/models/schedule_model.dart';
 import 'package:ventes/app/resources/views/daily_schedule/daily_schedule.dart';
 import 'package:ventes/app/resources/widgets/loader.dart';
+import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/routing/navigators/schedule_navigator.dart';
 import 'package:ventes/state_controllers/schedule_state_controller.dart';
 
@@ -38,5 +41,17 @@ class ScheduleListener {
         "date": $.selectedDate,
       },
     );
+  }
+
+  Color onAppointmentFindColor(Schedule appointment) {
+    Color color = RegularColor.primary;
+    if (appointment.schetypeid == $.dataSource.types["Event"]) {
+      color = RegularColor.purple;
+    } else if (appointment.schetypeid == $.dataSource.types["Task"]) {
+      color = RegularColor.red;
+    } else if (appointment.schetypeid == $.dataSource.types["Reminder"]) {
+      color = RegularColor.cyan;
+    }
+    return color;
   }
 }
