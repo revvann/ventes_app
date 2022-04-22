@@ -43,29 +43,30 @@ class RegularAppointmentCard extends StatelessWidget {
               fontSize: !isSmall() ? 12 : 10,
             ),
           ),
-          RichText(
-            overflow: TextOverflow.ellipsis,
-            text: TextSpan(
-              style: TextStyle(
-                fontSize: !isSmall() ? 12 : 10,
-                color: Colors.white,
+          if (!(schedule.scheallday ?? false))
+            RichText(
+              overflow: TextOverflow.ellipsis,
+              text: TextSpan(
+                style: TextStyle(
+                  fontSize: !isSmall() ? 12 : 10,
+                  color: Colors.white,
+                ),
+                children: [
+                  if (schedule.schestarttime != null)
+                    TextSpan(
+                      text: formatTime12(parseTime(schedule.schestarttime!)),
+                    ),
+                  if (schedule.scheendtime != null)
+                    TextSpan(
+                      text: " - ",
+                    ),
+                  if (schedule.scheendtime != null)
+                    TextSpan(
+                      text: formatTime12(parseTime(schedule.scheendtime!)),
+                    ),
+                ],
               ),
-              children: [
-                if (schedule.schestarttime != null)
-                  TextSpan(
-                    text: formatTime12(parseTime(schedule.schestarttime!)),
-                  ),
-                if (schedule.scheendtime != null)
-                  TextSpan(
-                    text: " - ",
-                  ),
-                if (schedule.scheendtime != null)
-                  TextSpan(
-                    text: formatTime12(parseTime(schedule.scheendtime!)),
-                  ),
-              ],
-            ),
-          )
+            )
         ],
       ),
     );
@@ -98,6 +99,11 @@ class RegularCalendarDataSource extends CalendarDataSource<Schedule> {
           return dbParseDate(date);
       }
     }
+
+    if (isAllDay(index)) {
+      return dbParseDate(date!);
+    }
+
     return DateTime(0);
   }
 
@@ -116,6 +122,11 @@ class RegularCalendarDataSource extends CalendarDataSource<Schedule> {
           return dbParseDate(date);
       }
     }
+
+    if (isAllDay(index)) {
+      return getStartTime(index).add(Duration(hours: 23, minutes: 59));
+    }
+
     return getStartTime(index).add(Duration(minutes: 15));
   }
 

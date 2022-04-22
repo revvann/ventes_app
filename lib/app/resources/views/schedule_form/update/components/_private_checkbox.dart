@@ -3,7 +3,9 @@ part of 'package:ventes/app/resources/views/schedule_form/update/schedule_fu.dar
 class _PrivateCheckbox extends StatelessWidget {
   _PrivateCheckbox({
     required this.onChecked,
+    required this.value,
   });
+  bool value;
   void Function(bool value) onChecked;
 
   @override
@@ -11,6 +13,7 @@ class _PrivateCheckbox extends StatelessWidget {
     return RegularCheckbox(
       label: ScheduleString.scheprivateLabel,
       onChecked: onChecked,
+      value: value,
     );
   }
 }

@@ -9,14 +9,11 @@ class _Calendar extends StatelessWidget {
     required this.onFindColor,
     this.onTap,
   });
+  DailyScheduleStateController $ = Get.find<DailyScheduleStateController>();
   Color Function(Schedule appointment) onFindColor;
   void Function(CalendarTapDetails details)? onTap;
   RegularCalendarDataSource? dataSource;
-  final Rx<Schedule?> _selectedAppointment = Rx<Schedule?>(null);
   DateTime date;
-
-  Schedule? get selectedAppointment => _selectedAppointment.value;
-  set selectedAppointment(Schedule? value) => _selectedAppointment.value = value;
 
   @override
   Widget build(BuildContext context) {
@@ -39,15 +36,12 @@ class _Calendar extends StatelessWidget {
 
   void onCalendarTap(CalendarTapDetails details) {
     onTap?.call(details);
-    if (details.appointments != null && (details.appointments?.isNotEmpty ?? false)) {
-      selectedAppointment = details.appointments!.first;
-    }
   }
 
   Widget appointmentBuilder(context, details) {
     Color primary = onFindColor(details.appointments.first);
     return Obx(() {
-      bool isActive = selectedAppointment?.scheid == details.appointments.first.scheid;
+      bool isActive = $.selectedAppointment?.scheid == details.appointments.first.scheid;
       return RegularAppointmentCard(
         schedule: details.appointments.first,
         primary: primary,

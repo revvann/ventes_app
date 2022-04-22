@@ -44,12 +44,12 @@ class ScheduleFormUpdateFormSource {
   int scheid = -1;
   String _scheonlink = "";
   String _scheloc = "";
-  bool _scheprivate = false;
   final Rx<DateTime> _schestartdate = Rx<DateTime>(DateTime.now());
   final Rx<DateTime> _scheenddate = Rx<DateTime>(DateTime.now());
   final Rx<DateTime?> _schestarttime = Rx<DateTime?>(null);
   final Rx<DateTime?> _scheendtime = Rx<DateTime?>(null);
   final Rx<int> _schetype = Rx<int>(0);
+  final Rx<bool> _scheprivate = Rx<bool>(false);
   final Rx<bool> _scheallday = Rx<bool>(false);
   final Rx<bool> _scheonline = Rx<bool>(false);
   final Rx<List<ScheduleGuest>> _guests = Rx<List<ScheduleGuest>>([]);
@@ -136,8 +136,8 @@ class ScheduleFormUpdateFormSource {
   bool get scheonline => _scheonline.value;
   set scheonline(bool value) => _scheonline.value = value;
 
-  bool get scheprivate => _scheprivate;
-  set scheprivate(bool value) => _scheprivate = value;
+  bool get scheprivate => _scheprivate.value;
+  set scheprivate(bool value) => _scheprivate.value = value;
 
   int get scheremind => int.tryParse(scheremindTEC.text) ?? 0;
   set scheremind(int? value) {
@@ -291,10 +291,10 @@ class ScheduleFormUpdateFormSource {
       schetype = dataSource.typeIndex(schedule.schetypeid ?? 0);
       schestartdate = dbParseDate(schedule.schestartdate!);
       scheenddate = dbParseDate(schedule.scheenddate ?? schedule.schestartdate!);
-      schestarttime = parseTime(schedule.schestarttime!);
-      scheendtime = parseTime(schedule.scheendtime ?? schedule.schestarttime!);
+      schestarttime = !(schedule.scheallday ?? false) ? parseTime(schedule.schestarttime!) : null;
+      scheendtime = !(schedule.scheallday ?? false) ? parseTime(schedule.scheendtime ?? schedule.schestarttime!) : null;
       schetzDC.value = schedule.schetz;
-      scheallday = schedule.scheallday ?? false;
+      listener.onAlldayValueChanged(schedule.scheallday ?? false);
       scheloc = schedule.scheloc ?? "";
       scheonline = schedule.scheonline ?? false;
       scheonlink = schedule.scheonlink ?? "";

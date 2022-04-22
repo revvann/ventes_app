@@ -47,9 +47,12 @@ class _EventForm extends StatelessWidget {
         SizedBox(
           height: RegularSize.m,
         ),
-        _AlldayCheckbox(
-          onChecked: $.formSource.listener.onAlldayValueChanged,
-        ),
+        Obx(() {
+          return _AlldayCheckbox(
+            value: $.formSource.scheallday,
+            onChecked: $.formSource.listener.onAlldayValueChanged,
+          );
+        }),
         SizedBox(
           height: RegularSize.m,
         ),
@@ -67,9 +70,12 @@ class _EventForm extends StatelessWidget {
         SizedBox(
           height: RegularSize.m,
         ),
-        _OnlineCheckbox(
-          onChecked: $.formSource.listener.onOnlineValueChanged,
-        ),
+        Obx(() {
+          return _OnlineCheckbox(
+            value: $.formSource.scheonline,
+            onChecked: $.formSource.listener.onOnlineValueChanged,
+          );
+        }),
         SizedBox(
           height: RegularSize.m,
         ),
@@ -91,7 +97,9 @@ class _EventForm extends StatelessWidget {
         SizedBox(
           height: RegularSize.m,
         ),
-        _PrivateCheckbox(onChecked: $.formSource.listener.onPrivateValueChanged),
+        Obx(() {
+          return _PrivateCheckbox(onChecked: $.formSource.listener.onPrivateValueChanged, value: $.formSource.scheprivate);
+        }),
         SizedBox(
           height: RegularSize.m,
         ),

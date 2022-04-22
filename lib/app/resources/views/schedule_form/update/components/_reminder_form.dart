@@ -28,9 +28,12 @@ class _ReminderForm extends StatelessWidget {
         SizedBox(
           height: RegularSize.m,
         ),
-        _AlldayCheckbox(
-          onChecked: $.formSource.listener.onAlldayValueChanged,
-        ),
+        Obx(() {
+          return _AlldayCheckbox(
+            onChecked: $.formSource.listener.onAlldayValueChanged,
+            value: $.formSource.scheallday,
+          );
+        }),
         SizedBox(
           height: RegularSize.m,
         ),

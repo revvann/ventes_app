@@ -48,10 +48,10 @@ class ScheduleFormUpdatePresenter {
           data['schedule'] = scheduleResponse.body;
           _fetchDataContract.onLoadSuccess(data);
         } else {
-          _fetchDataContract.onLoadFailed(scheduleResponse.body['message']);
+          _fetchDataContract.onLoadFailed("Failed to fetch schedule");
         }
       } else {
-        _fetchDataContract.onLoadFailed(typeResponse.body['message']);
+        _fetchDataContract.onLoadFailed("Failed to fetch schedule");
       }
     } catch (err) {
       _fetchDataContract.onLoadError(err.toString());

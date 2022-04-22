@@ -3,10 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:ventes/app/network/services/gmaps_service.dart';
-import 'package:ventes/app/network/services/schedule_service.dart';
-import 'package:ventes/app/network/services/type_service.dart';
-import 'package:ventes/app/network/services/user_service.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/helpers/auth_helper.dart';
 import 'package:ventes/helpers/function_helpers.dart';
