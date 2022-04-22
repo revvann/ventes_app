@@ -12,6 +12,7 @@ import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
 import 'package:ventes/constants/strings/nearby_string.dart';
+import 'package:ventes/helpers/function_helpers.dart';
 import 'package:ventes/state_controllers/nearby_state_controller.dart';
 import 'package:ventes/app/resources/views/regular_view.dart';
 import 'package:ventes/app/resources/widgets/top_navigation.dart';
@@ -45,7 +46,7 @@ class NearbyView extends RegularView<NearbyStateController> implements FetchData
               color: Colors.white,
             ),
           ),
-          onTap: $.listener.backToDashboard,
+          onTap: backToDashboard,
         ),
         below: Container(
           padding: EdgeInsets.symmetric(

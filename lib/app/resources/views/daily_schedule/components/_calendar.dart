@@ -24,12 +24,19 @@ class _Calendar extends StatelessWidget {
       minDate: DateTime(date.year, date.month, date.day, 0, 0),
       maxDate: DateTime(date.year, date.month, date.day, 23, 59),
       viewHeaderHeight: 0,
-      allowAppointmentResize: true,
       onTap: onCalendarTap,
       selectionDecoration: BoxDecoration(),
       appointmentBuilder: appointmentBuilder,
       timeSlotViewSettings: TimeSlotViewSettings(
         timeIntervalHeight: 120,
+      ),
+      allowDragAndDrop: true,
+      dragAndDropSettings: DragAndDropSettings(
+        allowNavigation: true,
+        allowScroll: true,
+        autoNavigateDelay: Duration(seconds: 1),
+        indicatorTimeFormat: 'HH:mm a',
+        showTimeIndicator: true,
       ),
     );
   }

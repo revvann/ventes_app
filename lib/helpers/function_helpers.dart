@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:get/get.dart';
 
 import 'package:timezone/timezone.dart';
 import 'package:intl/intl.dart';
+import 'package:ventes/constants/views.dart';
+import 'package:ventes/state_controllers/bottom_navigation_state_controller.dart';
 
 MaterialColor createSwatch(Color color) {
   final hslColor = HSLColor.fromColor(color);
@@ -134,4 +137,8 @@ List<Map<String, dynamic>> createTimeList([int? minHour, int? minMinutes]) {
     });
   }
   return items;
+}
+
+void backToDashboard() {
+  Get.find<BottomNavigationStateController>().currentIndex = Views.dashboard;
 }

@@ -7,28 +7,21 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:ventes/app/models/schedule_model.dart';
-import 'package:ventes/app/models/type_model.dart';
-import 'package:ventes/app/network/services/type_service.dart';
-import 'package:ventes/app/resources/widgets/error_alert.dart';
+import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
+import 'package:ventes/app/resources/views/regular_view.dart';
 import 'package:ventes/app/resources/widgets/failed_alert.dart';
+import 'package:ventes/app/resources/widgets/regular_appointment_card.dart';
+import 'package:ventes/app/resources/widgets/regular_dialog.dart';
 import 'package:ventes/app/resources/widgets/regular_outlined_button.dart';
+import 'package:ventes/app/resources/widgets/top_navigation.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
-import 'package:ventes/constants/strings/regular_string.dart';
 import 'package:ventes/constants/strings/schedule_string.dart';
-import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
 import 'package:ventes/helpers/function_helpers.dart';
-import 'package:ventes/routing/navigators/schedule_navigator.dart';
 import 'package:ventes/state_controllers/schedule_state_controller.dart';
-import 'package:ventes/app/resources/views/daily_schedule/daily_schedule.dart';
-import 'package:ventes/app/resources/views/regular_view.dart';
-import 'package:ventes/app/resources/widgets/regular_appointment_card.dart';
-import 'package:ventes/app/resources/widgets/regular_button.dart';
-import 'package:ventes/app/resources/widgets/regular_dialog.dart';
-import 'package:ventes/app/resources/widgets/top_navigation.dart';
 
-part 'package:ventes/app/resources/views/schedule/components/_calendar.dart';
 part 'package:ventes/app/resources/views/schedule/components/_appointment_item.dart';
+part 'package:ventes/app/resources/views/schedule/components/_calendar.dart';
 part 'package:ventes/app/resources/views/schedule/components/_month_cell.dart';
 
 class ScheduleView extends RegularView<ScheduleStateController> implements FetchDataContract {
@@ -50,6 +43,17 @@ class ScheduleView extends RegularView<ScheduleStateController> implements Fetch
         title: ScheduleString.appBarTitle,
         appBarKey: $.appBarKey,
         height: 90,
+        leading: GestureDetector(
+          child: Container(
+            padding: EdgeInsets.all(RegularSize.xs),
+            child: SvgPicture.asset(
+              "assets/svg/arrow-left.svg",
+              width: RegularSize.xl,
+              color: Colors.white,
+            ),
+          ),
+          onTap: backToDashboard,
+        ),
         actions: [
           GestureDetector(
             onTap: $.listener.onDetailClick,
@@ -119,60 +123,72 @@ class ScheduleView extends RegularView<ScheduleStateController> implements Fetch
         ),
       ).build(context),
       body: SafeArea(
-        child: Container(
-          width: double.infinity,
-          height: double.infinity,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(RegularSize.xl),
-              topRight: Radius.circular(RegularSize.xl),
-            ),
-          ),
-          child: Column(
-            children: [
-              SizedBox(
-                height: RegularSize.xl,
-              ),
-              Expanded(
-                child: Obx(() {
-                  return _Calendar(
-                    appointmentDetailItemBuilder: (schedule) => _AppointmentItem(
-                      appointment: schedule,
-                      onFindColor: $.listener.onAppointmentFindColor,
+        child: RefreshIndicator(
+          key: $.refreshKey,
+          onRefresh: () async {
+            await Future.delayed(Duration(seconds: 1));
+          },
+          child: CustomScrollView(
+            slivers: [
+              SliverFillRemaining(
+                child: Container(
+                  width: double.infinity,
+                  height: double.infinity,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(RegularSize.xl),
+                      topRight: Radius.circular(RegularSize.xl),
                     ),
-                    monthCellBuilder: (_, details) {
-                      return Obx(() {
-                        bool selected = details.date == $.selectedDate;
-                        bool thisMonth = details.date.month == $.dateShown.month;
-                        int appointmentsCount = details.appointments.length;
+                  ),
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: RegularSize.xl,
+                      ),
+                      Expanded(
+                        child: Obx(() {
+                          return _Calendar(
+                            appointmentDetailItemBuilder: (schedule) => _AppointmentItem(
+                              appointment: schedule,
+                              onFindColor: $.listener.onAppointmentFindColor,
+                            ),
+                            monthCellBuilder: (_, details) {
+                              return Obx(() {
+                                bool selected = details.date == $.selectedDate;
+                                bool thisMonth = details.date.month == $.dateShown.month;
+                                int appointmentsCount = details.appointments.length;
 
-                        Color textColor = RegularColor.gray;
-                        double fontSize = 14;
+                                Color textColor = RegularColor.gray;
+                                double fontSize = 14;
 
-                        if (thisMonth) {
-                          textColor = RegularColor.dark;
-                        }
+                                if (thisMonth) {
+                                  textColor = RegularColor.dark;
+                                }
 
-                        if (selected) {
-                          textColor = Colors.white;
-                          fontSize = 18;
-                        }
-                        return _MonthCell(
-                          day: "${details.date.day}",
-                          textColor: textColor,
-                          fontSize: fontSize,
-                          appointmentsCount: appointmentsCount,
-                          isSelected: selected,
-                        );
-                      });
-                    },
-                    dataSource: RegularCalendarDataSource($.dataSource.appointments),
-                    calendarController: $.calendarController,
-                    onSelectionChanged: $.listener.onDateSelectionChanged,
-                    initialDate: $.initialDate,
-                  );
-                }),
+                                if (selected) {
+                                  textColor = Colors.white;
+                                  fontSize = 18;
+                                }
+                                return _MonthCell(
+                                  day: "${details.date.day}",
+                                  textColor: textColor,
+                                  fontSize: fontSize,
+                                  appointmentsCount: appointmentsCount,
+                                  isSelected: selected,
+                                );
+                              });
+                            },
+                            dataSource: RegularCalendarDataSource($.dataSource.appointments),
+                            calendarController: $.calendarController,
+                            onSelectionChanged: $.listener.onDateSelectionChanged,
+                            initialDate: $.initialDate,
+                          );
+                        }),
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ],
           ),

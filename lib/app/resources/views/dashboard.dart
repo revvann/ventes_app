@@ -19,191 +19,197 @@ class DashboardView extends RegularView<DashboardStateController> {
       bottomNavigationBar: BottomNavigation(),
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              SizedBox(
-                height: 120,
-                width: double.infinity,
-                child: Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    _buildAppBar(),
-                    _buildTopPanel(),
-                  ],
+        child: RefreshIndicator(
+          key: $.refreshKey,
+          onRefresh: () async {
+            await Future.delayed(Duration(seconds: 2));
+          },
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 120,
+                  width: double.infinity,
+                  child: Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      _buildAppBar(),
+                      _buildTopPanel(),
+                    ],
+                  ),
                 ),
-              ),
-              SizedBox(
-                height: 125,
-              ),
-              Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: RegularSize.m,
+                SizedBox(
+                  height: 125,
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Row(
-                      children: [
-                        _buildMenuItem(
-                          RegularColor.purple,
-                          "assets/svg/marker.svg",
-                          "Nearby",
-                          () => $.bottomNavigation.currentIndex = Views.nearby,
-                        ),
-                        SizedBox(
-                          width: RegularSize.s,
-                        ),
-                        _buildMenuItem(
-                          RegularColor.yellow,
-                          "assets/svg/calendar.svg",
-                          "Schedule",
-                          () => $.bottomNavigation.currentIndex = Views.schedule,
-                        ),
-                        SizedBox(
-                          width: RegularSize.s,
-                        ),
-                        _buildMenuItem(
-                          RegularColor.cyan,
-                          "assets/svg/attendance.svg",
-                          "Attendance",
-                          () {},
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: RegularSize.s,
-                    ),
-                    Row(
-                      children: [
-                        _buildMenuItem(
-                          RegularColor.pink,
-                          "assets/svg/daily-visit.svg",
-                          "Daily Visit",
-                          () {},
-                        ),
-                        SizedBox(
-                          width: RegularSize.s,
-                        ),
-                        _buildMenuItem(
-                          RegularColor.red,
-                          "assets/svg/history.svg",
-                          "History",
-                          () => $.bottomNavigation.currentIndex = Views.history,
-                        ),
-                        SizedBox(
-                          width: RegularSize.s,
-                        ),
-                        _buildMenuItem(
-                          RegularColor.gray,
-                          "assets/svg/prospect.svg",
-                          "Prospect",
-                          () {},
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: RegularSize.m,
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    SizedBox(
-                      height: RegularSize.l,
-                    ),
-                    Text(
-                      "Plan For You",
-                      textAlign: TextAlign.start,
-                      style: TextStyle(
-                        color: RegularColor.primary,
-                        fontSize: 28,
-                        fontWeight: FontWeight.w600,
+                Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: RegularSize.m,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Row(
+                        children: [
+                          _buildMenuItem(
+                            RegularColor.purple,
+                            "assets/svg/marker.svg",
+                            "Nearby",
+                            () => $.bottomNavigation.currentIndex = Views.nearby,
+                          ),
+                          SizedBox(
+                            width: RegularSize.s,
+                          ),
+                          _buildMenuItem(
+                            RegularColor.yellow,
+                            "assets/svg/calendar.svg",
+                            "Schedule",
+                            () => $.bottomNavigation.currentIndex = Views.schedule,
+                          ),
+                          SizedBox(
+                            width: RegularSize.s,
+                          ),
+                          _buildMenuItem(
+                            RegularColor.cyan,
+                            "assets/svg/attendance.svg",
+                            "Attendance",
+                            () {},
+                          ),
+                        ],
                       ),
-                    ),
-                    SizedBox(
-                      height: RegularSize.m,
-                    ),
-                    _buildTitleHeader("Nearby Customers"),
-                  ],
-                ),
-              ),
-              Container(
-                height: 250,
-                child: ListView.builder(
-                  physics: BouncingScrollPhysics(),
-                  itemCount: 10,
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (_, index) {
-                    double mRight = 0;
-                    if (index == 9) {
-                      mRight = 16;
-                    }
-                    return CustomerCard(
-                      image: AssetImage('assets/images/dummybg.jpg'),
-                      margin: EdgeInsets.only(
-                        left: 16,
-                        right: mRight,
-                        top: 24,
-                        bottom: 24,
+                      SizedBox(
+                        height: RegularSize.s,
                       ),
-                      width: 220,
-                      title: "Oscorp Idustries",
-                      type: "Genetic Exploration",
-                      radius: "320 M",
-                      workTime: "08.00-16.00",
-                    );
-                  },
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: RegularSize.m,
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    _buildTitleHeader("Upcoming Visit"),
-                  ],
-                ),
-              ),
-              Container(
-                height: 250,
-                child: ListView.builder(
-                  physics: BouncingScrollPhysics(),
-                  itemCount: 10,
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (_, index) {
-                    double mRight = 0;
-                    if (index == 9) {
-                      mRight = 16;
-                    }
-                    return CustomerCard(
-                      image: AssetImage('assets/images/dummybg.jpg'),
-                      margin: EdgeInsets.only(
-                        left: 16,
-                        right: mRight,
-                        top: 24,
-                        bottom: 24,
+                      Row(
+                        children: [
+                          _buildMenuItem(
+                            RegularColor.pink,
+                            "assets/svg/daily-visit.svg",
+                            "Daily Visit",
+                            () {},
+                          ),
+                          SizedBox(
+                            width: RegularSize.s,
+                          ),
+                          _buildMenuItem(
+                            RegularColor.red,
+                            "assets/svg/history.svg",
+                            "History",
+                            () => $.bottomNavigation.currentIndex = Views.history,
+                          ),
+                          SizedBox(
+                            width: RegularSize.s,
+                          ),
+                          _buildMenuItem(
+                            RegularColor.gray,
+                            "assets/svg/prospect.svg",
+                            "Prospect",
+                            () {},
+                          ),
+                        ],
                       ),
-                      width: 220,
-                      title: "Oscorp Idustries",
-                      type: "Genetic Exploration",
-                      radius: "320 M",
-                      workTime: "08.00-16.00",
-                    );
-                  },
+                    ],
+                  ),
                 ),
-              ),
-              SizedBox(
-                height: RegularSize.xl,
-              ),
-            ],
+                Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: RegularSize.m,
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      SizedBox(
+                        height: RegularSize.l,
+                      ),
+                      Text(
+                        "Plan For You",
+                        textAlign: TextAlign.start,
+                        style: TextStyle(
+                          color: RegularColor.primary,
+                          fontSize: 28,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      SizedBox(
+                        height: RegularSize.m,
+                      ),
+                      _buildTitleHeader("Nearby Customers"),
+                    ],
+                  ),
+                ),
+                Container(
+                  height: 250,
+                  child: ListView.builder(
+                    physics: BouncingScrollPhysics(),
+                    itemCount: 10,
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: (_, index) {
+                      double mRight = 0;
+                      if (index == 9) {
+                        mRight = 16;
+                      }
+                      return CustomerCard(
+                        image: AssetImage('assets/images/dummybg.jpg'),
+                        margin: EdgeInsets.only(
+                          left: 16,
+                          right: mRight,
+                          top: 24,
+                          bottom: 24,
+                        ),
+                        width: 220,
+                        title: "Oscorp Idustries",
+                        type: "Genetic Exploration",
+                        radius: "320 M",
+                        workTime: "08.00-16.00",
+                      );
+                    },
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: RegularSize.m,
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      _buildTitleHeader("Upcoming Visit"),
+                    ],
+                  ),
+                ),
+                Container(
+                  height: 250,
+                  child: ListView.builder(
+                    physics: BouncingScrollPhysics(),
+                    itemCount: 10,
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: (_, index) {
+                      double mRight = 0;
+                      if (index == 9) {
+                        mRight = 16;
+                      }
+                      return CustomerCard(
+                        image: AssetImage('assets/images/dummybg.jpg'),
+                        margin: EdgeInsets.only(
+                          left: 16,
+                          right: mRight,
+                          top: 24,
+                          bottom: 24,
+                        ),
+                        width: 220,
+                        title: "Oscorp Idustries",
+                        type: "Genetic Exploration",
+                        radius: "320 M",
+                        workTime: "08.00-16.00",
+                      );
+                    },
+                  ),
+                ),
+                SizedBox(
+                  height: RegularSize.xl,
+                ),
+              ],
+            ),
           ),
         ),
       ),

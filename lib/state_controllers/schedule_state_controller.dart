@@ -1,8 +1,7 @@
 // ignore_for_file: prefer_const_constructors
-
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
-import 'package:ventes/app/models/schedule_model.dart';
 import 'package:ventes/app/resources/widgets/loader.dart';
 import 'package:ventes/state_controllers/regular_state_controller.dart';
 import 'package:ventes/state_sources/data_sources/schedule_data_source.dart';
@@ -12,6 +11,7 @@ class ScheduleStateController extends RegularStateController {
   ScheduleDataSource dataSource = ScheduleDataSource();
   late ScheduleListener listener;
 
+  GlobalKey<RefreshIndicatorState> refreshKey = GlobalKey<RefreshIndicatorState>();
   final CalendarController calendarController = CalendarController();
 
   final _dateShown = DateTime.now().obs;
