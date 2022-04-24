@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:simple_animations/simple_animations.dart';
 import 'package:ventes/app/resources/widgets/regular_dialog.dart';
@@ -8,9 +10,10 @@ import 'package:ventes/constants/regular_color.dart';
 class Loader {
   Future show() {
     return RegularDialog(
-      width: 80,
-      height: 100,
+      width: 120,
+      height: 160,
       dismissable: false,
+      backgroundColor: Colors.transparent,
       child: Container(
         alignment: Alignment.center,
         child: LoaderAnimation(),
@@ -27,106 +30,100 @@ class LoaderAnimation extends StatefulWidget {
 }
 
 class _LoaderAnimationState extends State<LoaderAnimation> with AnimationMixin {
-  late Animation<double> bubble1;
-  late AnimationController bubble1Controller;
-  late Animation<double> bubble2;
-  late AnimationController bubble2Controller;
-  late Animation<double> bubble3;
-  late AnimationController bubble3Controller;
+  late TimelineTween<AnimationType> bubble1;
 
   @override
   initState() {
     super.initState();
-    bubble1Controller = createController();
-    bubble1Controller.duration = Duration(milliseconds: 700);
-    Tween<double> bubble1Tween = Tween<double>(begin: 0.3, end: 1.0);
-    bubble1 = bubble1Tween.animate(CurvedAnimation(parent: bubble1Controller, curve: Curves.ease));
+    double bubbleSize = 37.5;
 
-    bubble2Controller = createController();
-    bubble2Controller.duration = Duration(milliseconds: 700);
-    Tween<double> bubble2Tween = Tween<double>(begin: 0.3, end: 1.0);
-    bubble2 = bubble2Tween.animate(CurvedAnimation(parent: bubble2Controller, curve: Curves.ease));
+    Tween<Offset> bubbleTween0 = Tween<Offset>(begin: Offset(bubbleSize, 0), end: Offset(bubbleSize, 0));
+    Tween<Offset> bubbleTween1 = Tween<Offset>(begin: Offset(bubbleSize, 0), end: Offset(0, bubbleSize));
+    Tween<Offset> bubbleTween2 = Tween<Offset>(begin: Offset(0, bubbleSize), end: Offset(-bubbleSize, 0));
+    Tween<Offset> bubbleTween3 = Tween<Offset>(begin: Offset(-bubbleSize, 0), end: Offset(0, -bubbleSize));
+    Tween<Offset> bubbleTween4 = Tween<Offset>(begin: Offset(0, -bubbleSize), end: Offset(bubbleSize, 0));
 
-    bubble3Controller = createController();
-    bubble3Controller.duration = Duration(milliseconds: 700);
-    Tween<double> bubble3Tween = Tween<double>(begin: 0.3, end: 1.0);
-    bubble3 = bubble3Tween.animate(CurvedAnimation(parent: bubble3Controller, curve: Curves.ease));
+    Tween<double> circleTween0 = Tween<double>(begin: pi * 0, end: pi * 0);
+    Tween<double> circleTween1 = Tween<double>(begin: pi * 0, end: pi * 0.5);
+    Tween<double> circleTween2 = Tween<double>(begin: pi * 0.5, end: pi);
+    Tween<double> circleTween3 = Tween<double>(begin: pi, end: pi * 1.5);
+    Tween<double> circleTween4 = Tween<double>(begin: pi * 1.5, end: pi * 2);
 
-    bubble1Controller.addStatusListener((status) {
-      if (status == AnimationStatus.completed) {
-        bubble1Controller.reverse();
-        bubble2Controller.forward();
-      }
-    });
-    bubble2Controller.addStatusListener((status) {
-      if (status == AnimationStatus.completed) {
-        bubble2Controller.reverse();
-        bubble3Controller.forward();
-      }
-    });
-    bubble3Controller.addStatusListener((status) {
-      if (status == AnimationStatus.completed) {
-        bubble3Controller.reverse();
-        bubble1Controller.forward();
-      }
-    });
-    bubble1Controller.forward();
+    Duration animDuration = Duration(milliseconds: 400);
+    Duration delay = Duration(milliseconds: 200);
+
+    bubble1 = TimelineTween<AnimationType>()
+      ..addScene(begin: Duration.zero, end: delay)
+          .animate(AnimationType.translate, tween: bubbleTween0)
+          .animate(AnimationType.rotate, tween: circleTween0)
+          .addSubsequentScene(duration: animDuration, delay: delay)
+          .animate(AnimationType.translate, tween: bubbleTween1)
+          .animate(AnimationType.rotate, tween: circleTween1)
+          .addSubsequentScene(duration: animDuration, delay: delay)
+          .animate(AnimationType.translate, tween: bubbleTween2)
+          .animate(AnimationType.rotate, tween: circleTween2)
+          .addSubsequentScene(duration: animDuration, delay: delay)
+          .animate(AnimationType.translate, tween: bubbleTween3)
+          .animate(AnimationType.rotate, tween: circleTween3)
+          .addSubsequentScene(duration: animDuration, delay: delay)
+          .animate(AnimationType.translate, tween: bubbleTween4)
+          .animate(AnimationType.rotate, tween: circleTween4);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        Row(
+    return LoopAnimation<TimelineValue<AnimationType>>(
+      tween: bubble1,
+      duration: bubble1.duration,
+      builder: (_, __, value) {
+        return Stack(
+          alignment: Alignment.center,
           children: [
-            AnimatedBuilder(
-              animation: bubble1Controller,
-              builder: (_, value) => Expanded(
-                child: Container(
-                  width: 20,
-                  height: 20,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: RegularColor.primary.withOpacity(bubble1.value),
-                  ),
+            Transform.translate(
+              offset: value.get(AnimationType.translate),
+              child: Container(
+                width: 15,
+                height: 15,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: RegularColor.secondary,
                 ),
               ),
             ),
-            AnimatedBuilder(
-              animation: bubble2Controller,
-              builder: (_, value) => Expanded(
-                child: Container(
-                  width: 20,
-                  height: 20,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: RegularColor.primary.withOpacity(bubble2.value),
-                  ),
-                ),
+            Transform.rotate(
+              angle: value.get(AnimationType.rotate),
+              child: CustomPaint(
+                size: Size(70, 70),
+                painter: QuarterBorderPainter(),
               ),
             ),
           ],
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            AnimatedBuilder(
-              animation: bubble3Controller,
-              builder: (_, value) => Expanded(
-                child: Container(
-                  width: 20,
-                  height: 20,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: RegularColor.primary.withOpacity(bubble3.value),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ],
+        );
+      },
     );
   }
+}
+
+class QuarterBorderPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    double strokeWidth = 15;
+    Rect myRect = Rect.fromLTWH(0, 0, size.width, size.height);
+
+    var paint1 = Paint()
+      ..color = RegularColor.primary
+      ..strokeWidth = strokeWidth
+      ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.round;
+
+    canvas.drawArc(myRect, pi * 0.25, pi * 1.5, false, paint1);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => true;
+}
+
+enum AnimationType {
+  translate,
+  rotate,
 }

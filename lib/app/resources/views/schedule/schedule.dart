@@ -123,75 +123,69 @@ class ScheduleView extends RegularView<ScheduleStateController> implements Fetch
         ),
       ).build(context),
       body: SafeArea(
-        child: RefreshIndicator(
-          key: $.refreshKey,
-          onRefresh: () async {
-            await Future.delayed(Duration(seconds: 1));
-          },
-          child: CustomScrollView(
-            slivers: [
-              SliverFillRemaining(
-                child: Container(
-                  width: double.infinity,
-                  height: double.infinity,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(RegularSize.xl),
-                      topRight: Radius.circular(RegularSize.xl),
-                    ),
-                  ),
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        height: RegularSize.xl,
-                      ),
-                      Expanded(
-                        child: Obx(() {
-                          return _Calendar(
-                            appointmentDetailItemBuilder: (schedule) => _AppointmentItem(
-                              appointment: schedule,
-                              onFindColor: $.listener.onAppointmentFindColor,
-                            ),
-                            monthCellBuilder: (_, details) {
-                              return Obx(() {
-                                bool selected = details.date == $.selectedDate;
-                                bool thisMonth = details.date.month == $.dateShown.month;
-                                int appointmentsCount = details.appointments.length;
-
-                                Color textColor = RegularColor.gray;
-                                double fontSize = 14;
-
-                                if (thisMonth) {
-                                  textColor = RegularColor.dark;
-                                }
-
-                                if (selected) {
-                                  textColor = Colors.white;
-                                  fontSize = 18;
-                                }
-                                return _MonthCell(
-                                  day: "${details.date.day}",
-                                  textColor: textColor,
-                                  fontSize: fontSize,
-                                  appointmentsCount: appointmentsCount,
-                                  isSelected: selected,
-                                );
-                              });
-                            },
-                            dataSource: RegularCalendarDataSource($.dataSource.appointments),
-                            calendarController: $.calendarController,
-                            onSelectionChanged: $.listener.onDateSelectionChanged,
-                            initialDate: $.initialDate,
-                          );
-                        }),
-                      ),
-                    ],
+        child: CustomScrollView(
+          slivers: [
+            SliverFillRemaining(
+              child: Container(
+                width: double.infinity,
+                height: double.infinity,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(RegularSize.xl),
+                    topRight: Radius.circular(RegularSize.xl),
                   ),
                 ),
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: RegularSize.xl,
+                    ),
+                    Expanded(
+                      child: Obx(() {
+                        return _Calendar(
+                          appointmentDetailItemBuilder: (schedule) => _AppointmentItem(
+                            appointment: schedule,
+                            onFindColor: $.listener.onAppointmentFindColor,
+                          ),
+                          monthCellBuilder: (_, details) {
+                            return Obx(() {
+                              bool selected = details.date == $.selectedDate;
+                              bool thisMonth = details.date.month == $.dateShown.month;
+                              int appointmentsCount = details.appointments.length;
+
+                              Color textColor = RegularColor.gray;
+                              double fontSize = 14;
+
+                              if (thisMonth) {
+                                textColor = RegularColor.dark;
+                              }
+
+                              if (selected) {
+                                textColor = Colors.white;
+                                fontSize = 18;
+                              }
+                              return _MonthCell(
+                                day: "${details.date.day}",
+                                textColor: textColor,
+                                fontSize: fontSize,
+                                appointmentsCount: appointmentsCount,
+                                isSelected: selected,
+                              );
+                            });
+                          },
+                          dataSource: RegularCalendarDataSource($.dataSource.appointments),
+                          calendarController: $.calendarController,
+                          onSelectionChanged: $.listener.onDateSelectionChanged,
+                          initialDate: $.initialDate,
+                        );
+                      }),
+                    ),
+                  ],
+                ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

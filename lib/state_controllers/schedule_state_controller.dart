@@ -11,7 +11,6 @@ class ScheduleStateController extends RegularStateController {
   ScheduleDataSource dataSource = ScheduleDataSource();
   late ScheduleListener listener;
 
-  GlobalKey<RefreshIndicatorState> refreshKey = GlobalKey<RefreshIndicatorState>();
   final CalendarController calendarController = CalendarController();
 
   final _dateShown = DateTime.now().obs;
