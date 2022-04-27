@@ -16,21 +16,21 @@ class _TaskForm extends StatelessWidget {
           return _DatestartInput(
             controller: $.formSource.schestartdateTEC,
             initialDate: $.formSource.schestartdate,
-            onSelected: $.formSource.listener.onDateStartSelected,
+            onSelected: $.listener.onDateStartSelected,
           );
         }),
         SizedBox(
           height: RegularSize.m,
         ),
         _StarttimeDropdown(
-          onTimeStartSelected: $.formSource.listener.onTimeStartSelected,
+          onTimeStartSelected: $.listener.onTimeStartSelected,
           timeStartController: $.formSource.schestarttimeDC,
         ),
         SizedBox(
           height: RegularSize.m,
         ),
         _AlldayCheckbox(
-          onChecked: $.formSource.listener.onAlldayValueChanged,
+          onChecked: $.listener.onAlldayValueChanged,
         ),
         SizedBox(
           height: RegularSize.m,

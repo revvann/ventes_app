@@ -7,10 +7,10 @@ import 'package:ventes/app/resources/views/splash_screen.dart';
 import 'package:ventes/app/resources/views/started_page.dart';
 import 'package:ventes/routing/middlewares/auth_middleware.dart';
 import 'package:ventes/routing/routes/regular_get_page.dart';
-import 'package:ventes/state_controllers/bottom_navigation_state_controller.dart';
-import 'package:ventes/state_controllers/signin_state_controller.dart';
-import 'package:ventes/state_controllers/splash_screen_state_controller.dart';
-import 'package:ventes/state_controllers/started_page_state_controller.dart';
+import 'package:ventes/state/controllers/bottom_navigation_state_controller.dart';
+import 'package:ventes/state/controllers/signin_state_controller.dart';
+import 'package:ventes/state/controllers/splash_screen_state_controller.dart';
+import 'package:ventes/state/controllers/started_page_state_controller.dart';
 
 class RegularRoute {
   static List<GetPage> get routes => [

@@ -7,11 +7,10 @@ import 'package:ventes/app/network/services/type_service.dart';
 import 'package:ventes/app/network/services/user_service.dart';
 import 'package:ventes/app/resources/views/schedule_form/update/schedule_fu.dart';
 import 'package:ventes/routing/routes/regular_get_page.dart';
-import 'package:ventes/state_controllers/daily_schedule_state_controller.dart';
-import 'package:ventes/state_controllers/fab_state_controller.dart';
-import 'package:ventes/state_controllers/schedule_fc_state_controller.dart';
-import 'package:ventes/state_controllers/schedule_fu_state_controller.dart';
-import 'package:ventes/state_controllers/schedule_state_controller.dart';
+import 'package:ventes/state/controllers/daily_schedule_state_controller.dart';
+import 'package:ventes/state/controllers/schedule_fc_state_controller.dart';
+import 'package:ventes/state/controllers/schedule_fu_state_controller.dart';
+import 'package:ventes/state/controllers/schedule_state_controller.dart';
 import 'package:ventes/app/resources/views/daily_schedule/daily_schedule.dart';
 import 'package:ventes/app/resources/views/schedule/schedule.dart';
 import 'package:ventes/app/resources/views/schedule_form/create/schedule_fc.dart';
@@ -47,7 +46,6 @@ class ScheduleNavigator extends StatelessWidget {
             binding: BindingsBuilder(() {
               Get.lazyPut(() => TypeService());
               Get.lazyPut(() => ScheduleService());
-              Get.lazyPut(() => FABStateController());
               Get.lazyPut(() => DailyScheduleStateController());
             }),
           );

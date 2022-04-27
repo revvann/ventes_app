@@ -3,9 +3,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ventes/routing/routes/regular_get_page.dart';
-import 'package:ventes/state_controllers/contact_state_controller.dart';
-import 'package:ventes/state_controllers/customer_state_controller.dart';
-import 'package:ventes/state_controllers/dashboard_state_controller.dart';
+import 'package:ventes/state/controllers/contact_state_controller.dart';
+import 'package:ventes/state/controllers/customer_state_controller.dart';
+import 'package:ventes/state/controllers/dashboard_state_controller.dart';
 import 'package:ventes/app/resources/views/contact.dart';
 import 'package:ventes/app/resources/views/customer.dart';
 import 'package:ventes/app/resources/views/dashboard.dart';

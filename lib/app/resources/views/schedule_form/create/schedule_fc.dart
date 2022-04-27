@@ -25,8 +25,8 @@ import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/constants/strings/schedule_string.dart';
 import 'package:ventes/app/network/contracts/create_contract.dart';
 import 'package:ventes/routing/navigators/schedule_navigator.dart';
-import 'package:ventes/state_controllers/schedule_fc_state_controller.dart';
-import 'package:ventes/state_sources/form_sources/schedule_fc_form_source.dart';
+import 'package:ventes/state/controllers/schedule_fc_state_controller.dart';
+import 'package:ventes/state/form_sources/schedule_fc_form_source.dart';
 
 part 'package:ventes/app/resources/views/schedule_form/create/components/_addmember_checkbox.dart';
 part 'package:ventes/app/resources/views/schedule_form/create/components/_allday_checkbox.dart';

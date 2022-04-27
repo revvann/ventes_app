@@ -9,7 +9,7 @@ import 'package:ventes/app/resources/widgets/loader.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/constants/views.dart';
-import 'package:ventes/state_controllers/dashboard_state_controller.dart';
+import 'package:ventes/state/controllers/dashboard_state_controller.dart';
 
 class DashboardView extends RegularView<DashboardStateController> {
   static const route = "/dashboard";

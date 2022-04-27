@@ -14,38 +14,38 @@ class SchedulePresenter {
   late final FetchDataContract _fetchContract;
   set fetchContract(FetchDataContract value) => _fetchContract = value;
 
-  Future fetchSchedules([int? month]) async {
-    try {
-      AuthModel? authModel = await Get.find<AuthHelper>().get();
-      int userid = authModel!.userId!;
-      Map<String, dynamic> params = {
-        "schetowardid": userid.toString(),
-        "schemonth": month.toString(),
-      };
+  Future<Response> fetchSchedules([int? month]) async {
+    AuthModel? authModel = await Get.find<AuthHelper>().get();
+    int userid = authModel!.userId!;
+    Map<String, dynamic> params = {
+      "schetowardid": userid.toString(),
+      "schemonth": month.toString(),
+    };
 
-      Response response = await _scheduleService.select(params);
-      if (response.statusCode == 200) {
-        _fetchContract.onLoadSuccess({
-          "schedules": response.body,
-        });
-      } else {
-        _fetchContract.onLoadFailed(ScheduleString.fetchFailed);
-      }
-    } catch (err) {
-      _fetchContract.onLoadError(ScheduleString.fetchError);
-    }
+    return await _scheduleService.select(params);
   }
 
-  Future<Map<String, int>> fetchTypes() async {
-    Map<String, int> types = {};
+  Future<Response> fetchTypes() async {
     Map<String, dynamic> params = {
       "typecd": DBTypeString.schedule,
     };
-    Response response = await _typeService.byCode(params);
-    if (response.statusCode == 200) {
-      List<DBType> dbType = List<DBType>.from(response.body.map((e) => DBType.fromJson(e)).toList());
-      types = dbType.asMap().map((i, e) => MapEntry(e.typename ?? "", e.typeid ?? 0));
+    return await _typeService.byCode(params);
+  }
+
+  Future fetchData([int? scheduleMonth]) async {
+    try {
+      Map data = {};
+      Response scheduleResponse = await fetchSchedules(scheduleMonth);
+      Response typesResponse = await fetchTypes();
+      if (scheduleResponse.statusCode == 200 && typesResponse.statusCode == 200) {
+        data["schedules"] = scheduleResponse.body;
+        data["types"] = typesResponse.body;
+        _fetchContract.onLoadSuccess(data);
+      } else {
+        _fetchContract.onLoadFailed(ScheduleString.fetchFailed);
+      }
+    } catch (e) {
+      _fetchContract.onLoadFailed(e.toString());
     }
-    return types;
   }
 }

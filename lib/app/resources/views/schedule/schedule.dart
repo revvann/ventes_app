@@ -18,7 +18,7 @@ import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/constants/strings/schedule_string.dart';
 import 'package:ventes/helpers/function_helpers.dart';
-import 'package:ventes/state_controllers/schedule_state_controller.dart';
+import 'package:ventes/state/controllers/schedule_state_controller.dart';
 
 part 'package:ventes/app/resources/views/schedule/components/_appointment_item.dart';
 part 'package:ventes/app/resources/views/schedule/components/_calendar.dart';
@@ -26,8 +26,7 @@ part 'package:ventes/app/resources/views/schedule/components/_month_cell.dart';
 
 class ScheduleView extends RegularView<ScheduleStateController> implements FetchDataContract {
   static const String route = "/schedule";
-  ScheduleView() {
-    $ = controller;
+  ScheduleView() : super() {
     $.dataSource.fetchContract = this;
   }
 
@@ -199,7 +198,12 @@ class ScheduleView extends RegularView<ScheduleStateController> implements Fetch
 
   @override
   onLoadSuccess(Map data) {
-    $.dataSource.listToAppointments(data["schedules"]);
+    if (data['schedule'] != null) {
+      $.dataSource.listToAppointments(data['schedule']);
+    }
+    if (data['types'] != null) {
+      $.dataSource.listToTypes(data['types']);
+    }
     Get.close(1);
   }
 

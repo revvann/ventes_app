@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:ventes/state_controllers/settings_state_controller.dart';
+import 'package:ventes/state/controllers/settings_state_controller.dart';
 import 'package:ventes/app/resources/views/settings.dart';
 
 class SettingsNavigator extends StatelessWidget {
