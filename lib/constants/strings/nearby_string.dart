@@ -4,4 +4,7 @@ class NearbyString {
 
   static const fetchError = "Could not fetch data";
   static const fetchFailed = "Failed to fetch data";
+
+  static const defaultCustomerName = "Customer Name";
+  static const defaultCustomerAddress = "Customer Address";
 }

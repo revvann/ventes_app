@@ -6,17 +6,18 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ventes/app/models/bp_customer_model.dart';
+import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
+import 'package:ventes/app/resources/views/regular_view.dart';
 import 'package:ventes/app/resources/widgets/failed_alert.dart';
 import 'package:ventes/app/resources/widgets/icon_input.dart';
-import 'package:ventes/app/resources/widgets/regular_bottom_sheet.dart';
+import 'package:ventes/app/resources/widgets/top_navigation.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
-import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
 import 'package:ventes/constants/strings/nearby_string.dart';
 import 'package:ventes/helpers/function_helpers.dart';
 import 'package:ventes/state/controllers/nearby_state_controller.dart';
-import 'package:ventes/app/resources/views/regular_view.dart';
-import 'package:ventes/app/resources/widgets/top_navigation.dart';
+
+part 'package:ventes/app/resources/views/nearby/components/customer_list.dart';
 
 class NearbyView extends RegularView<NearbyStateController> implements FetchDataContract {
   static const String route = "/nearby";
@@ -157,67 +158,7 @@ class NearbyView extends RegularView<NearbyStateController> implements FetchData
                             SizedBox(
                               height: RegularSize.s,
                             ),
-                            Obx(() {
-                              return Expanded(
-                                child: ListView.separated(
-                                  itemCount: state.properties.dataSource.customers.length,
-                                  separatorBuilder: (_, index) {
-                                    return Divider();
-                                  },
-                                  itemBuilder: (_, index) {
-                                    BpCustomer customer = state.properties.dataSource.customers[index];
-                                    return Padding(
-                                      padding: EdgeInsets.only(
-                                        left: RegularSize.m,
-                                        right: RegularSize.m,
-                                        bottom: RegularSize.xs,
-                                        top: RegularSize.xs,
-                                      ),
-                                      child: Row(
-                                        children: [
-                                          Container(
-                                            padding: EdgeInsets.symmetric(
-                                              horizontal: RegularSize.m,
-                                            ),
-                                            child: SvgPicture.asset(
-                                              "assets/svg/building-bold.svg",
-                                              color: RegularColor.gray,
-                                              width: RegularSize.m,
-                                            ),
-                                          ),
-                                          Expanded(
-                                            child: Column(
-                                              mainAxisSize: MainAxisSize.min,
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  customer.sbccstmname ?? "Company Name",
-                                                  style: TextStyle(
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                                SizedBox(
-                                                  height: RegularSize.s,
-                                                ),
-                                                Text(
-                                                  customer.sbccstmaddress ?? "Company Address",
-                                                  overflow: TextOverflow.ellipsis,
-                                                  style: TextStyle(
-                                                    fontSize: 14,
-                                                    color: RegularColor.gray,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  },
-                                ),
-                              );
-                            }),
+                            _CustomerList(),
                           ],
                         ),
                       );

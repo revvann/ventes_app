@@ -7,7 +7,7 @@ import 'package:ventes/app/network/services/gmaps_service.dart';
 import 'package:ventes/app/network/services/user_service.dart';
 import 'package:ventes/routing/routes/regular_get_page.dart';
 import 'package:ventes/state/controllers/nearby_state_controller.dart';
-import 'package:ventes/app/resources/views/nearby.dart';
+import 'package:ventes/app/resources/views/nearby/nearby.dart';
 
 class NearbyNavigator extends StatelessWidget {
   static const id = 2;
