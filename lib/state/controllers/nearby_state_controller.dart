@@ -14,6 +14,40 @@ import 'package:ventes/state/data_sources/nearby_data_source.dart';
 import 'package:ventes/state/listeners/nearby_listener.dart';
 
 class NearbyStateController extends RegularStateController with NearbyListener {
+  NearbyProperties properties = Get.put(NearbyProperties());
+  NearbyListener listener = Get.put(NearbyListener());
+
+  @override
+  void onInit() async {
+    super.onInit();
+
+    Position position = await getCurrentPosition();
+    GoogleMapController controller = await properties.mapsController.future;
+    controller.animateCamera(
+      CameraUpdate.newLatLng(LatLng(position.latitude, position.longitude)),
+    );
+    properties.dataSource.fetchData(LatLng(position.latitude, position.longitude));
+    Loader().show();
+  }
+
+  @override
+  onReady() {
+    super.onReady();
+    double bottomSheetHeight = properties.bottomSheetKey.currentContext?.size?.height ?? 0;
+    double stackHeight = properties.stackKey.currentContext?.size?.height ?? 0;
+    properties.bottomSheetHeight.value = stackHeight - RegularSize.l;
+    properties.mapsHeight.value = (stackHeight - bottomSheetHeight) + 10;
+  }
+
+  @override
+  void onClose() {
+    Get.delete<NearbyProperties>();
+    Get.delete<NearbyListener>();
+    super.onClose();
+  }
+}
+
+class NearbyProperties {
   NearbyDataSource dataSource = NearbyDataSource();
 
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
@@ -34,28 +68,29 @@ class NearbyStateController extends RegularStateController with NearbyListener {
       infoWindow: InfoWindow(title: "Selected Location"),
       position: latlng,
     );
-    markers = {marker};
+
+    if (markers.isNotEmpty) {
+      List<Marker> markersList = markers.toList();
+      markersList[0] = marker;
+      markers = Set.from(markersList);
+    } else {
+      markers = {marker};
+    }
   }
 
-  @override
-  void onInit() async {
-    super.onInit();
+  void deployCustomers(List data) {
+    dataSource.customersFromList(data);
 
-    Position position = await getCurrentPosition();
-    GoogleMapController controller = await mapsController.future;
-    controller.animateCamera(
-      CameraUpdate.newLatLng(LatLng(position.latitude, position.longitude)),
-    );
-    dataSource.getDetail(LatLng(position.latitude, position.longitude));
-    Loader().show();
-  }
-
-  @override
-  onReady() {
-    super.onReady();
-    double bottomSheetHeight = bottomSheetKey.currentContext?.size?.height ?? 0;
-    double stackHeight = stackKey.currentContext?.size?.height ?? 0;
-    this.bottomSheetHeight.value = stackHeight - RegularSize.l;
-    mapsHeight.value = (stackHeight - bottomSheetHeight) + 10;
+    List<Marker> markersList = [markers.first];
+    for (var element in dataSource.customers) {
+      Marker marker = Marker(
+        markerId: MarkerId((element.sbcid ?? "0").toString()),
+        infoWindow: InfoWindow(title: element.sbccstmname ?? "Unknown"),
+        position: LatLng(element.sbccstm!.cstmlatitude!, element.sbccstm!.cstmlongitude!),
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueCyan),
+      );
+      markersList.add(marker);
+    }
+    markers = Set.from(markersList);
   }
 }

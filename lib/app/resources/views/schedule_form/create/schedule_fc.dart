@@ -56,9 +56,8 @@ part 'package:ventes/app/resources/views/schedule_form/create/components/_twinti
 class ScheduleFormCreateView extends RegularView<ScheduleFormCreateStateController> implements CreateContract, FetchDataContract {
   static const String route = "/schedule/create";
   ScheduleFormCreateView() {
-    $ = controller;
-    $.dataSource.createContract = this;
-    $.dataSource.fetchDataContract = this;
+    state.properties.dataSource.createContract = this;
+    state.properties.dataSource.fetchDataContract = this;
   }
 
   @override
@@ -73,7 +72,7 @@ class ScheduleFormCreateView extends RegularView<ScheduleFormCreateStateControll
       appBar: TopNavigation(
         height: 85,
         title: ScheduleString.appBarTitle,
-        appBarKey: $.appBarKey,
+        appBarKey: state.appBarKey,
         leading: GestureDetector(
           child: Container(
             padding: EdgeInsets.all(RegularSize.xs),
@@ -89,7 +88,7 @@ class ScheduleFormCreateView extends RegularView<ScheduleFormCreateStateControll
         ),
         actions: [
           GestureDetector(
-            onTap: $.onFormSubmit,
+            onTap: state.listener.onFormSubmit,
             child: Container(
               padding: EdgeInsets.symmetric(
                 vertical: RegularSize.s,
@@ -136,7 +135,7 @@ class ScheduleFormCreateView extends RegularView<ScheduleFormCreateStateControll
             ),
           ),
           child: Form(
-            key: $.formKey,
+            key: state.formSource.formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -155,8 +154,8 @@ class ScheduleFormCreateView extends RegularView<ScheduleFormCreateStateControll
                   height: RegularSize.m,
                 ),
                 _TitleInput(
-                  controller: $.schenmTEC,
-                  validator: $.validator.schenm,
+                  controller: state.formSource.schenmTEC,
+                  validator: state.formSource.validator.schenm,
                 ),
                 SizedBox(
                   height: RegularSize.m,
@@ -164,10 +163,10 @@ class ScheduleFormCreateView extends RegularView<ScheduleFormCreateStateControll
                 Obx(() {
                   return _ScheduletypeSelectbox(
                     onSelected: (value) {
-                      $.schetype = value;
+                      state.formSource.schetype = value;
                     },
-                    activeIndex: $.schetype,
-                    items: $.dataSource.typeNames(),
+                    activeIndex: state.formSource.schetype,
+                    items: state.properties.dataSource.typeNames(),
                   );
                 }),
                 SizedBox(
@@ -187,15 +186,15 @@ class ScheduleFormCreateView extends RegularView<ScheduleFormCreateStateControll
                       child: Stack(
                         children: [
                           Offstage(
-                            offstage: $.dataSource.typeName($.schetype) != "Event",
+                            offstage: state.properties.dataSource.typeName(state.formSource.schetype) != "Event",
                             child: _EventForm(),
                           ),
                           Offstage(
-                            offstage: $.dataSource.typeName($.schetype) != "Task",
+                            offstage: state.properties.dataSource.typeName(state.formSource.schetype) != "Task",
                             child: _TaskForm(),
                           ),
                           Offstage(
-                            offstage: $.dataSource.typeName($.schetype) != "Reminder",
+                            offstage: state.properties.dataSource.typeName(state.formSource.schetype) != "Reminder",
                             child: _ReminderForm(),
                           ),
                         ],
@@ -241,6 +240,7 @@ class ScheduleFormCreateView extends RegularView<ScheduleFormCreateStateControll
 
   @override
   onLoadSuccess(Map data) {
-    $.dataSource.insertTypes(List<Map<String, dynamic>>.from(data['types']));
+    state.properties.dataSource.insertTypes(List<Map<String, dynamic>>.from(data['types']));
+    Get.close(1);
   }
 }

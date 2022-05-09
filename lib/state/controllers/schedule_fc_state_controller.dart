@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:ventes/app/resources/widgets/loader.dart';
 import 'package:ventes/app/resources/widgets/regular_bottom_sheet.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
@@ -15,8 +16,47 @@ import 'package:ventes/state/data_sources/schedule_fc_data_source.dart';
 import 'package:ventes/state/form_sources/schedule_fc_form_source.dart';
 import 'package:ventes/state/listeners/schedule_fc_listener.dart';
 
-class ScheduleFormCreateStateController extends RegularStateController with ScheduleFormCreateListener, ScheduleFormCreateFormSource {
+class ScheduleFormCreateStateController extends RegularStateController {
+  @override
+  bool get isFixedBody => false;
+
+  ScheduleFormCreateProperties properties = Get.put(ScheduleFormCreateProperties());
+  ScheduleFormCreateListener listener = Get.put(ScheduleFormCreateListener());
+  ScheduleFormCreateFormSource formSource = Get.put(ScheduleFormCreateFormSource());
+
+  @override
+  void onClose() {
+    formSource.formSourceDispose();
+    Get.delete<ScheduleFormCreateProperties>();
+    Get.delete<ScheduleFormCreateListener>();
+    Get.delete<ScheduleFormCreateFormSource>();
+    super.dispose();
+  }
+
+  @override
+  void onInit() {
+    super.onInit();
+    formSource.formSourceInit();
+  }
+
+  @override
+  void onReady() async {
+    super.onReady();
+    Loader().show();
+    Position pos = await getCurrentPosition();
+    properties.mapsController.future.then((controller) {
+      controller.animateCamera(
+        CameraUpdate.newLatLng(LatLng(pos.latitude, pos.longitude)),
+      );
+    });
+    properties.markerLatLng = LatLng(pos.latitude, pos.longitude);
+    properties.dataSource.fetchTypes();
+  }
+}
+
+class ScheduleFormCreateProperties {
   ScheduleFormCreateDataSource dataSource = ScheduleFormCreateDataSource();
+  ScheduleFormCreateListener get _listener => Get.find<ScheduleFormCreateListener>();
 
   final Completer<GoogleMapController> mapsController = Completer();
   CameraPosition currentPos = CameraPosition(target: LatLng(0, 0), zoom: 14.4764);
@@ -32,30 +72,6 @@ class ScheduleFormCreateStateController extends RegularStateController with Sche
       position: latlng,
     );
     markers = {marker};
-  }
-
-  @override
-  void dispose() {
-    formSourceDispose();
-    super.dispose();
-  }
-
-  @override
-  void onInit() {
-    super.onInit();
-    formSourceInit();
-  }
-
-  @override
-  void onReady() async {
-    super.onReady();
-    Position pos = await getCurrentPosition();
-    GoogleMapController controller = await mapsController.future;
-    controller.animateCamera(
-      CameraUpdate.newLatLng(LatLng(pos.latitude, pos.longitude)),
-    );
-    markerLatLng = LatLng(pos.latitude, pos.longitude);
-    dataSource.fetchTypes();
   }
 
   void showMapBottomSheet() {
@@ -122,10 +138,7 @@ class ScheduleFormCreateStateController extends RegularStateController with Sche
             mapsController.complete(controller);
           }
         },
-        onCameraMove: (position) {
-          markerLatLng = position.target;
-          scheloc = "https://maps.google.com?q=${position.target.latitude},${position.target.longitude}";
-        },
+        onCameraMove: _listener.onCameraMove,
       );
     });
   }

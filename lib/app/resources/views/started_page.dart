@@ -28,12 +28,12 @@ class StartedPageView extends RegularView<StartedPageStateController> {
               ),
               SizedBox(
                 child: CarouselSlider(
-                  carouselController: $.carouselController,
+                  carouselController: state.carouselController,
                   options: CarouselOptions(
                     enableInfiniteScroll: false,
                     onPageChanged: (index, reason) {
-                      $.activeIndex = index;
-                      $.setIndicator(index);
+                      state.activeIndex = index;
+                      state.setIndicator(index);
                     },
                     height: Get.height * 0.6,
                     viewportFraction: 1,
@@ -49,24 +49,24 @@ class StartedPageView extends RegularView<StartedPageStateController> {
                 children: [
                   _buildIndicator(
                     0,
-                    $.indicatorController1,
-                    $.indicator1,
+                    state.indicatorController1,
+                    state.indicator1,
                   ),
                   SizedBox(
                     width: 5,
                   ),
                   _buildIndicator(
                     1,
-                    $.indicatorController2,
-                    $.indicator2,
+                    state.indicatorController2,
+                    state.indicator2,
                   ),
                   SizedBox(
                     width: 5,
                   ),
                   _buildIndicator(
                     2,
-                    $.indicatorController3,
-                    $.indicator3,
+                    state.indicatorController3,
+                    state.indicator3,
                   ),
                 ],
               ),
@@ -85,14 +85,14 @@ class StartedPageView extends RegularView<StartedPageStateController> {
                   ),
                   TextButton(
                     onPressed: () {
-                      if ($.activeIndex != 2) {
-                        $.movePage($.activeIndex + 1);
+                      if (state.activeIndex != 2) {
+                        state.movePage(state.activeIndex + 1);
                       } else {
                         Get.toNamed(SigninView.route);
                       }
                     },
                     child: Obx(() {
-                      return Text($.activeIndex != 2 ? "Next" : "Start");
+                      return Text(state.activeIndex != 2 ? "Next" : "Start");
                     }),
                     style: TextButton.styleFrom(
                       primary: RegularColor.secondary,
@@ -108,7 +108,7 @@ class StartedPageView extends RegularView<StartedPageStateController> {
   }
 
   List<Widget>? _buildCarouselList() {
-    return $.carouselData.map((i) {
+    return state.carouselData.map((i) {
       return Builder(
         builder: (BuildContext context) {
           return Container(
@@ -175,7 +175,7 @@ class StartedPageView extends RegularView<StartedPageStateController> {
   ) {
     return GestureDetector(
       onTap: () {
-        $.movePage(index);
+        state.movePage(index);
       },
       child: AnimatedBuilder(
         animation: controller,

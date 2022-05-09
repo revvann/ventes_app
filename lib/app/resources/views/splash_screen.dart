@@ -32,13 +32,13 @@ class SplashScreenView extends RegularView<SplashScreenStateController> {
 
   Widget _buildDownScreen() {
     return AnimatedBuilder(
-      animation: $.bubbleController1,
+      animation: state.bubbleController1,
       builder: (_, __) => Positioned(
         top: 0,
         left: 0,
         right: 0,
         child: Container(
-          height: $.bubblePos1.value,
+          height: state.bubblePos1.value,
           decoration: BoxDecoration(
             color: RegularColor.secondary,
             // shape: BoxShape.circle,
@@ -50,9 +50,9 @@ class SplashScreenView extends RegularView<SplashScreenStateController> {
 
   Widget _buildLogo() {
     return AnimatedBuilder(
-      animation: $.logoController,
+      animation: state.logoController,
       builder: (_, __) => Positioned(
-        right: $.logoPos.value,
+        right: state.logoPos.value,
         child: Container(
           width: 200,
           alignment: Alignment.center,

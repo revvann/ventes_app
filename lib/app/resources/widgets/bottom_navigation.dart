@@ -55,7 +55,7 @@ class BottomNavigation extends RegularView<BottomNavigationStateController> {
                 ),
               ),
               onTap: () {
-                $.currentIndex = Views.schedule;
+                state.currentIndex = Views.schedule;
               },
             ),
           ),
@@ -110,7 +110,7 @@ class BottomNavigationItem extends RegularView<BottomNavigationStateController> 
               SizedBox(
                 height: RegularSize.xs,
               ),
-              if ($.currentIndex == view)
+              if (state.currentIndex == view)
                 Text(
                   title,
                   style: TextStyle(

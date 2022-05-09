@@ -11,13 +11,15 @@ import 'package:ventes/app/resources/widgets/regular_dropdown.dart';
 import 'package:ventes/helpers/function_helpers.dart';
 import 'package:ventes/state/controllers/schedule_fc_state_controller.dart';
 import 'package:ventes/state/form_validators/schedule_fc_validator.dart';
+import 'package:ventes/state/listeners/schedule_fc_listener.dart';
 
-mixin ScheduleFormCreateFormSource {
+class ScheduleFormCreateFormSource {
   int readOnlyId = 14;
   int addMemberId = 15;
   int shareLinkId = 16;
 
-  ScheduleFormCreateStateController get _$ => Get.find<ScheduleFormCreateStateController>();
+  ScheduleFormCreateProperties get _properties => Get.find<ScheduleFormCreateProperties>();
+  ScheduleFormCreateListener get _listener => Get.find<ScheduleFormCreateListener>();
   late ScheduleFormCreateValidator validator;
 
   UserDetail? userDefault;
@@ -47,9 +49,9 @@ mixin ScheduleFormCreateFormSource {
   final Rx<List<ScheduleGuest>> _guests = Rx<List<ScheduleGuest>>([]);
   final Rx<UserDetail?> _schetoward = Rx<UserDetail?>(null);
 
-  bool get isEvent => _$.dataSource.typeName(schetype) == "Event";
-  bool get isTask => _$.dataSource.typeName(schetype) == "Task";
-  bool get isReminder => _$.dataSource.typeName(schetype) == "Reminder";
+  bool get isEvent => _properties.dataSource.typeName(schetype) == "Event";
+  bool get isTask => _properties.dataSource.typeName(schetype) == "Task";
+  bool get isReminder => _properties.dataSource.typeName(schetype) == "Reminder";
 
   int? get schebpid => schetoward?.userdtbpid;
 
@@ -291,10 +293,11 @@ mixin ScheduleFormCreateFormSource {
     setStartTimeList();
 
     scheremindTEC.text = "0";
-    scheonlinkTEC.addListener(_$.onOnlineLinkChanged);
-    schelocTEC.addListener(_$.onLocationChanged);
+    scheonlinkTEC.addListener(_listener.onOnlineLinkChanged);
+    schelocTEC.addListener(_listener.onLocationChanged);
 
-    userDefault = await _$.dataSource.userActive;
+    userDefault = await _properties.dataSource.userActive;
+    userDefault = await _properties.dataSource.userActive;
     schetoward = userDefault;
     schetzDC.items = getTimezoneList();
     String currentTimeZone = await FlutterNativeTimezone.getLocalTimezone();
@@ -314,7 +317,8 @@ mixin ScheduleFormCreateFormSource {
       "scheonline": isEvent ? scheonline : false,
       "scheonlink": isEvent ? scheonlink : null,
       "scheallday": scheallday,
-      "schetypeid": _$.dataSource.typeId(schetype),
+      "schetypeid": _properties.dataSource.typeId(schetype),
+      "schetypeid": _properties.dataSource.typeId(schetype),
       "schetz": isEvent ? schetz : null,
       "scheprivate": isEvent ? scheprivate : false,
       "schetowardid": isEvent ? schetoward?.userid : userDefault?.userid,

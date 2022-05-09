@@ -16,10 +16,44 @@ import 'package:ventes/state/data_sources/schedule_fu_data_source.dart';
 import 'package:ventes/state/form_sources/schedule_fu_form_source.dart';
 import 'package:ventes/state/listeners/schedule_fu_listener.dart';
 
-class ScheduleFormUpdateState extends ScheduleFormUpdateStateController {}
+class ScheduleFormUpdateStateController extends RegularStateController {
+  ScheduleFormUpdateProperties properties = Get.put(ScheduleFormUpdateProperties());
+  ScheduleFormUpdateListener listener = Get.put(ScheduleFormUpdateListener());
+  ScheduleFormUpdateFormSource formSource = Get.put(ScheduleFormUpdateFormSource());
 
-class ScheduleFormUpdateStateController extends RegularStateController with ScheduleFormUpdateListener, ScheduleFormUpdateFormSource {
+  @override
+  void onClose() {
+    formSource.formSourceDispose();
+    Get.delete<ScheduleFormUpdateProperties>();
+    Get.delete<ScheduleFormUpdateListener>();
+    Get.delete<ScheduleFormUpdateFormSource>();
+    super.dispose();
+  }
+
+  @override
+  void onInit() async {
+    super.onInit();
+    formSource.formSourceInit();
+
+    Position pos = await getCurrentPosition();
+    GoogleMapController controller = await properties.mapsController.future;
+    controller.animateCamera(
+      CameraUpdate.newLatLng(LatLng(pos.latitude, pos.longitude)),
+    );
+    properties.markerLatLng = LatLng(pos.latitude, pos.longitude);
+  }
+
+  @override
+  void onReady() {
+    super.onReady();
+    properties.dataSource.fetchData();
+    Loader().show();
+  }
+}
+
+class ScheduleFormUpdateProperties {
   ScheduleFormUpdateDataSource dataSource = ScheduleFormUpdateDataSource();
+  ScheduleFormUpdateListener get listener => Get.find<ScheduleFormUpdateListener>();
 
   final Completer<GoogleMapController> mapsController = Completer();
   CameraPosition currentPos = CameraPosition(target: LatLng(0, 0), zoom: 14.4764);
@@ -35,32 +69,6 @@ class ScheduleFormUpdateStateController extends RegularStateController with Sche
       position: latlng,
     );
     markers = {marker};
-  }
-
-  @override
-  void dispose() {
-    formSourceDispose();
-    super.dispose();
-  }
-
-  @override
-  void onInit() async {
-    super.onInit();
-    formSourceInit();
-
-    Position pos = await getCurrentPosition();
-    GoogleMapController controller = await mapsController.future;
-    controller.animateCamera(
-      CameraUpdate.newLatLng(LatLng(pos.latitude, pos.longitude)),
-    );
-    markerLatLng = LatLng(pos.latitude, pos.longitude);
-  }
-
-  @override
-  void onReady() {
-    super.onReady();
-    dataSource.fetchData();
-    Loader().show();
   }
 
   void showMapBottomSheet() {
@@ -127,10 +135,7 @@ class ScheduleFormUpdateStateController extends RegularStateController with Sche
             mapsController.complete(controller);
           }
         },
-        onCameraMove: (position) {
-          markerLatLng = position.target;
-          scheloc = "https://maps.google.com?q=${position.target.latitude},${position.target.longitude}";
-        },
+        onCameraMove: listener.onCameraMove,
       );
     });
   }

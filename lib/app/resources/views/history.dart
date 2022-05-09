@@ -18,7 +18,7 @@ import 'package:ventes/app/resources/widgets/top_navigation.dart';
 class HistoryView extends RegularView<HistoryStateController> {
   static const String route = "/history";
   HistoryView() {
-    $ = controller;
+    state = controller;
   }
 
   @override
@@ -31,7 +31,7 @@ class HistoryView extends RegularView<HistoryStateController> {
       extendBodyBehindAppBar: true,
       appBar: TopNavigation(
         title: "History",
-        appBarKey: $.appBarKey,
+        appBarKey: state.appBarKey,
         actions: [
           GestureDetector(
             onTap: _showFilter,
@@ -53,7 +53,7 @@ class HistoryView extends RegularView<HistoryStateController> {
               return Container(
                 width: double.infinity,
                 constraints: BoxConstraints(
-                  minHeight: $.minHeight,
+                  minHeight: state.minHeight,
                 ),
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -162,13 +162,13 @@ class HistoryView extends RegularView<HistoryStateController> {
       child: Column(
         children: [
           GestureDetector(
-            onTap: $.changeTime,
+            onTap: state.changeTime,
             child: IconInput(
               label: "Visit Time",
               icon: "assets/svg/history.svg",
               hintText: "Visit Time",
               enabled: false,
-              controller: $.filterTimeInputController,
+              controller: state.filterTimeInputController,
             ),
           ),
           SizedBox(

@@ -6,11 +6,13 @@ Project Description
 
 ### Todo
 
+- [ ] create form create for add new customer  
 
 ### In Progress
 
-- [ ] create listener and formsource mixin⭐  
 
 ### Done ✓
 
+- [x] get customers data  
+- [x] create listener and formsource mixin⭐  
 

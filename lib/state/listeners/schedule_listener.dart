@@ -7,29 +7,29 @@ import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/routing/navigators/schedule_navigator.dart';
 import 'package:ventes/state/controllers/schedule_state_controller.dart';
 
-mixin ScheduleListener {
-  ScheduleStateController get _$ => Get.find<ScheduleStateController>();
+class ScheduleListener {
+  ScheduleProperties get _properties => Get.find<ScheduleProperties>();
 
   void onDateShownChanged(String data) {
     if (data == 'displayDate') {
-      if (_$.calendarController.displayDate != null) {
-        _$.dateShown = _$.calendarController.displayDate!;
+      if (_properties.calendarController.displayDate != null) {
+        _properties.dateShown = _properties.calendarController.displayDate!;
       }
-      _$.dataSource.fetchSchedules(_$.dateShown.month);
+      _properties.dataSource.fetchSchedules(_properties.dateShown.month);
       Loader().show();
     }
   }
 
   void onCalendarBackwardClick() {
-    _$.calendarController.backward?.call();
+    _properties.calendarController.backward?.call();
   }
 
   void onCalendarForwardClick() {
-    _$.calendarController.forward?.call();
+    _properties.calendarController.forward?.call();
   }
 
   void onDateSelectionChanged(details) {
-    _$.selectedDate = details.date!;
+    _properties.selectedDate = details.date!;
   }
 
   void onDetailClick() {
@@ -37,18 +37,18 @@ mixin ScheduleListener {
       DailyScheduleView.route,
       id: ScheduleNavigator.id,
       arguments: {
-        "date": _$.selectedDate,
+        "date": _properties.selectedDate,
       },
     );
   }
 
   Color onAppointmentFindColor(Schedule appointment) {
     Color color = RegularColor.primary;
-    if (appointment.schetypeid == _$.dataSource.types["Event"]) {
+    if (appointment.schetypeid == _properties.dataSource.types["Event"]) {
       color = RegularColor.purple;
-    } else if (appointment.schetypeid == _$.dataSource.types["Task"]) {
+    } else if (appointment.schetypeid == _properties.dataSource.types["Task"]) {
       color = RegularColor.red;
-    } else if (appointment.schetypeid == _$.dataSource.types["Reminder"]) {
+    } else if (appointment.schetypeid == _properties.dataSource.types["Reminder"]) {
       color = RegularColor.cyan;
     }
     return color;

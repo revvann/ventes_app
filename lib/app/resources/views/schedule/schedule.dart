@@ -27,7 +27,7 @@ part 'package:ventes/app/resources/views/schedule/components/_month_cell.dart';
 class ScheduleView extends RegularView<ScheduleStateController> implements FetchDataContract {
   static const String route = "/schedule";
   ScheduleView() : super() {
-    $.dataSource.fetchContract = this;
+    state.properties.dataSource.fetchContract = this;
   }
 
   @override
@@ -40,7 +40,7 @@ class ScheduleView extends RegularView<ScheduleStateController> implements Fetch
       extendBodyBehindAppBar: true,
       appBar: TopNavigation(
         title: ScheduleString.appBarTitle,
-        appBarKey: $.appBarKey,
+        appBarKey: state.appBarKey,
         height: 90,
         leading: GestureDetector(
           child: Container(
@@ -55,7 +55,7 @@ class ScheduleView extends RegularView<ScheduleStateController> implements Fetch
         ),
         actions: [
           GestureDetector(
-            onTap: $.onDetailClick,
+            onTap: state.listener.onDetailClick,
             child: Container(
               padding: EdgeInsets.all(RegularSize.xs),
               child: SvgPicture.asset(
@@ -75,7 +75,7 @@ class ScheduleView extends RegularView<ScheduleStateController> implements Fetch
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               GestureDetector(
-                onTap: $.onCalendarBackwardClick,
+                onTap: state.listener.onCalendarBackwardClick,
                 child: Container(
                   alignment: Alignment.center,
                   child: SvgPicture.asset(
@@ -89,7 +89,7 @@ class ScheduleView extends RegularView<ScheduleStateController> implements Fetch
                 width: RegularSize.s,
               ),
               Obx(() {
-                String date = DateFormat("MMMM, yyyy").format($.dateShown);
+                String date = DateFormat("MMMM, yyyy").format(state.properties.dateShown);
                 return Container(
                   width: Get.width * 0.5,
                   alignment: Alignment.center,
@@ -107,7 +107,7 @@ class ScheduleView extends RegularView<ScheduleStateController> implements Fetch
                 width: RegularSize.s,
               ),
               GestureDetector(
-                onTap: $.onCalendarForwardClick,
+                onTap: state.listener.onCalendarForwardClick,
                 child: Container(
                   alignment: Alignment.center,
                   child: SvgPicture.asset(
@@ -145,12 +145,12 @@ class ScheduleView extends RegularView<ScheduleStateController> implements Fetch
                         return _Calendar(
                           appointmentDetailItemBuilder: (schedule) => _AppointmentItem(
                             appointment: schedule,
-                            onFindColor: $.onAppointmentFindColor,
+                            onFindColor: state.listener.onAppointmentFindColor,
                           ),
                           monthCellBuilder: (_, details) {
                             return Obx(() {
-                              bool selected = details.date == $.selectedDate;
-                              bool thisMonth = details.date.month == $.dateShown.month;
+                              bool selected = details.date == state.properties.selectedDate;
+                              bool thisMonth = details.date.month == state.properties.dateShown.month;
                               int appointmentsCount = details.appointments.length;
 
                               Color textColor = RegularColor.gray;
@@ -173,10 +173,10 @@ class ScheduleView extends RegularView<ScheduleStateController> implements Fetch
                               );
                             });
                           },
-                          dataSource: RegularCalendarDataSource($.dataSource.appointments),
-                          calendarController: $.calendarController,
-                          onSelectionChanged: $.onDateSelectionChanged,
-                          initialDate: $.initialDate,
+                          dataSource: RegularCalendarDataSource(state.properties.dataSource.appointments),
+                          calendarController: state.properties.calendarController,
+                          onSelectionChanged: state.listener.onDateSelectionChanged,
+                          initialDate: state.properties.initialDate,
                         );
                       }),
                     ),
@@ -202,10 +202,10 @@ class ScheduleView extends RegularView<ScheduleStateController> implements Fetch
   @override
   onLoadSuccess(Map data) {
     if (data['schedules'] != null) {
-      $.dataSource.listToAppointments(data['schedules']);
+      state.properties.dataSource.listToAppointments(data['schedules']);
     }
     if (data['types'] != null) {
-      $.dataSource.listToTypes(data['types']);
+      state.properties.dataSource.listToTypes(data['types']);
     }
     Get.close(1);
   }

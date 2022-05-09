@@ -3,7 +3,7 @@
 part of 'package:ventes/app/resources/views/schedule_form/create/schedule_fc.dart';
 
 class _TaskForm extends StatelessWidget {
-  ScheduleFormCreateStateController $ = Get.find<ScheduleFormCreateStateController>();
+  ScheduleFormCreateStateController state = Get.find<ScheduleFormCreateStateController>();
 
   @override
   Widget build(BuildContext context) {
@@ -14,28 +14,28 @@ class _TaskForm extends StatelessWidget {
         ),
         Obx(() {
           return _DatestartInput(
-            controller: $.schestartdateTEC,
-            initialDate: $.schestartdate,
-            onSelected: $.onDateStartSelected,
+            controller: state.formSource.schestartdateTEC,
+            initialDate: state.formSource.schestartdate,
+            onSelected: state.listener.onDateStartSelected,
           );
         }),
         SizedBox(
           height: RegularSize.m,
         ),
         _StarttimeDropdown(
-          onTimeStartSelected: $.onTimeStartSelected,
-          timeStartController: $.schestarttimeDC,
+          onTimeStartSelected: state.listener.onTimeStartSelected,
+          timeStartController: state.formSource.schestarttimeDC,
         ),
         SizedBox(
           height: RegularSize.m,
         ),
         _AlldayCheckbox(
-          onChecked: $.onAlldayValueChanged,
+          onChecked: state.listener.onAlldayValueChanged,
         ),
         SizedBox(
           height: RegularSize.m,
         ),
-        _DescriptionInput(controller: $.schedescTEC),
+        _DescriptionInput(controller: state.formSource.schedescTEC),
         SizedBox(
           height: RegularSize.m,
         ),

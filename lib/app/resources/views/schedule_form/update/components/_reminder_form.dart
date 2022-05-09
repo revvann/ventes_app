@@ -2,7 +2,7 @@
 part of 'package:ventes/app/resources/views/schedule_form/update/schedule_fu.dart';
 
 class _ReminderForm extends StatelessWidget {
-  ScheduleFormUpdateStateController $ = Get.find<ScheduleFormUpdateStateController>();
+  ScheduleFormUpdateStateController state = Get.find<ScheduleFormUpdateStateController>();
 
   @override
   Widget build(BuildContext context) {
@@ -13,25 +13,25 @@ class _ReminderForm extends StatelessWidget {
         ),
         Obx(() {
           return _DatestartInput(
-            controller: $.schestartdateTEC,
-            initialDate: $.schestartdate,
-            onSelected: $.onDateStartSelected,
+            controller: state.formSource.schestartdateTEC,
+            initialDate: state.formSource.schestartdate,
+            onSelected: state.listener.onDateStartSelected,
           );
         }),
         SizedBox(
           height: RegularSize.m,
         ),
         _StarttimeDropdown(
-          onTimeStartSelected: $.onTimeStartSelected,
-          timeStartController: $.schestarttimeDC,
+          onTimeStartSelected: state.listener.onTimeStartSelected,
+          timeStartController: state.formSource.schestarttimeDC,
         ),
         SizedBox(
           height: RegularSize.m,
         ),
         Obx(() {
           return _AlldayCheckbox(
-            onChecked: $.onAlldayValueChanged,
-            value: $.scheallday,
+            onChecked: state.listener.onAlldayValueChanged,
+            value: state.formSource.scheallday,
           );
         }),
         SizedBox(
