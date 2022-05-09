@@ -26,7 +26,6 @@ class DailyScheduleDataSource {
   }
 
   void fetchData(String date) async {
-    _presenter.fetchTypes();
-    _presenter.fetchSchedules(date);
+    _presenter.fetchData(date);
   }
 }

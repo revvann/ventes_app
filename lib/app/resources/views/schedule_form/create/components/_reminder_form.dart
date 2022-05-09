@@ -14,23 +14,23 @@ class _ReminderForm extends StatelessWidget {
         ),
         Obx(() {
           return _DatestartInput(
-            controller: $.formSource.schestartdateTEC,
-            initialDate: $.formSource.schestartdate,
-            onSelected: $.listener.onDateStartSelected,
+            controller: $.schestartdateTEC,
+            initialDate: $.schestartdate,
+            onSelected: $.onDateStartSelected,
           );
         }),
         SizedBox(
           height: RegularSize.m,
         ),
         _StarttimeDropdown(
-          onTimeStartSelected: $.listener.onTimeStartSelected,
-          timeStartController: $.formSource.schestarttimeDC,
+          onTimeStartSelected: $.onTimeStartSelected,
+          timeStartController: $.schestarttimeDC,
         ),
         SizedBox(
           height: RegularSize.m,
         ),
         _AlldayCheckbox(
-          onChecked: $.listener.onAlldayValueChanged,
+          onChecked: $.onAlldayValueChanged,
         ),
         SizedBox(
           height: RegularSize.m,

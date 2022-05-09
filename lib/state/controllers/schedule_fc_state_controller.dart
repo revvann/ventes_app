@@ -15,10 +15,8 @@ import 'package:ventes/state/data_sources/schedule_fc_data_source.dart';
 import 'package:ventes/state/form_sources/schedule_fc_form_source.dart';
 import 'package:ventes/state/listeners/schedule_fc_listener.dart';
 
-class ScheduleFormCreateStateController extends RegularStateController {
-  ScheduleFormCreateFormSource formSource = ScheduleFormCreateFormSource();
+class ScheduleFormCreateStateController extends RegularStateController with ScheduleFormCreateListener, ScheduleFormCreateFormSource {
   ScheduleFormCreateDataSource dataSource = ScheduleFormCreateDataSource();
-  ScheduleFormCreateListener listener = ScheduleFormCreateListener();
 
   final Completer<GoogleMapController> mapsController = Completer();
   CameraPosition currentPos = CameraPosition(target: LatLng(0, 0), zoom: 14.4764);
@@ -38,14 +36,14 @@ class ScheduleFormCreateStateController extends RegularStateController {
 
   @override
   void dispose() {
-    formSource.dispose();
+    formSourceDispose();
     super.dispose();
   }
 
   @override
   void onInit() {
     super.onInit();
-    formSource.init();
+    formSourceInit();
   }
 
   @override
@@ -126,7 +124,7 @@ class ScheduleFormCreateStateController extends RegularStateController {
         },
         onCameraMove: (position) {
           markerLatLng = position.target;
-          formSource.scheloc = "https://maps.google.com?q=${position.target.latitude},${position.target.longitude}";
+          scheloc = "https://maps.google.com?q=${position.target.latitude},${position.target.longitude}";
         },
       );
     });

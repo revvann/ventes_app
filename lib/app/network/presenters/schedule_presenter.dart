@@ -14,7 +14,7 @@ class SchedulePresenter {
   late final FetchDataContract _fetchContract;
   set fetchContract(FetchDataContract value) => _fetchContract = value;
 
-  Future<Response> fetchSchedules([int? month]) async {
+  Future<Response> _getSchedules([int? month]) async {
     AuthModel? authModel = await Get.find<AuthHelper>().get();
     int userid = authModel!.userId!;
     Map<String, dynamic> params = {
@@ -25,18 +25,33 @@ class SchedulePresenter {
     return await _scheduleService.select(params);
   }
 
-  Future<Response> fetchTypes() async {
+  Future<Response> _getTypes() async {
     Map<String, dynamic> params = {
       "typecd": DBTypeString.schedule,
     };
     return await _typeService.byCode(params);
   }
 
-  Future fetchData([int? scheduleMonth]) async {
+  void fetchSchedules([int? month]) async {
     try {
       Map data = {};
-      Response scheduleResponse = await fetchSchedules(scheduleMonth);
-      Response typesResponse = await fetchTypes();
+      Response scheduleResponse = await _getSchedules(month);
+      if (scheduleResponse.statusCode == 200) {
+        data["schedules"] = scheduleResponse.body;
+        _fetchContract.onLoadSuccess(data);
+      } else {
+        _fetchContract.onLoadFailed(ScheduleString.fetchFailed);
+      }
+    } catch (e) {
+      _fetchContract.onLoadFailed(e.toString());
+    }
+  }
+
+  void fetchData([int? scheduleMonth]) async {
+    try {
+      Map data = {};
+      Response scheduleResponse = await _getSchedules(scheduleMonth);
+      Response typesResponse = await _getTypes();
       if (scheduleResponse.statusCode == 200 && typesResponse.statusCode == 200) {
         data["schedules"] = scheduleResponse.body;
         data["types"] = typesResponse.body;

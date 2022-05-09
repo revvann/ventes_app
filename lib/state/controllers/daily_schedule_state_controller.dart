@@ -8,9 +8,8 @@ import 'package:ventes/state/controllers/regular_state_controller.dart';
 import 'package:ventes/state/data_sources/daily_schedule_data_source.dart';
 import 'package:ventes/state/listeners/daily_schedule_listener.dart';
 
-class DailyScheduleStateController extends RegularStateController {
+class DailyScheduleStateController extends RegularStateController with DailyScheduleListener {
   DailyScheduleDataSource dataSource = DailyScheduleDataSource();
-  DailyScheduleListener listener = DailyScheduleListener();
 
   final Rx<DateTime> _date = Rx<DateTime>(DateTime.now());
   DateTime get date => _date.value;

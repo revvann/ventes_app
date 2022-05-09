@@ -51,13 +51,13 @@ class DailyScheduleView extends RegularView<DailyScheduleStateController> implem
               color: Colors.white,
             ),
           ),
-          onTap: $.listener.onArrowBackClick,
+          onTap: $.onArrowBackClick,
         ),
         actions: [
           Obx(() {
             return $.selectedAppointment != null
                 ? GestureDetector(
-                    onTap: $.listener.onEditButtonClick,
+                    onTap: $.onEditButtonClick,
                     child: Container(
                       padding: EdgeInsets.all(RegularSize.xs),
                       child: SvgPicture.asset(
@@ -113,8 +113,8 @@ class DailyScheduleView extends RegularView<DailyScheduleStateController> implem
                       date: $.date,
                       type: CalendarDataSourceType.daily,
                     ),
-                    onFindColor: $.listener.onFindAppointmentColor,
-                    onTap: $.listener.onCalendarTap,
+                    onFindColor: $.onFindAppointmentColor,
+                    onTap: $.onCalendarTap,
                   );
                 }),
               )
@@ -123,7 +123,7 @@ class DailyScheduleView extends RegularView<DailyScheduleStateController> implem
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: $.listener.onAddButtonClick,
+        onPressed: $.onAddButtonClick,
         backgroundColor: RegularColor.primary,
         child: SvgPicture.asset(
           'assets/svg/plus.svg',
@@ -143,7 +143,12 @@ class DailyScheduleView extends RegularView<DailyScheduleStateController> implem
 
   @override
   onLoadSuccess(Map data) {
-    $.dataSource.listToAppointments(data['schedules']);
+    if (data['types'] != null) {
+      $.dataSource.listToTypes(data['types']);
+    }
+    if (data['schedules'] != null) {
+      $.dataSource.listToAppointments(data['schedules']);
+    }
     Get.close(1);
   }
 

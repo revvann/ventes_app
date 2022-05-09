@@ -6,9 +6,8 @@ import 'package:ventes/state/controllers/regular_state_controller.dart';
 import 'package:ventes/state/data_sources/schedule_data_source.dart';
 import 'package:ventes/state/listeners/schedule_listener.dart';
 
-class ScheduleStateController extends RegularStateController {
+class ScheduleStateController extends RegularStateController with ScheduleListener {
   ScheduleDataSource dataSource = ScheduleDataSource();
-  ScheduleListener listener = ScheduleListener();
 
   final CalendarController calendarController = CalendarController();
 
@@ -31,7 +30,7 @@ class ScheduleStateController extends RegularStateController {
     dateShown = calendarController.displayDate ?? now;
     initialDate = dateShown;
 
-    calendarController.addPropertyChangedListener(listener.onDateShownChanged);
+    calendarController.addPropertyChangedListener(onDateShownChanged);
 
     dataSource.fetchData(dateShown.month);
     Loader().show();

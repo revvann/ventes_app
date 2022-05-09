@@ -13,8 +13,7 @@ import 'package:ventes/state/controllers/regular_state_controller.dart';
 import 'package:ventes/state/data_sources/nearby_data_source.dart';
 import 'package:ventes/state/listeners/nearby_listener.dart';
 
-class NearbyStateController extends RegularStateController {
-  NearbyListener listener = NearbyListener();
+class NearbyStateController extends RegularStateController with NearbyListener {
   NearbyDataSource dataSource = NearbyDataSource();
 
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();

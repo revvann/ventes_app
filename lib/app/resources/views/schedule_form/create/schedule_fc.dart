@@ -89,7 +89,7 @@ class ScheduleFormCreateView extends RegularView<ScheduleFormCreateStateControll
         ),
         actions: [
           GestureDetector(
-            onTap: $.listener.onFormSubmit,
+            onTap: $.onFormSubmit,
             child: Container(
               padding: EdgeInsets.symmetric(
                 vertical: RegularSize.s,
@@ -136,7 +136,7 @@ class ScheduleFormCreateView extends RegularView<ScheduleFormCreateStateControll
             ),
           ),
           child: Form(
-            key: $.formSource.formKey,
+            key: $.formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -155,8 +155,8 @@ class ScheduleFormCreateView extends RegularView<ScheduleFormCreateStateControll
                   height: RegularSize.m,
                 ),
                 _TitleInput(
-                  controller: $.formSource.schenmTEC,
-                  validator: $.formSource.validator.schenm,
+                  controller: $.schenmTEC,
+                  validator: $.validator.schenm,
                 ),
                 SizedBox(
                   height: RegularSize.m,
@@ -164,9 +164,9 @@ class ScheduleFormCreateView extends RegularView<ScheduleFormCreateStateControll
                 Obx(() {
                   return _ScheduletypeSelectbox(
                     onSelected: (value) {
-                      $.formSource.schetype = value;
+                      $.schetype = value;
                     },
-                    activeIndex: $.formSource.schetype,
+                    activeIndex: $.schetype,
                     items: $.dataSource.typeNames(),
                   );
                 }),
@@ -187,15 +187,15 @@ class ScheduleFormCreateView extends RegularView<ScheduleFormCreateStateControll
                       child: Stack(
                         children: [
                           Offstage(
-                            offstage: $.dataSource.typeName($.formSource.schetype) != "Event",
+                            offstage: $.dataSource.typeName($.schetype) != "Event",
                             child: _EventForm(),
                           ),
                           Offstage(
-                            offstage: $.dataSource.typeName($.formSource.schetype) != "Task",
+                            offstage: $.dataSource.typeName($.schetype) != "Task",
                             child: _TaskForm(),
                           ),
                           Offstage(
-                            offstage: $.dataSource.typeName($.formSource.schetype) != "Reminder",
+                            offstage: $.dataSource.typeName($.schetype) != "Reminder",
                             child: _ReminderForm(),
                           ),
                         ],

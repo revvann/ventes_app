@@ -7,29 +7,29 @@ import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/routing/navigators/schedule_navigator.dart';
 import 'package:ventes/state/controllers/schedule_state_controller.dart';
 
-class ScheduleListener {
-  ScheduleStateController get $ => Get.find<ScheduleStateController>();
+mixin ScheduleListener {
+  ScheduleStateController get _$ => Get.find<ScheduleStateController>();
 
   void onDateShownChanged(String data) {
     if (data == 'displayDate') {
-      if ($.calendarController.displayDate != null) {
-        $.dateShown = $.calendarController.displayDate!;
+      if (_$.calendarController.displayDate != null) {
+        _$.dateShown = _$.calendarController.displayDate!;
       }
-      $.dataSource.fetchSchedules($.dateShown.month);
+      _$.dataSource.fetchSchedules(_$.dateShown.month);
       Loader().show();
     }
   }
 
   void onCalendarBackwardClick() {
-    $.calendarController.backward?.call();
+    _$.calendarController.backward?.call();
   }
 
   void onCalendarForwardClick() {
-    $.calendarController.forward?.call();
+    _$.calendarController.forward?.call();
   }
 
   void onDateSelectionChanged(details) {
-    $.selectedDate = details.date!;
+    _$.selectedDate = details.date!;
   }
 
   void onDetailClick() {
@@ -37,18 +37,18 @@ class ScheduleListener {
       DailyScheduleView.route,
       id: ScheduleNavigator.id,
       arguments: {
-        "date": $.selectedDate,
+        "date": _$.selectedDate,
       },
     );
   }
 
   Color onAppointmentFindColor(Schedule appointment) {
     Color color = RegularColor.primary;
-    if (appointment.schetypeid == $.dataSource.types["Event"]) {
+    if (appointment.schetypeid == _$.dataSource.types["Event"]) {
       color = RegularColor.purple;
-    } else if (appointment.schetypeid == $.dataSource.types["Task"]) {
+    } else if (appointment.schetypeid == _$.dataSource.types["Task"]) {
       color = RegularColor.red;
-    } else if (appointment.schetypeid == $.dataSource.types["Reminder"]) {
+    } else if (appointment.schetypeid == _$.dataSource.types["Reminder"]) {
       color = RegularColor.cyan;
     }
     return color;

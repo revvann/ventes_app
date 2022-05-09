@@ -14,9 +14,9 @@ class _EventForm extends StatelessWidget {
         ),
         Obx(() {
           return _DatestartInput(
-            controller: $.formSource.schestartdateTEC,
-            initialDate: $.formSource.schestartdate,
-            onSelected: $.listener.onDateStartSelected,
+            controller: $.schestartdateTEC,
+            initialDate: $.schestartdate,
+            onSelected: $.onDateStartSelected,
           );
         }),
         SizedBox(
@@ -24,87 +24,87 @@ class _EventForm extends StatelessWidget {
         ),
         Obx(() {
           return _DateendInput(
-            controller: $.formSource.scheenddateTEC,
-            initialDate: $.formSource.scheenddate,
-            onSelected: $.listener.onDateEndSelected,
-            minDate: $.formSource.fullStartDate.add(Duration(minutes: 15)),
+            controller: $.scheenddateTEC,
+            initialDate: $.scheenddate,
+            onSelected: $.onDateEndSelected,
+            minDate: $.fullStartDate.add(Duration(minutes: 15)),
           );
         }),
         SizedBox(
           height: RegularSize.m,
         ),
         _TwintimeInput(
-          onTimeEndSelected: $.listener.onTimeEndSelected,
-          onTimeStartSelected: $.listener.onTimeStartSelected,
-          timeStartController: $.formSource.schestarttimeDC,
-          timeEndController: $.formSource.scheendtimeDC,
+          onTimeEndSelected: $.onTimeEndSelected,
+          onTimeStartSelected: $.onTimeStartSelected,
+          timeStartController: $.schestarttimeDC,
+          timeEndController: $.scheendtimeDC,
         ),
         SizedBox(
           height: RegularSize.m,
         ),
         _TimezoneDropdown(
-          controller: $.formSource.schetzDC,
+          controller: $.schetzDC,
         ),
         SizedBox(
           height: RegularSize.m,
         ),
         _AlldayCheckbox(
-          onChecked: $.listener.onAlldayValueChanged,
+          onChecked: $.onAlldayValueChanged,
         ),
         SizedBox(
           height: RegularSize.m,
         ),
         GestureDetector(
           onTap: () {
-            if (!$.formSource.scheonline) {
+            if (!$.scheonline) {
               $.showMapBottomSheet();
             }
           },
           child: _LocationInput(
-            controller: $.formSource.schelocTEC,
-            validator: $.formSource.validator.scheloc,
+            controller: $.schelocTEC,
+            validator: $.validator.scheloc,
           ),
         ),
         SizedBox(
           height: RegularSize.m,
         ),
         _OnlineCheckbox(
-          onChecked: $.listener.onOnlineValueChanged,
+          onChecked: $.onOnlineValueChanged,
         ),
         SizedBox(
           height: RegularSize.m,
         ),
         Obx(() {
           return _LinkInput(
-            controller: $.formSource.scheonlinkTEC,
-            enabled: $.formSource.scheonline,
-            validator: $.formSource.validator.scheonlink,
+            controller: $.scheonlinkTEC,
+            enabled: $.scheonline,
+            validator: $.validator.scheonlink,
           );
         }),
         SizedBox(
           height: RegularSize.m,
         ),
-        _RemindInput(controller: $.formSource.scheremindTEC),
+        _RemindInput(controller: $.scheremindTEC),
         SizedBox(
           height: RegularSize.m,
         ),
-        _DescriptionInput(controller: $.formSource.schedescTEC),
+        _DescriptionInput(controller: $.schedescTEC),
         SizedBox(
           height: RegularSize.m,
         ),
-        _PrivateCheckbox(onChecked: $.listener.onPrivateValueChanged),
+        _PrivateCheckbox(onChecked: $.onPrivateValueChanged),
         SizedBox(
           height: RegularSize.m,
         ),
         Obx(() {
           return _TowardDropdown(
-            selected: $.formSource.schetoward?.user?.userfullname,
-            onFilter: $.listener.onTowardFilter,
-            onItemSelected: $.listener.onTowardSelected,
+            selected: $.schetoward?.user?.userfullname,
+            onFilter: $.onTowardFilter,
+            onItemSelected: $.onTowardSelected,
             itemBuilder: (UserDetail user) {
               return Obx(
                 () {
-                  bool isSelected = $.formSource.schetoward?.userid == user.userid;
+                  bool isSelected = $.schetoward?.userid == user.userid;
                   return _GuestListItem(
                     userDetail: user,
                     isSelected: isSelected,
@@ -118,12 +118,12 @@ class _EventForm extends StatelessWidget {
           height: RegularSize.m,
         ),
         _GuestDropdown(
-          onFilter: $.listener.onGuestFilter,
-          onItemSelected: $.listener.onGuestSelected,
+          onFilter: $.onGuestFilter,
+          onItemSelected: $.onGuestSelected,
           itemBuilder: (UserDetail user) {
             return Obx(
               () {
-                List<ScheduleGuest> guestsSelected = $.formSource.guests;
+                List<ScheduleGuest> guestsSelected = $.guests;
                 bool isSelected = guestsSelected.where((g) => g.scheuserid == user.userid).isNotEmpty;
                 return _GuestListItem(
                   userDetail: user,
@@ -134,7 +134,7 @@ class _EventForm extends StatelessWidget {
           },
         ),
         Obx(() {
-          return $.formSource.guests.isNotEmpty
+          return $.guests.isNotEmpty
               ? Column(
                   children: [
                     SizedBox(
@@ -155,12 +155,12 @@ class _EventForm extends StatelessWidget {
                       height: RegularSize.s,
                     ),
                     _GuestList(
-                      guests: $.formSource.guests,
-                      onRemove: $.listener.onRemoveGuest,
-                      onAddMemberChanged: $.listener.onAddMemberValueChanged,
-                      onReadOnlyChanged: $.listener.onReadOnlyValueChanged,
-                      onShareLinkChanged: $.listener.onShareLinkValueChanged,
-                      checkPermission: $.formSource.hasPermission,
+                      guests: $.guests,
+                      onRemove: $.onRemoveGuest,
+                      onAddMemberChanged: $.onAddMemberValueChanged,
+                      onReadOnlyChanged: $.onReadOnlyValueChanged,
+                      onShareLinkChanged: $.onShareLinkValueChanged,
+                      checkPermission: $.hasPermission,
                     ),
                   ],
                 )

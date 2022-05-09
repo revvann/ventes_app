@@ -93,7 +93,7 @@ class ScheduleFormUpdateView extends RegularView<ScheduleFormUpdateStateControll
         ),
         actions: [
           GestureDetector(
-            onTap: $.listener.onFormSubmit,
+            onTap: $.onFormSubmit,
             child: Container(
               padding: EdgeInsets.symmetric(
                 vertical: RegularSize.s,
@@ -140,7 +140,7 @@ class ScheduleFormUpdateView extends RegularView<ScheduleFormUpdateStateControll
             ),
           ),
           child: Form(
-            key: $.formSource.formKey,
+            key: $.formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -159,8 +159,8 @@ class ScheduleFormUpdateView extends RegularView<ScheduleFormUpdateStateControll
                   height: RegularSize.m,
                 ),
                 _TitleInput(
-                  controller: $.formSource.schenmTEC,
-                  validator: $.formSource.validator.schenm,
+                  controller: $.schenmTEC,
+                  validator: $.validator.schenm,
                 ),
                 SizedBox(
                   height: RegularSize.m,
@@ -168,10 +168,10 @@ class ScheduleFormUpdateView extends RegularView<ScheduleFormUpdateStateControll
                 Obx(() {
                   return _ScheduletypeSelectbox(
                     onSelected: (value) {
-                      $.formSource.schetype = value;
+                      $.schetype = value;
                     },
-                    activeIndex: $.formSource.schetype,
-                    items: $.dataSource.types != null ? [$.dataSource.typeName($.formSource.schetype)] : [],
+                    activeIndex: $.schetype,
+                    items: $.dataSource.types != null ? [$.dataSource.typeName($.schetype)] : [],
                   );
                 }),
                 SizedBox(
@@ -191,15 +191,15 @@ class ScheduleFormUpdateView extends RegularView<ScheduleFormUpdateStateControll
                       child: Stack(
                         children: [
                           Offstage(
-                            offstage: $.dataSource.typeName($.formSource.schetype) != "Event",
+                            offstage: $.dataSource.typeName($.schetype) != "Event",
                             child: _EventForm(),
                           ),
                           Offstage(
-                            offstage: $.dataSource.typeName($.formSource.schetype) != "Task",
+                            offstage: $.dataSource.typeName($.schetype) != "Task",
                             child: _TaskForm(),
                           ),
                           Offstage(
-                            offstage: $.dataSource.typeName($.formSource.schetype) != "Reminder",
+                            offstage: $.dataSource.typeName($.schetype) != "Reminder",
                             child: _ReminderForm(),
                           ),
                         ],
@@ -251,7 +251,7 @@ class ScheduleFormUpdateView extends RegularView<ScheduleFormUpdateStateControll
   onLoadSuccess(Map data) {
     $.dataSource.schedule = Schedule.fromJson(data['schedule']);
     $.dataSource.insertTypes(List<Map<String, dynamic>>.from(data['types']));
-    $.formSource.prepareFormValue();
+    $.prepareFormValue();
     Get.close(1);
   }
 }

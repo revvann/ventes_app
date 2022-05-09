@@ -55,7 +55,7 @@ class ScheduleView extends RegularView<ScheduleStateController> implements Fetch
         ),
         actions: [
           GestureDetector(
-            onTap: $.listener.onDetailClick,
+            onTap: $.onDetailClick,
             child: Container(
               padding: EdgeInsets.all(RegularSize.xs),
               child: SvgPicture.asset(
@@ -75,7 +75,7 @@ class ScheduleView extends RegularView<ScheduleStateController> implements Fetch
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               GestureDetector(
-                onTap: $.listener.onCalendarBackwardClick,
+                onTap: $.onCalendarBackwardClick,
                 child: Container(
                   alignment: Alignment.center,
                   child: SvgPicture.asset(
@@ -107,7 +107,7 @@ class ScheduleView extends RegularView<ScheduleStateController> implements Fetch
                 width: RegularSize.s,
               ),
               GestureDetector(
-                onTap: $.listener.onCalendarForwardClick,
+                onTap: $.onCalendarForwardClick,
                 child: Container(
                   alignment: Alignment.center,
                   child: SvgPicture.asset(
@@ -145,7 +145,7 @@ class ScheduleView extends RegularView<ScheduleStateController> implements Fetch
                         return _Calendar(
                           appointmentDetailItemBuilder: (schedule) => _AppointmentItem(
                             appointment: schedule,
-                            onFindColor: $.listener.onAppointmentFindColor,
+                            onFindColor: $.onAppointmentFindColor,
                           ),
                           monthCellBuilder: (_, details) {
                             return Obx(() {
@@ -175,10 +175,13 @@ class ScheduleView extends RegularView<ScheduleStateController> implements Fetch
                           },
                           dataSource: RegularCalendarDataSource($.dataSource.appointments),
                           calendarController: $.calendarController,
-                          onSelectionChanged: $.listener.onDateSelectionChanged,
+                          onSelectionChanged: $.onDateSelectionChanged,
                           initialDate: $.initialDate,
                         );
                       }),
+                    ),
+                    SizedBox(
+                      height: RegularSize.s,
                     ),
                   ],
                 ),
@@ -198,8 +201,8 @@ class ScheduleView extends RegularView<ScheduleStateController> implements Fetch
 
   @override
   onLoadSuccess(Map data) {
-    if (data['schedule'] != null) {
-      $.dataSource.listToAppointments(data['schedule']);
+    if (data['schedules'] != null) {
+      $.dataSource.listToAppointments(data['schedules']);
     }
     if (data['types'] != null) {
       $.dataSource.listToTypes(data['types']);

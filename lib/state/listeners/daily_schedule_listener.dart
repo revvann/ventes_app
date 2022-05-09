@@ -8,8 +8,8 @@ import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/routing/navigators/schedule_navigator.dart';
 import 'package:ventes/state/controllers/daily_schedule_state_controller.dart';
 
-class DailyScheduleListener {
-  DailyScheduleStateController get $ => Get.find<DailyScheduleStateController>();
+mixin DailyScheduleListener {
+  DailyScheduleStateController get _$ => Get.find<DailyScheduleStateController>();
 
   void onArrowBackClick() {
     Get.back(id: ScheduleNavigator.id);
@@ -21,11 +21,11 @@ class DailyScheduleListener {
 
   Color onFindAppointmentColor(Schedule appointment) {
     Color color = RegularColor.primary;
-    if (appointment.schetypeid == $.dataSource.types["Event"]) {
+    if (appointment.schetypeid == _$.dataSource.types["Event"]) {
       color = RegularColor.purple;
-    } else if (appointment.schetypeid == $.dataSource.types["Task"]) {
+    } else if (appointment.schetypeid == _$.dataSource.types["Task"]) {
       color = RegularColor.red;
-    } else if (appointment.schetypeid == $.dataSource.types["Reminder"]) {
+    } else if (appointment.schetypeid == _$.dataSource.types["Reminder"]) {
       color = RegularColor.cyan;
     }
     return color;
@@ -33,11 +33,11 @@ class DailyScheduleListener {
 
   void onEditButtonClick() {
     Get.toNamed(ScheduleFormUpdateView.route, id: ScheduleNavigator.id, arguments: {
-      'scheduleId': $.selectedAppointment?.scheid,
+      'scheduleId': _$.selectedAppointment?.scheid,
     });
   }
 
   void onCalendarTap(CalendarTapDetails details) {
-    $.selectedAppointment = details.appointments?.first;
+    _$.selectedAppointment = details.appointments?.first;
   }
 }

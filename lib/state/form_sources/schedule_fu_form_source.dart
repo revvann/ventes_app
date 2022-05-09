@@ -8,21 +8,18 @@ import 'package:get/get.dart';
 import 'package:ventes/app/models/schedule_guest_model.dart';
 import 'package:ventes/app/models/schedule_model.dart';
 import 'package:ventes/app/models/user_detail_model.dart';
-import 'package:ventes/app/models/user_model.dart';
 import 'package:ventes/app/resources/widgets/regular_dropdown.dart';
 import 'package:ventes/helpers/function_helpers.dart';
 import 'package:ventes/state/controllers/schedule_fu_state_controller.dart';
-import 'package:ventes/state/data_sources/schedule_fu_data_source.dart';
 import 'package:ventes/state/form_sources/schedule_fc_form_source.dart';
 import 'package:ventes/state/form_validators/schedule_fu_validator.dart';
-import 'package:ventes/state/listeners/schedule_fu_listener.dart';
 
-class ScheduleFormUpdateFormSource {
+mixin ScheduleFormUpdateFormSource {
   int readOnlyId = 14;
   int addMemberId = 15;
   int shareLinkId = 16;
 
-  ScheduleFormUpdateStateController get $ => Get.find<ScheduleFormUpdateStateController>();
+  ScheduleFormUpdateStateController get _$ => Get.find<ScheduleFormUpdateStateController>();
   late ScheduleFormUpdateValidator validator;
 
   UserDetail? userDefault;
@@ -53,9 +50,9 @@ class ScheduleFormUpdateFormSource {
   final Rx<List<ScheduleGuest>> _guests = Rx<List<ScheduleGuest>>([]);
   final Rx<UserDetail?> _schetoward = Rx<UserDetail?>(null);
 
-  bool get isEvent => $.dataSource.typeName(schetype) == "Event";
-  bool get isTask => $.dataSource.typeName(schetype) == "Task";
-  bool get isReminder => $.dataSource.typeName(schetype) == "Reminder";
+  bool get isEvent => _$.dataSource.typeName(schetype) == "Event";
+  bool get isTask => _$.dataSource.typeName(schetype) == "Task";
+  bool get isReminder => _$.dataSource.typeName(schetype) == "Reminder";
 
   int? get schebpid => schetoward?.userdtbpid;
 
@@ -282,11 +279,11 @@ class ScheduleFormUpdateFormSource {
   }
 
   void prepareFormValue() {
-    if ($.dataSource.schedule != null) {
-      Schedule schedule = $.dataSource.schedule!;
+    if (_$.dataSource.schedule != null) {
+      Schedule schedule = _$.dataSource.schedule!;
       scheid = schedule.scheid ?? -1;
       schenm = schedule.schenm ?? "";
-      schetype = $.dataSource.typeIndex(schedule.schetypeid ?? 0);
+      schetype = _$.dataSource.typeIndex(schedule.schetypeid ?? 0);
       schestartdate = dbParseDate(schedule.schestartdate!);
       scheenddate = dbParseDate(schedule.scheenddate ?? schedule.schestartdate!);
       schestarttime = !(schedule.scheallday ?? false) ? parseTime(schedule.schestarttime!) : null;
@@ -294,7 +291,7 @@ class ScheduleFormUpdateFormSource {
       schetzDC.value = schedule.schetz;
 
       scheallday = schedule.scheallday ?? false;
-      $.listener.onAlldayValueChanged(scheallday);
+      _$.onAlldayValueChanged(scheallday);
 
       scheloc = schedule.scheloc ?? "";
       scheonline = schedule.scheonline ?? false;
@@ -310,7 +307,7 @@ class ScheduleFormUpdateFormSource {
     }
   }
 
-  dispose() {
+  formSourceDispose() {
     schenmTEC.dispose();
     schestartdateTEC.dispose();
     scheenddateTEC.dispose();
@@ -320,16 +317,16 @@ class ScheduleFormUpdateFormSource {
     scheonlinkTEC.dispose();
   }
 
-  init() async {
+  formSourceInit() async {
     validator = ScheduleFormUpdateValidator(this);
 
     setStartTimeList();
 
     scheremindTEC.text = "0";
-    scheonlinkTEC.addListener($.listener.onOnlineLinkChanged);
-    schelocTEC.addListener($.listener.onLocationChanged);
+    scheonlinkTEC.addListener(_$.onOnlineLinkChanged);
+    schelocTEC.addListener(_$.onLocationChanged);
 
-    userDefault = await $.dataSource.userActive;
+    userDefault = await _$.dataSource.userActive;
     schetoward = userDefault;
     schetzDC.items = getTimezoneList();
     String currentTimeZone = await FlutterNativeTimezone.getLocalTimezone();
@@ -350,7 +347,7 @@ class ScheduleFormUpdateFormSource {
       "scheonline": isEvent ? scheonline : false,
       "scheonlink": isEvent ? scheonlink : null,
       "scheallday": scheallday,
-      "schetypeid": $.dataSource.typeId(schetype),
+      "schetypeid": _$.dataSource.typeId(schetype),
       "schetz": isEvent ? schetz : null,
       "scheprivate": isEvent ? scheprivate : false,
       "schetowardid": isEvent ? schetoward?.userid : userDefault?.userid,

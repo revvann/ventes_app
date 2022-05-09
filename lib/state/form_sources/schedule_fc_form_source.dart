@@ -12,7 +12,7 @@ import 'package:ventes/helpers/function_helpers.dart';
 import 'package:ventes/state/controllers/schedule_fc_state_controller.dart';
 import 'package:ventes/state/form_validators/schedule_fc_validator.dart';
 
-class ScheduleFormCreateFormSource {
+mixin ScheduleFormCreateFormSource {
   int readOnlyId = 14;
   int addMemberId = 15;
   int shareLinkId = 16;
@@ -275,7 +275,7 @@ class ScheduleFormCreateFormSource {
     setEndTimeList();
   }
 
-  dispose() {
+  formSourceDispose() {
     schenmTEC.dispose();
     schestartdateTEC.dispose();
     scheenddateTEC.dispose();
@@ -285,14 +285,14 @@ class ScheduleFormCreateFormSource {
     scheonlinkTEC.dispose();
   }
 
-  init() async {
+  formSourceInit() async {
     validator = ScheduleFormCreateValidator(this);
 
     setStartTimeList();
 
     scheremindTEC.text = "0";
-    scheonlinkTEC.addListener(_$.listener.onOnlineLinkChanged);
-    schelocTEC.addListener(_$.listener.onLocationChanged);
+    scheonlinkTEC.addListener(_$.onOnlineLinkChanged);
+    schelocTEC.addListener(_$.onLocationChanged);
 
     userDefault = await _$.dataSource.userActive;
     schetoward = userDefault;

@@ -14,7 +14,7 @@ class DailySchedulePresenter {
   late final FetchDataContract _fetchContract;
   set fetchContract(FetchDataContract contract) => _fetchContract = contract;
 
-  Future<Response> fetchSchedules(String date) async {
+  Future<Response> getSchedules(String date) async {
     AuthModel? authModel = await Get.find<AuthHelper>().get();
     int userid = authModel!.userId!;
     Map<String, dynamic> params = {
@@ -25,18 +25,18 @@ class DailySchedulePresenter {
     return await _scheduleService.select(params);
   }
 
-  Future<Response> fetchTypes() async {
+  Future<Response> getTypes() async {
     Map<String, dynamic> params = {
       "typecd": DBTypeString.schedule,
     };
     return await _typeService.byCode(params);
   }
 
-  Future fetchData(String date) async {
+  void fetchData(String date) async {
     try {
       Map data = {};
-      Response scheduleResponse = await fetchSchedules(date);
-      Response typesResponse = await fetchTypes();
+      Response scheduleResponse = await getSchedules(date);
+      Response typesResponse = await getTypes();
 
       if (scheduleResponse.statusCode == 200 && typesResponse.statusCode == 200) {
         data["schedules"] = scheduleResponse.body;
