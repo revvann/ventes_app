@@ -33,6 +33,9 @@ class ScheduleFormUpdateStateController extends RegularStateController {
   @override
   void onInit() async {
     super.onInit();
+    properties.dataSource.updateContract = listener;
+    properties.dataSource.fetchDataContract = listener;
+
     formSource.formSourceInit();
 
     Position pos = await getCurrentPosition();

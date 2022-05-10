@@ -15,7 +15,7 @@ class ScheduleFormUpdatePresenter {
   final _typeService = Get.find<TypeService>();
 
   late final UpdateContract _updateContract;
-  set createContract(UpdateContract contract) => _updateContract = contract;
+  set updateContract(UpdateContract contract) => _updateContract = contract;
 
   late final FetchDataContract _fetchDataContract;
   set fetchDataContract(FetchDataContract contract) => _fetchDataContract = contract;

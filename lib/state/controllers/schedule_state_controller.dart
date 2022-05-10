@@ -11,6 +11,12 @@ class ScheduleStateController extends RegularStateController {
   ScheduleListener listener = Get.put(ScheduleListener());
 
   @override
+  void onInit() {
+    super.onInit();
+    properties.dataSource.fetchDataContract = listener;
+  }
+
+  @override
   void onReady() {
     super.onReady();
     DateTime now = DateTime.now();

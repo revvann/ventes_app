@@ -56,11 +56,9 @@ part 'package:ventes/app/resources/views/schedule_form/update/components/_title_
 part 'package:ventes/app/resources/views/schedule_form/update/components/_toward_dropdown.dart';
 part 'package:ventes/app/resources/views/schedule_form/update/components/_twintime_input.dart';
 
-class ScheduleFormUpdateView extends RegularView<ScheduleFormUpdateStateController> implements UpdateContract, FetchDataContract {
+class ScheduleFormUpdateView extends RegularView<ScheduleFormUpdateStateController> {
   static const String route = "/schedule/update";
   ScheduleFormUpdateView({required int scheduleId}) {
-    state.properties.dataSource.createContract = this;
-    state.properties.dataSource.fetchDataContract = this;
     state.properties.dataSource.scheduleId = scheduleId;
   }
 
@@ -212,45 +210,5 @@ class ScheduleFormUpdateView extends RegularView<ScheduleFormUpdateStateControll
         ),
       ),
     );
-  }
-
-  @override
-  void onUpdateFailed(String message) {
-    Get.close(1);
-    FailedAlert(ScheduleString.updateFailed).show();
-  }
-
-  @override
-  void onUpdateSuccess(String message) {
-    Get.close(1);
-    SuccessAlert(ScheduleString.updateSuccess).show();
-    Get.find<DailyScheduleStateController>().properties.refetch();
-    Get.back(id: ScheduleNavigator.id);
-  }
-
-  @override
-  void onUpdateError(String message) {
-    Get.close(1);
-    ErrorAlert(ScheduleString.updateError).show();
-  }
-
-  @override
-  onLoadError(String message) {
-    Get.close(1);
-    ErrorAlert(ScheduleString.fetchError).show();
-  }
-
-  @override
-  onLoadFailed(String message) {
-    Get.close(1);
-    FailedAlert(ScheduleString.fetchFailed).show();
-  }
-
-  @override
-  onLoadSuccess(Map data) {
-    state.properties.dataSource.schedule = Schedule.fromJson(data['schedule']);
-    state.properties.dataSource.insertTypes(List<Map<String, dynamic>>.from(data['types']));
-    state.formSource.prepareFormValue();
-    Get.close(1);
   }
 }

@@ -10,7 +10,7 @@ import 'package:ventes/helpers/auth_helper.dart';
 
 class ScheduleFormUpdateDataSource {
   final ScheduleFormUpdatePresenter _presenter = ScheduleFormUpdatePresenter();
-  set createContract(UpdateContract value) => _presenter.createContract = value;
+  set updateContract(UpdateContract value) => _presenter.updateContract = value;
   set fetchDataContract(FetchDataContract value) => _presenter.fetchDataContract = value;
 
   late int scheduleId;

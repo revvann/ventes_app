@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ventes/app/models/schedule_model.dart';
+import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
 import 'package:ventes/app/resources/views/daily_schedule/daily_schedule.dart';
+import 'package:ventes/app/resources/widgets/failed_alert.dart';
 import 'package:ventes/app/resources/widgets/loader.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/routing/navigators/schedule_navigator.dart';
 import 'package:ventes/state/controllers/schedule_state_controller.dart';
 
-class ScheduleListener {
+class ScheduleListener implements FetchDataContract {
   ScheduleProperties get _properties => Get.find<ScheduleProperties>();
 
   void onDateShownChanged(String data) {
@@ -52,5 +54,28 @@ class ScheduleListener {
       color = RegularColor.cyan;
     }
     return color;
+  }
+
+  @override
+  onLoadFailed(String message) {
+    Get.close(1);
+    FailedAlert(message).show();
+  }
+
+  @override
+  onLoadSuccess(Map data) {
+    if (data['schedules'] != null) {
+      _properties.dataSource.listToAppointments(data['schedules']);
+    }
+    if (data['types'] != null) {
+      _properties.dataSource.listToTypes(data['types']);
+    }
+    Get.close(1);
+  }
+
+  @override
+  onLoadError(String message) {
+    Get.close(1);
+    FailedAlert(message).show();
   }
 }

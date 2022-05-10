@@ -1,11 +1,17 @@
 import 'package:get/get.dart';
 import 'package:ventes/app/models/user_detail_model.dart';
+import 'package:ventes/app/network/contracts/create_contract.dart';
+import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
+import 'package:ventes/app/resources/widgets/error_alert.dart';
+import 'package:ventes/app/resources/widgets/failed_alert.dart';
 import 'package:ventes/app/resources/widgets/loader.dart';
+import 'package:ventes/app/resources/widgets/success_alert.dart';
+import 'package:ventes/constants/strings/schedule_string.dart';
 import 'package:ventes/helpers/function_helpers.dart';
 import 'package:ventes/state/controllers/schedule_fc_state_controller.dart';
 import 'package:ventes/state/form_sources/schedule_fc_form_source.dart';
 
-class ScheduleFormCreateListener {
+class ScheduleFormCreateListener implements FetchDataContract, CreateContract {
   ScheduleFormCreateProperties get _properties => Get.find<ScheduleFormCreateProperties>();
   ScheduleFormCreateFormSource get _formSource => Get.find<ScheduleFormCreateFormSource>();
 
@@ -197,5 +203,39 @@ class ScheduleFormCreateListener {
   void onCameraMove(position) {
     _properties.markerLatLng = position.target;
     _formSource.scheloc = "https://maps.google.com?q=${position.target.latitude},${position.target.longitude}";
+  }
+
+  @override
+  void onCreateFailed(String message) {
+    Get.close(1);
+    FailedAlert(ScheduleString.createFailed).show();
+  }
+
+  @override
+  void onCreateSuccess(String message) {
+    Get.close(1);
+    SuccessAlert(ScheduleString.createSuccess).show();
+  }
+
+  @override
+  void onCreateError(String message) {
+    Get.close(1);
+    ErrorAlert(ScheduleString.createError).show();
+  }
+
+  @override
+  onLoadError(String message) {
+    ErrorAlert(ScheduleString.createError).show();
+  }
+
+  @override
+  onLoadFailed(String message) {
+    FailedAlert(ScheduleString.createFailed).show();
+  }
+
+  @override
+  onLoadSuccess(Map data) {
+    _properties.dataSource.insertTypes(List<Map<String, dynamic>>.from(data['types']));
+    Get.close(1);
   }
 }

@@ -20,13 +20,12 @@ import 'package:ventes/state/controllers/daily_schedule_state_controller.dart';
 
 part 'package:ventes/app/resources/views/daily_schedule/components/_calendar.dart';
 
-class DailyScheduleView extends RegularView<DailyScheduleStateController> implements FetchDataContract {
+class DailyScheduleView extends RegularView<DailyScheduleStateController> {
   static const String route = "/schedule/daily";
 
   DailyScheduleView({
     required DateTime date,
   }) : super() {
-    state.properties.dataSource.fetchContract = this;
     state.properties.date = date;
   }
 
@@ -133,28 +132,5 @@ class DailyScheduleView extends RegularView<DailyScheduleStateController> implem
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
-  }
-
-  @override
-  onLoadFailed(String message) {
-    Get.close(1);
-    FailedAlert(message).show();
-  }
-
-  @override
-  onLoadSuccess(Map data) {
-    if (data['types'] != null) {
-      state.properties.dataSource.listToTypes(data['types']);
-    }
-    if (data['schedules'] != null) {
-      state.properties.dataSource.listToAppointments(data['schedules']);
-    }
-    Get.close(1);
-  }
-
-  @override
-  onLoadError(String message) {
-    Get.close(1);
-    ErrorAlert(message).show();
   }
 }

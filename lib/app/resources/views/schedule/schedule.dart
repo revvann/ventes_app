@@ -24,11 +24,8 @@ part 'package:ventes/app/resources/views/schedule/components/_appointment_item.d
 part 'package:ventes/app/resources/views/schedule/components/_calendar.dart';
 part 'package:ventes/app/resources/views/schedule/components/_month_cell.dart';
 
-class ScheduleView extends RegularView<ScheduleStateController> implements FetchDataContract {
+class ScheduleView extends RegularView<ScheduleStateController> {
   static const String route = "/schedule";
-  ScheduleView() : super() {
-    state.properties.dataSource.fetchContract = this;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -191,28 +188,5 @@ class ScheduleView extends RegularView<ScheduleStateController> implements Fetch
         ),
       ),
     );
-  }
-
-  @override
-  onLoadFailed(String message) {
-    Get.close(1);
-    FailedAlert(message).show();
-  }
-
-  @override
-  onLoadSuccess(Map data) {
-    if (data['schedules'] != null) {
-      state.properties.dataSource.listToAppointments(data['schedules']);
-    }
-    if (data['types'] != null) {
-      state.properties.dataSource.listToTypes(data['types']);
-    }
-    Get.close(1);
-  }
-
-  @override
-  onLoadError(String message) {
-    Get.close(1);
-    FailedAlert(message).show();
   }
 }

@@ -1,11 +1,20 @@
 import 'package:get/get.dart';
+import 'package:ventes/app/models/schedule_model.dart';
 import 'package:ventes/app/models/user_detail_model.dart';
+import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
+import 'package:ventes/app/network/contracts/update_contract.dart';
+import 'package:ventes/app/resources/widgets/error_alert.dart';
+import 'package:ventes/app/resources/widgets/failed_alert.dart';
 import 'package:ventes/app/resources/widgets/loader.dart';
+import 'package:ventes/app/resources/widgets/success_alert.dart';
+import 'package:ventes/constants/strings/schedule_string.dart';
 import 'package:ventes/helpers/function_helpers.dart';
+import 'package:ventes/routing/navigators/schedule_navigator.dart';
+import 'package:ventes/state/controllers/daily_schedule_state_controller.dart';
 import 'package:ventes/state/controllers/schedule_fu_state_controller.dart';
 import 'package:ventes/state/form_sources/schedule_fu_form_source.dart';
 
-class ScheduleFormUpdateListener {
+class ScheduleFormUpdateListener implements FetchDataContract, UpdateContract {
   ScheduleFormUpdateProperties get _properties => Get.find<ScheduleFormUpdateProperties>();
   ScheduleFormUpdateFormSource get _formSource => Get.find<ScheduleFormUpdateFormSource>();
 
@@ -196,6 +205,46 @@ class ScheduleFormUpdateListener {
 
   void onCameraMove(position) {
     _properties.markerLatLng = position.target;
-    _formSource.scheloc = "https://maps.google.com?q=properties{position.target.latitude},properties{position.target.longitude}";
+    _formSource.scheloc = "https://maps.google.com?q=${position.target.latitude},${position.target.longitude}";
+  }
+
+  @override
+  void onUpdateFailed(String message) {
+    Get.close(1);
+    FailedAlert(ScheduleString.updateFailed).show();
+  }
+
+  @override
+  void onUpdateSuccess(String message) {
+    Get.close(1);
+    SuccessAlert(ScheduleString.updateSuccess).show();
+    Get.find<DailyScheduleStateController>().properties.refetch();
+    Get.back(id: ScheduleNavigator.id);
+  }
+
+  @override
+  void onUpdateError(String message) {
+    Get.close(1);
+    ErrorAlert(ScheduleString.updateError).show();
+  }
+
+  @override
+  onLoadError(String message) {
+    Get.close(1);
+    ErrorAlert(ScheduleString.fetchError).show();
+  }
+
+  @override
+  onLoadFailed(String message) {
+    Get.close(1);
+    FailedAlert(ScheduleString.fetchFailed).show();
+  }
+
+  @override
+  onLoadSuccess(Map data) {
+    _properties.dataSource.schedule = Schedule.fromJson(data['schedule']);
+    _properties.dataSource.insertTypes(List<Map<String, dynamic>>.from(data['types']));
+    _formSource.prepareFormValue();
+    Get.close(1);
   }
 }

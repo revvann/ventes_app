@@ -53,12 +53,8 @@ part 'package:ventes/app/resources/views/schedule_form/create/components/_title_
 part 'package:ventes/app/resources/views/schedule_form/create/components/_toward_dropdown.dart';
 part 'package:ventes/app/resources/views/schedule_form/create/components/_twintime_input.dart';
 
-class ScheduleFormCreateView extends RegularView<ScheduleFormCreateStateController> implements CreateContract, FetchDataContract {
+class ScheduleFormCreateView extends RegularView<ScheduleFormCreateStateController> {
   static const String route = "/schedule/create";
-  ScheduleFormCreateView() {
-    state.properties.dataSource.createContract = this;
-    state.properties.dataSource.fetchDataContract = this;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -208,39 +204,5 @@ class ScheduleFormCreateView extends RegularView<ScheduleFormCreateStateControll
         ),
       ),
     );
-  }
-
-  @override
-  void onCreateFailed(String message) {
-    Get.close(1);
-    FailedAlert(ScheduleString.createFailed).show();
-  }
-
-  @override
-  void onCreateSuccess(String message) {
-    Get.close(1);
-    SuccessAlert(ScheduleString.createSuccess).show();
-  }
-
-  @override
-  void onCreateError(String message) {
-    Get.close(1);
-    ErrorAlert(ScheduleString.createError).show();
-  }
-
-  @override
-  onLoadError(String message) {
-    ErrorAlert(ScheduleString.createError).show();
-  }
-
-  @override
-  onLoadFailed(String message) {
-    FailedAlert(ScheduleString.createFailed).show();
-  }
-
-  @override
-  onLoadSuccess(Map data) {
-    state.properties.dataSource.insertTypes(List<Map<String, dynamic>>.from(data['types']));
-    Get.close(1);
   }
 }

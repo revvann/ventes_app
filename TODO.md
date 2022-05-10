@@ -6,10 +6,10 @@ Project Description
 
 ### Todo
 
-- [ ] create form create for add new customer  
 
 ### In Progress
 
+- [ ] create form create for add new customer  
 
 ### Done ✓
 

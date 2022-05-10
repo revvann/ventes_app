@@ -13,6 +13,12 @@ class DailyScheduleStateController extends RegularStateController {
   DailyScheduleListener listener = Get.put(DailyScheduleListener());
 
   @override
+  void onInit() {
+    super.onInit();
+    properties.dataSource.fetchDataContract = listener;
+  }
+
+  @override
   void onReady() {
     super.onReady();
     properties.refetch();

@@ -6,9 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ventes/app/models/bp_customer_model.dart';
-import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
 import 'package:ventes/app/resources/views/regular_view.dart';
-import 'package:ventes/app/resources/widgets/failed_alert.dart';
 import 'package:ventes/app/resources/widgets/icon_input.dart';
 import 'package:ventes/app/resources/widgets/top_navigation.dart';
 import 'package:ventes/constants/regular_color.dart';
@@ -19,12 +17,8 @@ import 'package:ventes/state/controllers/nearby_state_controller.dart';
 
 part 'package:ventes/app/resources/views/nearby/components/customer_list.dart';
 
-class NearbyView extends RegularView<NearbyStateController> implements FetchDataContract {
+class NearbyView extends RegularView<NearbyStateController> {
   static const String route = "/nearby";
-  NearbyView() {
-    state = controller;
-    state.properties.dataSource.fetchDataContract = this;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -98,14 +92,8 @@ class NearbyView extends RegularView<NearbyStateController> implements FetchData
                   initialCameraPosition: CameraPosition(target: LatLng(0, 0), zoom: 14.4764),
                   markers: state.properties.markers,
                   myLocationEnabled: true,
-                  onMapCreated: (GoogleMapController controller) {
-                    if (!state.properties.mapsController.isCompleted) {
-                      state.properties.mapsController.complete(controller);
-                    }
-                  },
-                  onCameraMove: (position) {
-                    state.properties.markerLatLng = position.target;
-                  },
+                  onMapCreated: state.listener.onMapControllerCreated,
+                  onCameraMove: state.listener.onCameraMoved,
                 ),
               );
             }),
@@ -132,7 +120,7 @@ class NearbyView extends RegularView<NearbyStateController> implements FetchData
                   child: SingleChildScrollView(
                     controller: myscrollController,
                     child: Obx(() {
-                      return Container(
+                      return SizedBox(
                         height: state.properties.bottomSheetHeight.value,
                         child: Column(
                           children: [
@@ -171,29 +159,5 @@ class NearbyView extends RegularView<NearbyStateController> implements FetchData
         ),
       ),
     );
-  }
-
-  @override
-  onLoadError(String message) {
-    Get.close(1);
-    FailedAlert(NearbyString.fetchError).show();
-  }
-
-  @override
-  onLoadFailed(String message) {
-    Get.close(1);
-    FailedAlert(NearbyString.fetchFailed).show();
-  }
-
-  @override
-  onLoadSuccess(Map data) {
-    if (data['location'] != null) {
-      state.properties.dataSource.locationDetailLoaded(data['location'] as Map<String, dynamic>);
-    }
-
-    if (data['customers'] != null) {
-      state.properties.deployCustomers(data['customers']);
-    }
-    Get.close(1);
   }
 }

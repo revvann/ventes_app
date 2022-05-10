@@ -36,6 +36,9 @@ class ScheduleFormCreateStateController extends RegularStateController {
   @override
   void onInit() {
     super.onInit();
+    properties.dataSource.fetchDataContract = listener;
+    properties.dataSource.createContract = listener;
+
     formSource.formSourceInit();
   }
 

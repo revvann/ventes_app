@@ -7,4 +7,7 @@ class NearbyString {
 
   static const defaultCustomerName = "Customer Name";
   static const defaultCustomerAddress = "Customer Address";
+
+  static const selectedLocId = "selectedloc";
+  static const selectedLocName = "Selected Location";
 }

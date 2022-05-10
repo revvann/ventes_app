@@ -6,7 +6,7 @@ import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
 
 class DailyScheduleDataSource {
   final DailySchedulePresenter _presenter = DailySchedulePresenter();
-  set fetchContract(FetchDataContract contract) => _presenter.fetchContract = contract;
+  set fetchDataContract(FetchDataContract contract) => _presenter.fetchContract = contract;
 
   final _types = <String, int>{}.obs;
   Map<String, int> get types => _types.value;
