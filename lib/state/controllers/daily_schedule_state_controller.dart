@@ -9,8 +9,31 @@ import 'package:ventes/state/data_sources/daily_schedule_data_source.dart';
 import 'package:ventes/state/listeners/daily_schedule_listener.dart';
 
 class DailyScheduleStateController extends RegularStateController {
+  DailyScheduleProperties properties = Get.put(DailyScheduleProperties());
+  DailyScheduleListener listener = Get.put(DailyScheduleListener());
+
+  @override
+  void onInit() {
+    super.onInit();
+    properties.dataSource.fetchDataContract = listener;
+  }
+
+  @override
+  void onReady() {
+    super.onReady();
+    properties.refetch();
+  }
+
+  @override
+  void onClose() {
+    Get.delete<DailyScheduleProperties>();
+    Get.delete<DailyScheduleListener>();
+    super.onClose();
+  }
+}
+
+class DailyScheduleProperties {
   DailyScheduleDataSource dataSource = DailyScheduleDataSource();
-  DailyScheduleListener listener = DailyScheduleListener();
 
   final Rx<DateTime> _date = Rx<DateTime>(DateTime.now());
   DateTime get date => _date.value;
@@ -19,12 +42,6 @@ class DailyScheduleStateController extends RegularStateController {
   final Rx<Schedule?> _selectedAppointment = Rx<Schedule?>(null);
   Schedule? get selectedAppointment => _selectedAppointment.value;
   set selectedAppointment(Schedule? value) => _selectedAppointment.value = value;
-
-  @override
-  void onReady() {
-    super.onReady();
-    refetch();
-  }
 
   void refetch() {
     dataSource.fetchData(dbFormatDate(date));

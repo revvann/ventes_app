@@ -20,14 +20,13 @@ import 'package:ventes/state/controllers/daily_schedule_state_controller.dart';
 
 part 'package:ventes/app/resources/views/daily_schedule/components/_calendar.dart';
 
-class DailyScheduleView extends RegularView<DailyScheduleStateController> implements FetchDataContract {
+class DailyScheduleView extends RegularView<DailyScheduleStateController> {
   static const String route = "/schedule/daily";
 
   DailyScheduleView({
     required DateTime date,
   }) : super() {
-    $.dataSource.fetchContract = this;
-    $.date = date;
+    state.properties.date = date;
   }
 
   @override
@@ -41,7 +40,7 @@ class DailyScheduleView extends RegularView<DailyScheduleStateController> implem
       appBar: TopNavigation(
         title: ScheduleString.appBarTitle,
         height: 85,
-        appBarKey: $.appBarKey,
+        appBarKey: state.appBarKey,
         leading: GestureDetector(
           child: Container(
             padding: EdgeInsets.all(RegularSize.xs),
@@ -51,13 +50,13 @@ class DailyScheduleView extends RegularView<DailyScheduleStateController> implem
               color: Colors.white,
             ),
           ),
-          onTap: $.listener.onArrowBackClick,
+          onTap: state.listener.onArrowBackClick,
         ),
         actions: [
           Obx(() {
-            return $.selectedAppointment != null
+            return state.properties.selectedAppointment != null
                 ? GestureDetector(
-                    onTap: $.listener.onEditButtonClick,
+                    onTap: state.listener.onEditButtonClick,
                     child: Container(
                       padding: EdgeInsets.all(RegularSize.xs),
                       child: SvgPicture.asset(
@@ -75,7 +74,7 @@ class DailyScheduleView extends RegularView<DailyScheduleStateController> implem
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              formatDate($.date),
+              formatDate(state.properties.date),
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -107,14 +106,14 @@ class DailyScheduleView extends RegularView<DailyScheduleStateController> implem
               Expanded(
                 child: Obx(() {
                   return _Calendar(
-                    date: $.date,
+                    date: state.properties.date,
                     dataSource: RegularCalendarDataSource(
-                      $.dataSource.appointments,
-                      date: $.date,
+                      state.properties.dataSource.appointments,
+                      date: state.properties.date,
                       type: CalendarDataSourceType.daily,
                     ),
-                    onFindColor: $.listener.onFindAppointmentColor,
-                    onTap: $.listener.onCalendarTap,
+                    onFindColor: state.listener.onFindAppointmentColor,
+                    onTap: state.listener.onCalendarTap,
                   );
                 }),
               )
@@ -123,7 +122,7 @@ class DailyScheduleView extends RegularView<DailyScheduleStateController> implem
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: $.listener.onAddButtonClick,
+        onPressed: state.listener.onAddButtonClick,
         backgroundColor: RegularColor.primary,
         child: SvgPicture.asset(
           'assets/svg/plus.svg',
@@ -133,23 +132,5 @@ class DailyScheduleView extends RegularView<DailyScheduleStateController> implem
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
-  }
-
-  @override
-  onLoadFailed(String message) {
-    Get.close(1);
-    FailedAlert(message).show();
-  }
-
-  @override
-  onLoadSuccess(Map data) {
-    $.dataSource.listToAppointments(data['schedules']);
-    Get.close(1);
-  }
-
-  @override
-  onLoadError(String message) {
-    Get.close(1);
-    ErrorAlert(message).show();
   }
 }

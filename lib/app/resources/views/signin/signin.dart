@@ -22,7 +22,7 @@ class SigninView extends RegularView<SigninStateController> implements AuthContr
   static const String route = "/signin";
 
   SigninView() {
-    $.dataSource.authContract = this;
+    state.dataSource.authContract = this;
   }
 
   @override
@@ -103,7 +103,7 @@ class SigninView extends RegularView<SigninStateController> implements AuthContr
     RegularBottomSheet(
       backgroundColor: Colors.white,
       child: Form(
-        key: $.formSource.key,
+        key: state.formSource.key,
         child: Column(
           children: [
             SizedBox(
@@ -121,13 +121,13 @@ class SigninView extends RegularView<SigninStateController> implements AuthContr
               height: RegularSize.m,
             ),
             _UsernameInput(
-              controller: $.formSource.usernameTEC,
+              controller: state.formSource.usernameTEC,
             ),
             SizedBox(
               height: RegularSize.m,
             ),
             _PasswordInput(
-              controller: $.formSource.passwordTEC,
+              controller: state.formSource.passwordTEC,
             ),
             SizedBox(
               height: RegularSize.xl,
@@ -135,10 +135,10 @@ class SigninView extends RegularView<SigninStateController> implements AuthContr
             Obx(() {
               return RegularButton(
                 primary: RegularColor.secondary,
-                isLoading: $.dataSource.isLoading,
+                isLoading: state.dataSource.isLoading,
                 label: SigninString.signinButton,
                 height: RegularSize.xxl,
-                onPressed: $.formSubmit,
+                onPressed: state.formSubmit,
               );
             }),
           ],
@@ -149,7 +149,7 @@ class SigninView extends RegularView<SigninStateController> implements AuthContr
 
   @override
   void onAuthFailed(String message) {
-    $.dataSource.isLoading = false;
+    state.dataSource.isLoading = false;
     RegularDialog(
       width: Get.width * 0.7,
       child: Column(
@@ -198,7 +198,7 @@ class SigninView extends RegularView<SigninStateController> implements AuthContr
 
   @override
   void onAuthSuccess(String message) {
-    $.dataSource.isLoading = false;
+    state.dataSource.isLoading = false;
     Get.offAllNamed(DashboardView.route);
   }
 }

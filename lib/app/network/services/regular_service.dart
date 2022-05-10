@@ -1,10 +1,14 @@
+// ignore_for_file: unnecessary_getters_setters
+
 import 'package:get/get.dart';
 import 'package:ventes/constants/strings/regular_string.dart';
 import 'package:ventes/helpers/auth_helper.dart';
 import 'package:ventes/app/models/auth_model.dart';
 
 class RegularService extends GetConnect {
-  String get api => '';
+  String _api = '';
+  String get api => _api;
+  set api(String value) => _api = value;
 
   @override
   void onInit() {

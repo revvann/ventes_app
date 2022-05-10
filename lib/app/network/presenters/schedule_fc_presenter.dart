@@ -46,7 +46,6 @@ class ScheduleFormCreatePresenter {
         _fetchDataContract.onLoadFailed(response.body['message']);
       }
     } catch (err) {
-      print(err.toString());
       _fetchDataContract.onLoadError(err.toString());
     }
   }

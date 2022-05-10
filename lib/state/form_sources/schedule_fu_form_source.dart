@@ -8,11 +8,9 @@ import 'package:get/get.dart';
 import 'package:ventes/app/models/schedule_guest_model.dart';
 import 'package:ventes/app/models/schedule_model.dart';
 import 'package:ventes/app/models/user_detail_model.dart';
-import 'package:ventes/app/models/user_model.dart';
 import 'package:ventes/app/resources/widgets/regular_dropdown.dart';
 import 'package:ventes/helpers/function_helpers.dart';
 import 'package:ventes/state/controllers/schedule_fu_state_controller.dart';
-import 'package:ventes/state/data_sources/schedule_fu_data_source.dart';
 import 'package:ventes/state/form_sources/schedule_fc_form_source.dart';
 import 'package:ventes/state/form_validators/schedule_fu_validator.dart';
 import 'package:ventes/state/listeners/schedule_fu_listener.dart';
@@ -22,7 +20,8 @@ class ScheduleFormUpdateFormSource {
   int addMemberId = 15;
   int shareLinkId = 16;
 
-  ScheduleFormUpdateStateController get $ => Get.find<ScheduleFormUpdateStateController>();
+  ScheduleFormUpdateProperties get _properties => Get.find<ScheduleFormUpdateProperties>();
+  ScheduleFormUpdateListener get _listener => Get.find<ScheduleFormUpdateListener>();
   late ScheduleFormUpdateValidator validator;
 
   UserDetail? userDefault;
@@ -53,9 +52,9 @@ class ScheduleFormUpdateFormSource {
   final Rx<List<ScheduleGuest>> _guests = Rx<List<ScheduleGuest>>([]);
   final Rx<UserDetail?> _schetoward = Rx<UserDetail?>(null);
 
-  bool get isEvent => $.dataSource.typeName(schetype) == "Event";
-  bool get isTask => $.dataSource.typeName(schetype) == "Task";
-  bool get isReminder => $.dataSource.typeName(schetype) == "Reminder";
+  bool get isEvent => _properties.dataSource.typeName(schetype) == "Event";
+  bool get isTask => _properties.dataSource.typeName(schetype) == "Task";
+  bool get isReminder => _properties.dataSource.typeName(schetype) == "Reminder";
 
   int? get schebpid => schetoward?.userdtbpid;
 
@@ -188,24 +187,23 @@ class ScheduleFormUpdateFormSource {
   }
 
   void addGuest(UserDetail guest) {
-    _guests.update((value) => value!
-      ..add(
-        ScheduleGuest(
-          scheuserid: guest.userid,
-          schebpid: guest.userdtbpid,
-          scheuser: guest.user,
-          businesspartner: guest.businesspartner,
-        ),
-      ));
+    _guests.update((value) => value!.add(
+          ScheduleGuest(
+            scheuserid: guest.userid,
+            schebpid: guest.userdtbpid,
+            scheuser: guest.user,
+            businesspartner: guest.businesspartner,
+          ),
+        ));
   }
 
   void removeGuest(guest) {
     int? userid = guest is UserDetail ? guest.userid : guest.scheuserid;
-    _guests.update((value) => value!..removeWhere((g) => g.scheuserid == userid));
+    _guests.update((value) => value!.removeWhere((g) => g.scheuserid == userid));
   }
 
   void setPermission(int userid, List<int> permission) {
-    _guests.update((value) => value!..firstWhere((g) => g.scheuserid == userid).schepermisid = permission);
+    _guests.update((value) => value!.firstWhere((g) => g.scheuserid == userid).schepermisid = permission);
   }
 
   void removePermission(int userid, int permission) {
@@ -282,11 +280,11 @@ class ScheduleFormUpdateFormSource {
   }
 
   void prepareFormValue() {
-    if ($.dataSource.schedule != null) {
-      Schedule schedule = $.dataSource.schedule!;
+    if (_properties.dataSource.schedule != null) {
+      Schedule schedule = _properties.dataSource.schedule!;
       scheid = schedule.scheid ?? -1;
       schenm = schedule.schenm ?? "";
-      schetype = $.dataSource.typeIndex(schedule.schetypeid ?? 0);
+      schetype = _properties.dataSource.typeIndex(schedule.schetypeid ?? 0);
       schestartdate = dbParseDate(schedule.schestartdate!);
       scheenddate = dbParseDate(schedule.scheenddate ?? schedule.schestartdate!);
       schestarttime = !(schedule.scheallday ?? false) ? parseTime(schedule.schestarttime!) : null;
@@ -294,7 +292,7 @@ class ScheduleFormUpdateFormSource {
       schetzDC.value = schedule.schetz;
 
       scheallday = schedule.scheallday ?? false;
-      $.listener.onAlldayValueChanged(scheallday);
+      _listener.onAlldayValueChanged(scheallday);
 
       scheloc = schedule.scheloc ?? "";
       scheonline = schedule.scheonline ?? false;
@@ -310,7 +308,7 @@ class ScheduleFormUpdateFormSource {
     }
   }
 
-  dispose() {
+  formSourceDispose() {
     schenmTEC.dispose();
     schestartdateTEC.dispose();
     scheenddateTEC.dispose();
@@ -320,16 +318,16 @@ class ScheduleFormUpdateFormSource {
     scheonlinkTEC.dispose();
   }
 
-  init() async {
+  formSourceInit() async {
     validator = ScheduleFormUpdateValidator(this);
 
     setStartTimeList();
 
     scheremindTEC.text = "0";
-    scheonlinkTEC.addListener($.listener.onOnlineLinkChanged);
-    schelocTEC.addListener($.listener.onLocationChanged);
+    scheonlinkTEC.addListener(_listener.onOnlineLinkChanged);
+    schelocTEC.addListener(_listener.onLocationChanged);
 
-    userDefault = await $.dataSource.userActive;
+    userDefault = await _properties.dataSource.userActive;
     schetoward = userDefault;
     schetzDC.items = getTimezoneList();
     String currentTimeZone = await FlutterNativeTimezone.getLocalTimezone();
@@ -350,7 +348,7 @@ class ScheduleFormUpdateFormSource {
       "scheonline": isEvent ? scheonline : false,
       "scheonlink": isEvent ? scheonlink : null,
       "scheallday": scheallday,
-      "schetypeid": $.dataSource.typeId(schetype),
+      "schetypeid": _properties.dataSource.typeId(schetype),
       "schetz": isEvent ? schetz : null,
       "scheprivate": isEvent ? scheprivate : false,
       "schetowardid": isEvent ? schetoward?.userid : userDefault?.userid,

@@ -16,7 +16,7 @@ import 'package:ventes/app/resources/widgets/top_navigation.dart';
 class ContactView extends RegularView<ContactStateController> {
   static const String route = "/contact";
   ContactView() {
-    $ = controller;
+    state = controller;
   }
 
   @override
@@ -29,7 +29,7 @@ class ContactView extends RegularView<ContactStateController> {
       extendBodyBehindAppBar: true,
       appBar: TopNavigation(
         title: "Contact",
-        appBarKey: $.appBarKey,
+        appBarKey: state.appBarKey,
         leading: GestureDetector(
           child: Container(
             padding: EdgeInsets.all(RegularSize.xs),
@@ -72,7 +72,7 @@ class ContactView extends RegularView<ContactStateController> {
                   horizontal: RegularSize.m,
                 ),
                 constraints: BoxConstraints(
-                  minHeight: $.minHeight,
+                  minHeight: state.minHeight,
                 ),
                 decoration: BoxDecoration(
                   color: Colors.white,

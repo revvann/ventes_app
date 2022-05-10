@@ -15,7 +15,7 @@ import 'package:ventes/app/resources/widgets/top_navigation.dart';
 class CustomerView extends RegularView<CustomerStateController> {
   static const String route = "/customer";
   CustomerView() {
-    $ = controller;
+    state = controller;
   }
 
   @override
@@ -28,7 +28,7 @@ class CustomerView extends RegularView<CustomerStateController> {
       extendBodyBehindAppBar: true,
       appBar: TopNavigation(
         title: "Customers",
-        appBarKey: $.appBarKey,
+        appBarKey: state.appBarKey,
         leading: GestureDetector(
           child: Container(
             padding: EdgeInsets.all(RegularSize.xs),
@@ -63,7 +63,7 @@ class CustomerView extends RegularView<CustomerStateController> {
                   horizontal: RegularSize.m,
                 ),
                 constraints: BoxConstraints(
-                  minHeight: $.minHeight,
+                  minHeight: state.minHeight,
                 ),
                 decoration: BoxDecoration(
                   color: Colors.white,

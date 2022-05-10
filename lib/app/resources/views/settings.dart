@@ -7,7 +7,7 @@ import 'package:ventes/app/resources/views/regular_view.dart';
 class SettingsView extends RegularView<SettingsStateController> {
   static const String route = "/settings";
   SettingsView() {
-    $ = controller;
+    state = controller;
   }
 
   @override

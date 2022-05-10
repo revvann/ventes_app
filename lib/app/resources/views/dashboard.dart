@@ -50,7 +50,7 @@ class DashboardView extends RegularView<DashboardStateController> {
                           RegularColor.purple,
                           "assets/svg/marker.svg",
                           "Nearby",
-                          () => $.bottomNavigation.currentIndex = Views.nearby,
+                          () => state.bottomNavigation.currentIndex = Views.nearby,
                         ),
                         SizedBox(
                           width: RegularSize.s,
@@ -59,7 +59,7 @@ class DashboardView extends RegularView<DashboardStateController> {
                           RegularColor.yellow,
                           "assets/svg/calendar.svg",
                           "Schedule",
-                          () => $.bottomNavigation.currentIndex = Views.schedule,
+                          () => state.bottomNavigation.currentIndex = Views.schedule,
                         ),
                         SizedBox(
                           width: RegularSize.s,
@@ -92,7 +92,7 @@ class DashboardView extends RegularView<DashboardStateController> {
                           RegularColor.red,
                           "assets/svg/history.svg",
                           "History",
-                          () => $.bottomNavigation.currentIndex = Views.history,
+                          () => state.bottomNavigation.currentIndex = Views.history,
                         ),
                         SizedBox(
                           width: RegularSize.s,
@@ -233,26 +233,7 @@ class DashboardView extends RegularView<DashboardStateController> {
               children: [
                 Image.asset(
                   'assets/images/logo.png',
-                  width: RegularSize.xxl,
-                ),
-                SizedBox(
-                  width: RegularSize.s,
-                ),
-                RichText(
-                  text: TextSpan(
-                    text: "VENTES \n",
-                    style: TextStyle(
-                      fontFamily: "Montserrat",
-                      fontSize: 20,
-                      color: RegularColor.dark.withAlpha(200),
-                      fontWeight: FontWeight.bold,
-                    ),
-                    children: [
-                      TextSpan(
-                        text: "APP",
-                      )
-                    ],
-                  ),
+                  width: 75,
                 ),
               ],
             ),

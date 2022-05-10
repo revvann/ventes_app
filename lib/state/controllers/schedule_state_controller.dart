@@ -7,8 +7,41 @@ import 'package:ventes/state/data_sources/schedule_data_source.dart';
 import 'package:ventes/state/listeners/schedule_listener.dart';
 
 class ScheduleStateController extends RegularStateController {
+  ScheduleProperties properties = Get.put(ScheduleProperties());
+  ScheduleListener listener = Get.put(ScheduleListener());
+
+  @override
+  void onInit() {
+    super.onInit();
+    properties.dataSource.fetchDataContract = listener;
+  }
+
+  @override
+  void onReady() {
+    super.onReady();
+    DateTime now = DateTime.now();
+
+    properties.selectedDate = DateTime(now.year, now.month, now.day);
+    properties.dateShown = properties.calendarController.displayDate ?? now;
+    properties.initialDate = properties.dateShown;
+
+    properties.calendarController.addPropertyChangedListener(listener.onDateShownChanged);
+
+    properties.dataSource.fetchData(properties.dateShown.month);
+    Loader().show();
+  }
+
+  @override
+  void onClose() {
+    properties.calendarController.dispose();
+    Get.delete<ScheduleProperties>();
+    Get.delete<ScheduleListener>();
+    super.onClose();
+  }
+}
+
+class ScheduleProperties extends RegularStateController {
   ScheduleDataSource dataSource = ScheduleDataSource();
-  ScheduleListener listener = ScheduleListener();
 
   final CalendarController calendarController = CalendarController();
 
@@ -21,25 +54,4 @@ class ScheduleStateController extends RegularStateController {
   set selectedDate(DateTime value) => _selectedDate.value = value;
 
   DateTime initialDate = DateTime.now();
-
-  @override
-  void onReady() {
-    super.onReady();
-    DateTime now = DateTime.now();
-
-    selectedDate = DateTime(now.year, now.month, now.day);
-    dateShown = calendarController.displayDate ?? now;
-    initialDate = dateShown;
-
-    calendarController.addPropertyChangedListener(listener.onDateShownChanged);
-
-    dataSource.fetchData(dateShown.month);
-    Loader().show();
-  }
-
-  @override
-  void onClose() {
-    calendarController.dispose();
-    super.onClose();
-  }
 }
