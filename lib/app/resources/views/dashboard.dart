@@ -233,26 +233,7 @@ class DashboardView extends RegularView<DashboardStateController> {
               children: [
                 Image.asset(
                   'assets/images/logo.png',
-                  width: RegularSize.xxl,
-                ),
-                SizedBox(
-                  width: RegularSize.s,
-                ),
-                RichText(
-                  text: TextSpan(
-                    text: "VENTES \n",
-                    style: TextStyle(
-                      fontFamily: "Montserrat",
-                      fontSize: 20,
-                      color: RegularColor.dark.withAlpha(200),
-                      fontWeight: FontWeight.bold,
-                    ),
-                    children: [
-                      TextSpan(
-                        text: "APP",
-                      )
-                    ],
-                  ),
+                  width: 75,
                 ),
               ],
             ),

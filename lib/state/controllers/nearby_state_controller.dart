@@ -14,7 +14,7 @@ import 'package:ventes/state/controllers/regular_state_controller.dart';
 import 'package:ventes/state/data_sources/nearby_data_source.dart';
 import 'package:ventes/state/listeners/nearby_listener.dart';
 
-class NearbyStateController extends RegularStateController with NearbyListener {
+class NearbyStateController extends RegularStateController {
   NearbyProperties properties = Get.put(NearbyProperties());
   NearbyListener listener = Get.put(NearbyListener());
 
@@ -59,6 +59,8 @@ class NearbyProperties {
 
   final Rx<double> mapsHeight = Rx<double>(0);
   final Rx<double> bottomSheetHeight = Rx<double>(0);
+
+  final double defaultZoom = 14.5;
 
   final Completer<GoogleMapController> mapsController = Completer();
 

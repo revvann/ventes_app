@@ -44,6 +44,24 @@ class NearbyView extends RegularView<NearbyStateController> {
           ),
           onTap: backToDashboard,
         ),
+        actions: [
+          GestureDetector(
+            onTap: state.listener.onAddDataClick,
+            child: Container(
+              padding: EdgeInsets.symmetric(
+                vertical: RegularSize.s,
+                horizontal: RegularSize.m,
+              ),
+              child: Text(
+                NearbyString.addCustomerText,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                ),
+              ),
+            ),
+          ),
+        ],
         below: Container(
           padding: EdgeInsets.symmetric(
             horizontal: RegularSize.xl,

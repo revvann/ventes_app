@@ -10,4 +10,9 @@ class NearbyString {
 
   static const selectedLocId = "selectedloc";
   static const selectedLocName = "Selected Location";
+
+  static const addCustomerText = "Add";
+
+  static const formCreateTitle = "Create Customer";
+  static const formSubmitButton = "Save";
 }
