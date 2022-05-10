@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
-import 'package:ventes/app/network/services/regular_service.dart';
+import 'package:ventes/core/service.dart';
 
-class TypeService extends RegularService {
+class TypeService extends Service {
   @override
   String get api => "/types";
 

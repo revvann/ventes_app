@@ -2,16 +2,16 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:ventes/app/resources/views/regular_view.dart';
+import 'package:ventes/core/regular_view.dart';
 import 'package:ventes/app/resources/widgets/bottom_navigation.dart';
 import 'package:ventes/app/resources/widgets/customer_card.dart';
 import 'package:ventes/app/resources/widgets/loader.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/constants/views.dart';
-import 'package:ventes/state/controllers/dashboard_state_controller.dart';
+import 'package:ventes/app/state/controllers/dashboard_state_controller.dart';
 
-class DashboardView extends RegularView<DashboardStateController> {
+class DashboardView extends View<DashboardStateController> {
   static const route = "/dashboard";
 
   @override

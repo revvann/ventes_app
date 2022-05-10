@@ -8,7 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:ventes/app/models/schedule_model.dart';
 import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
-import 'package:ventes/app/resources/views/regular_view.dart';
+import 'package:ventes/core/regular_view.dart';
 import 'package:ventes/app/resources/widgets/failed_alert.dart';
 import 'package:ventes/app/resources/widgets/regular_appointment_card.dart';
 import 'package:ventes/app/resources/widgets/regular_dialog.dart';
@@ -18,13 +18,13 @@ import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/constants/strings/schedule_string.dart';
 import 'package:ventes/helpers/function_helpers.dart';
-import 'package:ventes/state/controllers/schedule_state_controller.dart';
+import 'package:ventes/app/state/controllers/schedule_state_controller.dart';
 
 part 'package:ventes/app/resources/views/schedule/components/_appointment_item.dart';
 part 'package:ventes/app/resources/views/schedule/components/_calendar.dart';
 part 'package:ventes/app/resources/views/schedule/components/_month_cell.dart';
 
-class ScheduleView extends RegularView<ScheduleStateController> {
+class ScheduleView extends View<ScheduleStateController> {
   static const String route = "/schedule";
 
   @override

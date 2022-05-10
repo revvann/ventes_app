@@ -1,7 +1,7 @@
 import 'package:ventes/app/models/province_model.dart';
-import 'package:ventes/app/models/regular_model.dart';
+import 'package:ventes/core/model.dart';
 
-class City extends RegularModel {
+class City extends Model {
   int? cityid;
   int? cityprovid;
   String? cityname;

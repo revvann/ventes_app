@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:timezone/timezone.dart';
 import 'package:intl/intl.dart';
 import 'package:ventes/constants/views.dart';
-import 'package:ventes/state/controllers/bottom_navigation_state_controller.dart';
+import 'package:ventes/app/state/controllers/bottom_navigation_state_controller.dart';
 
 MaterialColor createSwatch(Color color) {
   final hslColor = HSLColor.fromColor(color);

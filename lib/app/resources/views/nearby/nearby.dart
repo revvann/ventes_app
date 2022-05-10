@@ -6,18 +6,18 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ventes/app/models/bp_customer_model.dart';
-import 'package:ventes/app/resources/views/regular_view.dart';
+import 'package:ventes/core/regular_view.dart';
 import 'package:ventes/app/resources/widgets/icon_input.dart';
 import 'package:ventes/app/resources/widgets/top_navigation.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/constants/strings/nearby_string.dart';
 import 'package:ventes/helpers/function_helpers.dart';
-import 'package:ventes/state/controllers/nearby_state_controller.dart';
+import 'package:ventes/app/state/controllers/nearby_state_controller.dart';
 
 part 'package:ventes/app/resources/views/nearby/components/customer_list.dart';
 
-class NearbyView extends RegularView<NearbyStateController> {
+class NearbyView extends View<NearbyStateController> {
   static const String route = "/nearby";
 
   @override

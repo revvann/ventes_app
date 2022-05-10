@@ -1,7 +1,7 @@
 import 'package:ventes/app/models/city_model.dart';
-import 'package:ventes/app/models/regular_model.dart';
+import 'package:ventes/core/model.dart';
 
-class Subdistrict extends RegularModel {
+class Subdistrict extends Model {
   int? subdistrictid;
   int? subdistrictcityid;
   String? subdistrictname;

@@ -9,7 +9,7 @@ import 'package:ventes/app/models/schedule_model.dart';
 import 'package:ventes/app/models/user_detail_model.dart';
 import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
 import 'package:ventes/app/network/contracts/update_contract.dart';
-import 'package:ventes/app/resources/views/regular_view.dart';
+import 'package:ventes/core/regular_view.dart';
 import 'package:ventes/app/resources/widgets/editor_input.dart';
 import 'package:ventes/app/resources/widgets/error_alert.dart';
 import 'package:ventes/app/resources/widgets/failed_alert.dart';
@@ -26,10 +26,10 @@ import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/constants/strings/schedule_string.dart';
 import 'package:ventes/routing/navigators/schedule_navigator.dart';
-import 'package:ventes/state/controllers/daily_schedule_state_controller.dart';
-import 'package:ventes/state/controllers/schedule_fc_state_controller.dart';
-import 'package:ventes/state/controllers/schedule_fu_state_controller.dart';
-import 'package:ventes/state/form_sources/schedule_fc_form_source.dart';
+import 'package:ventes/app/state/controllers/daily_schedule_state_controller.dart';
+import 'package:ventes/app/state/controllers/schedule_fc_state_controller.dart';
+import 'package:ventes/app/state/controllers/schedule_fu_state_controller.dart';
+import 'package:ventes/app/state/form_sources/schedule_fc_form_source.dart';
 
 part 'package:ventes/app/resources/views/schedule_form/update/components/_addmember_checkbox.dart';
 part 'package:ventes/app/resources/views/schedule_form/update/components/_allday_checkbox.dart';
@@ -56,7 +56,7 @@ part 'package:ventes/app/resources/views/schedule_form/update/components/_title_
 part 'package:ventes/app/resources/views/schedule_form/update/components/_toward_dropdown.dart';
 part 'package:ventes/app/resources/views/schedule_form/update/components/_twintime_input.dart';
 
-class ScheduleFormUpdateView extends RegularView<ScheduleFormUpdateStateController> {
+class ScheduleFormUpdateView extends View<ScheduleFormUpdateStateController> {
   static const String route = "/schedule/update";
   ScheduleFormUpdateView({required int scheduleId}) {
     state.properties.dataSource.scheduleId = scheduleId;

@@ -1,9 +1,9 @@
 import 'package:ventes/app/models/business_partner_model.dart';
-import 'package:ventes/app/models/regular_model.dart';
+import 'package:ventes/core/model.dart';
 import 'package:ventes/app/models/type_model.dart';
 import 'package:ventes/app/models/user_model.dart';
 
-class UserDetail extends RegularModel {
+class UserDetail extends Model {
   int? userdtid;
   int? userid;
   int? userdttypeid;

@@ -1,6 +1,6 @@
-import 'package:ventes/app/models/regular_model.dart';
+import 'package:ventes/core/model.dart';
 
-class DBType extends RegularModel {
+class DBType extends Model {
   int? typeid;
   String? typename;
   String? typecd;

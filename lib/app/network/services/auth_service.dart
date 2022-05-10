@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
-import 'package:ventes/app/network/services/regular_service.dart';
+import 'package:ventes/core/service.dart';
 
-class AuthService extends RegularService {
+class AuthService extends Service {
   @override
   String get api => "/auth";
 

@@ -1,10 +1,10 @@
 import 'package:ventes/app/models/business_partner_model.dart';
-import 'package:ventes/app/models/regular_model.dart';
+import 'package:ventes/core/model.dart';
 import 'package:ventes/app/models/schedule_guest_model.dart';
 import 'package:ventes/app/models/type_model.dart';
 import 'package:ventes/app/models/user_model.dart';
 
-class Schedule extends RegularModel {
+class Schedule extends Model {
   int? scheid;
   String? schenm;
   String? schestartdate;

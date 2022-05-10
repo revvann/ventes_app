@@ -6,7 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:ventes/app/models/schedule_model.dart';
-import 'package:ventes/app/resources/views/regular_view.dart';
+import 'package:ventes/core/regular_view.dart';
 import 'package:ventes/app/resources/widgets/error_alert.dart';
 import 'package:ventes/app/resources/widgets/failed_alert.dart';
 import 'package:ventes/app/resources/widgets/regular_appointment_card.dart';
@@ -16,11 +16,11 @@ import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/constants/strings/schedule_string.dart';
 import 'package:ventes/helpers/function_helpers.dart';
 import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
-import 'package:ventes/state/controllers/daily_schedule_state_controller.dart';
+import 'package:ventes/app/state/controllers/daily_schedule_state_controller.dart';
 
 part 'package:ventes/app/resources/views/daily_schedule/components/_calendar.dart';
 
-class DailyScheduleView extends RegularView<DailyScheduleStateController> {
+class DailyScheduleView extends View<DailyScheduleStateController> {
   static const String route = "/schedule/daily";
 
   DailyScheduleView({

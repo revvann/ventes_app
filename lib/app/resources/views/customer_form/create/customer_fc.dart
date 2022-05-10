@@ -3,16 +3,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:ventes/app/resources/views/regular_view.dart';
+import 'package:ventes/core/regular_view.dart';
 import 'package:ventes/app/resources/widgets/editor_input.dart';
 import 'package:ventes/app/resources/widgets/regular_input.dart';
 import 'package:ventes/app/resources/widgets/top_navigation.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/constants/strings/nearby_string.dart';
-import 'package:ventes/state/controllers/customer_fc_state_controller.dart';
+import 'package:ventes/app/state/controllers/customer_fc_state_controller.dart';
 
-class CustomerFormCreateView extends RegularView<CustomerFormCreateStateController> {
+class CustomerFormCreateView extends View<CustomerFormCreateStateController> {
   static const String route = "/customer/create";
 
   @override

@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:ventes/app/resources/views/regular_view.dart';
+import 'package:ventes/core/regular_view.dart';
 import 'package:ventes/app/resources/widgets/bottom_navigation.dart';
 import 'package:ventes/constants/views.dart';
 import 'package:ventes/routing/navigators/dashboard_navigator.dart';
@@ -10,9 +10,9 @@ import 'package:ventes/routing/navigators/history_navigator.dart';
 import 'package:ventes/routing/navigators/nearby_navigator.dart';
 import 'package:ventes/routing/navigators/schedule_navigator.dart';
 import 'package:ventes/routing/navigators/settings_navigator.dart';
-import 'package:ventes/state/controllers/bottom_navigation_state_controller.dart';
+import 'package:ventes/app/state/controllers/bottom_navigation_state_controller.dart';
 
-class MainView extends RegularView<BottomNavigationStateController> {
+class MainView extends View<BottomNavigationStateController> {
   static const String route = "/";
   late BottomNavigationStateController state;
   MainView() {

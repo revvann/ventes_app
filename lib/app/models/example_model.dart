@@ -1,6 +1,6 @@
-import 'package:ventes/app/models/regular_model.dart';
+import 'package:ventes/core/model.dart';
 
-class Example extends RegularModel {
+class Example extends Model {
   Example({
     String? createddate,
     String? updateddate,

@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 import 'package:ventes/app/models/schedule_guest_model.dart';
 import 'package:ventes/app/models/user_detail_model.dart';
 import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
-import 'package:ventes/app/resources/views/regular_view.dart';
+import 'package:ventes/core/regular_view.dart';
 import 'package:ventes/app/resources/widgets/editor_input.dart';
 import 'package:ventes/app/resources/widgets/error_alert.dart';
 import 'package:ventes/app/resources/widgets/failed_alert.dart';
@@ -25,8 +25,8 @@ import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/constants/strings/schedule_string.dart';
 import 'package:ventes/app/network/contracts/create_contract.dart';
 import 'package:ventes/routing/navigators/schedule_navigator.dart';
-import 'package:ventes/state/controllers/schedule_fc_state_controller.dart';
-import 'package:ventes/state/form_sources/schedule_fc_form_source.dart';
+import 'package:ventes/app/state/controllers/schedule_fc_state_controller.dart';
+import 'package:ventes/app/state/form_sources/schedule_fc_form_source.dart';
 
 part 'package:ventes/app/resources/views/schedule_form/create/components/_addmember_checkbox.dart';
 part 'package:ventes/app/resources/views/schedule_form/create/components/_allday_checkbox.dart';
@@ -53,7 +53,7 @@ part 'package:ventes/app/resources/views/schedule_form/create/components/_title_
 part 'package:ventes/app/resources/views/schedule_form/create/components/_toward_dropdown.dart';
 part 'package:ventes/app/resources/views/schedule_form/create/components/_twintime_input.dart';
 
-class ScheduleFormCreateView extends RegularView<ScheduleFormCreateStateController> {
+class ScheduleFormCreateView extends View<ScheduleFormCreateStateController> {
   static const String route = "/schedule/create";
 
   @override

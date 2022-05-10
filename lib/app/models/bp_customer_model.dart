@@ -1,8 +1,8 @@
 import 'package:ventes/app/models/business_partner_model.dart';
 import 'package:ventes/app/models/customer_model.dart';
-import 'package:ventes/app/models/regular_model.dart';
+import 'package:ventes/core/model.dart';
 
-class BpCustomer extends RegularModel {
+class BpCustomer extends Model {
   int? sbcid;
   int? sbcbpid;
   int? sbccstmid;

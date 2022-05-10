@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/helpers/auth_helper.dart';
-import 'package:ventes/state/controllers/splash_screen_state_controller.dart';
-import 'package:ventes/app/resources/views/regular_view.dart';
+import 'package:ventes/app/state/controllers/splash_screen_state_controller.dart';
+import 'package:ventes/core/regular_view.dart';
 
-class SplashScreenView extends RegularView<SplashScreenStateController> {
+class SplashScreenView extends View<SplashScreenStateController> {
   static const String route = "/welcome";
 
   @override

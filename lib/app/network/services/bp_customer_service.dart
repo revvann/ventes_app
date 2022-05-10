@@ -1,6 +1,6 @@
-import 'package:ventes/app/network/services/regular_service.dart';
+import 'package:ventes/core/service.dart';
 
-class BpCustomerService extends RegularService {
+class BpCustomerService extends Service {
   @override
   String get api => "/bpcustomer";
 }

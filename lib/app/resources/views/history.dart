@@ -6,8 +6,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
-import 'package:ventes/state/controllers/history_state_controller.dart';
-import 'package:ventes/app/resources/views/regular_view.dart';
+import 'package:ventes/app/state/controllers/history_state_controller.dart';
+import 'package:ventes/core/regular_view.dart';
 import 'package:ventes/app/resources/widgets/icon_input.dart';
 import 'package:ventes/app/resources/widgets/regular_button.dart';
 import 'package:ventes/app/resources/widgets/regular_dialog.dart';
@@ -15,7 +15,7 @@ import 'package:ventes/app/resources/widgets/regular_select_pill.dart';
 import 'package:ventes/app/resources/widgets/schedule_card.dart';
 import 'package:ventes/app/resources/widgets/top_navigation.dart';
 
-class HistoryView extends RegularView<HistoryStateController> {
+class HistoryView extends View<HistoryStateController> {
   static const String route = "/history";
   HistoryView() {
     state = controller;

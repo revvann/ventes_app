@@ -1,7 +1,7 @@
-import 'package:ventes/app/models/regular_model.dart';
+import 'package:ventes/core/model.dart';
 import 'package:ventes/app/models/user_detail_model.dart';
 
-class User extends RegularModel {
+class User extends Model {
   int? userid;
   String? username;
   String? userpassword;

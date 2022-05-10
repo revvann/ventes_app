@@ -1,10 +1,10 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
-import 'package:ventes/state/controllers/settings_state_controller.dart';
-import 'package:ventes/app/resources/views/regular_view.dart';
+import 'package:ventes/app/state/controllers/settings_state_controller.dart';
+import 'package:ventes/core/regular_view.dart';
 
-class SettingsView extends RegularView<SettingsStateController> {
+class SettingsView extends View<SettingsStateController> {
   static const String route = "/settings";
   SettingsView() {
     state = controller;

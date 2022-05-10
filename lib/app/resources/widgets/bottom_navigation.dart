@@ -6,10 +6,10 @@ import 'package:get/get.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/constants/views.dart';
-import 'package:ventes/state/controllers/bottom_navigation_state_controller.dart';
-import 'package:ventes/app/resources/views/regular_view.dart';
+import 'package:ventes/app/state/controllers/bottom_navigation_state_controller.dart';
+import 'package:ventes/core/regular_view.dart';
 
-class BottomNavigation extends RegularView<BottomNavigationStateController> {
+class BottomNavigation extends View<BottomNavigationStateController> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -79,7 +79,7 @@ class BottomNavigation extends RegularView<BottomNavigationStateController> {
   }
 }
 
-class BottomNavigationItem extends RegularView<BottomNavigationStateController> {
+class BottomNavigationItem extends View<BottomNavigationStateController> {
   BottomNavigationItem({
     Key? key,
     required this.icon,

@@ -1,6 +1,6 @@
-import 'package:ventes/app/network/services/regular_service.dart';
+import 'package:ventes/core/service.dart';
 
-class PlaceServices extends RegularService {
+class PlaceServices extends Service {
   country() {
     api = '/country';
   }

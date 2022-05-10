@@ -1,7 +1,7 @@
-import 'package:ventes/app/models/regular_model.dart';
+import 'package:ventes/core/model.dart';
 import 'package:ventes/app/models/type_model.dart';
 
-class BusinessPartner extends RegularModel {
+class BusinessPartner extends Model {
   int? bpid;
   String? bpname;
   int? bptypeid;

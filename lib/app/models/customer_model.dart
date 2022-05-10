@@ -1,7 +1,7 @@
-import 'package:ventes/app/models/regular_model.dart';
+import 'package:ventes/core/model.dart';
 import 'package:ventes/app/models/type_model.dart';
 
-class Customer extends RegularModel {
+class Customer extends Model {
   int? cstmid;
   String? cstmprefix;
   String? cstmname;

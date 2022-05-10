@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:ventes/app/resources/views/regular_view.dart';
-import 'package:ventes/state/controllers/example_state_controller.dart';
+import 'package:ventes/core/regular_view.dart';
+import 'package:ventes/app/state/controllers/example_state_controller.dart';
 
-class ExampleView extends RegularView<ExampleStateController> {
+class ExampleView extends View<ExampleStateController> {
   static const String route = "/example";
 
   @override

@@ -1,6 +1,6 @@
-import 'package:ventes/app/models/regular_model.dart';
+import 'package:ventes/core/model.dart';
 
-class Country extends RegularModel {
+class Country extends Model {
   int? countryid;
   String? countryname;
 

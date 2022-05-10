@@ -7,9 +7,9 @@ import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/constants/strings/signin_string.dart';
 import 'package:ventes/app/network/contracts/auth_contract.dart';
-import 'package:ventes/state/controllers/signin_state_controller.dart';
+import 'package:ventes/app/state/controllers/signin_state_controller.dart';
 import 'package:ventes/app/resources/views/dashboard.dart';
-import 'package:ventes/app/resources/views/regular_view.dart';
+import 'package:ventes/core/regular_view.dart';
 import 'package:ventes/app/resources/widgets/regular_bottom_sheet.dart';
 import 'package:ventes/app/resources/widgets/regular_button.dart';
 import 'package:ventes/app/resources/widgets/regular_dialog.dart';
@@ -18,7 +18,7 @@ import 'package:ventes/app/resources/widgets/regular_input.dart';
 part 'package:ventes/app/resources/views/signin/components/_username_input.dart';
 part 'package:ventes/app/resources/views/signin/components/_password_input.dart';
 
-class SigninView extends RegularView<SigninStateController> implements AuthContract {
+class SigninView extends View<SigninStateController> implements AuthContract {
   static const String route = "/signin";
 
   SigninView() {
