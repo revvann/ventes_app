@@ -1,8 +1,18 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:ventes/app/models/city_model.dart';
+import 'package:ventes/app/models/country_model.dart';
+import 'package:ventes/app/models/province_model.dart';
+import 'package:ventes/app/models/subdistrict_model.dart';
+import 'package:ventes/app/resources/widgets/keyable_selectbox.dart';
+import 'package:ventes/app/resources/widgets/search_list.dart';
 import 'package:ventes/core/regular_view.dart';
 import 'package:ventes/app/resources/widgets/editor_input.dart';
 import 'package:ventes/app/resources/widgets/regular_input.dart';
@@ -11,6 +21,10 @@ import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/constants/strings/nearby_string.dart';
 import 'package:ventes/app/state/controllers/customer_fc_state_controller.dart';
+
+part 'package:ventes/app/resources/views/customer_form/create/components/_form.dart';
+part 'package:ventes/app/resources/views/customer_form/create/components/_search_list.dart';
+part 'package:ventes/app/resources/views/customer_form/create/components/_customer_picture.dart';
 
 class CustomerFormCreateView extends View<CustomerFormCreateStateController> {
   static const String route = "/customer/create";
@@ -75,8 +89,10 @@ class CustomerFormCreateView extends View<CustomerFormCreateStateController> {
       body: SafeArea(
         child: Container(
           width: double.infinity,
-          padding: EdgeInsets.symmetric(
-            horizontal: RegularSize.m,
+          padding: EdgeInsets.only(
+            right: RegularSize.m,
+            left: RegularSize.m,
+            top: RegularSize.l,
           ),
           decoration: BoxDecoration(
             color: Colors.white,
@@ -85,44 +101,8 @@ class CustomerFormCreateView extends View<CustomerFormCreateStateController> {
               topRight: Radius.circular(RegularSize.xl),
             ),
           ),
-          child: Form(
-            key: state.formSource.formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  height: RegularSize.l,
-                ),
-                RegularInput(
-                  label: "Customer name",
-                  hintText: "Enter name",
-                ),
-                SizedBox(
-                  height: RegularSize.m,
-                ),
-                RegularInput(
-                  label: "Customer phone",
-                  hintText: "Enter phone",
-                ),
-                SizedBox(
-                  height: RegularSize.m,
-                ),
-                RegularInput(
-                  label: "Customer postal code",
-                  hintText: "Enter postal code",
-                ),
-                SizedBox(
-                  height: RegularSize.m,
-                ),
-                EditorInput(
-                  label: "Customer address",
-                  hintText: "Enter address",
-                ),
-                SizedBox(
-                  height: RegularSize.l,
-                ),
-              ],
-            ),
+          child: SingleChildScrollView(
+            child: _CustomerForm(),
           ),
         ),
       ),

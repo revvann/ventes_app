@@ -12,8 +12,8 @@ select column_name,
     is_nullable
 from INFORMATION_SCHEMA.COLUMNS
 where table_name = 'stbpcustomer';
-select *
-from mscustomer;
+-- select *
+-- from mscustomer;
 -- select *
 -- from INFORMATION_SCHEMA.TABLES
 -- where TABLE_SCHEMA = 'public';

@@ -15,4 +15,6 @@ class NearbyString {
 
   static const formCreateTitle = "Create Customer";
   static const formSubmitButton = "Save";
+
+  static const defaultImage = 'images/cat.png';
 }

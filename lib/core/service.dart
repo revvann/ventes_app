@@ -6,9 +6,7 @@ import 'package:ventes/helpers/auth_helper.dart';
 import 'package:ventes/app/models/auth_model.dart';
 
 class Service extends GetConnect {
-  String _api = '';
-  String get api => _api;
-  set api(String value) => _api = value;
+  String get api => '';
 
   @override
   void onInit() {

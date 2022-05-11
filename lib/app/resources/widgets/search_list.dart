@@ -4,6 +4,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
+import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/app/resources/widgets/icon_input.dart';
 import 'package:ventes/app/resources/widgets/regular_bottom_sheet.dart';
@@ -99,6 +100,14 @@ class __SearchListState<T> extends State<_SearchList<T>> {
         SizedBox(
           height: RegularSize.m,
         ),
+        if (_items.isEmpty)
+          Text(
+            "Item not found",
+            style: TextStyle(
+              color: RegularColor.dark,
+              fontSize: 16,
+            ),
+          ),
         Expanded(
             child: ListView.builder(
           itemCount: _items.length,
