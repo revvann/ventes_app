@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 import 'package:simple_animations/simple_animations.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
-import 'package:ventes/app/state/controllers/started_page_state_controller.dart';
+import 'package:ventes/app/states/controllers/started_page_state_controller.dart';
 import 'package:ventes/core/regular_view.dart';
 import 'package:ventes/app/resources/views/signin/signin.dart';
 

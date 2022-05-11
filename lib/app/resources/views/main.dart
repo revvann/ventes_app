@@ -10,7 +10,7 @@ import 'package:ventes/routing/navigators/history_navigator.dart';
 import 'package:ventes/routing/navigators/nearby_navigator.dart';
 import 'package:ventes/routing/navigators/schedule_navigator.dart';
 import 'package:ventes/routing/navigators/settings_navigator.dart';
-import 'package:ventes/app/state/controllers/bottom_navigation_state_controller.dart';
+import 'package:ventes/app/states/controllers/bottom_navigation_state_controller.dart';
 
 class MainView extends View<BottomNavigationStateController> {
   static const String route = "/";

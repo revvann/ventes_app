@@ -6,7 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/helpers/auth_helper.dart';
 import 'package:ventes/helpers/function_helpers.dart';
-import 'package:ventes/routing/routes/regular_route.dart';
+import 'package:ventes/routing/routes/routes.dart';
 import 'package:ventes/app/network/services/auth_service.dart';
 import 'package:ventes/app/resources/views/splash_screen.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: createSwatch(RegularColor.primary),
         fontFamily: "Inter",
       ),
-      getPages: RegularRoute.routes,
+      getPages: Routes.all,
       initialRoute: SplashScreenView.route,
       initialBinding: BindingsBuilder(() {
         Get.lazyPut(() => AuthService());

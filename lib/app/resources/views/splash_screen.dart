@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/helpers/auth_helper.dart';
-import 'package:ventes/app/state/controllers/splash_screen_state_controller.dart';
+import 'package:ventes/app/states/controllers/splash_screen_state_controller.dart';
 import 'package:ventes/core/regular_view.dart';
 
 class SplashScreenView extends View<SplashScreenStateController> {

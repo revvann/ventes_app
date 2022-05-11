@@ -2,10 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:ventes/routing/routes/regular_get_page.dart';
-import 'package:ventes/app/state/controllers/contact_state_controller.dart';
-import 'package:ventes/app/state/controllers/customer_state_controller.dart';
-import 'package:ventes/app/state/controllers/dashboard_state_controller.dart';
+import 'package:ventes/core/page_route.dart';
+import 'package:ventes/app/states/controllers/contact_state_controller.dart';
+import 'package:ventes/app/states/controllers/customer_state_controller.dart';
+import 'package:ventes/app/states/controllers/dashboard_state_controller.dart';
 import 'package:ventes/app/resources/views/contact.dart';
 import 'package:ventes/app/resources/views/customer.dart';
 import 'package:ventes/app/resources/views/dashboard.dart';
@@ -22,7 +22,7 @@ class DashboardNavigator extends StatelessWidget {
       initialRoute: DashboardView.route,
       onGenerateRoute: (routeSettings) {
         if (routeSettings.name == DashboardView.route) {
-          return RegularGetRoute(
+          return ViewRoute(
             page: () => DashboardView(),
             bindings: [
               BindingsBuilder(() {
@@ -33,7 +33,7 @@ class DashboardNavigator extends StatelessWidget {
         }
 
         if (routeSettings.name == ContactView.route) {
-          return RegularGetRoute(
+          return ViewRoute(
             page: () => ContactView(),
             bindings: [
               BindingsBuilder(() {
@@ -44,7 +44,7 @@ class DashboardNavigator extends StatelessWidget {
         }
 
         if (routeSettings.name == CustomerView.route) {
-          return RegularGetRoute(
+          return ViewRoute(
             page: () => CustomerView(),
             bindings: [
               BindingsBuilder(() {

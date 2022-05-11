@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:ventes/app/state/controllers/history_state_controller.dart';
+import 'package:ventes/app/states/controllers/history_state_controller.dart';
 import 'package:ventes/app/resources/views/history.dart';
 
 class HistoryNavigator extends StatelessWidget {

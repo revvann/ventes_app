@@ -7,9 +7,9 @@ import 'package:ventes/app/network/services/gmaps_service.dart';
 import 'package:ventes/app/network/services/place_service.dart';
 import 'package:ventes/app/network/services/user_service.dart';
 import 'package:ventes/app/resources/views/customer_form/create/customer_fc.dart';
-import 'package:ventes/routing/routes/regular_get_page.dart';
-import 'package:ventes/app/state/controllers/customer_fc_state_controller.dart';
-import 'package:ventes/app/state/controllers/nearby_state_controller.dart';
+import 'package:ventes/core/page_route.dart';
+import 'package:ventes/app/states/controllers/customer_fc_state_controller.dart';
+import 'package:ventes/app/states/controllers/nearby_state_controller.dart';
 import 'package:ventes/app/resources/views/nearby/nearby.dart';
 
 class NearbyNavigator extends StatelessWidget {
@@ -24,7 +24,7 @@ class NearbyNavigator extends StatelessWidget {
       initialRoute: NearbyView.route,
       onGenerateRoute: (routeSettings) {
         if (routeSettings.name == NearbyView.route) {
-          return RegularGetRoute(
+          return ViewRoute(
             page: () => NearbyView(),
             bindings: [
               BindingsBuilder(() {
@@ -38,7 +38,7 @@ class NearbyNavigator extends StatelessWidget {
         }
 
         if (routeSettings.name == CustomerFormCreateView.route) {
-          return RegularGetRoute(
+          return ViewRoute(
             page: () => CustomerFormCreateView(),
             bindings: [
               BindingsBuilder(() {

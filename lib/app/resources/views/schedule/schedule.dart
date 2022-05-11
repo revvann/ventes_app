@@ -18,7 +18,7 @@ import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/constants/strings/schedule_string.dart';
 import 'package:ventes/helpers/function_helpers.dart';
-import 'package:ventes/app/state/controllers/schedule_state_controller.dart';
+import 'package:ventes/app/states/controllers/schedule_state_controller.dart';
 
 part 'package:ventes/app/resources/views/schedule/components/_appointment_item.dart';
 part 'package:ventes/app/resources/views/schedule/components/_calendar.dart';

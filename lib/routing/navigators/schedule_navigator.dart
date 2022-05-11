@@ -6,11 +6,11 @@ import 'package:ventes/app/network/services/schedule_service.dart';
 import 'package:ventes/app/network/services/type_service.dart';
 import 'package:ventes/app/network/services/user_service.dart';
 import 'package:ventes/app/resources/views/schedule_form/update/schedule_fu.dart';
-import 'package:ventes/routing/routes/regular_get_page.dart';
-import 'package:ventes/app/state/controllers/daily_schedule_state_controller.dart';
-import 'package:ventes/app/state/controllers/schedule_fc_state_controller.dart';
-import 'package:ventes/app/state/controllers/schedule_fu_state_controller.dart';
-import 'package:ventes/app/state/controllers/schedule_state_controller.dart';
+import 'package:ventes/core/page_route.dart';
+import 'package:ventes/app/states/controllers/daily_schedule_state_controller.dart';
+import 'package:ventes/app/states/controllers/schedule_fc_state_controller.dart';
+import 'package:ventes/app/states/controllers/schedule_fu_state_controller.dart';
+import 'package:ventes/app/states/controllers/schedule_state_controller.dart';
 import 'package:ventes/app/resources/views/daily_schedule/daily_schedule.dart';
 import 'package:ventes/app/resources/views/schedule/schedule.dart';
 import 'package:ventes/app/resources/views/schedule_form/create/schedule_fc.dart';
@@ -29,7 +29,7 @@ class ScheduleNavigator extends StatelessWidget {
       onGenerateRoute: (routeSettings) {
         Map arguments = routeSettings.arguments == null ? {} : routeSettings.arguments as Map;
         if (routeSettings.name == ScheduleView.route) {
-          return RegularGetRoute(
+          return ViewRoute(
             page: () => ScheduleView(),
             binding: BindingsBuilder(() {
               Get.lazyPut(() => ScheduleService());
@@ -39,7 +39,7 @@ class ScheduleNavigator extends StatelessWidget {
           );
         }
         if (routeSettings.name == DailyScheduleView.route) {
-          return RegularGetRoute(
+          return ViewRoute(
             page: () => DailyScheduleView(
               date: arguments["date"],
             ),
@@ -51,7 +51,7 @@ class ScheduleNavigator extends StatelessWidget {
           );
         }
         if (routeSettings.name == ScheduleFormCreateView.route) {
-          return RegularGetRoute(
+          return ViewRoute(
             page: () => ScheduleFormCreateView(),
             binding: BindingsBuilder(() {
               Get.lazyPut(() => UserService());
@@ -62,7 +62,7 @@ class ScheduleNavigator extends StatelessWidget {
           );
         }
         if (routeSettings.name == ScheduleFormUpdateView.route) {
-          return RegularGetRoute(
+          return ViewRoute(
             page: () => ScheduleFormUpdateView(
               scheduleId: arguments['scheduleId'],
             ),
