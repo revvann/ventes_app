@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/helpers/auth_helper.dart';
 import 'package:ventes/app/states/controllers/splash_screen_state_controller.dart';
-import 'package:ventes/core/regular_view.dart';
+import 'package:ventes/core/view.dart';
 
 class SplashScreenView extends View<SplashScreenStateController> {
   static const String route = "/welcome";
@@ -56,14 +56,7 @@ class SplashScreenView extends View<SplashScreenStateController> {
         child: Container(
           width: 200,
           alignment: Alignment.center,
-          child: Text(
-            "VENTES",
-            style: TextStyle(
-              color: RegularColor.dark,
-              fontSize: 48,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+          child: Image.asset('assets/images/logo.png'),
         ),
       ),
     );

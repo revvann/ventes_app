@@ -7,9 +7,8 @@ abstract class ViewNavigator extends StatelessWidget {
   ViewNavigator({required this.navigatorKey});
   GlobalKey<NavigatorState> navigatorKey;
 
-  static int get id => 2;
   String get initialRoute;
-  Map<String, ViewRoute Function(Object? args)> get routes;
+  Map<String, ViewRoute Function(Map args)> get routes;
 
   @override
   Widget build(BuildContext context) {
@@ -17,8 +16,9 @@ abstract class ViewNavigator extends StatelessWidget {
       key: navigatorKey,
       initialRoute: initialRoute,
       onGenerateRoute: (routeSettings) {
+        Map arguments = routeSettings.arguments == null ? {} : routeSettings.arguments as Map;
         if (routes.containsKey(routeSettings.name)) {
-          return routes[routeSettings.name]?.call(routeSettings.arguments);
+          return routes[routeSettings.name]?.call(arguments);
         }
       },
     );

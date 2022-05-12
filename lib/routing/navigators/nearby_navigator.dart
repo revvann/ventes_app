@@ -11,47 +11,39 @@ import 'package:ventes/core/page_route.dart';
 import 'package:ventes/app/states/controllers/customer_fc_state_controller.dart';
 import 'package:ventes/app/states/controllers/nearby_state_controller.dart';
 import 'package:ventes/app/resources/views/nearby/nearby.dart';
+import 'package:ventes/core/view_navigator.dart';
 
-class NearbyNavigator extends StatelessWidget {
+class NearbyNavigator extends ViewNavigator {
   static const id = 2;
-  NearbyNavigator({required this.navigatorKey});
-  GlobalKey<NavigatorState> navigatorKey;
+  NearbyNavigator({required GlobalKey<NavigatorState> navigatorKey}) : super(navigatorKey: navigatorKey);
 
   @override
-  Widget build(BuildContext context) {
-    return Navigator(
-      key: navigatorKey,
-      initialRoute: NearbyView.route,
-      onGenerateRoute: (routeSettings) {
-        if (routeSettings.name == NearbyView.route) {
-          return ViewRoute(
-            page: () => NearbyView(),
-            bindings: [
-              BindingsBuilder(() {
-                Get.lazyPut(() => GmapsService());
-                Get.lazyPut(() => UserService());
-                Get.lazyPut(() => BpCustomerService());
-                Get.lazyPut(() => NearbyStateController());
-              })
-            ],
-          );
-        }
+  String get initialRoute => NearbyView.route;
 
-        if (routeSettings.name == CustomerFormCreateView.route) {
-          return ViewRoute(
-            page: () => CustomerFormCreateView(),
-            bindings: [
-              BindingsBuilder(() {
-                Get.lazyPut(() => GmapsService());
-                Get.lazyPut(() => UserService());
-                Get.lazyPut(() => PlaceService());
-                Get.lazyPut(() => BpCustomerService());
-                Get.lazyPut(() => CustomerFormCreateStateController());
-              })
-            ],
-          );
-        }
-      },
-    );
-  }
+  @override
+  Map<String, ViewRoute Function(Map? args)> get routes => {
+        NearbyView.route: (args) => ViewRoute(
+              page: () => NearbyView(),
+              bindings: [
+                BindingsBuilder(() {
+                  Get.lazyPut(() => GmapsService());
+                  Get.lazyPut(() => UserService());
+                  Get.lazyPut(() => BpCustomerService());
+                  Get.lazyPut(() => NearbyStateController());
+                })
+              ],
+            ),
+        CustomerFormCreateView.route: (args) => ViewRoute(
+              page: () => CustomerFormCreateView(latitude: args?['latitude'], longitude: args?['longitude']),
+              bindings: [
+                BindingsBuilder(() {
+                  Get.lazyPut(() => GmapsService());
+                  Get.lazyPut(() => UserService());
+                  Get.lazyPut(() => PlaceService());
+                  Get.lazyPut(() => BpCustomerService());
+                  Get.lazyPut(() => CustomerFormCreateStateController());
+                })
+              ],
+            ),
+      };
 }

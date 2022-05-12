@@ -51,7 +51,7 @@ class NearbyPresenter {
         _fetchDataContract.onLoadFailed(NearbyString.fetchFailed);
       }
     } catch (err) {
-      _fetchDataContract.onLoadError(NearbyString.fetchError);
+      _fetchDataContract.onLoadError(err.toString());
     }
   }
 }

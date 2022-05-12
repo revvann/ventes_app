@@ -8,7 +8,7 @@ import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/routing/navigators/dashboard_navigator.dart';
 import 'package:ventes/app/states/controllers/contact_state_controller.dart';
-import 'package:ventes/core/regular_view.dart';
+import 'package:ventes/core/view.dart';
 import 'package:ventes/app/resources/widgets/icon_input.dart';
 import 'package:ventes/app/resources/widgets/contact_card.dart';
 import 'package:ventes/app/resources/widgets/top_navigation.dart';

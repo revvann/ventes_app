@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:ventes/core/regular_view.dart';
+import 'package:ventes/core/view.dart';
 import 'package:ventes/app/resources/widgets/bottom_navigation.dart';
 import 'package:ventes/constants/views.dart';
 import 'package:ventes/routing/navigators/dashboard_navigator.dart';

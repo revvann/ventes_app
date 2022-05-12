@@ -21,6 +21,7 @@ class _CustomerForm extends StatelessWidget {
           RegularInput(
             label: "Customer name",
             hintText: "Enter name",
+            controller: state.formSource.nameTEC,
           ),
           SizedBox(
             height: RegularSize.m,
@@ -28,6 +29,7 @@ class _CustomerForm extends StatelessWidget {
           RegularInput(
             label: "Customer phone",
             hintText: "Enter phone",
+            controller: state.formSource.phoneTEC,
           ),
           SizedBox(
             height: RegularSize.m,
@@ -35,6 +37,7 @@ class _CustomerForm extends StatelessWidget {
           RegularInput(
             label: "Customer postal code",
             hintText: "Enter postal code",
+            controller: state.formSource.postalCodeTEC,
           ),
           SizedBox(
             height: RegularSize.m,
@@ -42,6 +45,7 @@ class _CustomerForm extends StatelessWidget {
           EditorInput(
             label: "Customer address",
             hintText: "Enter address",
+            controller: state.formSource.addressTEC,
           ),
           SizedBox(
             height: RegularSize.m,
@@ -54,7 +58,7 @@ class _CustomerForm extends StatelessWidget {
                   bool isSelected = state.formSource.country?.countryid == country.countryid;
                   return _SearchListItem(
                     isSelected: isSelected,
-                    text: state.formSource.country?.countryname ?? "",
+                    text: country.countryname ?? "",
                   );
                 });
               },
@@ -75,7 +79,7 @@ class _CustomerForm extends StatelessWidget {
                   bool isSelected = state.formSource.province?.provid == province.provid;
                   return _SearchListItem(
                     isSelected: isSelected,
-                    text: state.formSource.province?.provname ?? "",
+                    text: province.provname ?? "",
                   );
                 });
               },
@@ -96,7 +100,7 @@ class _CustomerForm extends StatelessWidget {
                   bool isSelected = state.formSource.city?.cityid == city.cityid;
                   return _SearchListItem(
                     isSelected: isSelected,
-                    text: state.formSource.city?.cityname ?? "",
+                    text: city.cityname ?? "",
                   );
                 });
               },
@@ -117,7 +121,7 @@ class _CustomerForm extends StatelessWidget {
                   bool isSelected = state.formSource.subdistrict?.subdistrictid == subdistrict.subdistrictid;
                   return _SearchListItem(
                     isSelected: isSelected,
-                    text: state.formSource.subdistrict?.subdistrictname ?? "",
+                    text: subdistrict.subdistrictname ?? "",
                   );
                 });
               },
@@ -130,18 +134,18 @@ class _CustomerForm extends StatelessWidget {
           SizedBox(
             height: RegularSize.m,
           ),
-          KeyableSelectBox<int>(
-            label: "Customer type",
-            onSelected: (value) {
-              print(value);
-            },
-            activeIndex: 13,
-            items: const {
-              13: "Manufacture",
-              23: "Distributor",
-              33: "Retailer",
-            },
+          Obx(() {
+            return KeyableSelectBox<int>(
+              label: "Customer type",
+              onSelected: state.listener.onTypeSelected,
+              activeIndex: 13,
+              items: state.properties.dataSource.types,
+            );
+          }),
+          SizedBox(
+            height: RegularSize.m,
           ),
+          _PlacePicker(),
           SizedBox(
             height: RegularSize.l,
           ),

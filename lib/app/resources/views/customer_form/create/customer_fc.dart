@@ -1,33 +1,37 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ventes/app/models/city_model.dart';
 import 'package:ventes/app/models/country_model.dart';
 import 'package:ventes/app/models/province_model.dart';
 import 'package:ventes/app/models/subdistrict_model.dart';
-import 'package:ventes/app/resources/widgets/keyable_selectbox.dart';
-import 'package:ventes/app/resources/widgets/search_list.dart';
-import 'package:ventes/core/regular_view.dart';
 import 'package:ventes/app/resources/widgets/editor_input.dart';
+import 'package:ventes/app/resources/widgets/keyable_selectbox.dart';
 import 'package:ventes/app/resources/widgets/regular_input.dart';
+import 'package:ventes/app/resources/widgets/search_list.dart';
 import 'package:ventes/app/resources/widgets/top_navigation.dart';
+import 'package:ventes/app/states/controllers/customer_fc_state_controller.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/constants/strings/nearby_string.dart';
-import 'package:ventes/app/states/controllers/customer_fc_state_controller.dart';
+import 'package:ventes/core/view.dart';
 
+part 'package:ventes/app/resources/views/customer_form/create/components/_customer_picture.dart';
 part 'package:ventes/app/resources/views/customer_form/create/components/_form.dart';
 part 'package:ventes/app/resources/views/customer_form/create/components/_search_list.dart';
-part 'package:ventes/app/resources/views/customer_form/create/components/_customer_picture.dart';
+part 'package:ventes/app/resources/views/customer_form/create/components/_place_picker.dart';
 
 class CustomerFormCreateView extends View<CustomerFormCreateStateController> {
   static const String route = "/customer/create";
+
+  CustomerFormCreateView({double? latitude, double? longitude}) {
+    state.properties.latitude = latitude;
+    state.properties.longitude = longitude;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +59,7 @@ class CustomerFormCreateView extends View<CustomerFormCreateStateController> {
         ),
         actions: [
           GestureDetector(
-            onTap: () {},
+            onTap: state.listener.onSubmitButtonClicked,
             child: Container(
               padding: EdgeInsets.symmetric(
                 vertical: RegularSize.s,
@@ -71,20 +75,6 @@ class CustomerFormCreateView extends View<CustomerFormCreateStateController> {
             ),
           ),
         ],
-        below: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(
-              NearbyString.formCreateTitle,
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
-          ],
-        ),
       ).build(context),
       body: SafeArea(
         child: Container(

@@ -5,6 +5,10 @@ class NearbyString {
   static const fetchError = "Could not fetch data";
   static const fetchFailed = "Failed to fetch data";
 
+  static const createSuccess = "Customer created";
+  static const createFailed = "Failed to create customer";
+  static const createError = "Could not create customer";
+
   static const defaultCustomerName = "Customer Name";
   static const defaultCustomerAddress = "Customer Address";
 
@@ -17,4 +21,6 @@ class NearbyString {
   static const formSubmitButton = "Save";
 
   static const defaultImage = 'images/cat.png';
+
+  static const customerTypeCode = 'cstmtype';
 }

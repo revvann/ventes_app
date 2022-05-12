@@ -15,66 +15,53 @@ import 'package:ventes/app/resources/views/daily_schedule/daily_schedule.dart';
 import 'package:ventes/app/resources/views/schedule/schedule.dart';
 import 'package:ventes/app/resources/views/schedule_form/create/schedule_fc.dart';
 import 'package:ventes/app/resources/widgets/regular_dropdown.dart';
+import 'package:ventes/core/view_navigator.dart';
 
-class ScheduleNavigator extends StatelessWidget {
+class ScheduleNavigator extends ViewNavigator {
   static const id = 3;
-  ScheduleNavigator({required this.navigatorKey});
-  GlobalKey<NavigatorState> navigatorKey;
+  ScheduleNavigator({required GlobalKey<NavigatorState> navigatorKey}) : super(navigatorKey: navigatorKey);
+  @override
+  String get initialRoute => ScheduleView.route;
 
   @override
-  Widget build(BuildContext context) {
-    return Navigator(
-      key: navigatorKey,
-      initialRoute: ScheduleView.route,
-      onGenerateRoute: (routeSettings) {
-        Map arguments = routeSettings.arguments == null ? {} : routeSettings.arguments as Map;
-        if (routeSettings.name == ScheduleView.route) {
-          return ViewRoute(
-            page: () => ScheduleView(),
-            binding: BindingsBuilder(() {
-              Get.lazyPut(() => ScheduleService());
-              Get.lazyPut(() => TypeService());
-              Get.lazyPut(() => ScheduleStateController());
-            }),
-          );
-        }
-        if (routeSettings.name == DailyScheduleView.route) {
-          return ViewRoute(
-            page: () => DailyScheduleView(
-              date: arguments["date"],
+  Map<String, ViewRoute Function(Map? args)> get routes => {
+        ScheduleView.route: (args) => ViewRoute(
+              page: () => ScheduleView(),
+              binding: BindingsBuilder(() {
+                Get.lazyPut(() => ScheduleService());
+                Get.lazyPut(() => TypeService());
+                Get.lazyPut(() => ScheduleStateController());
+              }),
             ),
-            binding: BindingsBuilder(() {
-              Get.lazyPut(() => TypeService());
-              Get.lazyPut(() => ScheduleService());
-              Get.lazyPut(() => DailyScheduleStateController());
-            }),
-          );
-        }
-        if (routeSettings.name == ScheduleFormCreateView.route) {
-          return ViewRoute(
-            page: () => ScheduleFormCreateView(),
-            binding: BindingsBuilder(() {
-              Get.lazyPut(() => UserService());
-              Get.lazyPut(() => TypeService());
-              Get.lazyPut(() => ScheduleService());
-              Get.lazyPut(() => ScheduleFormCreateStateController());
-            }),
-          );
-        }
-        if (routeSettings.name == ScheduleFormUpdateView.route) {
-          return ViewRoute(
-            page: () => ScheduleFormUpdateView(
-              scheduleId: arguments['scheduleId'],
+        DailyScheduleView.route: (args) => ViewRoute(
+              page: () => DailyScheduleView(
+                date: args!["date"],
+              ),
+              binding: BindingsBuilder(() {
+                Get.lazyPut(() => TypeService());
+                Get.lazyPut(() => ScheduleService());
+                Get.lazyPut(() => DailyScheduleStateController());
+              }),
             ),
-            binding: BindingsBuilder(() {
-              Get.lazyPut(() => UserService());
-              Get.lazyPut(() => TypeService());
-              Get.lazyPut(() => ScheduleService());
-              Get.lazyPut(() => ScheduleFormUpdateStateController());
-            }),
-          );
-        }
-      },
-    );
-  }
+        ScheduleFormCreateView.route: (args) => ViewRoute(
+              page: () => ScheduleFormCreateView(),
+              binding: BindingsBuilder(() {
+                Get.lazyPut(() => UserService());
+                Get.lazyPut(() => TypeService());
+                Get.lazyPut(() => ScheduleService());
+                Get.lazyPut(() => ScheduleFormCreateStateController());
+              }),
+            ),
+        ScheduleFormUpdateView.route: (args) => ViewRoute(
+              page: () => ScheduleFormUpdateView(
+                scheduleId: args!['scheduleId'],
+              ),
+              binding: BindingsBuilder(() {
+                Get.lazyPut(() => UserService());
+                Get.lazyPut(() => TypeService());
+                Get.lazyPut(() => ScheduleService());
+                Get.lazyPut(() => ScheduleFormUpdateStateController());
+              }),
+            ),
+      };
 }

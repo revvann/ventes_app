@@ -5,6 +5,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ventes/app/models/bp_customer_model.dart';
 import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
 import 'package:ventes/app/resources/views/customer_form/create/customer_fc.dart';
+import 'package:ventes/app/resources/widgets/error_alert.dart';
 import 'package:ventes/app/resources/widgets/failed_alert.dart';
 import 'package:ventes/constants/strings/nearby_string.dart';
 import 'package:ventes/routing/navigators/nearby_navigator.dart';
@@ -33,13 +34,20 @@ class NearbyListener implements FetchDataContract {
   }
 
   void onAddDataClick() {
-    Get.toNamed(CustomerFormCreateView.route, id: NearbyNavigator.id);
+    Get.toNamed(
+      CustomerFormCreateView.route,
+      id: NearbyNavigator.id,
+      arguments: {
+        'latitude': _properties.markers.first.position.latitude,
+        'longitude': _properties.markers.first.position.longitude,
+      },
+    );
   }
 
   @override
   onLoadError(String message) {
     Get.close(1);
-    FailedAlert(NearbyString.fetchError).show();
+    ErrorAlert(NearbyString.fetchError).show();
   }
 
   @override

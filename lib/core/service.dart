@@ -1,4 +1,4 @@
-// ignore_for_file: unnecessary_getters_setters
+// ignore_for_file: unnecessary_getters_setters, prefer_const_constructors
 
 import 'package:get/get.dart';
 import 'package:ventes/constants/strings/regular_string.dart';
@@ -23,8 +23,13 @@ class Service extends GetConnect {
     return get(api, query: params);
   }
 
-  Future<Response> store(Map<String, dynamic> body) {
-    return post(api, body);
+  Future<Response> store(
+    dynamic body, {
+    String? contentType,
+    Map<String, String>? headers,
+    Map<String, dynamic>? query,
+  }) {
+    return post(api, body, contentType: contentType, headers: headers, query: query);
   }
 
   Future<Response> show(int id) {

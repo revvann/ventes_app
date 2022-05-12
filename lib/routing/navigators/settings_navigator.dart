@@ -4,29 +4,24 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ventes/app/states/controllers/settings_state_controller.dart';
 import 'package:ventes/app/resources/views/settings.dart';
+import 'package:ventes/core/page_route.dart';
+import 'package:ventes/core/view_navigator.dart';
 
-class SettingsNavigator extends StatelessWidget {
+class SettingsNavigator extends ViewNavigator {
   static const id = 5;
-  SettingsNavigator({required this.navigatorKey});
-  GlobalKey<NavigatorState> navigatorKey;
+  SettingsNavigator({required GlobalKey<NavigatorState> navigatorKey}) : super(navigatorKey: navigatorKey);
 
   @override
-  Widget build(BuildContext context) {
-    return Navigator(
-      key: navigatorKey,
-      initialRoute: SettingsView.route,
-      onGenerateRoute: (routeSettings) {
-        if (routeSettings.name == SettingsView.route) {
-          return GetPageRoute(
-            page: () => SettingsView(),
-            binding: BindingsBuilder(() {
-              Get.put(SettingsStateController());
-            }),
-            transition: Transition.fadeIn,
-            transitionDuration: Duration(milliseconds: 300),
-          );
-        }
-      },
-    );
-  }
+  String get initialRoute => SettingsView.route;
+
+  @override
+  // TODO: implement routes
+  Map<String, ViewRoute Function(Map args)> get routes => {
+        SettingsView.route: (args) => ViewRoute(
+              page: () => SettingsView(),
+              binding: BindingsBuilder(() {
+                Get.put(SettingsStateController());
+              }),
+            ),
+      };
 }

@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:ventes/app/states/controllers/settings_state_controller.dart';
-import 'package:ventes/core/regular_view.dart';
+import 'package:ventes/core/view.dart';
 
 class SettingsView extends View<SettingsStateController> {
   static const String route = "/settings";

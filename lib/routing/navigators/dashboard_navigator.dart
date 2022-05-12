@@ -9,51 +9,43 @@ import 'package:ventes/app/states/controllers/dashboard_state_controller.dart';
 import 'package:ventes/app/resources/views/contact.dart';
 import 'package:ventes/app/resources/views/customer.dart';
 import 'package:ventes/app/resources/views/dashboard.dart';
+import 'package:ventes/core/view_navigator.dart';
 
-class DashboardNavigator extends StatelessWidget {
-  static const id = 1;
-  DashboardNavigator({required this.navigatorKey});
-  GlobalKey<NavigatorState> navigatorKey;
+class DashboardNavigator extends ViewNavigator {
+  static int get id => 1;
+  DashboardNavigator({required GlobalKey<NavigatorState> navigatorKey})
+      : super(
+          navigatorKey: navigatorKey,
+        );
 
   @override
-  Widget build(BuildContext context) {
-    return Navigator(
-      key: navigatorKey,
-      initialRoute: DashboardView.route,
-      onGenerateRoute: (routeSettings) {
-        if (routeSettings.name == DashboardView.route) {
-          return ViewRoute(
-            page: () => DashboardView(),
-            bindings: [
-              BindingsBuilder(() {
-                Get.put(DashboardStateController());
-              })
-            ],
-          );
-        }
+  String get initialRoute => DashboardView.route;
 
-        if (routeSettings.name == ContactView.route) {
-          return ViewRoute(
-            page: () => ContactView(),
-            bindings: [
-              BindingsBuilder(() {
-                Get.put(ContactStateController());
-              })
-            ],
-          );
-        }
-
-        if (routeSettings.name == CustomerView.route) {
-          return ViewRoute(
-            page: () => CustomerView(),
-            bindings: [
-              BindingsBuilder(() {
-                Get.put(CustomerStateController());
-              })
-            ],
-          );
-        }
-      },
-    );
-  }
+  @override
+  Map<String, ViewRoute Function(Map? args)> get routes => {
+        DashboardView.route: (args) => ViewRoute(
+              page: () => DashboardView(),
+              bindings: [
+                BindingsBuilder(() {
+                  Get.put(DashboardStateController());
+                })
+              ],
+            ),
+        ContactView.route: (args) => ViewRoute(
+              page: () => ContactView(),
+              bindings: [
+                BindingsBuilder(() {
+                  Get.put(ContactStateController());
+                })
+              ],
+            ),
+        CustomerView.route: (args) => ViewRoute(
+              page: () => CustomerView(),
+              bindings: [
+                BindingsBuilder(() {
+                  Get.put(CustomerStateController());
+                })
+              ],
+            ),
+      };
 }

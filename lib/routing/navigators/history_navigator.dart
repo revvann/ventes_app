@@ -4,29 +4,23 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ventes/app/states/controllers/history_state_controller.dart';
 import 'package:ventes/app/resources/views/history.dart';
+import 'package:ventes/core/page_route.dart';
+import 'package:ventes/core/view_navigator.dart';
 
-class HistoryNavigator extends StatelessWidget {
+class HistoryNavigator extends ViewNavigator {
   static const id = 4;
-  HistoryNavigator({required this.navigatorKey});
-  GlobalKey<NavigatorState> navigatorKey;
+  HistoryNavigator({required GlobalKey<NavigatorState> navigatorKey}) : super(navigatorKey: navigatorKey);
 
   @override
-  Widget build(BuildContext context) {
-    return Navigator(
-      key: navigatorKey,
-      initialRoute: HistoryView.route,
-      onGenerateRoute: (routeSettings) {
-        if (routeSettings.name == HistoryView.route) {
-          return GetPageRoute(
-            page: () => HistoryView(),
-            binding: BindingsBuilder(() {
-              Get.put(HistoryStateController());
-            }),
-            transition: Transition.fadeIn,
-            transitionDuration: Duration(milliseconds: 300),
-          );
-        }
-      },
-    );
-  }
+  String get initialRoute => HistoryView.route;
+
+  @override
+  Map<String, ViewRoute Function(Map args)> get routes => {
+        HistoryView.route: (args) => ViewRoute(
+              page: () => HistoryView(),
+              binding: BindingsBuilder(() {
+                Get.put(HistoryStateController());
+              }),
+            ),
+      };
 }

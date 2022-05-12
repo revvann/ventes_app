@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:ventes/core/regular_view.dart';
+import 'package:ventes/core/view.dart';
 import 'package:ventes/app/resources/widgets/bottom_navigation.dart';
 import 'package:ventes/app/resources/widgets/customer_card.dart';
 import 'package:ventes/app/resources/widgets/loader.dart';
@@ -360,7 +360,7 @@ class DashboardView extends View<DashboardStateController> {
           ],
         ),
         decoration: BoxDecoration(
-          color: RegularColor.primary,
+          color: Colors.white,
         ),
       ),
     );

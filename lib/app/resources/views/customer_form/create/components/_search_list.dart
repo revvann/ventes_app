@@ -56,17 +56,16 @@ class _SearchListItem extends StatelessWidget {
       child: Row(
         children: [
           SizedBox(width: RegularSize.s),
-          Text(
-            text,
-            style: TextStyle(
-              color: RegularColor.dark,
-              fontSize: 16,
+          Expanded(
+            child: Text(
+              text,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                color: RegularColor.dark,
+                fontSize: 16,
+              ),
             ),
           ),
-          if (isSelected)
-            Expanded(
-              child: Container(),
-            ),
           if (isSelected)
             SvgPicture.asset(
               "assets/svg/check.svg",
