@@ -4,6 +4,7 @@ import 'package:ventes/app/models/bp_customer_model.dart';
 import 'package:ventes/app/models/maps_loc.dart';
 import 'package:ventes/app/network/presenters/nearby_presenter.dart';
 import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
+import 'package:ventes/helpers/function_helpers.dart';
 
 class NearbyDataSource {
   final NearbyPresenter _presenter = NearbyPresenter();
@@ -22,7 +23,13 @@ class NearbyDataSource {
     mapsLoc = MapsLoc.fromJson(data);
   }
 
-  void customersFromList(List data) {
+  void customersFromList(List data, LatLng currentPos) {
     customers = data.map((e) => BpCustomer.fromJson(e)).toList();
+    LatLng coords2 = LatLng(currentPos.latitude, currentPos.longitude);
+    customers = customers.where((element) {
+      LatLng coords1 = LatLng(element.sbccstm?.cstmlatitude ?? 0.0, element.sbccstm?.cstmlongitude ?? 0.0);
+      double radius = calculateDistance(coords1, coords2);
+      return radius <= 100;
+    }).toList();
   }
 }

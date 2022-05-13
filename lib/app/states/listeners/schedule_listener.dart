@@ -47,7 +47,7 @@ class ScheduleListener implements FetchDataContract {
   Color onAppointmentFindColor(Schedule appointment) {
     Color color = RegularColor.primary;
     if (appointment.schetypeid == _properties.dataSource.types["Event"]) {
-      color = RegularColor.purple;
+      color = RegularColor.yellow;
     } else if (appointment.schetypeid == _properties.dataSource.types["Task"]) {
       color = RegularColor.red;
     } else if (appointment.schetypeid == _properties.dataSource.types["Reminder"]) {

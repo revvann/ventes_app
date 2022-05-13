@@ -51,7 +51,7 @@ class DailyScheduleProperties {
   Color getAppointmentColor(Schedule appointment) {
     Color color = RegularColor.primary;
     if (appointment.schetypeid == dataSource.types["Event"]) {
-      color = RegularColor.purple;
+      color = RegularColor.yellow;
     } else if (appointment.schetypeid == dataSource.types["Task"]) {
       color = RegularColor.red;
     } else if (appointment.schetypeid == dataSource.types["Reminder"]) {

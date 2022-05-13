@@ -1,6 +1,9 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'package:timezone/timezone.dart';
 import 'package:intl/intl.dart';
@@ -141,4 +144,14 @@ List<Map<String, dynamic>> createTimeList([int? minHour, int? minMinutes]) {
 
 void backToDashboard() {
   Get.find<BottomNavigationStateController>().currentIndex = Views.dashboard;
+}
+
+///
+/// unit is meter
+///
+double calculateDistance(LatLng coords1, LatLng coords2) {
+  var p = 0.017453292519943295;
+  var c = cos;
+  var a = 0.5 - c((coords2.latitude - coords1.latitude) * p) / 2 + c(coords1.latitude * p) * c(coords2.latitude * p) * (1 - c((coords2.longitude - coords1.longitude) * p)) / 2;
+  return (12742 * asin(sqrt(a))) * 1000;
 }

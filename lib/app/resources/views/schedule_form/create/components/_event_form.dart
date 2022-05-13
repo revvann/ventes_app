@@ -101,17 +101,15 @@ class _EventForm extends StatelessWidget {
             selected: state.formSource.schetoward?.user?.userfullname,
             onFilter: state.listener.onTowardFilter,
             onItemSelected: state.listener.onTowardSelected,
-            itemBuilder: (UserDetail user) {
-              return Obx(
-                () {
-                  bool isSelected = state.formSource.schetoward?.userid == user.userid;
-                  return _GuestListItem(
-                    userDetail: user,
-                    isSelected: isSelected,
-                  );
-                },
+            itemBuilder: (UserDetail user, UserDetail? selected) {
+              bool isSelected = selected?.userid == user.userid;
+              return _GuestListItem(
+                userDetail: user,
+                isSelected: isSelected,
               );
             },
+            compare: state.listener.onTowardCompared,
+            controller: state.formSource.towardSearchListController,
           );
         }),
         SizedBox(
@@ -119,19 +117,16 @@ class _EventForm extends StatelessWidget {
         ),
         _GuestDropdown(
           onFilter: state.listener.onGuestFilter,
-          onItemSelected: state.listener.onGuestSelected,
-          itemBuilder: (UserDetail user) {
-            return Obx(
-              () {
-                List<ScheduleGuest> guestsSelected = state.formSource.guests;
-                bool isSelected = guestsSelected.where((g) => g.scheuserid == user.userid).isNotEmpty;
-                return _GuestListItem(
-                  userDetail: user,
-                  isSelected: isSelected,
-                );
-              },
+          onItemSelected: state.listener.onGuestChanged,
+          itemBuilder: (UserDetail user, List<UserDetail?>? selected) {
+            bool isSelected = selected?.any((g) => g?.userid == user.userid) ?? false;
+            return _GuestListItem(
+              userDetail: user,
+              isSelected: isSelected,
             );
           },
+          compare: state.listener.onGuestCompared,
+          controller: state.formSource.guestSearchListController,
         ),
         Obx(() {
           return state.formSource.guests.isNotEmpty

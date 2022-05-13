@@ -1,3 +1,4 @@
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ventes/app/models/bp_customer_model.dart';
 import 'package:ventes/app/models/city_model.dart';
 import 'package:ventes/app/models/country_model.dart';
@@ -8,6 +9,7 @@ import 'package:ventes/app/network/contracts/create_contract.dart';
 import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
 import 'package:ventes/app/network/presenters/customer_fc_presenter.dart';
 import 'package:get/get.dart';
+import 'package:ventes/helpers/function_helpers.dart';
 
 class CustomerFormCreateDataSource {
   final CustomerFormCreatePresenter _presenter = CustomerFormCreatePresenter();
@@ -23,8 +25,14 @@ class CustomerFormCreateDataSource {
   set types(Map<int, String> value) => _types.value = value;
   Map<int, String> get types => _types.value;
 
-  void customersFromList(List data) {
+  void customersFromList(List data, LatLng currentPos) {
     customers = data.map((e) => BpCustomer.fromJson(e)).toList();
+    LatLng coords2 = LatLng(currentPos.latitude, currentPos.longitude);
+    customers = customers.where((element) {
+      LatLng coords1 = LatLng(element.sbccstm?.cstmlatitude ?? 0.0, element.sbccstm?.cstmlongitude ?? 0.0);
+      double radius = calculateDistance(coords1, coords2);
+      return radius <= 100;
+    }).toList();
   }
 
   void typesFromList(List data) {

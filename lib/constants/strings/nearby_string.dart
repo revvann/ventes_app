@@ -8,6 +8,7 @@ class NearbyString {
   static const createSuccess = "Customer created";
   static const createFailed = "Failed to create customer";
   static const createError = "Could not create customer";
+  static const formInvalid = "Form is invalid, please fill all fields";
 
   static const defaultCustomerName = "Customer Name";
   static const defaultCustomerAddress = "Customer Address";

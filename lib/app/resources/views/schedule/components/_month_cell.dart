@@ -24,7 +24,7 @@ class _MonthCell extends StatelessWidget {
       ),
       child: Container(
         decoration: BoxDecoration(
-          color: isSelected ? RegularColor.primary : Colors.white,
+          color: isSelected ? RegularColor.green : Colors.white,
           shape: BoxShape.circle,
         ),
         child: Stack(
@@ -54,7 +54,7 @@ class _MonthCell extends StatelessWidget {
                   ),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: RegularColor.indigo,
+                    color: RegularColor.secondary,
                   ),
                 ),
               ),

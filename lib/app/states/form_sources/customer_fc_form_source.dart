@@ -8,6 +8,7 @@ import 'package:ventes/app/models/city_model.dart';
 import 'package:ventes/app/models/country_model.dart';
 import 'package:ventes/app/models/province_model.dart';
 import 'package:ventes/app/models/subdistrict_model.dart';
+import 'package:ventes/app/resources/widgets/search_list.dart';
 import 'package:ventes/app/states/controllers/customer_fc_state_controller.dart';
 import 'package:ventes/app/states/form_validators/customer_fc_validator.dart';
 import 'package:ventes/app/states/listeners/customer_fc_listener.dart';
@@ -17,6 +18,10 @@ class CustomerFormCreateFormSource {
   late CustomerFormCreateValidator validator;
   final CustomerFormCreateProperties _properties = Get.find<CustomerFormCreateProperties>();
   final CustomerFormCreateListener _listener = Get.find<CustomerFormCreateListener>();
+  SearchListController<Country, Country> countrySearchListController = Get.put(SearchListController<Country, Country>());
+  SearchListController<Province, Province> provinceSearchListController = Get.put(SearchListController<Province, Province>());
+  SearchListController<City, City> citySearchListController = Get.put(SearchListController<City, City>());
+  SearchListController<Subdistrict, Subdistrict> subdistrictSearchListController = Get.put(SearchListController<Subdistrict, Subdistrict>());
 
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final defaultPicture = Image.asset('assets/' + NearbyString.defaultImage).obs;
@@ -64,6 +69,19 @@ class CustomerFormCreateFormSource {
 
     _properties.rxLatitude.stream.listen(_listener.onLatitudeValueChanged);
     _properties.rxLongitude.stream.listen(_listener.onLongitudeValueChanged);
+  }
+
+  dispose() {
+    nameTEC.dispose();
+    addressTEC.dispose();
+    phoneTEC.dispose();
+    postalCodeTEC.dispose();
+    latitudeTEC.dispose();
+    longitudeTEC.dispose();
+    Get.delete<SearchListController<Country, Country>>();
+    Get.delete<SearchListController<Province, Province>>();
+    Get.delete<SearchListController<City, City>>();
+    Get.delete<SearchListController<Subdistrict, Subdistrict>>();
   }
 
   Future<File> _getImageFileFromAssets(String path) async {

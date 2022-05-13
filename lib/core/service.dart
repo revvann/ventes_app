@@ -16,7 +16,7 @@ class Service extends GetConnect {
       if (session?.jwtToken != null) request.headers['Authorization'] = "Bearer ${session?.jwtToken}";
       return request;
     });
-    httpClient.timeout = Duration(seconds: 30);
+    httpClient.timeout = Duration(minutes: 1);
   }
 
   Future<Response> select(Map<String, dynamic> params) {

@@ -79,16 +79,16 @@ class KeyableSelectBox<K> extends StatelessWidget {
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(RegularSize.s),
-        splashColor: isActive ? RegularColor.primary.withOpacity(0.1) : null,
+        splashColor: isActive ? RegularColor.green.withOpacity(0.1) : null,
         child: Ink(
           padding: EdgeInsets.symmetric(
             horizontal: RegularSize.m,
             vertical: RegularSize.s,
           ),
           decoration: BoxDecoration(
-            color: isActive ? RegularColor.primary : Colors.white,
+            color: isActive ? RegularColor.green : Colors.white,
             border: Border.all(
-              color: isActive ? RegularColor.primary : RegularColor.disable,
+              color: isActive ? RegularColor.green : RegularColor.disable,
               width: 2,
             ),
             borderRadius: BorderRadius.circular(RegularSize.s),

@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:ventes/app/models/schedule_guest_model.dart';
 import 'package:ventes/app/models/user_detail_model.dart';
 import 'package:ventes/app/resources/widgets/regular_dropdown.dart';
+import 'package:ventes/app/resources/widgets/search_list.dart';
 import 'package:ventes/helpers/function_helpers.dart';
 import 'package:ventes/app/states/controllers/schedule_fc_state_controller.dart';
 import 'package:ventes/app/states/form_validators/schedule_fc_validator.dart';
@@ -35,6 +36,8 @@ class ScheduleFormCreateFormSource {
   final scheendtimeDC = DropdownController<String?>(null);
   final schetzDC = DropdownController<String?>(null);
   final formKey = GlobalKey<FormState>();
+  final towardSearchListController = Get.put(SearchListController<UserDetail, UserDetail>());
+  final guestSearchListController = Get.put(SearchListController<UserDetail, List<UserDetail>>());
 
   String _scheonlink = "";
   String _scheloc = "";
@@ -183,20 +186,8 @@ class ScheduleFormCreateFormSource {
     );
   }
 
-  void addGuest(UserDetail guest) {
-    _guests.update((value) => value!
-      ..add(
-        ScheduleGuest(
-          scheuserid: guest.userid,
-          schebpid: guest.userdtbpid,
-          scheuser: guest.user,
-          businesspartner: guest.businesspartner,
-        ),
-      ));
-  }
-
-  void removeGuest(guest) {
-    int? userid = guest is UserDetail ? guest.userid : guest.scheuserid;
+  void removeGuest(ScheduleGuest guest) {
+    int? userid = guest.scheuserid;
     _guests.update((value) => value!..removeWhere((g) => g.scheuserid == userid));
   }
 
@@ -285,10 +276,13 @@ class ScheduleFormCreateFormSource {
     scheremindTEC.dispose();
     schedescTEC.dispose();
     scheonlinkTEC.dispose();
+    Get.delete<SearchListController<UserDetail, UserDetail>>();
+    Get.delete<SearchListController<UserDetail, List<UserDetail>>>();
   }
 
   formSourceInit() async {
     validator = ScheduleFormCreateValidator(this);
+    towardSearchListController.selectedItem = schetoward;
 
     setStartTimeList();
 
@@ -317,7 +311,6 @@ class ScheduleFormCreateFormSource {
       "scheonline": isEvent ? scheonline : false,
       "scheonlink": isEvent ? scheonlink : null,
       "scheallday": scheallday,
-      "schetypeid": _properties.dataSource.typeId(schetype),
       "schetypeid": _properties.dataSource.typeId(schetype),
       "schetz": isEvent ? schetz : null,
       "scheprivate": isEvent ? scheprivate : false,

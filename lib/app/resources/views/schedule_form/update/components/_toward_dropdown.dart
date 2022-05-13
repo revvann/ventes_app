@@ -7,10 +7,14 @@ class _TowardDropdown extends StatelessWidget {
     required this.itemBuilder,
     this.onItemSelected,
     this.selected,
+    required this.compare,
+    required this.controller,
   });
   Future<List<UserDetail>> Function(String?) onFilter;
-  void Function(UserDetail user)? onItemSelected;
-  Widget Function(UserDetail user) itemBuilder;
+  void Function(UserDetail? user)? onItemSelected;
+  Widget Function(UserDetail user, UserDetail? selected) itemBuilder;
+  bool Function(UserDetail user, UserDetail? selected) compare;
+  SearchListController<UserDetail, UserDetail> controller;
   String? selected;
 
   @override
@@ -24,10 +28,12 @@ class _TowardDropdown extends StatelessWidget {
         enabled: false,
       ),
       onTap: () {
-        SearchList<UserDetail>(
+        SearchList<UserDetail, UserDetail>(
           onFilter: onFilter,
           itemBuilder: itemBuilder,
           onItemSelected: onItemSelected,
+          compare: compare,
+          controller: controller,
         ).show();
       },
     );

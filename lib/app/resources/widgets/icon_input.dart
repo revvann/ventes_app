@@ -28,7 +28,7 @@ class IconInput extends StatelessWidget {
   String icon;
   String? hintText;
   final GlobalKey<FormFieldState> _key = GlobalKey<FormFieldState>();
-  Color _activeColor = RegularColor.primary;
+  Color _activeColor = RegularColor.green;
   String? value;
 
   @override
@@ -117,6 +117,9 @@ class IconInput extends StatelessWidget {
                     color: RegularColor.red,
                     width: 2,
                   ),
+                ),
+                errorStyle: TextStyle(
+                  color: RegularColor.red,
                 ),
               ),
             ),

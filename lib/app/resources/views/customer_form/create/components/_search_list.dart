@@ -2,7 +2,7 @@
 
 part of 'package:ventes/app/resources/views/customer_form/create/customer_fc.dart';
 
-class _SearchList<T> extends StatelessWidget {
+class _SearchList<T, V> extends StatelessWidget {
   CustomerFormCreateStateController state = Get.find<CustomerFormCreateStateController>();
 
   _SearchList({
@@ -12,31 +12,33 @@ class _SearchList<T> extends StatelessWidget {
     required this.onFilter,
     required this.onItemSelected,
     required this.itemBuilder,
+    this.validator,
+    required this.compare,
+    required this.controller,
   });
 
   String label;
   String hint;
   String? value;
   Future Function(String?) onFilter;
-  Function(T)? onItemSelected;
-  Widget Function(T) itemBuilder;
+  Function(V?)? onItemSelected;
+  Widget Function(T item, V? selectedItem) itemBuilder;
+  String? Function(String?)? validator;
+  bool Function(T item, V? selectedItem) compare;
+  SearchListController<T, V> controller;
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      child: RegularInput(
-        label: label,
-        hintText: hint,
-        enabled: false,
-        value: value,
-      ),
-      onTap: () {
-        SearchList<T>(
-          onFilter: onFilter,
-          itemBuilder: itemBuilder,
-          onItemSelected: onItemSelected,
-        ).show();
-      },
+    return InputSearchList<T, V>(
+      onFilter: onFilter,
+      itemBuilder: itemBuilder,
+      onItemSelected: onItemSelected,
+      compare: compare,
+      label: label,
+      hint: hint,
+      value: value,
+      validator: validator,
+      controller: controller,
     );
   }
 }

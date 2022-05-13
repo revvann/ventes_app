@@ -23,14 +23,7 @@ class NearbyStateController extends RegularStateController {
     super.onInit();
 
     properties.dataSource.fetchDataContract = listener;
-
-    Position position = await getCurrentPosition();
-    GoogleMapController controller = await properties.mapsController.future;
-    controller.animateCamera(
-      CameraUpdate.newLatLng(LatLng(position.latitude, position.longitude)),
-    );
-    properties.dataSource.fetchData(LatLng(position.latitude, position.longitude));
-    Loader().show();
+    properties.refresh();
   }
 
   @override
@@ -83,8 +76,11 @@ class NearbyProperties {
     }
   }
 
-  void deployCustomers(List data) {
-    dataSource.customersFromList(data);
+  void deployCustomers(List data) async {
+    dataSource.customersFromList(
+      data,
+      LatLng(markers.first.position.latitude, markers.first.position.longitude),
+    );
 
     List<Marker> markersList = [markers.first];
     for (var element in dataSource.customers) {
@@ -97,5 +93,15 @@ class NearbyProperties {
       markersList.add(marker);
     }
     markers = Set.from(markersList);
+  }
+
+  void refresh() async {
+    Position position = await getCurrentPosition();
+    GoogleMapController controller = await mapsController.future;
+    controller.animateCamera(
+      CameraUpdate.newLatLng(LatLng(position.latitude, position.longitude)),
+    );
+    dataSource.fetchData(LatLng(position.latitude, position.longitude));
+    Loader().show();
   }
 }

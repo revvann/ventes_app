@@ -9,6 +9,7 @@ import 'package:ventes/app/models/schedule_guest_model.dart';
 import 'package:ventes/app/models/schedule_model.dart';
 import 'package:ventes/app/models/user_detail_model.dart';
 import 'package:ventes/app/resources/widgets/regular_dropdown.dart';
+import 'package:ventes/app/resources/widgets/search_list.dart';
 import 'package:ventes/helpers/function_helpers.dart';
 import 'package:ventes/app/states/controllers/schedule_fu_state_controller.dart';
 import 'package:ventes/app/states/form_sources/schedule_fc_form_source.dart';
@@ -37,6 +38,8 @@ class ScheduleFormUpdateFormSource {
   final scheendtimeDC = DropdownController<String?>(null);
   final schetzDC = DropdownController<String?>(null);
   final formKey = GlobalKey<FormState>();
+  final towardSearchListController = Get.put(SearchListController<UserDetail, UserDetail>());
+  final guestSearchListController = Get.put(SearchListController<UserDetail, List<UserDetail>>());
 
   int scheid = -1;
   String _scheonlink = "";
@@ -316,10 +319,13 @@ class ScheduleFormUpdateFormSource {
     scheremindTEC.dispose();
     schedescTEC.dispose();
     scheonlinkTEC.dispose();
+    Get.delete<SearchListController<UserDetail, UserDetail>>();
+    Get.delete<SearchListController<UserDetail, List<UserDetail>>>();
   }
 
   formSourceInit() async {
     validator = ScheduleFormUpdateValidator(this);
+    towardSearchListController.selectedItem = schetoward;
 
     setStartTimeList();
 

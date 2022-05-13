@@ -2,9 +2,11 @@
 
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ventes/app/resources/widgets/loader.dart';
+import 'package:ventes/app/resources/widgets/search_list.dart';
 import 'package:ventes/app/states/controllers/regular_state_controller.dart';
 import 'package:ventes/app/states/data_sources/customer_fc_data_source.dart';
 import 'package:ventes/app/states/form_sources/customer_fc_form_source.dart';
@@ -85,7 +87,10 @@ class CustomerFormCreateProperties {
   }
 
   void deployCustomers(List data) {
-    dataSource.customersFromList(data);
+    dataSource.customersFromList(
+      data,
+      LatLng(markers.first.position.latitude, markers.first.position.longitude),
+    );
 
     List<Marker> markersList = [markers.first];
     for (var element in dataSource.customers) {

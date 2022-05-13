@@ -46,7 +46,7 @@ class BottomNavigation extends View<BottomNavigationStateController> {
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: RegularColor.primary,
+                  color: RegularColor.secondary,
                 ),
                 child: SvgPicture.asset(
                   'assets/svg/calendar.svg',
@@ -104,7 +104,7 @@ class BottomNavigationItem extends View<BottomNavigationStateController> {
             children: [
               SvgPicture.asset(
                 icon,
-                color: RegularColor.primary,
+                color: RegularColor.secondary,
                 width: RegularSize.l,
               ),
               SizedBox(

@@ -10,6 +10,7 @@ import 'package:ventes/app/models/country_model.dart';
 import 'package:ventes/app/models/province_model.dart';
 import 'package:ventes/app/models/subdistrict_model.dart';
 import 'package:ventes/app/resources/widgets/editor_input.dart';
+import 'package:ventes/app/resources/widgets/input_search_list.dart';
 import 'package:ventes/app/resources/widgets/keyable_selectbox.dart';
 import 'package:ventes/app/resources/widgets/regular_input.dart';
 import 'package:ventes/app/resources/widgets/search_list.dart';
@@ -43,7 +44,6 @@ class CustomerFormCreateView extends View<CustomerFormCreateStateController> {
       backgroundColor: RegularColor.primary,
       extendBodyBehindAppBar: true,
       appBar: TopNavigation(
-        height: 85,
         title: NearbyString.appBarTitle,
         appBarKey: state.appBarKey,
         leading: GestureDetector(

@@ -11,7 +11,7 @@ class RegularOutlinedButton extends StatelessWidget {
     this.height = double.infinity,
     this.width = double.infinity,
     this.onPressed,
-    this.primary = RegularColor.primary,
+    this.primary = RegularColor.yellow,
     this.isLoading,
   }) : super(key: key);
   String? label;

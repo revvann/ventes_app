@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:ventes/app/models/schedule_guest_model.dart';
 import 'package:ventes/app/models/user_detail_model.dart';
 import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
+import 'package:ventes/app/resources/widgets/input_search_list.dart';
 import 'package:ventes/core/view.dart';
 import 'package:ventes/app/resources/widgets/editor_input.dart';
 import 'package:ventes/app/resources/widgets/error_alert.dart';

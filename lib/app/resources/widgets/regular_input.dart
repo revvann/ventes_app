@@ -94,6 +94,9 @@ class RegularInput extends StatelessWidget {
                 width: 2,
               ),
             ),
+            errorStyle: TextStyle(
+              color: RegularColor.red,
+            ),
           ),
         ),
       ],

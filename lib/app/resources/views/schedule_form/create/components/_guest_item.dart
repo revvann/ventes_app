@@ -46,7 +46,7 @@ class _GuestListItem extends StatelessWidget {
               ),
             ),
             decoration: BoxDecoration(
-              color: isSelected ? RegularColor.primary : RegularColor.purple,
+              color: isSelected ? RegularColor.primary : RegularColor.yellow,
               shape: BoxShape.circle,
             ),
           ),

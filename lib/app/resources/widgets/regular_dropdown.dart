@@ -75,7 +75,7 @@ class RegularDropdown<T> extends StatelessWidget {
                   alignment: Alignment.center,
                   child: SvgPicture.asset(
                     icon ?? "",
-                    color: RegularColor.primary,
+                    color: RegularColor.green,
                     width: RegularSize.m,
                   ),
                 ),

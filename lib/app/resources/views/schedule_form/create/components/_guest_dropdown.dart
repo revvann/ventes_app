@@ -3,10 +3,18 @@
 part of 'package:ventes/app/resources/views/schedule_form/create/schedule_fc.dart';
 
 class _GuestDropdown extends StatelessWidget {
-  _GuestDropdown({required this.onFilter, required this.itemBuilder, this.onItemSelected});
+  _GuestDropdown({
+    required this.onFilter,
+    required this.itemBuilder,
+    this.onItemSelected,
+    required this.compare,
+    required this.controller,
+  });
   Future<List<UserDetail>> Function(String?) onFilter;
-  void Function(UserDetail user)? onItemSelected;
-  Widget Function(UserDetail user) itemBuilder;
+  void Function(List<UserDetail>? user)? onItemSelected;
+  Widget Function(UserDetail user, List<UserDetail>? selectedUser) itemBuilder;
+  bool Function(UserDetail user, List<UserDetail>? selectedUser) compare;
+  SearchListController<UserDetail, List<UserDetail>> controller;
 
   @override
   Widget build(BuildContext context) {
@@ -18,10 +26,12 @@ class _GuestDropdown extends StatelessWidget {
         enabled: false,
       ),
       onTap: () {
-        SearchList<UserDetail>(
+        SearchList<UserDetail, List<UserDetail>>(
           onFilter: onFilter,
           itemBuilder: itemBuilder,
           onItemSelected: onItemSelected,
+          compare: compare,
+          controller: controller,
         ).show();
       },
     );

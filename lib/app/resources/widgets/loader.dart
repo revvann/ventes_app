@@ -86,7 +86,7 @@ class _LoaderAnimationState extends State<LoaderAnimation> with AnimationMixin {
                 height: 15,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: RegularColor.secondary,
+                  color: RegularColor.yellow,
                 ),
               ),
             ),
@@ -111,7 +111,7 @@ class QuarterBorderPainter extends CustomPainter {
     Rect myRect = Rect.fromLTWH(0, 0, size.width, size.height);
 
     var paint1 = Paint()
-      ..color = RegularColor.primary
+      ..color = RegularColor.green
       ..strokeWidth = strokeWidth
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round;

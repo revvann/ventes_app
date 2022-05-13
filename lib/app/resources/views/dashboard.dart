@@ -250,14 +250,14 @@ class DashboardView extends View<DashboardStateController> {
                 child: Text(
                   "SS",
                   style: TextStyle(
-                    color: RegularColor.cream,
+                    color: Colors.white,
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: RegularColor.secondary,
+                  color: RegularColor.primary,
                 ),
               ),
               itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
@@ -272,7 +272,7 @@ class DashboardView extends View<DashboardStateController> {
                         child: Text(
                           "SS",
                           style: TextStyle(
-                            color: RegularColor.cream,
+                            color: RegularColor.green,
                             fontSize: 14,
                             fontWeight: FontWeight.bold,
                           ),
@@ -319,7 +319,7 @@ class DashboardView extends View<DashboardStateController> {
                         child: Text(
                           "SS",
                           style: TextStyle(
-                            color: RegularColor.cream,
+                            color: RegularColor.green,
                             fontSize: 14,
                             fontWeight: FontWeight.bold,
                           ),
@@ -439,7 +439,7 @@ class DashboardView extends View<DashboardStateController> {
                 SvgPicture.asset(
                   icon,
                   width: RegularSize.l,
-                  color: RegularColor.primary,
+                  color: RegularColor.green,
                 ),
                 SizedBox(
                   width: RegularSize.s,

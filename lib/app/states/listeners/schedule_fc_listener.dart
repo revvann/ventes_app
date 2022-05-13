@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:ventes/app/models/schedule_guest_model.dart';
 import 'package:ventes/app/models/user_detail_model.dart';
 import 'package:ventes/app/network/contracts/create_contract.dart';
 import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
@@ -127,10 +128,25 @@ class ScheduleFormCreateListener implements FetchDataContract, CreateContract {
     }
   }
 
-  void onGuestChanged(UserDetail? user) {
-    if (user != null) {
-      _formSource.addGuest(user);
-    }
+  bool onGuestCompared(UserDetail a, List<UserDetail?>? b) {
+    return b?.any((element) => element?.userid == a.userid) ?? false;
+  }
+
+  bool onTowardCompared(UserDetail a, UserDetail? b) {
+    return a.userid == b?.userid;
+  }
+
+  void onGuestChanged(List<UserDetail?>? user) {
+    _formSource.guests = List<ScheduleGuest>.from(
+      user!.map(
+        (UserDetail? user) => ScheduleGuest(
+          scheuserid: user?.userid,
+          schebpid: user?.userdtbpid,
+          scheuser: user?.user,
+          businesspartner: user?.businesspartner,
+        ),
+      ),
+    );
   }
 
   void onRemoveGuest(item) {
@@ -163,16 +179,8 @@ class ScheduleFormCreateListener implements FetchDataContract, CreateContract {
     }
   }
 
-  void onGuestSelected(UserDetail user) {
-    if (_formSource.guests.where((item) => item.scheuserid == user.userid).isEmpty) {
-      _formSource.addGuest(user);
-    } else {
-      _formSource.removeGuest(user);
-    }
-  }
-
-  void onTowardSelected(UserDetail value) {
-    if (_formSource.schetoward?.userdtid != value.userdtid) {
+  void onTowardSelected(UserDetail? value) {
+    if (value != null) {
       _formSource.schetoward = value;
     } else {
       _formSource.schetoward = _formSource.userDefault;

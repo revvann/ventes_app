@@ -85,7 +85,7 @@ class SigninView extends View<SigninStateController> implements AuthContract {
                 height: RegularSize.m,
               ),
               RegularButton(
-                primary: RegularColor.secondary,
+                primary: RegularColor.yellow,
                 label: "Sign In",
                 height: RegularSize.xxl,
                 onPressed: () {
@@ -114,7 +114,7 @@ class SigninView extends View<SigninStateController> implements AuthContract {
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                color: RegularColor.secondary,
+                color: RegularColor.yellow,
               ),
             ),
             SizedBox(
@@ -134,7 +134,7 @@ class SigninView extends View<SigninStateController> implements AuthContract {
             ),
             Obx(() {
               return RegularButton(
-                primary: RegularColor.secondary,
+                primary: RegularColor.yellow,
                 isLoading: state.dataSource.isLoading,
                 label: SigninString.signinButton,
                 height: RegularSize.xxl,

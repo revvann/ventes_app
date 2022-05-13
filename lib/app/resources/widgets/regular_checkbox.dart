@@ -38,7 +38,7 @@ class RegularCheckbox extends StatelessWidget {
               padding: EdgeInsets.all(1),
               decoration: BoxDecoration(
                 border: Border.all(
-                  color: RegularColor.primary,
+                  color: RegularColor.green,
                   width: 2,
                 ),
                 borderRadius: BorderRadius.circular(4),
@@ -49,7 +49,7 @@ class RegularCheckbox extends StatelessWidget {
                   height: double.infinity,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(2),
-                    color: value.value ? RegularColor.primary : Colors.white,
+                    color: value.value ? RegularColor.green : Colors.white,
                   ),
                 );
               }),

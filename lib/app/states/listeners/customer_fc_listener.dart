@@ -15,6 +15,7 @@ import 'package:ventes/app/resources/widgets/error_alert.dart';
 import 'package:ventes/app/resources/widgets/failed_alert.dart';
 import 'package:ventes/app/resources/widgets/loader.dart';
 import 'package:ventes/app/resources/widgets/success_alert.dart';
+import 'package:ventes/app/states/controllers/nearby_state_controller.dart';
 import 'package:ventes/app/states/form_sources/customer_fc_form_source.dart';
 import 'package:ventes/constants/strings/nearby_string.dart';
 import 'package:ventes/routing/navigators/nearby_navigator.dart';
@@ -29,28 +30,44 @@ class CustomerFormCreateListener implements FetchDataContract, CreateContract {
     Get.back(id: NearbyNavigator.id);
   }
 
-  void onCountrySelected(Country country) {
+  void onCountrySelected(Country? country) {
     _formSource.country = country;
   }
 
-  void onProvinceSelected(Province province) {
+  void onProvinceSelected(Province? province) {
     _formSource.province = province;
   }
 
-  void onCitySelected(City city) {
+  void onCitySelected(City? city) {
     _formSource.city = city;
   }
 
-  void onSubdistrictSelected(Subdistrict subdistrict) {
+  void onSubdistrictSelected(Subdistrict? subdistrict) {
     _formSource.subdistrict = subdistrict;
   }
 
+  bool onCountryCompared(Country country, Country? selected) {
+    return country.countryid == selected?.countryid;
+  }
+
+  bool onProvinceCompared(Province province, Province? selected) {
+    return province.provid == selected?.provid;
+  }
+
+  bool onCityCompared(City city, City? selected) {
+    return city.cityid == selected?.cityid;
+  }
+
+  bool onSubdistrictCompared(Subdistrict subdistrict, Subdistrict? selected) {
+    return subdistrict.subdistrictid == selected?.subdistrictid;
+  }
+
   void onLongitudeValueChanged(latitude) {
-    _formSource.latitudeTEC.text = latitude.toString();
+    _formSource.longitudeTEC.text = latitude.toString();
   }
 
   void onLatitudeValueChanged(longitude) {
-    _formSource.longitudeTEC.text = longitude.toString();
+    _formSource.latitudeTEC.text = longitude.toString();
   }
 
   void onTypeSelected(int type) {
@@ -111,13 +128,17 @@ class CustomerFormCreateListener implements FetchDataContract, CreateContract {
   }
 
   void onSubmitButtonClicked() async {
-    Map<String, dynamic> data = _formSource.toJson();
-    String filename = path.basename(data['sbccstmpic']);
-    data['sbccstmpic'] = MultipartFile(File(data['sbccstmpic']), filename: filename);
+    if (_formSource.isValid) {
+      Map<String, dynamic> data = _formSource.toJson();
+      String filename = path.basename(data['sbccstmpic']);
+      data['sbccstmpic'] = MultipartFile(File(data['sbccstmpic']), filename: filename);
 
-    FormData formData = FormData(data);
-    _properties.dataSource.createCustomer(formData);
-    Loader().show();
+      FormData formData = FormData(data);
+      _properties.dataSource.createCustomer(formData);
+      Loader().show();
+    } else {
+      FailedAlert(NearbyString.formInvalid).show();
+    }
   }
 
   @override
@@ -162,8 +183,10 @@ class CustomerFormCreateListener implements FetchDataContract, CreateContract {
   }
 
   @override
-  void onCreateSuccess(String message) {
+  void onCreateSuccess(String message) async {
     Get.close(1);
     SuccessAlert(NearbyString.createSuccess).show();
+    Get.find<NearbyStateController>().properties.refresh();
+    Get.back(id: NearbyNavigator.id);
   }
 }
