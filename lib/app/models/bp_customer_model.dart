@@ -13,6 +13,10 @@ class BpCustomer extends Model {
   BusinessPartner? sbcbp;
   Customer? sbccstm;
 
+  ///
+  /// radus in meter
+  double? radius;
+
   BpCustomer({
     this.sbcid,
     this.sbcbpid,
@@ -23,6 +27,7 @@ class BpCustomer extends Model {
     this.sbccstmpic,
     this.sbcbp,
     this.sbccstm,
+    this.radius,
     String? createddate,
     String? updateddate,
     int? createdby,

@@ -16,6 +16,7 @@ class _CustomerList extends StatelessWidget {
           },
           itemBuilder: (_, index) {
             BpCustomer customer = customers[index];
+            String radius = (customer.radius! / 10).toStringAsFixed(2);
             return GestureDetector(
               onTap: () {
                 state.listener.onCustomerSelected(customer);
@@ -63,6 +64,16 @@ class _CustomerList extends StatelessWidget {
                             ),
                           ),
                         ],
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(
+                        right: RegularSize.m,
+                        left: RegularSize.m,
+                      ),
+                      child: Text(
+                        "$radius DAM",
+                        style: TextStyle(fontSize: 14, color: RegularColor.gray),
                       ),
                     ),
                   ],

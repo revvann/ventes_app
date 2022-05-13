@@ -31,6 +31,7 @@ class CustomerFormCreateDataSource {
     customers = customers.where((element) {
       LatLng coords1 = LatLng(element.sbccstm?.cstmlatitude ?? 0.0, element.sbccstm?.cstmlongitude ?? 0.0);
       double radius = calculateDistance(coords1, coords2);
+      element.radius = radius;
       return radius <= 100;
     }).toList();
   }

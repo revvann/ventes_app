@@ -26,10 +26,14 @@ class NearbyDataSource {
   void customersFromList(List data, LatLng currentPos) {
     customers = data.map((e) => BpCustomer.fromJson(e)).toList();
     LatLng coords2 = LatLng(currentPos.latitude, currentPos.longitude);
-    customers = customers.where((element) {
-      LatLng coords1 = LatLng(element.sbccstm?.cstmlatitude ?? 0.0, element.sbccstm?.cstmlongitude ?? 0.0);
-      double radius = calculateDistance(coords1, coords2);
-      return radius <= 100;
-    }).toList();
+    customers = customers
+        .map((element) {
+          LatLng coords1 = LatLng(element.sbccstm?.cstmlatitude ?? 0.0, element.sbccstm?.cstmlongitude ?? 0.0);
+          double radius = calculateDistance(coords1, coords2);
+          element.radius = radius;
+          return element;
+        })
+        .where((element) => element.radius != null ? element.radius! <= 100 : false)
+        .toList();
   }
 }
