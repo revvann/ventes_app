@@ -6,12 +6,15 @@ import 'package:ventes/app/models/user_detail_model.dart';
 import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
 import 'package:ventes/app/network/contracts/update_contract.dart';
 import 'package:ventes/app/network/presenters/schedule_fu_presenter.dart';
+import 'package:ventes/app/states/form_sources/schedule_fu_form_source.dart';
+import 'package:ventes/app/states/listeners/schedule_fu_listener.dart';
 import 'package:ventes/helpers/auth_helper.dart';
 
-class ScheduleFormUpdateDataSource {
+class ScheduleFormUpdateDataSource implements FetchDataContract, UpdateContract {
+  ScheduleFormUpdateListener get _listener => Get.find<ScheduleFormUpdateListener>();
+  ScheduleFormUpdateFormSource get _formSource => Get.find<ScheduleFormUpdateFormSource>();
+
   final ScheduleFormUpdatePresenter _presenter = ScheduleFormUpdatePresenter();
-  set updateContract(UpdateContract value) => _presenter.updateContract = value;
-  set fetchDataContract(FetchDataContract value) => _presenter.fetchDataContract = value;
 
   late int scheduleId;
 
@@ -28,6 +31,11 @@ class ScheduleFormUpdateDataSource {
   final Rx<Schedule?> _schedule = Rx<Schedule?>(null);
   Schedule? get schedule => _schedule.value;
   set schedule(Schedule? value) => _schedule.value = value;
+
+  void init() {
+    _presenter.fetchDataContract = this;
+    _presenter.updateContract = this;
+  }
 
   void insertTypes(List<Map<String, dynamic>> types) {
     List<DBType> typeMap = types.map((type) => DBType.fromJson(type)).where((element) => element.typeid == schedule?.schetypeid).toList();
@@ -65,5 +73,28 @@ class ScheduleFormUpdateDataSource {
       return isExist && e.userdtid == userdtid;
     }).toList();
     return userDetails;
+  }
+
+  @override
+  void onUpdateFailed(String message) => _listener.onUpdateDataFailed(message);
+
+  @override
+  void onUpdateSuccess(String message) => _listener.onUpdateDataSuccess(message);
+
+  @override
+  void onUpdateError(String message) => _listener.onUpdateDataError(message);
+
+  @override
+  onLoadError(String message) => _listener.onLoadDataError(message);
+
+  @override
+  onLoadFailed(String message) => _listener.onLoadDataFailed(message);
+
+  @override
+  onLoadSuccess(Map data) {
+    schedule = Schedule.fromJson(data['schedule']);
+    insertTypes(List<Map<String, dynamic>>.from(data['types']));
+    _formSource.prepareFormValue();
+    Get.close(1);
   }
 }

@@ -170,7 +170,7 @@ class ScheduleView extends View<ScheduleStateController> {
                               );
                             });
                           },
-                          dataSource: RegularCalendarDataSource(state.properties.dataSource.appointments),
+                          dataSource: RegularCalendarDataSource(state.dataSource.appointments),
                           calendarController: state.properties.calendarController,
                           onSelectionChanged: state.listener.onDateSelectionChanged,
                           initialDate: state.properties.initialDate,

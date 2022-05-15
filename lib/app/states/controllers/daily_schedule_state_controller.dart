@@ -11,11 +11,12 @@ import 'package:ventes/app/states/listeners/daily_schedule_listener.dart';
 class DailyScheduleStateController extends RegularStateController {
   DailyScheduleProperties properties = Get.put(DailyScheduleProperties());
   DailyScheduleListener listener = Get.put(DailyScheduleListener());
+  DailyScheduleDataSource dataSource = Get.put(DailyScheduleDataSource());
 
   @override
   void onInit() {
     super.onInit();
-    properties.dataSource.fetchDataContract = listener;
+    dataSource.init();
   }
 
   @override
@@ -28,12 +29,13 @@ class DailyScheduleStateController extends RegularStateController {
   void onClose() {
     Get.delete<DailyScheduleProperties>();
     Get.delete<DailyScheduleListener>();
+    Get.delete<DailyScheduleDataSource>();
     super.onClose();
   }
 }
 
 class DailyScheduleProperties {
-  DailyScheduleDataSource dataSource = DailyScheduleDataSource();
+  DailyScheduleDataSource get _dataSource => Get.find<DailyScheduleDataSource>();
 
   final Rx<DateTime> _date = Rx<DateTime>(DateTime.now());
   DateTime get date => _date.value;
@@ -44,17 +46,17 @@ class DailyScheduleProperties {
   set selectedAppointment(Schedule? value) => _selectedAppointment.value = value;
 
   void refetch() {
-    dataSource.fetchData(dbFormatDate(date));
+    _dataSource.fetchData(dbFormatDate(date));
     Loader().show();
   }
 
   Color getAppointmentColor(Schedule appointment) {
     Color color = RegularColor.primary;
-    if (appointment.schetypeid == dataSource.types["Event"]) {
+    if (appointment.schetypeid == _dataSource.types["Event"]) {
       color = RegularColor.yellow;
-    } else if (appointment.schetypeid == dataSource.types["Task"]) {
+    } else if (appointment.schetypeid == _dataSource.types["Task"]) {
       color = RegularColor.red;
-    } else if (appointment.schetypeid == dataSource.types["Reminder"]) {
+    } else if (appointment.schetypeid == _dataSource.types["Reminder"]) {
       color = RegularColor.cyan;
     }
     return color;

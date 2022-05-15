@@ -10,8 +10,8 @@ import 'package:ventes/app/models/schedule_model.dart';
 import 'package:ventes/app/models/user_detail_model.dart';
 import 'package:ventes/app/resources/widgets/regular_dropdown.dart';
 import 'package:ventes/app/resources/widgets/search_list.dart';
+import 'package:ventes/app/states/data_sources/schedule_fu_data_source.dart';
 import 'package:ventes/helpers/function_helpers.dart';
-import 'package:ventes/app/states/controllers/schedule_fu_state_controller.dart';
 import 'package:ventes/app/states/form_sources/schedule_fc_form_source.dart';
 import 'package:ventes/app/states/form_validators/schedule_fu_validator.dart';
 import 'package:ventes/app/states/listeners/schedule_fu_listener.dart';
@@ -21,7 +21,7 @@ class ScheduleFormUpdateFormSource {
   int addMemberId = 15;
   int shareLinkId = 16;
 
-  ScheduleFormUpdateProperties get _properties => Get.find<ScheduleFormUpdateProperties>();
+  ScheduleFormUpdateDataSource get _dataSource => Get.find<ScheduleFormUpdateDataSource>();
   ScheduleFormUpdateListener get _listener => Get.find<ScheduleFormUpdateListener>();
   late ScheduleFormUpdateValidator validator;
 
@@ -55,9 +55,9 @@ class ScheduleFormUpdateFormSource {
   final Rx<List<ScheduleGuest>> _guests = Rx<List<ScheduleGuest>>([]);
   final Rx<UserDetail?> _schetoward = Rx<UserDetail?>(null);
 
-  bool get isEvent => _properties.dataSource.typeName(schetype) == "Event";
-  bool get isTask => _properties.dataSource.typeName(schetype) == "Task";
-  bool get isReminder => _properties.dataSource.typeName(schetype) == "Reminder";
+  bool get isEvent => _dataSource.typeName(schetype) == "Event";
+  bool get isTask => _dataSource.typeName(schetype) == "Task";
+  bool get isReminder => _dataSource.typeName(schetype) == "Reminder";
 
   int? get schebpid => schetoward?.userdtbpid;
 
@@ -283,11 +283,11 @@ class ScheduleFormUpdateFormSource {
   }
 
   void prepareFormValue() {
-    if (_properties.dataSource.schedule != null) {
-      Schedule schedule = _properties.dataSource.schedule!;
+    if (_dataSource.schedule != null) {
+      Schedule schedule = _dataSource.schedule!;
       scheid = schedule.scheid ?? -1;
       schenm = schedule.schenm ?? "";
-      schetype = _properties.dataSource.typeIndex(schedule.schetypeid ?? 0);
+      schetype = _dataSource.typeIndex(schedule.schetypeid ?? 0);
       schestartdate = dbParseDate(schedule.schestartdate!);
       scheenddate = dbParseDate(schedule.scheenddate ?? schedule.schestartdate!);
       schestarttime = !(schedule.scheallday ?? false) ? parseTime(schedule.schestarttime!) : null;
@@ -333,7 +333,7 @@ class ScheduleFormUpdateFormSource {
     scheonlinkTEC.addListener(_listener.onOnlineLinkChanged);
     schelocTEC.addListener(_listener.onLocationChanged);
 
-    userDefault = await _properties.dataSource.userActive;
+    userDefault = await _dataSource.userActive;
     schetoward = userDefault;
     schetzDC.items = getTimezoneList();
     String currentTimeZone = await FlutterNativeTimezone.getLocalTimezone();
@@ -354,7 +354,7 @@ class ScheduleFormUpdateFormSource {
       "scheonline": isEvent ? scheonline : false,
       "scheonlink": isEvent ? scheonlink : null,
       "scheallday": scheallday,
-      "schetypeid": _properties.dataSource.typeId(schetype),
+      "schetypeid": _dataSource.typeId(schetype),
       "schetz": isEvent ? schetz : null,
       "scheprivate": isEvent ? scheprivate : false,
       "schetowardid": isEvent ? schetoward?.userid : userDefault?.userid,

@@ -4,11 +4,15 @@ import 'package:ventes/app/models/bp_customer_model.dart';
 import 'package:ventes/app/models/maps_loc.dart';
 import 'package:ventes/app/network/presenters/nearby_presenter.dart';
 import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
+import 'package:ventes/app/states/controllers/nearby_state_controller.dart';
+import 'package:ventes/app/states/listeners/nearby_listener.dart';
 import 'package:ventes/helpers/function_helpers.dart';
 
-class NearbyDataSource {
+class NearbyDataSource implements FetchDataContract {
+  NearbyProperties get _properties => Get.find<NearbyProperties>();
+  NearbyListener get _listener => Get.find<NearbyListener>();
+
   final NearbyPresenter _presenter = NearbyPresenter();
-  set fetchDataContract(FetchDataContract value) => _presenter.fetchDataContract = value;
 
   final _customers = <BpCustomer>[].obs;
   set customers(List<BpCustomer> value) => _customers.value = value;
@@ -17,6 +21,10 @@ class NearbyDataSource {
   final Rx<MapsLoc> _mapsLoc = Rx<MapsLoc>(MapsLoc());
   set mapsLoc(MapsLoc value) => _mapsLoc.value = value;
   MapsLoc get mapsLoc => _mapsLoc.value;
+
+  void init() {
+    _presenter.fetchDataContract = this;
+  }
 
   void fetchData(LatLng position) => _presenter.fetchData(position.latitude, position.longitude);
   void locationDetailLoaded(Map<String, dynamic> data) {
@@ -35,5 +43,27 @@ class NearbyDataSource {
         })
         .where((element) => element.radius != null ? element.radius! <= 100 : false)
         .toList();
+  }
+
+  @override
+  onLoadError(String message) => _listener.onLoadDataError();
+
+  @override
+  onLoadFailed(String message) => _listener.onLoadDataFailed();
+
+  @override
+  onLoadSuccess(Map data) {
+    if (data['location'] != null) {
+      locationDetailLoaded(data['location'] as Map<String, dynamic>);
+    }
+
+    if (data['customers'] != null) {
+      customersFromList(
+        data['customers'],
+        LatLng(_properties.markers.first.position.latitude, _properties.markers.first.position.longitude),
+      );
+      _properties.deployCustomers(customers);
+    }
+    Get.close(1);
   }
 }

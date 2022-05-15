@@ -7,7 +7,7 @@ class _CustomerList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      List<BpCustomer> customers = state.properties.dataSource.customers;
+      List<BpCustomer> customers = state.dataSource.customers;
       return Expanded(
         child: ListView.separated(
           itemCount: customers.length,

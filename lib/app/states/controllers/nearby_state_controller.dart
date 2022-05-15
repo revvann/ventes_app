@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:ventes/app/models/bp_customer_model.dart';
 import 'package:ventes/app/resources/widgets/loader.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/constants/strings/nearby_string.dart';
@@ -17,34 +18,32 @@ import 'package:ventes/app/states/listeners/nearby_listener.dart';
 class NearbyStateController extends RegularStateController {
   NearbyProperties properties = Get.put(NearbyProperties());
   NearbyListener listener = Get.put(NearbyListener());
+  NearbyDataSource dataSource = Get.put(NearbyDataSource());
 
   @override
   void onInit() async {
     super.onInit();
-
-    properties.dataSource.fetchDataContract = listener;
     properties.refresh();
+    dataSource.init();
   }
 
   @override
   onReady() {
     super.onReady();
-    double bottomSheetHeight = properties.bottomSheetKey.currentContext?.size?.height ?? 0;
-    double stackHeight = properties.stackKey.currentContext?.size?.height ?? 0;
-    properties.bottomSheetHeight.value = stackHeight - RegularSize.l;
-    properties.mapsHeight.value = (stackHeight - bottomSheetHeight) + 10;
+    properties.ready();
   }
 
   @override
   void onClose() {
     Get.delete<NearbyProperties>();
     Get.delete<NearbyListener>();
+    Get.delete<NearbyDataSource>();
     super.onClose();
   }
 }
 
 class NearbyProperties {
-  NearbyDataSource dataSource = NearbyDataSource();
+  final NearbyDataSource _dataSource = Get.find<NearbyDataSource>();
 
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   GlobalKey bottomSheetKey = GlobalKey();
@@ -76,14 +75,16 @@ class NearbyProperties {
     }
   }
 
-  void deployCustomers(List data) async {
-    dataSource.customersFromList(
-      data,
-      LatLng(markers.first.position.latitude, markers.first.position.longitude),
-    );
+  void ready() {
+    double bottomSheetHeight = bottomSheetKey.currentContext?.size?.height ?? 0;
+    double stackHeight = stackKey.currentContext?.size?.height ?? 0;
+    this.bottomSheetHeight.value = stackHeight - RegularSize.l;
+    mapsHeight.value = (stackHeight - bottomSheetHeight) + 10;
+  }
 
+  void deployCustomers(List<BpCustomer> data) async {
     List<Marker> markersList = [markers.first];
-    for (var element in dataSource.customers) {
+    for (var element in data) {
       Marker marker = Marker(
         markerId: MarkerId((element.sbcid ?? "0").toString()),
         infoWindow: InfoWindow(title: element.sbccstmname ?? "Unknown"),
@@ -101,7 +102,7 @@ class NearbyProperties {
     controller.animateCamera(
       CameraUpdate.newLatLng(LatLng(position.latitude, position.longitude)),
     );
-    dataSource.fetchData(LatLng(position.latitude, position.longitude));
+    _dataSource.fetchData(LatLng(position.latitude, position.longitude));
     Loader().show();
   }
 }

@@ -1,20 +1,20 @@
 import 'package:get/get.dart';
 import 'package:ventes/app/models/schedule_guest_model.dart';
 import 'package:ventes/app/models/user_detail_model.dart';
-import 'package:ventes/app/network/contracts/create_contract.dart';
-import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
 import 'package:ventes/app/resources/widgets/error_alert.dart';
 import 'package:ventes/app/resources/widgets/failed_alert.dart';
 import 'package:ventes/app/resources/widgets/loader.dart';
 import 'package:ventes/app/resources/widgets/success_alert.dart';
+import 'package:ventes/app/states/data_sources/schedule_fc_data_source.dart';
 import 'package:ventes/constants/strings/schedule_string.dart';
 import 'package:ventes/helpers/function_helpers.dart';
 import 'package:ventes/app/states/controllers/schedule_fc_state_controller.dart';
 import 'package:ventes/app/states/form_sources/schedule_fc_form_source.dart';
 
-class ScheduleFormCreateListener implements FetchDataContract, CreateContract {
+class ScheduleFormCreateListener {
   ScheduleFormCreateProperties get _properties => Get.find<ScheduleFormCreateProperties>();
   ScheduleFormCreateFormSource get _formSource => Get.find<ScheduleFormCreateFormSource>();
+  ScheduleFormCreateDataSource get _dataSource => Get.find<ScheduleFormCreateDataSource>();
 
   void onLocationChanged() {
     _formSource.schelocquiet = _formSource.schelocTEC.text;
@@ -188,13 +188,13 @@ class ScheduleFormCreateListener implements FetchDataContract, CreateContract {
   }
 
   Future<List<UserDetail>> onGuestFilter(String? search) async {
-    List<UserDetail> userDetails = await _properties.dataSource.filterUser(search);
+    List<UserDetail> userDetails = await _dataSource.filterUser(search);
     userDetails = userDetails.where((item) => item.userid != _formSource.schetoward?.userid).toList();
     return userDetails;
   }
 
   Future<List<UserDetail>> onTowardFilter(String? search) async {
-    List<UserDetail> userDetails = await _properties.dataSource.allUser(search);
+    List<UserDetail> userDetails = await _dataSource.allUser(search);
     List<int?> guestIds = _formSource.guests.map((item) => item.scheuserid).toList();
     userDetails = userDetails.where((item) => !guestIds.contains(item.userid)).toList();
     return userDetails;
@@ -204,7 +204,7 @@ class ScheduleFormCreateListener implements FetchDataContract, CreateContract {
     if (_formSource.isValid()) {
       Map<String, dynamic> data = _formSource.toJson();
       Loader().show();
-      _properties.dataSource.createSchedule(data);
+      _dataSource.createSchedule(data);
     }
   }
 
@@ -213,37 +213,26 @@ class ScheduleFormCreateListener implements FetchDataContract, CreateContract {
     _formSource.scheloc = "https://maps.google.com?q=${position.target.latitude},${position.target.longitude}";
   }
 
-  @override
-  void onCreateFailed(String message) {
+  void onCreateDataFailed(String message) {
     Get.close(1);
     FailedAlert(ScheduleString.createFailed).show();
   }
 
-  @override
-  void onCreateSuccess(String message) {
+  void onCreateDataSuccess(String message) {
     Get.close(1);
     SuccessAlert(ScheduleString.createSuccess).show();
   }
 
-  @override
-  void onCreateError(String message) {
+  void onCreateDataError(String message) {
     Get.close(1);
     ErrorAlert(ScheduleString.createError).show();
   }
 
-  @override
-  onLoadError(String message) {
+  onLoadDataError(String message) {
     ErrorAlert(ScheduleString.createError).show();
   }
 
-  @override
-  onLoadFailed(String message) {
+  onLoadDataFailed(String message) {
     FailedAlert(ScheduleString.createFailed).show();
-  }
-
-  @override
-  onLoadSuccess(Map data) {
-    _properties.dataSource.insertTypes(List<Map<String, dynamic>>.from(data['types']));
-    Get.close(1);
   }
 }

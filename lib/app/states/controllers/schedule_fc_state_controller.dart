@@ -23,6 +23,7 @@ class ScheduleFormCreateStateController extends RegularStateController {
   ScheduleFormCreateProperties properties = Get.put(ScheduleFormCreateProperties());
   ScheduleFormCreateListener listener = Get.put(ScheduleFormCreateListener());
   ScheduleFormCreateFormSource formSource = Get.put(ScheduleFormCreateFormSource());
+  ScheduleFormCreateDataSource dataSource = Get.put(ScheduleFormCreateDataSource());
 
   @override
   void onClose() {
@@ -30,35 +31,26 @@ class ScheduleFormCreateStateController extends RegularStateController {
     Get.delete<ScheduleFormCreateProperties>();
     Get.delete<ScheduleFormCreateListener>();
     Get.delete<ScheduleFormCreateFormSource>();
+    Get.delete<ScheduleFormCreateDataSource>();
     super.dispose();
   }
 
   @override
   void onInit() {
     super.onInit();
-    properties.dataSource.fetchDataContract = listener;
-    properties.dataSource.createContract = listener;
-
-    formSource.formSourceInit();
+    dataSource.init();
+    formSource.init();
   }
 
   @override
   void onReady() async {
     super.onReady();
-    Loader().show();
-    Position pos = await getCurrentPosition();
-    properties.mapsController.future.then((controller) {
-      controller.animateCamera(
-        CameraUpdate.newLatLng(LatLng(pos.latitude, pos.longitude)),
-      );
-    });
-    properties.markerLatLng = LatLng(pos.latitude, pos.longitude);
-    properties.dataSource.fetchTypes();
+    properties.ready();
   }
 }
 
 class ScheduleFormCreateProperties {
-  ScheduleFormCreateDataSource dataSource = ScheduleFormCreateDataSource();
+  ScheduleFormCreateDataSource get _dataSource => Get.find<ScheduleFormCreateDataSource>();
   ScheduleFormCreateListener get _listener => Get.find<ScheduleFormCreateListener>();
 
   final Completer<GoogleMapController> mapsController = Completer();
@@ -75,6 +67,18 @@ class ScheduleFormCreateProperties {
       position: latlng,
     );
     markers = {marker};
+  }
+
+  void ready() async {
+    Loader().show();
+    Position pos = await getCurrentPosition();
+    mapsController.future.then((controller) {
+      controller.animateCamera(
+        CameraUpdate.newLatLng(LatLng(pos.latitude, pos.longitude)),
+      );
+    });
+    markerLatLng = LatLng(pos.latitude, pos.longitude);
+    _dataSource.fetchTypes();
   }
 
   void showMapBottomSheet() {

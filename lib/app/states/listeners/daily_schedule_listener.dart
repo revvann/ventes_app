@@ -2,17 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:ventes/app/models/schedule_model.dart';
-import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
 import 'package:ventes/app/resources/views/schedule_form/create/schedule_fc.dart';
 import 'package:ventes/app/resources/views/schedule_form/update/schedule_fu.dart';
 import 'package:ventes/app/resources/widgets/error_alert.dart';
 import 'package:ventes/app/resources/widgets/failed_alert.dart';
+import 'package:ventes/app/states/controllers/daily_schedule_state_controller.dart';
+import 'package:ventes/app/states/data_sources/daily_schedule_data_source.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/routing/navigators/schedule_navigator.dart';
-import 'package:ventes/app/states/controllers/daily_schedule_state_controller.dart';
 
-class DailyScheduleListener implements FetchDataContract {
+class DailyScheduleListener {
   DailyScheduleProperties get _properties => Get.find<DailyScheduleProperties>();
+  DailyScheduleDataSource get _dataSource => Get.find<DailyScheduleDataSource>();
 
   void onArrowBackClick() {
     Get.back(id: ScheduleNavigator.id);
@@ -24,11 +25,11 @@ class DailyScheduleListener implements FetchDataContract {
 
   Color onFindAppointmentColor(Schedule appointment) {
     Color color = RegularColor.primary;
-    if (appointment.schetypeid == _properties.dataSource.types["Event"]) {
+    if (appointment.schetypeid == _dataSource.types["Event"]) {
       color = RegularColor.yellow;
-    } else if (appointment.schetypeid == _properties.dataSource.types["Task"]) {
+    } else if (appointment.schetypeid == _dataSource.types["Task"]) {
       color = RegularColor.red;
-    } else if (appointment.schetypeid == _properties.dataSource.types["Reminder"]) {
+    } else if (appointment.schetypeid == _dataSource.types["Reminder"]) {
       color = RegularColor.cyan;
     }
     return color;
@@ -44,25 +45,12 @@ class DailyScheduleListener implements FetchDataContract {
     _properties.selectedAppointment = details.appointments?.first;
   }
 
-  @override
-  onLoadFailed(String message) {
+  onLoadDataFailed(String message) {
     Get.close(1);
     FailedAlert(message).show();
   }
 
-  @override
-  onLoadSuccess(Map data) {
-    if (data['types'] != null) {
-      _properties.dataSource.listToTypes(data['types']);
-    }
-    if (data['schedules'] != null) {
-      _properties.dataSource.listToAppointments(data['schedules']);
-    }
-    Get.close(1);
-  }
-
-  @override
-  onLoadError(String message) {
+  onLoadDataError(String message) {
     Get.close(1);
     ErrorAlert(message).show();
   }

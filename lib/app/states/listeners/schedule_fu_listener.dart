@@ -8,6 +8,7 @@ import 'package:ventes/app/resources/widgets/error_alert.dart';
 import 'package:ventes/app/resources/widgets/failed_alert.dart';
 import 'package:ventes/app/resources/widgets/loader.dart';
 import 'package:ventes/app/resources/widgets/success_alert.dart';
+import 'package:ventes/app/states/data_sources/schedule_fu_data_source.dart';
 import 'package:ventes/constants/strings/schedule_string.dart';
 import 'package:ventes/helpers/function_helpers.dart';
 import 'package:ventes/routing/navigators/schedule_navigator.dart';
@@ -15,9 +16,10 @@ import 'package:ventes/app/states/controllers/daily_schedule_state_controller.da
 import 'package:ventes/app/states/controllers/schedule_fu_state_controller.dart';
 import 'package:ventes/app/states/form_sources/schedule_fu_form_source.dart';
 
-class ScheduleFormUpdateListener implements FetchDataContract, UpdateContract {
+class ScheduleFormUpdateListener {
   ScheduleFormUpdateProperties get _properties => Get.find<ScheduleFormUpdateProperties>();
   ScheduleFormUpdateFormSource get _formSource => Get.find<ScheduleFormUpdateFormSource>();
+  ScheduleFormUpdateDataSource get _dataSource => Get.find<ScheduleFormUpdateDataSource>();
 
   void onLocationChanged() {
     _formSource.schelocquiet = _formSource.schelocTEC.text;
@@ -191,13 +193,13 @@ class ScheduleFormUpdateListener implements FetchDataContract, UpdateContract {
   }
 
   Future<List<UserDetail>> onGuestFilter(String? search) async {
-    List<UserDetail> userDetails = await _properties.dataSource.filterUser(search);
+    List<UserDetail> userDetails = await _dataSource.filterUser(search);
     userDetails = userDetails.where((item) => item.userid != _formSource.schetoward?.userid).toList();
     return userDetails;
   }
 
   Future<List<UserDetail>> onTowardFilter(String? search) async {
-    List<UserDetail> userDetails = await _properties.dataSource.allUser(search);
+    List<UserDetail> userDetails = await _dataSource.allUser(search);
     List<int?> guestIds = _formSource.guests.map((item) => item.scheuserid).toList();
     userDetails = userDetails.where((item) => !guestIds.contains(item.userid)).toList();
     return userDetails;
@@ -207,7 +209,7 @@ class ScheduleFormUpdateListener implements FetchDataContract, UpdateContract {
     if (_formSource.isValid()) {
       Map<String, dynamic> data = _formSource.toJson();
       Loader().show();
-      _properties.dataSource.updateSchedule(data);
+      _dataSource.updateSchedule(data);
     }
   }
 
@@ -216,43 +218,30 @@ class ScheduleFormUpdateListener implements FetchDataContract, UpdateContract {
     _formSource.scheloc = "https://maps.google.com?q=${position.target.latitude},${position.target.longitude}";
   }
 
-  @override
-  void onUpdateFailed(String message) {
+  void onUpdateDataFailed(String message) {
     Get.close(1);
     FailedAlert(ScheduleString.updateFailed).show();
   }
 
-  @override
-  void onUpdateSuccess(String message) {
+  void onUpdateDataSuccess(String message) {
     Get.close(1);
     SuccessAlert(ScheduleString.updateSuccess).show();
     Get.find<DailyScheduleStateController>().properties.refetch();
     Get.back(id: ScheduleNavigator.id);
   }
 
-  @override
-  void onUpdateError(String message) {
+  void onUpdateDataError(String message) {
     Get.close(1);
     ErrorAlert(ScheduleString.updateError).show();
   }
 
-  @override
-  onLoadError(String message) {
+  onLoadDataError(String message) {
     Get.close(1);
     ErrorAlert(ScheduleString.fetchError).show();
   }
 
-  @override
-  onLoadFailed(String message) {
+  onLoadDataFailed(String message) {
     Get.close(1);
     FailedAlert(ScheduleString.fetchFailed).show();
-  }
-
-  @override
-  onLoadSuccess(Map data) {
-    _properties.dataSource.schedule = Schedule.fromJson(data['schedule']);
-    _properties.dataSource.insertTypes(List<Map<String, dynamic>>.from(data['types']));
-    _formSource.prepareFormValue();
-    Get.close(1);
   }
 }

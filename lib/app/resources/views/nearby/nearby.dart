@@ -81,7 +81,7 @@ class NearbyView extends View<NearbyStateController> {
               Expanded(
                 child: Obx(() {
                   return Text(
-                    state.properties.dataSource.mapsLoc.adresses?.first.formattedAddress ?? "Unknown",
+                    state.dataSource.mapsLoc.adresses?.first.formattedAddress ?? "Unknown",
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       color: Colors.white,

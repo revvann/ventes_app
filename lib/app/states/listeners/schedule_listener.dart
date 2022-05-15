@@ -1,23 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ventes/app/models/schedule_model.dart';
-import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
 import 'package:ventes/app/resources/views/daily_schedule/daily_schedule.dart';
 import 'package:ventes/app/resources/widgets/failed_alert.dart';
 import 'package:ventes/app/resources/widgets/loader.dart';
+import 'package:ventes/app/states/data_sources/schedule_data_source.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/routing/navigators/schedule_navigator.dart';
 import 'package:ventes/app/states/controllers/schedule_state_controller.dart';
 
-class ScheduleListener implements FetchDataContract {
+class ScheduleListener {
   ScheduleProperties get _properties => Get.find<ScheduleProperties>();
+  ScheduleDataSource get _dataSource => Get.find<ScheduleDataSource>();
 
   void onDateShownChanged(String data) {
     if (data == 'displayDate') {
       if (_properties.calendarController.displayDate != null) {
         _properties.dateShown = _properties.calendarController.displayDate!;
       }
-      _properties.dataSource.fetchSchedules(_properties.dateShown.month);
+      _dataSource.fetchSchedules(_properties.dateShown.month);
       Loader().show();
     }
   }
@@ -46,35 +47,22 @@ class ScheduleListener implements FetchDataContract {
 
   Color onAppointmentFindColor(Schedule appointment) {
     Color color = RegularColor.primary;
-    if (appointment.schetypeid == _properties.dataSource.types["Event"]) {
+    if (appointment.schetypeid == _dataSource.types["Event"]) {
       color = RegularColor.yellow;
-    } else if (appointment.schetypeid == _properties.dataSource.types["Task"]) {
+    } else if (appointment.schetypeid == _dataSource.types["Task"]) {
       color = RegularColor.red;
-    } else if (appointment.schetypeid == _properties.dataSource.types["Reminder"]) {
+    } else if (appointment.schetypeid == _dataSource.types["Reminder"]) {
       color = RegularColor.cyan;
     }
     return color;
   }
 
-  @override
-  onLoadFailed(String message) {
+  onLoadDataFailed(String message) {
     Get.close(1);
     FailedAlert(message).show();
   }
 
-  @override
-  onLoadSuccess(Map data) {
-    if (data['schedules'] != null) {
-      _properties.dataSource.listToAppointments(data['schedules']);
-    }
-    if (data['types'] != null) {
-      _properties.dataSource.listToTypes(data['types']);
-    }
-    Get.close(1);
-  }
-
-  @override
-  onLoadError(String message) {
+  onLoadDataError(String message) {
     Get.close(1);
     FailedAlert(message).show();
   }

@@ -59,7 +59,7 @@ part 'package:ventes/app/resources/views/schedule_form/update/components/_twinti
 class ScheduleFormUpdateView extends View<ScheduleFormUpdateStateController> {
   static const String route = "/schedule/update";
   ScheduleFormUpdateView({required int scheduleId}) {
-    state.properties.dataSource.scheduleId = scheduleId;
+    state.dataSource.scheduleId = scheduleId;
   }
 
   @override
@@ -152,7 +152,7 @@ class ScheduleFormUpdateView extends View<ScheduleFormUpdateStateController> {
                       state.formSource.schetype = value;
                     },
                     activeIndex: state.formSource.schetype,
-                    items: state.properties.dataSource.types != null ? [state.properties.dataSource.typeName(state.formSource.schetype)] : [],
+                    items: state.dataSource.types != null ? [state.dataSource.typeName(state.formSource.schetype)] : [],
                   );
                 }),
                 SizedBox(
@@ -172,15 +172,15 @@ class ScheduleFormUpdateView extends View<ScheduleFormUpdateStateController> {
                       child: Stack(
                         children: [
                           Offstage(
-                            offstage: state.properties.dataSource.typeName(state.formSource.schetype) != "Event",
+                            offstage: state.dataSource.typeName(state.formSource.schetype) != "Event",
                             child: _EventForm(),
                           ),
                           Offstage(
-                            offstage: state.properties.dataSource.typeName(state.formSource.schetype) != "Task",
+                            offstage: state.dataSource.typeName(state.formSource.schetype) != "Task",
                             child: _TaskForm(),
                           ),
                           Offstage(
-                            offstage: state.properties.dataSource.typeName(state.formSource.schetype) != "Reminder",
+                            offstage: state.dataSource.typeName(state.formSource.schetype) != "Reminder",
                             child: _ReminderForm(),
                           ),
                         ],

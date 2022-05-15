@@ -147,7 +147,7 @@ class ScheduleFormCreateView extends View<ScheduleFormCreateStateController> {
                       state.formSource.schetype = value;
                     },
                     activeIndex: state.formSource.schetype,
-                    items: state.properties.dataSource.typeNames(),
+                    items: state.dataSource.typeNames(),
                   );
                 }),
                 SizedBox(
@@ -167,15 +167,15 @@ class ScheduleFormCreateView extends View<ScheduleFormCreateStateController> {
                       child: Stack(
                         children: [
                           Offstage(
-                            offstage: state.properties.dataSource.typeName(state.formSource.schetype) != "Event",
+                            offstage: state.dataSource.typeName(state.formSource.schetype) != "Event",
                             child: _EventForm(),
                           ),
                           Offstage(
-                            offstage: state.properties.dataSource.typeName(state.formSource.schetype) != "Task",
+                            offstage: state.dataSource.typeName(state.formSource.schetype) != "Task",
                             child: _TaskForm(),
                           ),
                           Offstage(
-                            offstage: state.properties.dataSource.typeName(state.formSource.schetype) != "Reminder",
+                            offstage: state.dataSource.typeName(state.formSource.schetype) != "Reminder",
                             child: _ReminderForm(),
                           ),
                         ],

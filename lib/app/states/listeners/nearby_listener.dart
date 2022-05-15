@@ -1,10 +1,8 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ventes/app/models/bp_customer_model.dart';
-import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
 import 'package:ventes/app/resources/views/customer_form/create/customer_fc.dart';
 import 'package:ventes/app/resources/widgets/error_alert.dart';
 import 'package:ventes/app/resources/widgets/failed_alert.dart';
@@ -14,7 +12,7 @@ import 'package:ventes/helpers/function_helpers.dart';
 import 'package:ventes/routing/navigators/nearby_navigator.dart';
 import 'package:ventes/app/states/controllers/nearby_state_controller.dart';
 
-class NearbyListener implements FetchDataContract {
+class NearbyListener {
   NearbyProperties get _properties => Get.find<NearbyProperties>();
 
   void onMapControllerCreated(GoogleMapController controller) {
@@ -56,27 +54,13 @@ class NearbyListener implements FetchDataContract {
     });
   }
 
-  @override
-  onLoadError(String message) {
+  void onLoadDataError() {
     Get.close(1);
     ErrorAlert(NearbyString.fetchError).show();
   }
 
-  @override
-  onLoadFailed(String message) {
+  void onLoadDataFailed() {
     Get.close(1);
     FailedAlert(NearbyString.fetchFailed).show();
-  }
-
-  @override
-  onLoadSuccess(Map data) {
-    if (data['location'] != null) {
-      _properties.dataSource.locationDetailLoaded(data['location'] as Map<String, dynamic>);
-    }
-
-    if (data['customers'] != null) {
-      _properties.deployCustomers(data['customers']);
-    }
-    Get.close(1);
   }
 }
