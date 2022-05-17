@@ -46,6 +46,16 @@ class Service extends GetConnect {
     return put('$api/$id', body, contentType: contentType, headers: headers, query: query);
   }
 
+  Future<Response> postUpdate(
+    int id,
+    dynamic body, {
+    String? contentType,
+    Map<String, String>? headers,
+    Map<String, dynamic>? query,
+  }) {
+    return post('$api/$id', body, contentType: contentType, headers: headers, query: query);
+  }
+
   Future<Response> destroy(int id, {Map<String, dynamic>? query}) {
     return delete('$api/$id', query: query);
   }

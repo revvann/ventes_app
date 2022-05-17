@@ -95,7 +95,7 @@ class CustomerFormUpdatePresenter {
 
   void updateCustomer(int id, FormData data) async {
     try {
-      Response response = await _bpCustomerService.update(
+      Response response = await _bpCustomerService.postUpdate(
         id,
         data,
         contentType: "multipart/form-data",
