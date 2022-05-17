@@ -9,79 +9,90 @@ class _CustomerList extends StatelessWidget {
     return Obx(() {
       List<BpCustomer> customers = state.dataSource.customers;
       return Expanded(
-        child: ListView.separated(
-          itemCount: customers.length,
-          separatorBuilder: (_, index) {
-            return Divider();
-          },
-          itemBuilder: (_, index) {
-            BpCustomer customer = customers[index];
-            String radius = (customer.radius! / 10).toStringAsFixed(2);
-            return GestureDetector(
-              onTap: () {
-                state.listener.onCustomerSelected(customer);
-              },
-              child: Padding(
-                padding: EdgeInsets.only(
-                  left: RegularSize.m,
-                  right: RegularSize.m,
-                  bottom: RegularSize.xs,
-                  top: RegularSize.xs,
+        child: customers.isEmpty
+            ? Text(
+                "There is no customer in your area",
+                style: TextStyle(
+                  color: RegularColor.dark,
+                  fontSize: 16,
                 ),
-                child: Row(
-                  children: [
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: RegularSize.m,
+              )
+            : ListView.separated(
+                itemCount: customers.length,
+                separatorBuilder: (_, index) {
+                  return Divider();
+                },
+                itemBuilder: (_, index) {
+                  BpCustomer customer = customers[index];
+                  String radius = (customer.radius! / 1000).toStringAsFixed(2);
+                  return GestureDetector(
+                    onTap: () {
+                      state.listener.onCustomerSelected(customer);
+                    },
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                        left: RegularSize.m,
+                        right: RegularSize.m,
+                        bottom: RegularSize.xs,
+                        top: RegularSize.xs,
                       ),
-                      child: SvgPicture.asset(
-                        "assets/svg/building-bold.svg",
-                        color: RegularColor.gray,
-                        width: RegularSize.m,
-                      ),
-                    ),
-                    Expanded(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      child: Row(
                         children: [
-                          Text(
-                            customer.sbccstmname ?? NearbyString.defaultCustomerName,
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: RegularSize.m,
+                            ),
+                            child: Obx(() {
+                              bool isSelected = state.properties.selectedCustomer.any((c) => c.sbcid == customer.sbcid);
+                              return SvgPicture.asset(
+                                isSelected ? "assets/svg/marker.svg" : "assets/svg/building-bold.svg",
+                                color: isSelected ? RegularColor.green : RegularColor.gray,
+                                width: RegularSize.m,
+                              );
+                            }),
+                          ),
+                          Expanded(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  customer.sbccstmname ?? NearbyString.defaultCustomerName,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: RegularSize.s,
+                                ),
+                                Text(
+                                  customer.sbccstmaddress ?? NearbyString.defaultCustomerAddress,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: RegularColor.gray,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                          SizedBox(
-                            height: RegularSize.s,
-                          ),
-                          Text(
-                            customer.sbccstmaddress ?? NearbyString.defaultCustomerAddress,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: RegularColor.gray,
+                          Padding(
+                            padding: EdgeInsets.only(
+                              right: RegularSize.m,
+                              left: RegularSize.m,
+                            ),
+                            child: Text(
+                              "$radius KM",
+                              style: TextStyle(fontSize: 14, color: RegularColor.gray),
                             ),
                           ),
                         ],
                       ),
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(
-                        right: RegularSize.m,
-                        left: RegularSize.m,
-                      ),
-                      child: Text(
-                        "$radius DAM",
-                        style: TextStyle(fontSize: 14, color: RegularColor.gray),
-                      ),
-                    ),
-                  ],
-                ),
+                  );
+                },
               ),
-            );
-          },
-        ),
       );
     });
   }

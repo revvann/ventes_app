@@ -20,10 +20,10 @@ class ScheduleFormCreateStateController extends RegularStateController {
   @override
   bool get isFixedBody => false;
 
-  ScheduleFormCreateProperties properties = Get.put(ScheduleFormCreateProperties());
+  ScheduleFormCreateDataSource dataSource = Get.put(ScheduleFormCreateDataSource());
   ScheduleFormCreateListener listener = Get.put(ScheduleFormCreateListener());
   ScheduleFormCreateFormSource formSource = Get.put(ScheduleFormCreateFormSource());
-  ScheduleFormCreateDataSource dataSource = Get.put(ScheduleFormCreateDataSource());
+  ScheduleFormCreateProperties properties = Get.put(ScheduleFormCreateProperties());
 
   @override
   void onClose() {

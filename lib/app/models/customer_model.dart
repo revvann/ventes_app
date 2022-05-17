@@ -1,3 +1,7 @@
+import 'package:ventes/app/models/city_model.dart';
+import 'package:ventes/app/models/country_model.dart';
+import 'package:ventes/app/models/province_model.dart';
+import 'package:ventes/app/models/subdistrict_model.dart';
 import 'package:ventes/core/model.dart';
 import 'package:ventes/app/models/type_model.dart';
 
@@ -17,6 +21,10 @@ class Customer extends Model {
   double? cstmlongitude;
   String? referalcode;
   DBType? cstmtype;
+  Country? cstmcountry;
+  Province? cstmprovince;
+  City? cstmcity;
+  Subdistrict? cstmsubdistrict;
 
   Customer({
     this.cstmid,
@@ -34,6 +42,10 @@ class Customer extends Model {
     this.cstmlongitude,
     this.referalcode,
     this.cstmtype,
+    this.cstmcountry,
+    this.cstmprovince,
+    this.cstmcity,
+    this.cstmsubdistrict,
     String? createddate,
     String? updateddate,
     int? createdby,
@@ -66,6 +78,22 @@ class Customer extends Model {
     if (json['cstmtype'] != null) {
       cstmtype = DBType.fromJson(json['cstmtype']);
     }
+
+    if (json['cstmcountry'] != null) {
+      cstmcountry = Country.fromJson(json['cstmcountry']);
+    }
+
+    if (json['cstmprovince'] != null) {
+      cstmprovince = Province.fromJson(json['cstmprovince']);
+    }
+
+    if (json['cstmcity'] != null) {
+      cstmcity = City.fromJson(json['cstmcity']);
+    }
+
+    if (json['cstmsubdistrict'] != null) {
+      cstmsubdistrict = Subdistrict.fromJson(json['cstmsubdistrict']);
+    }
     super.fromJson(json);
   }
 
@@ -89,6 +117,22 @@ class Customer extends Model {
 
     if (cstmtype != null) {
       data['cstmtype'] = cstmtype!.toJson();
+    }
+
+    if (cstmcountry != null) {
+      data['cstmcountry'] = cstmcountry!.toJson();
+    }
+
+    if (cstmprovince != null) {
+      data['cstmprovince'] = cstmprovince!.toJson();
+    }
+
+    if (cstmcity != null) {
+      data['cstmcity'] = cstmcity!.toJson();
+    }
+
+    if (cstmsubdistrict != null) {
+      data['cstmsubdistrict'] = cstmsubdistrict!.toJson();
     }
     return data;
   }

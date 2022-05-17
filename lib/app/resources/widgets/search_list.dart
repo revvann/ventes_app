@@ -79,18 +79,24 @@ class SearchListController<T, V> extends GetxController {
   bool get isLoading => _isLoading.value;
   set isLoading(bool value) => _isLoading.value = value;
 
-  _onSearchChanged(String query) {
+  _onSearchChanged() {
     if (_debounce?.isActive ?? false) _debounce?.cancel();
     _debounce = Timer(const Duration(milliseconds: 500), () async {
-      _rebuildList(query);
+      refreshList();
     });
   }
 
-  _rebuildList([String? search]) async {
+  refreshList() async {
     isLoading = true;
-    List<T> items = await onFilter(search);
+    List<T> items = await onFilter(_searchController.text);
     isLoading = false;
     this.items = items;
+  }
+
+  reset() {
+    refreshList();
+    selectedItem = null;
+    _searchController.text = '';
   }
 
   bool _isMultiple() {
@@ -123,7 +129,7 @@ class SearchListController<T, V> extends GetxController {
     }
 
     _searchController.addListener(() {
-      _onSearchChanged(_searchController.text);
+      _onSearchChanged();
     });
   }
 
@@ -147,7 +153,7 @@ class SearchListWidget<T, V> extends StatelessWidget {
     controller.onFilter = onFilter;
     controller.itemBuilder = itemBuilder;
     controller.onItemSelected = onItemSelected;
-    controller._rebuildList();
+    controller.refreshList();
   }
 
   final SearchListController<T, V> controller;

@@ -15,7 +15,6 @@ class CustomerCard extends StatelessWidget {
     this.title,
     this.type,
     this.radius,
-    this.workTime,
     this.place,
   }) : super(key: key);
   EdgeInsets? margin;
@@ -25,7 +24,6 @@ class CustomerCard extends StatelessWidget {
   String? title;
   String? type;
   String? radius;
-  String? workTime;
   String? place;
 
   @override
@@ -111,24 +109,6 @@ class CustomerCard extends StatelessWidget {
                     ),
                     Text(
                       radius ?? "",
-                      style: TextStyle(
-                        color: RegularColor.dark,
-                        fontSize: 12,
-                      ),
-                    ),
-                    SizedBox(
-                      width: RegularSize.s,
-                    ),
-                    SvgPicture.asset(
-                      'assets/svg/history.svg',
-                      width: RegularSize.m,
-                      color: RegularColor.primary,
-                    ),
-                    SizedBox(
-                      width: RegularSize.xs,
-                    ),
-                    Text(
-                      workTime ?? "",
                       style: TextStyle(
                         color: RegularColor.dark,
                         fontSize: 12,

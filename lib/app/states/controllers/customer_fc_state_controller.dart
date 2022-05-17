@@ -2,11 +2,10 @@
 
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:ventes/app/models/bp_customer_model.dart';
 import 'package:ventes/app/resources/widgets/loader.dart';
-import 'package:ventes/app/resources/widgets/search_list.dart';
 import 'package:ventes/app/states/controllers/regular_state_controller.dart';
 import 'package:ventes/app/states/data_sources/customer_fc_data_source.dart';
 import 'package:ventes/app/states/form_sources/customer_fc_form_source.dart';
@@ -14,6 +13,7 @@ import 'package:ventes/app/states/listeners/customer_fc_listener.dart';
 import 'package:ventes/constants/strings/nearby_string.dart';
 
 class CustomerFormCreateStateController extends RegularStateController {
+  CustomerFormCreateDataSource dataSource = Get.put(CustomerFormCreateDataSource());
   CustomerFormCreateProperties properties = Get.put(CustomerFormCreateProperties());
   CustomerFormCreateListener listener = Get.put(CustomerFormCreateListener());
   CustomerFormCreateFormSource formSource = Get.put(CustomerFormCreateFormSource());
@@ -21,8 +21,7 @@ class CustomerFormCreateStateController extends RegularStateController {
   @override
   onInit() {
     super.onInit();
-    properties.dataSource.fetchDataContract = listener;
-    properties.dataSource.createContract = listener;
+    dataSource.init();
     formSource.init();
   }
 
@@ -39,7 +38,7 @@ class CustomerFormCreateStateController extends RegularStateController {
       properties.markerLatLng = pos;
     }
 
-    properties.dataSource.fetchData();
+    dataSource.fetchData();
     Loader().show();
   }
 
@@ -53,8 +52,6 @@ class CustomerFormCreateStateController extends RegularStateController {
 }
 
 class CustomerFormCreateProperties {
-  CustomerFormCreateDataSource dataSource = CustomerFormCreateDataSource();
-
   final double defaultZoom = 14.5;
   final Completer<GoogleMapController> mapsController = Completer();
 
@@ -86,14 +83,9 @@ class CustomerFormCreateProperties {
     }
   }
 
-  void deployCustomers(List data) {
-    dataSource.customersFromList(
-      data,
-      LatLng(markers.first.position.latitude, markers.first.position.longitude),
-    );
-
+  void deployCustomers(List<BpCustomer> data) {
     List<Marker> markersList = [markers.first];
-    for (var element in dataSource.customers) {
+    for (var element in data) {
       Marker marker = Marker(
         markerId: MarkerId((element.sbcid ?? "0").toString()),
         infoWindow: InfoWindow(title: element.sbccstmname ?? "Unknown"),

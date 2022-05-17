@@ -9,13 +9,15 @@ import 'package:ventes/app/models/country_model.dart';
 import 'package:ventes/app/models/province_model.dart';
 import 'package:ventes/app/models/subdistrict_model.dart';
 import 'package:ventes/app/resources/widgets/search_list.dart';
-import 'package:ventes/app/states/controllers/customer_fc_state_controller.dart';
-import 'package:ventes/app/states/form_validators/customer_fc_validator.dart';
+import 'package:ventes/app/states/controllers/customer_fu_state_controller.dart';
+import 'package:ventes/app/states/form_validators/customer_fu_validator.dart';
+import 'package:ventes/app/states/listeners/customer_fu_listener.dart';
 import 'package:ventes/constants/strings/nearby_string.dart';
 
-class CustomerFormCreateFormSource {
-  late CustomerFormCreateValidator validator;
-  final CustomerFormCreateProperties _properties = Get.find<CustomerFormCreateProperties>();
+class CustomerFormUpdateFormSource {
+  late CustomerFormUpdateValidator validator;
+  final CustomerFormUpdateProperties _properties = Get.find<CustomerFormUpdateProperties>();
+  final CustomerFormUpdateListener _listener = Get.find<CustomerFormUpdateListener>();
 
   SearchListController<Country, Country> countrySearchListController = Get.put(SearchListController<Country, Country>());
   SearchListController<Province, Province> provinceSearchListController = Get.put(SearchListController<Province, Province>());
@@ -23,23 +25,23 @@ class CustomerFormCreateFormSource {
   SearchListController<Subdistrict, Subdistrict> subdistrictSearchListController = Get.put(SearchListController<Subdistrict, Subdistrict>());
 
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  final defaultPicture = Image.asset('assets/' + NearbyString.defaultImage).obs;
+  Rx<Image> defaultPicture = Image.asset('assets/' + NearbyString.defaultImage).obs;
 
   bool get isValid => formKey.currentState?.validate() ?? false;
 
-  TextEditingController latitudeTEC = TextEditingController();
-  TextEditingController longitudeTEC = TextEditingController();
   TextEditingController nameTEC = TextEditingController();
   TextEditingController addressTEC = TextEditingController();
   TextEditingController phoneTEC = TextEditingController();
   TextEditingController postalCodeTEC = TextEditingController();
 
   File? picture;
-  int? cstmtypeid;
-  int? sbcbpid;
+  int? sbcid;
+  String cstmlatitude = '0';
+  String cstmlongitude = '0';
 
-  String get cstmlatitude => latitudeTEC.text;
-  String get cstmlongitude => longitudeTEC.text;
+  final Rx<int?> _cstmtypeid = Rx<int?>(null);
+
+  int? get cstmtypeid => _cstmtypeid.value;
   String get cstmname => nameTEC.text;
   String get cstmaddress => addressTEC.text;
   String get cstmphone => phoneTEC.text;
@@ -54,12 +56,10 @@ class CustomerFormCreateFormSource {
   City? get city => citySearchListController.selectedItem;
   Subdistrict? get subdistrict => subdistrictSearchListController.selectedItem;
 
-  init() async {
-    validator = CustomerFormCreateValidator(this);
-    picture = await _getImageFileFromAssets(NearbyString.defaultImage);
+  set cstmtypeid(int? value) => _cstmtypeid.value = value;
 
-    latitudeTEC.text = _properties.latitude!.toString();
-    longitudeTEC.text = _properties.longitude!.toString();
+  init() async {
+    validator = CustomerFormUpdateValidator(this);
   }
 
   dispose() {
@@ -67,28 +67,50 @@ class CustomerFormCreateFormSource {
     addressTEC.dispose();
     phoneTEC.dispose();
     postalCodeTEC.dispose();
-    latitudeTEC.dispose();
-    longitudeTEC.dispose();
     Get.delete<SearchListController<Country, Country>>();
     Get.delete<SearchListController<Province, Province>>();
     Get.delete<SearchListController<City, City>>();
     Get.delete<SearchListController<Subdistrict, Subdistrict>>();
   }
 
-  Future<File> _getImageFileFromAssets(String path) async {
-    final byteData = await rootBundle.load('assets/$path');
+  void prepareFormValue() {
+    if (_properties.customer != null) {
+      sbcid = _properties.customer!.sbcid;
 
-    final file = File('${(await getTemporaryDirectory()).path}/$path');
-    await file.create(recursive: true);
-    await file.writeAsBytes(byteData.buffer.asUint8List(byteData.offsetInBytes, byteData.lengthInBytes));
+      cstmlatitude = _properties.customer!.sbccstm!.cstmlatitude!.toString();
+      cstmlongitude = _properties.customer!.sbccstm!.cstmlongitude!.toString();
+      nameTEC.text = _properties.customer!.sbccstm!.cstmname ?? "";
+      addressTEC.text = _properties.customer!.sbccstm!.cstmaddress ?? "";
+      phoneTEC.text = _properties.customer!.sbccstm!.cstmphone ?? "";
+      postalCodeTEC.text = _properties.customer!.sbccstm!.cstmpostalcode ?? "";
 
-    return file;
+      cstmtypeid = _properties.customer!.sbccstm!.cstmtypeid;
+
+      if (_properties.customer!.sbccstmpic != null) {
+        defaultPicture.value = Image.network(_properties.customer!.sbccstmpic!);
+      }
+
+      if (_properties.customer!.sbccstm!.cstmcountry != null) {
+        countrySearchListController.selectedItem = _properties.customer!.sbccstm!.cstmcountry!;
+      }
+
+      if (_properties.customer!.sbccstm!.cstmprovince != null) {
+        provinceSearchListController.selectedItem = _properties.customer!.sbccstm!.cstmprovince!;
+      }
+
+      if (_properties.customer!.sbccstm!.cstmcity != null) {
+        citySearchListController.selectedItem = _properties.customer!.sbccstm!.cstmcity!;
+      }
+
+      if (_properties.customer!.sbccstm!.cstmsubdistrict != null) {
+        subdistrictSearchListController.selectedItem = _properties.customer!.sbccstm!.cstmsubdistrict!;
+      }
+    }
   }
 
   Map<String, dynamic> toJson() {
     return {
       'sbccstmpic': picture?.path,
-      'sbcbpid': sbcbpid.toString(),
       'cstmname': cstmname,
       'cstmaddress': cstmaddress,
       'cstmphone': cstmphone,

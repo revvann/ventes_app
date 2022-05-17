@@ -8,19 +8,19 @@ import 'package:ventes/app/models/type_model.dart';
 import 'package:ventes/app/models/user_detail_model.dart';
 import 'package:ventes/app/network/contracts/create_contract.dart';
 import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
-import 'package:ventes/app/network/presenters/customer_fc_presenter.dart';
+import 'package:ventes/app/network/presenters/customer_fu_presenter.dart';
 import 'package:get/get.dart';
-import 'package:ventes/app/states/controllers/customer_fc_state_controller.dart';
-import 'package:ventes/app/states/form_sources/customer_fc_form_source.dart';
-import 'package:ventes/app/states/listeners/customer_fc_listener.dart';
+import 'package:ventes/app/states/controllers/customer_fu_state_controller.dart';
+import 'package:ventes/app/states/form_sources/customer_fu_form_source.dart';
+import 'package:ventes/app/states/listeners/customer_fu_listener.dart';
 import 'package:ventes/helpers/function_helpers.dart';
 
-class CustomerFormCreateDataSource implements FetchDataContract, CreateContract {
-  CustomerFormCreateListener get _listener => Get.find<CustomerFormCreateListener>();
-  CustomerFormCreateFormSource get _formSource => Get.find<CustomerFormCreateFormSource>();
-  CustomerFormCreateProperties get _properties => Get.find<CustomerFormCreateProperties>();
+class CustomerFormUpdateDataSource implements FetchDataContract, CreateContract {
+  CustomerFormUpdateListener get _listener => Get.find<CustomerFormUpdateListener>();
+  CustomerFormUpdateFormSource get _formSource => Get.find<CustomerFormUpdateFormSource>();
+  CustomerFormUpdateProperties get _properties => Get.find<CustomerFormUpdateProperties>();
 
-  final CustomerFormCreatePresenter _presenter = CustomerFormCreatePresenter();
+  final CustomerFormUpdatePresenter _presenter = CustomerFormUpdatePresenter();
 
   set fetchDataContract(FetchDataContract value) => _presenter.fetchDataContract = value;
   set createContract(CreateContract value) => _presenter.createContract = value;
@@ -63,8 +63,8 @@ class CustomerFormCreateDataSource implements FetchDataContract, CreateContract 
   Future<List<City>> fetchCities(int provinceId, [String? search]) async => await _presenter.fetchCities(provinceId, search);
   Future<List<Subdistrict>> fetchSubdistricts(int cityId, [String? search]) async => await _presenter.fetchSubdistricts(cityId, search);
 
-  void fetchData() => _presenter.fetchData();
-  void createCustomer(FormData data) => _presenter.createCustomer(data);
+  void fetchData() => _presenter.fetchData(_properties.customer?.sbcid ?? 0);
+  void updateCustomer(int id, Map<String, dynamic> data) => _presenter.updateCustomer(id, data);
 
   @override
   onLoadError(String message) => _listener.onLoadDataError(message);
@@ -73,7 +73,13 @@ class CustomerFormCreateDataSource implements FetchDataContract, CreateContract 
   onLoadFailed(String message) => _listener.onLoadDataFailed(message);
 
   @override
-  onLoadSuccess(Map data) {
+  onLoadSuccess(Map data) async {
+    if (data['customer'] != null) {
+      _properties.customer = data['customer'];
+      await _properties.moveCamera();
+      _formSource.prepareFormValue();
+    }
+
     if (data['customers'] != null) {
       customersFromList(
         data['customers'],
@@ -84,10 +90,6 @@ class CustomerFormCreateDataSource implements FetchDataContract, CreateContract 
 
     if (data['types'] != null) {
       typesFromList(data['types']);
-    }
-
-    if (data['user'] != null) {
-      _formSource.sbcbpid = UserDetail.fromJson(data['user']).userdtbpid;
     }
 
     Get.close(1);

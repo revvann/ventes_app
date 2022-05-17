@@ -133,7 +133,6 @@ class _CustomerForm extends StatelessWidget {
               },
               label: 'Search subdistrict',
               onFilter: state.listener.onSubdistrictFilter,
-              onItemSelected: state.listener.onSubdistrictSelected,
               value: state.formSource.subdistrict?.subdistrictname,
               validator: state.formSource.validator.cstmsubdistrict,
               compare: state.listener.onSubdistrictCompared,
@@ -148,7 +147,7 @@ class _CustomerForm extends StatelessWidget {
               label: "Customer type",
               onSelected: state.listener.onTypeSelected,
               activeIndex: 13,
-              items: state.properties.dataSource.types,
+              items: state.dataSource.types,
             );
           }),
           SizedBox(

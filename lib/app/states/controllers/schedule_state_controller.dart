@@ -7,9 +7,9 @@ import 'package:ventes/app/states/data_sources/schedule_data_source.dart';
 import 'package:ventes/app/states/listeners/schedule_listener.dart';
 
 class ScheduleStateController extends RegularStateController {
-  ScheduleProperties properties = Get.put(ScheduleProperties());
-  ScheduleListener listener = Get.put(ScheduleListener());
   ScheduleDataSource dataSource = Get.put(ScheduleDataSource());
+  ScheduleListener listener = Get.put(ScheduleListener());
+  ScheduleProperties properties = Get.put(ScheduleProperties());
 
   @override
   void onInit() {

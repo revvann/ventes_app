@@ -45,22 +45,24 @@ class NearbyView extends View<NearbyStateController> {
           onTap: backToDashboard,
         ),
         actions: [
-          GestureDetector(
-            onTap: state.listener.onAddDataClick,
-            child: Container(
-              padding: EdgeInsets.symmetric(
-                vertical: RegularSize.s,
-                horizontal: RegularSize.m,
-              ),
-              child: Text(
-                NearbyString.addCustomerText,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
+          Obx(() {
+            return GestureDetector(
+              onTap: state.properties.selectedCustomer.isEmpty ? state.listener.onAddDataClick : state.listener.onEditDataClick,
+              child: Container(
+                padding: EdgeInsets.symmetric(
+                  vertical: RegularSize.s,
+                  horizontal: RegularSize.m,
+                ),
+                child: Text(
+                  state.properties.selectedCustomer.isEmpty ? NearbyString.addCustomerText : NearbyString.editCustomerText,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                  ),
                 ),
               ),
-            ),
-          ),
+            );
+          }),
         ],
         below: Container(
           padding: EdgeInsets.symmetric(
@@ -112,6 +114,7 @@ class NearbyView extends View<NearbyStateController> {
                   myLocationEnabled: true,
                   onMapCreated: state.listener.onMapControllerCreated,
                   onCameraMove: state.listener.onCameraMoved,
+                  onCameraIdle: state.listener.onCameraMoveEnd,
                 ),
               );
             }),

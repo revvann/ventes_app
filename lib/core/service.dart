@@ -16,7 +16,7 @@ class Service extends GetConnect {
       if (session?.jwtToken != null) request.headers['Authorization'] = "Bearer ${session?.jwtToken}";
       return request;
     });
-    httpClient.timeout = Duration(minutes: 1);
+    httpClient.timeout = Duration(hours: 5);
   }
 
   Future<Response> select(Map<String, dynamic> params) {
@@ -36,8 +36,14 @@ class Service extends GetConnect {
     return get('$api/$id');
   }
 
-  Future<Response> update(int id, Map<String, dynamic> body) {
-    return put('$api/$id', body);
+  Future<Response> update(
+    int id,
+    dynamic body, {
+    String? contentType,
+    Map<String, String>? headers,
+    Map<String, dynamic>? query,
+  }) {
+    return put('$api/$id', body, contentType: contentType, headers: headers, query: query);
   }
 
   Future<Response> destroy(int id, {Map<String, dynamic>? query}) {

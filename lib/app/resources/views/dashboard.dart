@@ -2,6 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
+import 'package:ventes/app/models/bp_customer_model.dart';
 import 'package:ventes/core/view.dart';
 import 'package:ventes/app/resources/widgets/bottom_navigation.dart';
 import 'package:ventes/app/resources/widgets/customer_card.dart';
@@ -137,31 +139,33 @@ class DashboardView extends View<DashboardStateController> {
               ),
               Container(
                 height: 250,
-                child: ListView.builder(
-                  physics: BouncingScrollPhysics(),
-                  itemCount: 10,
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (_, index) {
-                    double mRight = 0;
-                    if (index == 9) {
-                      mRight = 16;
-                    }
-                    return CustomerCard(
-                      image: AssetImage('assets/images/dummybg.jpg'),
-                      margin: EdgeInsets.only(
-                        left: 16,
-                        right: mRight,
-                        top: 24,
-                        bottom: 24,
-                      ),
-                      width: 220,
-                      title: "Oscorp Idustries",
-                      type: "Genetic Exploration",
-                      radius: "320 M",
-                      workTime: "08.00-16.00",
-                    );
-                  },
-                ),
+                child: Obx(() {
+                  return ListView.builder(
+                    physics: BouncingScrollPhysics(),
+                    itemCount: state.dataSource.customers.length,
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: (_, index) {
+                      BpCustomer customer = state.dataSource.customers[index];
+                      double mRight = 0;
+                      if (index == 9) {
+                        mRight = 16;
+                      }
+                      return CustomerCard(
+                        image: NetworkImage(customer.sbccstmpic ?? ""),
+                        margin: EdgeInsets.only(
+                          left: 16,
+                          right: mRight,
+                          top: 24,
+                          bottom: 24,
+                        ),
+                        width: 220,
+                        title: customer.sbccstmname,
+                        type: customer.sbccstm?.cstmtype?.typename ?? "",
+                        radius: (customer.radius! / 1000).toStringAsFixed(2) + " KM",
+                      );
+                    },
+                  );
+                }),
               ),
               Container(
                 padding: EdgeInsets.symmetric(
@@ -198,7 +202,6 @@ class DashboardView extends View<DashboardStateController> {
                       title: "Oscorp Idustries",
                       type: "Genetic Exploration",
                       radius: "320 M",
-                      workTime: "08.00-16.00",
                     );
                   },
                 ),

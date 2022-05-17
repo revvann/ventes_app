@@ -1,9 +1,9 @@
 // ignore_for_file: prefer_const_constructors
 
-part of 'package:ventes/app/resources/views/customer_form/create/customer_fc.dart';
+part of 'package:ventes/app/resources/views/customer_form/update/customer_fu.dart';
 
 class _SearchList<T, V> extends StatelessWidget {
-  CustomerFormCreateStateController state = Get.find<CustomerFormCreateStateController>();
+  CustomerFormUpdateStateController state = Get.find<CustomerFormUpdateStateController>();
 
   _SearchList({
     required this.label,

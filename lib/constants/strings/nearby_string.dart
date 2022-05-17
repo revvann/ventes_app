@@ -1,6 +1,7 @@
 class NearbyString {
   static const appBarTitle = "Nearby";
   static const bottomSheetTitle = "Choose location to visit";
+  static const formBottomSheetTitle = "Update customer data";
 
   static const fetchError = "Could not fetch data";
   static const fetchFailed = "Failed to fetch data";
@@ -8,6 +9,9 @@ class NearbyString {
   static const createSuccess = "Customer created";
   static const createFailed = "Failed to create customer";
   static const createError = "Could not create customer";
+  static const updateSuccess = "Customer updated";
+  static const updateFailed = "Failed to update customer";
+  static const updateError = "Could not update customer";
   static const formInvalid = "Form is invalid, please fill all fields";
 
   static const customerOuttaRange = "Customer is out of range";
@@ -19,6 +23,7 @@ class NearbyString {
   static const selectedLocName = "Selected Location";
 
   static const addCustomerText = "Add";
+  static const editCustomerText = "Edit";
 
   static const formCreateTitle = "Create Customer";
   static const formSubmitButton = "Save";

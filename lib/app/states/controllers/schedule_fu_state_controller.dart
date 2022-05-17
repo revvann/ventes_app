@@ -17,10 +17,10 @@ import 'package:ventes/app/states/form_sources/schedule_fu_form_source.dart';
 import 'package:ventes/app/states/listeners/schedule_fu_listener.dart';
 
 class ScheduleFormUpdateStateController extends RegularStateController {
-  ScheduleFormUpdateProperties properties = Get.put(ScheduleFormUpdateProperties());
+  ScheduleFormUpdateDataSource dataSource = Get.put(ScheduleFormUpdateDataSource());
   ScheduleFormUpdateListener listener = Get.put(ScheduleFormUpdateListener());
   ScheduleFormUpdateFormSource formSource = Get.put(ScheduleFormUpdateFormSource());
-  ScheduleFormUpdateDataSource dataSource = Get.put(ScheduleFormUpdateDataSource());
+  ScheduleFormUpdateProperties properties = Get.put(ScheduleFormUpdateProperties());
 
   @override
   void onClose() {
