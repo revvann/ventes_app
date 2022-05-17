@@ -19,7 +19,7 @@ class _CustomerForm extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // _CustomerPicture(),
+            _CustomerPicture(),
             SizedBox(
               height: RegularSize.m,
             ),

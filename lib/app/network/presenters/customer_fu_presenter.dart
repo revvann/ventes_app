@@ -93,11 +93,12 @@ class CustomerFormUpdatePresenter {
     }
   }
 
-  void updateCustomer(int id, Map<String, dynamic> data) async {
+  void updateCustomer(int id, FormData data) async {
     try {
       Response response = await _bpCustomerService.update(
         id,
         data,
+        contentType: "multipart/form-data",
       );
       if (response.statusCode == 200) {
         _createContract.onCreateSuccess(NearbyString.createSuccess);

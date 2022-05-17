@@ -64,7 +64,7 @@ class CustomerFormUpdateDataSource implements FetchDataContract, CreateContract 
   Future<List<Subdistrict>> fetchSubdistricts(int cityId, [String? search]) async => await _presenter.fetchSubdistricts(cityId, search);
 
   void fetchData() => _presenter.fetchData(_properties.customer?.sbcid ?? 0);
-  void updateCustomer(int id, Map<String, dynamic> data) => _presenter.updateCustomer(id, data);
+  void updateCustomer(int id, FormData data) => _presenter.updateCustomer(id, data);
 
   @override
   onLoadError(String message) => _listener.onLoadDataError(message);

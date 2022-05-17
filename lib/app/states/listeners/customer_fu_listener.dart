@@ -140,13 +140,14 @@ class CustomerFormUpdateListener {
   void onSubmitButtonClicked() async {
     if (_formSource.isValid) {
       Map<String, dynamic> data = _formSource.toJson();
+      data['_method'] = 'PUT';
       if (data['sbccstmpic'] != null) {
         String filename = path.basename(data['sbccstmpic']);
         data['sbccstmpic'] = MultipartFile(File(data['sbccstmpic']), filename: filename);
       }
 
-      // FormData formData = FormData(data);
-      _dataSource.updateCustomer(_formSource.sbcid!, data);
+      FormData formData = FormData(data);
+      _dataSource.updateCustomer(_formSource.sbcid!, formData);
       Loader().show();
     } else {
       FailedAlert(NearbyString.formInvalid).show();
