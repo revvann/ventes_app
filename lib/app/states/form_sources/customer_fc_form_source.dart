@@ -6,21 +6,19 @@ import 'package:path_provider/path_provider.dart';
 import 'package:get/get.dart';
 import 'package:ventes/app/models/city_model.dart';
 import 'package:ventes/app/models/country_model.dart';
+import 'package:ventes/app/models/customer_model.dart';
 import 'package:ventes/app/models/province_model.dart';
 import 'package:ventes/app/models/subdistrict_model.dart';
 import 'package:ventes/app/resources/widgets/search_list.dart';
 import 'package:ventes/app/states/controllers/customer_fc_state_controller.dart';
+import 'package:ventes/app/states/data_sources/customer_fc_data_source.dart';
 import 'package:ventes/app/states/form_validators/customer_fc_validator.dart';
 import 'package:ventes/constants/strings/nearby_string.dart';
 
 class CustomerFormCreateFormSource {
   late CustomerFormCreateValidator validator;
   final CustomerFormCreateProperties _properties = Get.find<CustomerFormCreateProperties>();
-
-  SearchListController<Country, Country> countrySearchListController = Get.put(SearchListController<Country, Country>());
-  SearchListController<Province, Province> provinceSearchListController = Get.put(SearchListController<Province, Province>());
-  SearchListController<City, City> citySearchListController = Get.put(SearchListController<City, City>());
-  SearchListController<Subdistrict, Subdistrict> subdistrictSearchListController = Get.put(SearchListController<Subdistrict, Subdistrict>());
+  final CustomerFormCreateDataSource _dataSource = Get.find<CustomerFormCreateDataSource>();
 
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final defaultPicture = Image.asset('assets/' + NearbyString.defaultImage).obs;
@@ -32,27 +30,31 @@ class CustomerFormCreateFormSource {
   TextEditingController nameTEC = TextEditingController();
   TextEditingController addressTEC = TextEditingController();
   TextEditingController phoneTEC = TextEditingController();
-  TextEditingController postalCodeTEC = TextEditingController();
 
   File? picture;
-  int? cstmtypeid;
+  int? sbccstmstatusid;
   int? sbcbpid;
+
+  final Rx<int?> _cstmtypeid = Rx<int?>(null);
+  Rx<int?> _provinceid = Rx(null);
+  Rx<int?> _cityid = Rx(null);
+  Rx<int?> _subdistrictid = Rx(null);
 
   String get cstmlatitude => latitudeTEC.text;
   String get cstmlongitude => longitudeTEC.text;
   String get cstmname => nameTEC.text;
   String get cstmaddress => addressTEC.text;
   String get cstmphone => phoneTEC.text;
-  String get cstmpostalcode => postalCodeTEC.text;
-  String? get cstmcoutryid => countrySearchListController.selectedItem?.countryid.toString();
-  String? get cstmprovinceid => provinceSearchListController.selectedItem?.provid.toString();
-  String? get cstmcityid => citySearchListController.selectedItem?.cityid.toString();
-  String? get cstmsubdistrictid => subdistrictSearchListController.selectedItem?.subdistrictid.toString();
 
-  Country? get country => countrySearchListController.selectedItem;
-  Province? get province => provinceSearchListController.selectedItem;
-  City? get city => citySearchListController.selectedItem;
-  Subdistrict? get subdistrict => subdistrictSearchListController.selectedItem;
+  int? get cstmtypeid => _cstmtypeid.value;
+  int? get provinceid => _provinceid.value;
+  int? get cityid => _cityid.value;
+  int? get subdistrictid => _subdistrictid.value;
+
+  set cstmtypeid(int? value) => _cstmtypeid.value = value;
+  set provinceid(int? value) => _provinceid.value = value;
+  set cityid(int? value) => _cityid.value = value;
+  set subdistrictid(int? value) => _subdistrictid.value = value;
 
   init() async {
     validator = CustomerFormCreateValidator(this);
@@ -66,13 +68,18 @@ class CustomerFormCreateFormSource {
     nameTEC.dispose();
     addressTEC.dispose();
     phoneTEC.dispose();
-    postalCodeTEC.dispose();
     latitudeTEC.dispose();
     longitudeTEC.dispose();
     Get.delete<SearchListController<Country, Country>>();
     Get.delete<SearchListController<Province, Province>>();
     Get.delete<SearchListController<City, City>>();
     Get.delete<SearchListController<Subdistrict, Subdistrict>>();
+  }
+
+  void prepareValues(Customer customer) {
+    nameTEC.text = customer.cstmname ?? "";
+    addressTEC.text = customer.cstmaddress ?? "";
+    phoneTEC.text = customer.cstmphone ?? "";
   }
 
   Future<File> _getImageFileFromAssets(String path) async {
@@ -89,14 +96,14 @@ class CustomerFormCreateFormSource {
     return {
       'sbccstmpic': picture?.path,
       'sbcbpid': sbcbpid.toString(),
+      'sbccstmstatusid': sbccstmstatusid?.toString(),
       'cstmname': cstmname,
       'cstmaddress': cstmaddress,
       'cstmphone': cstmphone,
-      'cstmpostalcode': cstmpostalcode,
-      'cstmcountryid': cstmcoutryid,
-      'cstmprovinceid': cstmprovinceid,
-      'cstmcityid': cstmcityid,
-      'cstmsubdistrictid': cstmsubdistrictid,
+      'cstmpostalcode': _dataSource.getPostalCodeName(),
+      'cstmprovinceid': provinceid.toString(),
+      'cstmcityid': cityid.toString(),
+      'cstmsubdistrictid': subdistrictid.toString(),
       'cstmtypeid': cstmtypeid?.toString(),
       'cstmlatitude': cstmlatitude,
       'cstmlongitude': cstmlongitude,

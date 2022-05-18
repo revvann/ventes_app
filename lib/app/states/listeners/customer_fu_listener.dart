@@ -17,6 +17,7 @@ import 'package:ventes/app/states/controllers/nearby_state_controller.dart';
 import 'package:ventes/app/states/data_sources/customer_fu_data_source.dart';
 import 'package:ventes/app/states/form_sources/customer_fu_form_source.dart';
 import 'package:ventes/constants/strings/nearby_string.dart';
+import 'package:ventes/helpers/function_helpers.dart';
 import 'package:ventes/routing/navigators/nearby_navigator.dart';
 import 'package:ventes/app/states/controllers/customer_fu_state_controller.dart';
 import 'package:path/path.dart' as path;
@@ -138,9 +139,17 @@ class CustomerFormUpdateListener {
   }
 
   void onSubmitButtonClicked() async {
-    if (_formSource.isValid) {
+    double newLat = double.tryParse(_formSource.cstmlatitude) ?? 0.0;
+    double newLng = double.tryParse(_formSource.cstmlongitude) ?? 0.0;
+    LatLng newPos = LatLng(newLat, newLng);
+
+    double radius = calculateDistance(_properties.markers.first.position, newPos);
+    bool inRange = radius <= 100;
+
+    if (_formSource.isValid && inRange) {
       Map<String, dynamic> data = _formSource.toJson();
       data['_method'] = 'PUT';
+
       if (data['sbccstmpic'] != null) {
         String filename = path.basename(data['sbccstmpic']);
         data['sbccstmpic'] = MultipartFile(File(data['sbccstmpic']), filename: filename);
@@ -148,6 +157,7 @@ class CustomerFormUpdateListener {
 
       FormData formData = FormData(data);
       _dataSource.updateCustomer(_formSource.sbcid!, formData);
+
       Loader().show();
     } else {
       FailedAlert(NearbyString.formInvalid).show();

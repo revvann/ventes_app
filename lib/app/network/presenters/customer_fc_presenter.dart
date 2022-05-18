@@ -8,6 +8,8 @@ import 'package:ventes/app/models/user_detail_model.dart';
 import 'package:ventes/app/network/contracts/create_contract.dart';
 import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
 import 'package:ventes/app/network/services/bp_customer_service.dart';
+import 'package:ventes/app/network/services/customer_service.dart';
+import 'package:ventes/app/network/services/gmaps_service.dart';
 import 'package:ventes/app/network/services/place_service.dart';
 import 'package:ventes/app/network/services/type_service.dart';
 import 'package:ventes/app/network/services/user_service.dart';
@@ -17,8 +19,10 @@ import 'package:ventes/helpers/auth_helper.dart';
 class CustomerFormCreatePresenter {
   final PlaceService _placeService = Get.find<PlaceService>();
   final BpCustomerService _bpCustomerService = Get.find<BpCustomerService>();
+  final CustomerService _customerService = Get.find<CustomerService>();
   final UserService _userService = Get.find<UserService>();
   final TypeService _typeService = Get.find<TypeService>();
+  final GmapsService _gmapsService = Get.find<GmapsService>();
 
   late FetchDataContract _fetchDataContract;
   set fetchDataContract(FetchDataContract value) => _fetchDataContract = value;
@@ -27,11 +31,32 @@ class CustomerFormCreatePresenter {
   set createContract(CreateContract value) => _createContract = value;
 
   Future<Response> _getCustomers() async {
-    int? bpid = (await _findActiveUser())?.userdtbpid;
-    Map<String, dynamic> data = {
-      'sbcbpid': bpid.toString(),
-    };
-    return await _bpCustomerService.select(data);
+    return await _customerService.select();
+  }
+
+  Future<Response> _getCustomer(int id) async {
+    return await _customerService.show(id);
+  }
+
+  Future<Response> _getUser() async {
+    AuthModel? authModel = await Get.find<AuthHelper>().get();
+    return await _userService.show(authModel!.accountActive!);
+  }
+
+  Future<Response> _getLocDetail(double latitude, double longitude) async {
+    return await _gmapsService.getDetail(latitude, longitude);
+  }
+
+  Future<Response> _getProvince(int idProv) async {
+    return await _placeService.province().show(idProv);
+  }
+
+  Future<Response> _getCity(int idCity) async {
+    return await _placeService.city().show(idCity);
+  }
+
+  Future<Response> _getSubdistrict(String search) async {
+    return await _placeService.subdistrict().select({'search': search});
   }
 
   Future<UserDetail?> _findActiveUser() async {
@@ -48,18 +73,63 @@ class CustomerFormCreatePresenter {
     return await _typeService.byCode({'typecd': NearbyString.customerTypeCode});
   }
 
-  void fetchData() async {
+  Future<Response> _getStatusTypes() async {
+    return await _typeService.byCode({'typecd': NearbyString.statusTypeCode});
+  }
+
+  void fetchData(double latitude, double longitude, [int? cstmid]) async {
     Map data = {};
     try {
-      AuthModel? authModel = await Get.find<AuthHelper>().get();
-      Response userResponse = await _userService.show(authModel!.accountActive!);
-      Response customerResponse = await _getCustomers();
+      Response userResponse = await _getUser();
+      Response customersResponse = await _getCustomers();
       Response typeResponse = await _getTypes();
-      if (customerResponse.statusCode == 200) {
-        data['customers'] = customerResponse.body;
+      Response statusResponse = await _getStatusTypes();
+      Response locResponse = await _getLocDetail(latitude, longitude);
+
+      if (cstmid != null) {
+        Response customerResponse = await _getCustomer(cstmid);
+        if (customerResponse.statusCode == 200) {
+          data['customer'] = customerResponse.body;
+        }
+      }
+
+      if (customersResponse.statusCode == 200 && typeResponse.statusCode == 200 && locResponse.statusCode == 200 && statusResponse.statusCode == 200) {
+        data['customers'] = customersResponse.body;
         data['types'] = typeResponse.body;
+        data['statuses'] = statusResponse.body;
         data['user'] = userResponse.body;
+        data['location'] = locResponse.body;
         _fetchDataContract.onLoadSuccess(data);
+      } else {
+        _fetchDataContract.onLoadFailed(NearbyString.fetchFailed);
+      }
+    } catch (err) {
+      _fetchDataContract.onLoadError(err.toString());
+    }
+  }
+
+  void fetchPlaces(String subdistrictSearch) async {
+    Map data = {'places': {}};
+
+    try {
+      Response subdistrictResponse = await _getSubdistrict(subdistrictSearch);
+      if (subdistrictResponse.statusCode == 200) {
+        Subdistrict subdistrict = Subdistrict.fromJson(subdistrictResponse.body[0] ?? {});
+        Response cityResponse = await _getCity(subdistrict.subdistrictcityid ?? 0);
+
+        if (cityResponse.statusCode == 200) {
+          City city = City.fromJson(cityResponse.body);
+          Response provinceResponse = await _getProvince(city.cityprovid ?? 0);
+
+          if (provinceResponse.statusCode == 200) {
+            data['places']['province'] = provinceResponse.body;
+            data['places']['city'] = cityResponse.body;
+            data['places']['subdistrict'] = subdistrict.toJson();
+            _fetchDataContract.onLoadSuccess(data);
+          }
+        } else {
+          _fetchDataContract.onLoadFailed(NearbyString.fetchFailed);
+        }
       } else {
         _fetchDataContract.onLoadFailed(NearbyString.fetchFailed);
       }

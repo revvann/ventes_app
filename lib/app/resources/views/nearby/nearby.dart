@@ -6,12 +6,14 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ventes/app/models/bp_customer_model.dart';
+import 'package:ventes/app/models/customer_model.dart';
 import 'package:ventes/core/view.dart';
 import 'package:ventes/app/resources/widgets/icon_input.dart';
 import 'package:ventes/app/resources/widgets/top_navigation.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/constants/strings/nearby_string.dart';
+import 'package:ventes/helpers/auth_helper.dart';
 import 'package:ventes/helpers/function_helpers.dart';
 import 'package:ventes/app/states/controllers/nearby_state_controller.dart';
 
@@ -46,15 +48,25 @@ class NearbyView extends View<NearbyStateController> {
         ),
         actions: [
           Obx(() {
+            bool isCustomerSelected = state.properties.selectedCustomer.isNotEmpty;
+            bool isBpHasCustomer = state.dataSource.bpCustomersHas(state.properties.selectedCustomer.first);
             return GestureDetector(
-              onTap: state.properties.selectedCustomer.isEmpty ? state.listener.onAddDataClick : state.listener.onEditDataClick,
+              onTap: isCustomerSelected
+                  ? isBpHasCustomer
+                      ? state.listener.onEditDataClick
+                      : state.listener.onAddDataClick
+                  : state.listener.onAddDataClick,
               child: Container(
                 padding: EdgeInsets.symmetric(
                   vertical: RegularSize.s,
                   horizontal: RegularSize.m,
                 ),
                 child: Text(
-                  state.properties.selectedCustomer.isEmpty ? NearbyString.addCustomerText : NearbyString.editCustomerText,
+                  isCustomerSelected
+                      ? isBpHasCustomer
+                          ? NearbyString.editCustomerText
+                          : NearbyString.addCustomerText
+                      : NearbyString.addCustomerText,
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 16,
@@ -109,7 +121,7 @@ class NearbyView extends View<NearbyStateController> {
                 ),
                 child: GoogleMap(
                   mapType: MapType.terrain,
-                  initialCameraPosition: CameraPosition(target: LatLng(0, 0), zoom: 14.4764),
+                  initialCameraPosition: CameraPosition(target: LatLng(0, 0), zoom: state.properties.defaultZoom),
                   markers: state.properties.markers,
                   myLocationEnabled: true,
                   onMapCreated: state.listener.onMapControllerCreated,

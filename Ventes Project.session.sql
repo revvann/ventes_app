@@ -16,4 +16,4 @@
 -- from INFORMATION_SCHEMA.TABLES
 -- where TABLE_SCHEMA = 'public';
 select *
-from mscustomer;
+from stbpcustomer;

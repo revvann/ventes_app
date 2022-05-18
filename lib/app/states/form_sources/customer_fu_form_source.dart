@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:get/get.dart';
 import 'package:ventes/app/models/city_model.dart';
@@ -79,6 +80,8 @@ class CustomerFormUpdateFormSource {
 
       cstmlatitude = _properties.customer!.sbccstm!.cstmlatitude!.toString();
       cstmlongitude = _properties.customer!.sbccstm!.cstmlongitude!.toString();
+      _properties.markerLatLng = LatLng(double.parse(cstmlatitude), double.parse(cstmlongitude));
+
       nameTEC.text = _properties.customer!.sbccstm!.cstmname ?? "";
       addressTEC.text = _properties.customer!.sbccstm!.cstmaddress ?? "";
       phoneTEC.text = _properties.customer!.sbccstm!.cstmphone ?? "";

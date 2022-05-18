@@ -94,7 +94,9 @@ class SearchListController<T, V> extends GetxController {
   }
 
   reset() {
-    refreshList();
+    if (compare != null && onFilter != null) {
+      refreshList();
+    }
     selectedItem = null;
     _searchController.text = '';
   }

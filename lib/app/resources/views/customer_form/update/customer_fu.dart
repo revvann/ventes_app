@@ -25,6 +25,7 @@ import 'package:ventes/core/view.dart';
 part 'package:ventes/app/resources/views/customer_form/update/components/_customer_picture.dart';
 part 'package:ventes/app/resources/views/customer_form/update/components/_form.dart';
 part 'package:ventes/app/resources/views/customer_form/update/components/_search_list.dart';
+part 'package:ventes/app/resources/views/customer_form/update/components/_bottomsheet.dart';
 
 class CustomerFormUpdateView extends View<CustomerFormUpdateStateController> {
   static const String route = "/customer/update";
@@ -38,8 +39,6 @@ class CustomerFormUpdateView extends View<CustomerFormUpdateStateController> {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: RegularColor.primary,
     ));
-
-    Widget bottomSheetWidget = _CustomerForm();
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -92,7 +91,7 @@ class CustomerFormUpdateView extends View<CustomerFormUpdateStateController> {
                 ),
                 child: GoogleMap(
                   mapType: MapType.terrain,
-                  initialCameraPosition: CameraPosition(target: LatLng(0, 0), zoom: 14.4764),
+                  initialCameraPosition: CameraPosition(target: LatLng(0, 0), zoom: state.properties.defaultZoom),
                   markers: state.properties.markers,
                   myLocationEnabled: true,
                   onMapCreated: state.listener.onMapControllerCreated,
@@ -101,49 +100,9 @@ class CustomerFormUpdateView extends View<CustomerFormUpdateStateController> {
                 ),
               );
             }),
-            DraggableScrollableSheet(
-              initialChildSize: 0.3,
-              minChildSize: 0.3,
-              snap: true,
-              snapSizes: [
-                1.0,
-              ],
-              builder: (BuildContext context, myscrollController) {
-                return Container(
-                  key: state.properties.bottomSheetKey,
-                  padding: EdgeInsets.only(
-                    top: RegularSize.l,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(RegularSize.xl),
-                      topRight: Radius.circular(RegularSize.xl),
-                    ),
-                  ),
-                  child: SingleChildScrollView(
-                    controller: myscrollController,
-                    child: SizedBox(
-                      child: Column(
-                        children: [
-                          Text(
-                            NearbyString.bottomSheetTitle,
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          SizedBox(
-                            height: RegularSize.m,
-                          ),
-                          bottomSheetWidget,
-                        ],
-                      ),
-                    ),
-                  ),
-                );
-              },
-            )
+            _BottomSheet(
+              child: _CustomerForm(),
+            ),
           ],
         ),
       ),

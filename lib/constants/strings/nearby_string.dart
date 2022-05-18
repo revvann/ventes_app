@@ -31,4 +31,5 @@ class NearbyString {
   static const defaultImage = 'images/cat.png';
 
   static const customerTypeCode = 'cstmtype';
+  static const statusTypeCode = 'cstmstatus';
 }

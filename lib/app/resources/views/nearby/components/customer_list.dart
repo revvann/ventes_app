@@ -7,7 +7,7 @@ class _CustomerList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      List<BpCustomer> customers = state.dataSource.customers;
+      List<Customer> customers = state.dataSource.customers;
       return Expanded(
         child: customers.isEmpty
             ? Text(
@@ -23,7 +23,7 @@ class _CustomerList extends StatelessWidget {
                   return Divider();
                 },
                 itemBuilder: (_, index) {
-                  BpCustomer customer = customers[index];
+                  Customer customer = customers[index];
                   String radius = (customer.radius! / 1000).toStringAsFixed(2);
                   return GestureDetector(
                     onTap: () {
@@ -43,7 +43,7 @@ class _CustomerList extends StatelessWidget {
                               horizontal: RegularSize.m,
                             ),
                             child: Obx(() {
-                              bool isSelected = state.properties.selectedCustomer.any((c) => c.sbcid == customer.sbcid);
+                              bool isSelected = state.properties.selectedCustomer.any((c) => c.cstmid == customer.cstmid);
                               return SvgPicture.asset(
                                 isSelected ? "assets/svg/marker.svg" : "assets/svg/building-bold.svg",
                                 color: isSelected ? RegularColor.green : RegularColor.gray,
@@ -57,7 +57,7 @@ class _CustomerList extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  customer.sbccstmname ?? NearbyString.defaultCustomerName,
+                                  customer.cstmname ?? NearbyString.defaultCustomerName,
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
@@ -67,7 +67,7 @@ class _CustomerList extends StatelessWidget {
                                   height: RegularSize.s,
                                 ),
                                 Text(
-                                  customer.sbccstmaddress ?? NearbyString.defaultCustomerAddress,
+                                  customer.cstmaddress ?? NearbyString.defaultCustomerAddress,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
                                     fontSize: 14,

@@ -30,6 +30,8 @@ class CustomerFormCreateStateController extends RegularStateController {
     super.onReady();
 
     if (properties.latitude != null && properties.longitude != null) {
+      dataSource.fetchData(properties.latitude!, properties.longitude!);
+
       LatLng pos = LatLng(properties.latitude!, properties.longitude!);
       GoogleMapController controller = await properties.mapsController.future;
       controller.animateCamera(
@@ -38,7 +40,6 @@ class CustomerFormCreateStateController extends RegularStateController {
       properties.markerLatLng = pos;
     }
 
-    dataSource.fetchData();
     Loader().show();
   }
 
@@ -52,11 +53,14 @@ class CustomerFormCreateStateController extends RegularStateController {
 }
 
 class CustomerFormCreateProperties {
-  final double defaultZoom = 14.5;
+  CustomerFormCreateDataSource get _dataSource => Get.find<CustomerFormCreateDataSource>();
+
+  final double defaultZoom = 20;
   final Completer<GoogleMapController> mapsController = Completer();
 
   final rxLatitude = Rx<double?>(null);
   final rxLongitude = Rx<double?>(null);
+  int? cstmid;
 
   double? get latitude => rxLatitude.value;
   set latitude(double? value) => rxLatitude.value = value;
@@ -95,5 +99,10 @@ class CustomerFormCreateProperties {
       markersList.add(marker);
     }
     markers = Set.from(markersList);
+  }
+
+  void fetchPlacesIds() {
+    _dataSource.fetchPlacesIds(_dataSource.getSubdistrictName()!);
+    Loader().show();
   }
 }

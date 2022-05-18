@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ventes/app/models/bp_customer_model.dart';
+import 'package:ventes/app/models/customer_model.dart';
 import 'package:ventes/app/models/maps_loc.dart';
 import 'package:ventes/app/network/presenters/nearby_presenter.dart';
 import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
@@ -14,9 +15,11 @@ class NearbyDataSource implements FetchDataContract {
 
   final NearbyPresenter _presenter = NearbyPresenter();
 
-  final _customers = <BpCustomer>[].obs;
-  set customers(List<BpCustomer> value) => _customers.value = value;
-  List<BpCustomer> get customers => _customers.value;
+  List<BpCustomer> bpCustomers = <BpCustomer>[];
+
+  final _customers = <Customer>[].obs;
+  set customers(List<Customer> value) => _customers.value = value;
+  List<Customer> get customers => _customers.value;
 
   final Rx<MapsLoc> _mapsLoc = Rx<MapsLoc>(MapsLoc());
   set mapsLoc(MapsLoc value) => _mapsLoc.value = value;
@@ -26,17 +29,25 @@ class NearbyDataSource implements FetchDataContract {
     _presenter.fetchDataContract = this;
   }
 
+  bool bpCustomersHas(Customer customer) {
+    return bpCustomers.any((element) => element.sbccstmid == customer.cstmid);
+  }
+
   void fetchData(LatLng position) => _presenter.fetchData(position.latitude, position.longitude);
   void locationDetailLoaded(Map<String, dynamic> data) {
     mapsLoc = MapsLoc.fromJson(data);
   }
 
+  void bpCustomersLoaded(List<dynamic> data) {
+    bpCustomers = data.map((e) => BpCustomer.fromJson(e)).toList();
+  }
+
   void customersFromList(List data, LatLng currentPos) {
-    customers = data.map((e) => BpCustomer.fromJson(e)).toList();
+    customers = data.map((e) => Customer.fromJson(e)).toList();
     LatLng coords2 = LatLng(currentPos.latitude, currentPos.longitude);
     customers = customers
         .map((element) {
-          LatLng coords1 = LatLng(element.sbccstm?.cstmlatitude ?? 0.0, element.sbccstm?.cstmlongitude ?? 0.0);
+          LatLng coords1 = LatLng(element.cstmlatitude ?? 0.0, element.cstmlongitude ?? 0.0);
           double radius = calculateDistance(coords1, coords2);
           element.radius = radius;
           return element;
@@ -55,6 +66,10 @@ class NearbyDataSource implements FetchDataContract {
   onLoadSuccess(Map data) {
     if (data['location'] != null) {
       locationDetailLoaded(data['location'] as Map<String, dynamic>);
+    }
+
+    if (data['bpcustomers'] != null) {
+      bpCustomers = data['bpcustomers'].map((e) => BpCustomer.fromJson(e)).toList();
     }
 
     if (data['customers'] != null) {

@@ -32,36 +32,6 @@ class CustomerFormCreateListener {
     Get.back(id: NearbyNavigator.id);
   }
 
-  void onCountrySelected(Country? country) {
-    Country? provcountry = _formSource.provinceSearchListController.selectedItem?.provcountry;
-    if (provcountry?.countryid != country?.countryid && provcountry != null) {
-      _formSource.provinceSearchListController.reset();
-      if (_formSource.citySearchListController.selectedItem != null) {
-        _formSource.citySearchListController.reset();
-        if (_formSource.subdistrictSearchListController.selectedItem != null) {
-          _formSource.subdistrictSearchListController.reset();
-        }
-      }
-    }
-  }
-
-  void onProvinceSelected(Province? province) {
-    Province? cityprov = _formSource.citySearchListController.selectedItem?.cityprov;
-    if (cityprov?.provid != province?.provid && cityprov != null) {
-      _formSource.citySearchListController.reset();
-      if (_formSource.subdistrictSearchListController.selectedItem != null) {
-        _formSource.subdistrictSearchListController.reset();
-      }
-    }
-  }
-
-  void onCitySelected(City? city) {
-    City? subdistrictcity = _formSource.subdistrictSearchListController.selectedItem?.subdistrictcity;
-    if (subdistrictcity?.cityid != city?.cityid && subdistrictcity != null) {
-      _formSource.subdistrictSearchListController.reset();
-    }
-  }
-
   bool onCountryCompared(Country country, Country? selected) {
     return country.countryid == selected?.countryid;
   }
@@ -82,6 +52,10 @@ class CustomerFormCreateListener {
     _formSource.cstmtypeid = type;
   }
 
+  void onStatusSelected(int status) {
+    _formSource.sbccstmstatusid = status;
+  }
+
   void onMapControllerCreated(GoogleMapController controller) {
     if (!_properties.mapsController.isCompleted) {
       _properties.mapsController.complete(controller);
@@ -91,30 +65,6 @@ class CustomerFormCreateListener {
   Future onCountryFilter(String? search) async {
     List<Country> countries = await _dataSource.fetchCountries(search);
     return countries;
-  }
-
-  Future onProvinceFilter(String? search) async {
-    if (_formSource.country == null) {
-      return <Province>[];
-    }
-    List<Province> provinces = await _dataSource.fetchProvinces(_formSource.country!.countryid!, search);
-    return provinces;
-  }
-
-  Future onCityFilter(String? search) async {
-    if (_formSource.province == null) {
-      return <City>[];
-    }
-    List<City> cities = await _dataSource.fetchCities(_formSource.province!.provid!, search);
-    return cities;
-  }
-
-  Future onSubdistrictFilter(String? search) async {
-    if (_formSource.city == null) {
-      return <Subdistrict>[];
-    }
-    List<Subdistrict> subdistricts = await _dataSource.fetchSubdistricts(_formSource.city!.cityid!, search);
-    return subdistricts;
   }
 
   void onPicturePicked() async {
@@ -165,8 +115,9 @@ class CustomerFormCreateListener {
 
   void onCreateDataSuccess(String message) async {
     Get.close(1);
-    SuccessAlert(NearbyString.createSuccess).show();
-    Get.find<NearbyStateController>().properties.refresh();
-    Get.back(id: NearbyNavigator.id);
+    SuccessAlert(NearbyString.createSuccess).show().then((res) {
+      Get.find<NearbyStateController>().properties.refresh();
+      Get.back(id: NearbyNavigator.id);
+    });
   }
 }

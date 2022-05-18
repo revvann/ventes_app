@@ -1,5 +1,6 @@
 import 'package:ventes/app/models/business_partner_model.dart';
 import 'package:ventes/app/models/customer_model.dart';
+import 'package:ventes/app/models/type_model.dart';
 import 'package:ventes/core/model.dart';
 
 class BpCustomer extends Model {
@@ -10,6 +11,8 @@ class BpCustomer extends Model {
   String? sbccstmphone;
   String? sbccstmaddress;
   String? sbccstmpic;
+  int? sbccstmstatusid;
+  DBType? sbccstmstatus;
   BusinessPartner? sbcbp;
   Customer? sbccstm;
 
@@ -28,6 +31,8 @@ class BpCustomer extends Model {
     this.sbcbp,
     this.sbccstm,
     this.radius,
+    this.sbccstmstatusid,
+    this.sbccstmstatus,
     String? createddate,
     String? updateddate,
     int? createdby,
@@ -49,6 +54,7 @@ class BpCustomer extends Model {
     sbccstmphone = json['sbccstmphone'];
     sbccstmaddress = json['sbccstmaddress'];
     sbccstmpic = json['sbccstmpic'];
+    sbccstmstatusid = json['sbccstmstatusid'];
 
     if (json['sbcbp'] != null) {
       sbcbp = BusinessPartner.fromJson(json['sbcbp']);
@@ -56,6 +62,10 @@ class BpCustomer extends Model {
 
     if (json['sbccstm'] != null) {
       sbccstm = Customer.fromJson(json['sbccstm']);
+    }
+
+    if (json['sbccstmstatus'] != null) {
+      sbccstmstatus = DBType.fromJson(json['sbccstmstatus']);
     }
 
     super.fromJson(json);
@@ -71,6 +81,7 @@ class BpCustomer extends Model {
     data['sbccstmphone'] = sbccstmphone;
     data['sbccstmaddress'] = sbccstmaddress;
     data['sbccstmpic'] = sbccstmpic;
+    data['sbccstmstatusid'] = sbccstmstatusid;
 
     if (data['sbcbp'] != null) {
       data['sbcbp'] = sbcbp?.toJson();

@@ -19,7 +19,7 @@ class Service extends GetConnect {
     httpClient.timeout = Duration(hours: 5);
   }
 
-  Future<Response> select(Map<String, dynamic> params) {
+  Future<Response> select([Map<String, dynamic>? params]) {
     return get(api, query: params);
   }
 

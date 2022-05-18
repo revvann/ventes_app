@@ -35,32 +35,4 @@ class CustomerFormCreateValidator {
       return 'Address cannot be empty';
     }
   }
-
-  String? cstmcountry(String? value) {
-    Country? selectedCountry = _formSource.country;
-    if (selectedCountry == null) {
-      return 'Country cannot be empty';
-    }
-  }
-
-  String? cstmprovince(String? value) {
-    Province? selectedProvince = _formSource.province;
-    if (selectedProvince == null) {
-      return 'Province cannot be empty';
-    }
-  }
-
-  String? cstmcity(String? value) {
-    City? selectedCity = _formSource.city;
-    if (selectedCity == null) {
-      return 'City cannot be empty';
-    }
-  }
-
-  String? cstmsubdistrict(String? value) {
-    Subdistrict? selectedSubdistrict = _formSource.subdistrict;
-    if (selectedSubdistrict == null) {
-      return 'Subdistrict cannot be empty';
-    }
-  }
 }

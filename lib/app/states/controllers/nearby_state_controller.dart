@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:ventes/app/models/bp_customer_model.dart';
+import 'package:ventes/app/models/customer_model.dart';
 import 'package:ventes/app/resources/widgets/loader.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/constants/strings/nearby_string.dart';
@@ -51,12 +51,12 @@ class NearbyProperties {
 
   CameraMoveType cameraMoveType = CameraMoveType.controller;
 
-  final Rx<List<BpCustomer>> _selectedCustomer = Rx<List<BpCustomer>>([]);
+  final Rx<List<Customer>> _selectedCustomer = Rx<List<Customer>>([]);
 
   final Rx<double> mapsHeight = Rx<double>(0);
   final Rx<double> bottomSheetHeight = Rx<double>(0);
 
-  final double defaultZoom = 14.5;
+  final double defaultZoom = 20;
 
   final Completer<GoogleMapController> mapsController = Completer();
 
@@ -79,8 +79,8 @@ class NearbyProperties {
     }
   }
 
-  set selectedCustomer(List<BpCustomer> customer) => _selectedCustomer.value = customer;
-  List<BpCustomer> get selectedCustomer => _selectedCustomer.value;
+  set selectedCustomer(List<Customer> customer) => _selectedCustomer.value = customer;
+  List<Customer> get selectedCustomer => _selectedCustomer.value;
 
   void ready() {
     double bottomSheetHeight = bottomSheetKey.currentContext?.size?.height ?? 0;
@@ -89,14 +89,15 @@ class NearbyProperties {
     mapsHeight.value = (stackHeight - bottomSheetHeight) + 10;
   }
 
-  void deployCustomers(List<BpCustomer> data) async {
+  void deployCustomers(List<Customer> data) async {
     List<Marker> markersList = [markers.first];
     for (var element in data) {
+      bool isInBp = _dataSource.bpCustomersHas(element);
       Marker marker = Marker(
-        markerId: MarkerId((element.sbcid ?? "0").toString()),
-        infoWindow: InfoWindow(title: element.sbccstmname ?? "Unknown"),
-        position: LatLng(element.sbccstm!.cstmlatitude!, element.sbccstm!.cstmlongitude!),
-        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueCyan),
+        markerId: MarkerId((element.cstmid ?? "0").toString()),
+        infoWindow: InfoWindow(title: element.cstmname ?? "Unknown"),
+        position: LatLng(element.cstmlatitude!, element.cstmlongitude!),
+        icon: BitmapDescriptor.defaultMarkerWithHue(isInBp ? BitmapDescriptor.hueBlue : BitmapDescriptor.hueCyan),
       );
       markersList.add(marker);
     }

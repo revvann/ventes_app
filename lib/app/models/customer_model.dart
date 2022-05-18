@@ -25,6 +25,7 @@ class Customer extends Model {
   Province? cstmprovince;
   City? cstmcity;
   Subdistrict? cstmsubdistrict;
+  double? radius;
 
   Customer({
     this.cstmid,
@@ -46,6 +47,7 @@ class Customer extends Model {
     this.cstmprovince,
     this.cstmcity,
     this.cstmsubdistrict,
+    this.radius,
     String? createddate,
     String? updateddate,
     int? createdby,

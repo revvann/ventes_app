@@ -47,7 +47,9 @@ class CustomerFormUpdateStateController extends RegularStateController {
 }
 
 class CustomerFormUpdateProperties {
-  final double defaultZoom = 14.5;
+  CustomerFormUpdateFormSource get _formSource => Get.find<CustomerFormUpdateFormSource>();
+
+  final double defaultZoom = 20;
   final Completer<GoogleMapController> mapsController = Completer();
 
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
@@ -66,7 +68,7 @@ class CustomerFormUpdateProperties {
   set markerLatLng(LatLng latlng) {
     Marker marker = Marker(
       markerId: MarkerId(NearbyString.selectedLocId),
-      infoWindow: InfoWindow(title: NearbyString.selectedLocName),
+      infoWindow: InfoWindow(title: _formSource.cstmname),
       position: latlng,
     );
 
@@ -89,13 +91,15 @@ class CustomerFormUpdateProperties {
   void deployCustomers(List<BpCustomer> data) {
     List<Marker> markersList = [markers.first];
     for (var element in data) {
-      Marker marker = Marker(
-        markerId: MarkerId((element.sbcid ?? "0").toString()),
-        infoWindow: InfoWindow(title: element.sbccstmname ?? "Unknown"),
-        position: LatLng(element.sbccstm!.cstmlatitude!, element.sbccstm!.cstmlongitude!),
-        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueCyan),
-      );
-      markersList.add(marker);
+      if (element.sbcid != _formSource.sbcid) {
+        Marker marker = Marker(
+          markerId: MarkerId((element.sbcid ?? "0").toString()),
+          infoWindow: InfoWindow(title: element.sbccstmname ?? "Unknown"),
+          position: LatLng(element.sbccstm!.cstmlatitude!, element.sbccstm!.cstmlongitude!),
+          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueCyan),
+        );
+        markersList.add(marker);
+      }
     }
     markers = Set.from(markersList);
   }

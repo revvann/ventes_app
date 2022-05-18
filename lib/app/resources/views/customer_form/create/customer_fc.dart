@@ -23,15 +23,15 @@ import 'package:ventes/core/view.dart';
 
 part 'package:ventes/app/resources/views/customer_form/create/components/_customer_picture.dart';
 part 'package:ventes/app/resources/views/customer_form/create/components/_form.dart';
-part 'package:ventes/app/resources/views/customer_form/create/components/_search_list.dart';
 part 'package:ventes/app/resources/views/customer_form/create/components/_place_picker.dart';
 
 class CustomerFormCreateView extends View<CustomerFormCreateStateController> {
   static const String route = "/customer/create";
 
-  CustomerFormCreateView({double? latitude, double? longitude}) {
+  CustomerFormCreateView({double? latitude, double? longitude, int? cstmid}) {
     state.properties.latitude = latitude;
     state.properties.longitude = longitude;
+    state.properties.cstmid = cstmid;
   }
 
   @override

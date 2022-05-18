@@ -2,6 +2,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ventes/app/models/bp_customer_model.dart';
 import 'package:ventes/app/models/city_model.dart';
 import 'package:ventes/app/models/country_model.dart';
+import 'package:ventes/app/models/maps_loc.dart';
 import 'package:ventes/app/models/province_model.dart';
 import 'package:ventes/app/models/subdistrict_model.dart';
 import 'package:ventes/app/models/type_model.dart';
@@ -29,9 +30,17 @@ class CustomerFormCreateDataSource implements FetchDataContract, CreateContract 
   set customers(List<BpCustomer> value) => _customers.value = value;
   List<BpCustomer> get customers => _customers.value;
 
+  final _mapsLoc = Rx<MapsLoc?>(null);
+  set mapsLoc(MapsLoc? value) => _mapsLoc.value = value;
+  MapsLoc? get mapsLoc => _mapsLoc.value;
+
   final _types = <int, String>{}.obs;
   set types(Map<int, String> value) => _types.value = value;
   Map<int, String> get types => _types.value;
+
+  final _statuses = <int, String>{}.obs;
+  set statuses(Map<int, String> value) => _statuses.value = value;
+  Map<int, String> get statuses => _statuses.value;
 
   void init() {
     _presenter.createContract = this;
@@ -58,12 +67,61 @@ class CustomerFormCreateDataSource implements FetchDataContract, CreateContract 
     this.types = typesData;
   }
 
+  void statusesFromList(List data) {
+    Map<int, String> statusesData = {};
+    List<DBType> statuses = List<DBType>.from(data.map((e) => DBType.fromJson(e)));
+    for (var type in statuses) {
+      statusesData[type.typeid ?? 0] = type.typename ?? '';
+    }
+    this.statuses = statusesData;
+  }
+
+  String? getCountryName() {
+    List<AddressComponents>? addresses = mapsLoc?.adresses?.first.addressComponents;
+    if (addresses != null) {
+      return addresses.firstWhere((element) => element.types!.contains('country')).longName ?? "";
+    }
+  }
+
+  String? getProvinceName() {
+    List<AddressComponents>? addresses = mapsLoc?.adresses?.first.addressComponents;
+    if (addresses != null) {
+      return addresses.firstWhere((element) => element.types!.contains('administrative_area_level_1')).longName ?? "";
+    }
+  }
+
+  String? getCityName() {
+    List<AddressComponents>? addresses = mapsLoc?.adresses?.first.addressComponents;
+    if (addresses != null) {
+      String city = addresses.firstWhere((element) => element.types!.contains('administrative_area_level_2')).longName ?? "";
+      // replace word Kota, Kab, or Kabupaten with Empty String
+      return city.replaceAll(RegExp(r'Kota |Kabupaten |Kab '), '');
+    }
+  }
+
+  String? getSubdistrictName() {
+    List<AddressComponents>? addresses = mapsLoc?.adresses?.first.addressComponents;
+    if (addresses != null) {
+      String subdistrict = addresses.firstWhere((element) => element.types!.contains('administrative_area_level_3')).longName ?? "";
+
+      return subdistrict.replaceAll(RegExp(r'Kecamatan |Kec '), '');
+    }
+  }
+
+  String? getPostalCodeName() {
+    List<AddressComponents>? addresses = mapsLoc?.adresses?.first.addressComponents;
+    if (addresses != null) {
+      return addresses.firstWhere((element) => element.types!.contains('postal_code')).longName ?? "";
+    }
+  }
+
   Future<List<Country>> fetchCountries([String? search]) async => await _presenter.fetchCountries(search);
   Future<List<Province>> fetchProvinces(int countryId, [String? search]) async => await _presenter.fetchProvinces(countryId, search);
   Future<List<City>> fetchCities(int provinceId, [String? search]) async => await _presenter.fetchCities(provinceId, search);
   Future<List<Subdistrict>> fetchSubdistricts(int cityId, [String? search]) async => await _presenter.fetchSubdistricts(cityId, search);
 
-  void fetchData() => _presenter.fetchData();
+  void fetchData(double latitude, double longitude) => _presenter.fetchData(latitude, longitude);
+  void fetchPlacesIds(String subdistrict) => _presenter.fetchPlaces(subdistrict);
   void createCustomer(FormData data) => _presenter.createCustomer(data);
 
   @override
@@ -86,9 +144,31 @@ class CustomerFormCreateDataSource implements FetchDataContract, CreateContract 
       typesFromList(data['types']);
     }
 
+    if (data['statuses'] != null) {
+      statusesFromList(data['statuses']);
+    }
+
     if (data['user'] != null) {
       _formSource.sbcbpid = UserDetail.fromJson(data['user']).userdtbpid;
     }
+
+    if (data['location'] != null) {
+      mapsLoc = MapsLoc.fromJson(data['location']);
+      _properties.fetchPlacesIds();
+    }
+
+    if (data['places'] != null) {
+      Map places = data['places'];
+      if (places['province'] != null && places['city'] != null && places['subdistrict'] != null) {
+        _formSource.provinceid = Province.fromJson(places['province']).provid;
+        _formSource.cityid = City.fromJson(places['city']).cityid;
+        _formSource.subdistrictid = Subdistrict.fromJson(places['subdistrict']).subdistrictid;
+      } else {
+        throw "The selected location is not available";
+      }
+    }
+
+    if (data['customer'] != null) {}
 
     Get.close(1);
   }

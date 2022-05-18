@@ -3,6 +3,7 @@
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ventes/app/models/bp_customer_model.dart';
+import 'package:ventes/app/models/customer_model.dart';
 import 'package:ventes/app/resources/views/customer_form/create/customer_fc.dart';
 import 'package:ventes/app/resources/views/customer_form/update/customer_fu.dart';
 import 'package:ventes/app/resources/widgets/error_alert.dart';
@@ -28,7 +29,7 @@ class NearbyListener {
     _properties.markerLatLng = position.target;
     if (_properties.cameraMoveType == CameraMoveType.dragged) {
       _properties.selectedCustomer = _dataSource.customers.where((customer) {
-        LatLng customerPos = LatLng(customer.sbccstm?.cstmlatitude ?? 0, customer.sbccstm?.cstmlongitude ?? 0);
+        LatLng customerPos = LatLng(customer.cstmlatitude ?? 0, customer.cstmlongitude ?? 0);
         return calculateDistance(customerPos, position.target) < 0.5;
       }).toList();
     }
@@ -38,10 +39,10 @@ class NearbyListener {
     _properties.cameraMoveType = CameraMoveType.dragged;
   }
 
-  void onCustomerSelected(BpCustomer customer) {
+  void onCustomerSelected(Customer customer) {
     _properties.cameraMoveType = CameraMoveType.controller;
     _properties.selectedCustomer = [customer];
-    LatLng latLng = LatLng(customer.sbccstm!.cstmlatitude!, customer.sbccstm!.cstmlongitude!);
+    LatLng latLng = LatLng(customer.cstmlatitude!, customer.cstmlongitude!);
     _properties.mapsController.future.then((controller) async {
       controller.animateCamera(CameraUpdate.newLatLng(latLng));
     });
@@ -52,6 +53,12 @@ class NearbyListener {
     getCurrentPosition().then((position) {
       Get.close(1);
       double radius = calculateDistance(_properties.markers.first.position, LatLng(position.latitude, position.longitude));
+
+      int? cstmid;
+      if (_properties.selectedCustomer.isNotEmpty) {
+        cstmid = _properties.selectedCustomer.first.cstmid;
+      }
+
       if (radius < 100) {
         Get.toNamed(
           CustomerFormCreateView.route,
@@ -59,6 +66,7 @@ class NearbyListener {
           arguments: {
             'latitude': _properties.markers.first.position.latitude,
             'longitude': _properties.markers.first.position.longitude,
+            'cstmid': cstmid,
           },
         );
       } else {
