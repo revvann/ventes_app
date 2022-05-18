@@ -71,15 +71,15 @@ class CustomerFormCreateFormSource {
     Get.delete<SearchListController<Subdistrict, Subdistrict>>();
   }
 
-  void prepareValues(Customer customer) {
-    nameTEC.text = customer.cstmname ?? "";
-    addressTEC.text = customer.cstmaddress ?? "";
-    phoneTEC.text = customer.cstmphone ?? "";
-    cstmtypeid = customer.cstmtypeid;
-    provinceid = customer.cstmprovinceid;
-    cityid = customer.cstmcityid;
-    subdistrictid = customer.cstmsubdistrictid;
-    cstmid = customer.cstmid;
+  void prepareValues() {
+    nameTEC.text = _dataSource.customer!.cstmname ?? "";
+    addressTEC.text = _dataSource.customer!.cstmaddress ?? "";
+    phoneTEC.text = _dataSource.customer!.cstmphone ?? "";
+    cstmtypeid = _dataSource.customer!.cstmtypeid;
+    provinceid = _dataSource.customer!.cstmprovinceid;
+    cityid = _dataSource.customer!.cstmcityid;
+    subdistrictid = _dataSource.customer!.cstmsubdistrictid;
+    cstmid = _dataSource.customer!.cstmid;
   }
 
   Future<File> _getImageFileFromAssets(String path) async {

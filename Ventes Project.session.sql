@@ -16,4 +16,26 @@
 -- from INFORMATION_SCHEMA.TABLES
 -- where TABLE_SCHEMA = 'public';
 select *
-from stbpcustomer;
+from mscustomer;
+INSERT INTO mscustomer
+VALUES (
+        default,
+        null,
+        'Magnum P.I.',
+        '081211113333',
+        'Jl. Bahagia Raya, Kel. Gebang Raya, Kec. Periuk, Kota Tangerang',
+        18,
+        36,
+        3671,
+        367108,
+        null,
+        '34435',
+        -6.180482,
+        106.589175,
+        null,
+        1,
+        now(),
+        1,
+        now(),
+        true
+    );

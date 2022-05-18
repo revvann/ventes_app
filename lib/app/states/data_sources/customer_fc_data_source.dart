@@ -86,6 +86,7 @@ class CustomerFormCreateDataSource implements FetchDataContract, CreateContract 
     if (addresses != null) {
       return addresses.firstWhere((element) => element.types!.contains('country')).longName ?? "";
     }
+    return null;
   }
 
   String? getProvinceName() {
@@ -93,6 +94,7 @@ class CustomerFormCreateDataSource implements FetchDataContract, CreateContract 
     if (addresses != null) {
       return addresses.firstWhere((element) => element.types!.contains('administrative_area_level_1')).longName ?? "";
     }
+    return null;
   }
 
   String? getCityName() {
@@ -102,6 +104,7 @@ class CustomerFormCreateDataSource implements FetchDataContract, CreateContract 
       // replace word Kota, Kab, or Kabupaten with Empty String
       return city.replaceAll(RegExp(r'Kota |Kabupaten |Kab '), '');
     }
+    return null;
   }
 
   String? getSubdistrictName() {
@@ -111,6 +114,7 @@ class CustomerFormCreateDataSource implements FetchDataContract, CreateContract 
 
       return subdistrict.replaceAll(RegExp(r'Kecamatan |Kec '), '');
     }
+    return null;
   }
 
   String? getPostalCodeName() {
@@ -118,6 +122,7 @@ class CustomerFormCreateDataSource implements FetchDataContract, CreateContract 
     if (addresses != null) {
       return addresses.firstWhere((element) => element.types!.contains('postal_code')).longName ?? "";
     }
+    return null;
   }
 
   Future<List<Country>> fetchCountries([String? search]) async => await _presenter.fetchCountries(search);
@@ -174,7 +179,8 @@ class CustomerFormCreateDataSource implements FetchDataContract, CreateContract 
     }
 
     if (data['customer'] != null) {
-      _formSource.prepareValues(Customer.fromJson(data['customer']));
+      customer = Customer.fromJson(data['customer']);
+      _formSource.prepareValues();
     }
 
     Get.close(1);

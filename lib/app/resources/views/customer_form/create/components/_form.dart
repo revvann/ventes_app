@@ -59,7 +59,7 @@ class _CustomerForm extends StatelessWidget {
           Obx(() {
             return RegularInput(
               label: "Customer country",
-              value: state.dataSource.getCountryName(),
+              value: state.dataSource.getCountryName() ?? state.dataSource.customer?.cstmcountry?.countryname,
               enabled: false,
             );
           }),

@@ -73,9 +73,18 @@ class Customer extends Model {
     cstmsubdistrictid = json['cstmsubdistrictid'];
     cstmuvid = json['cstmuvid'];
     cstmpostalcode = json['cstmpostalcode'];
-    cstmlatitude = json['cstmlatitude'];
-    cstmlongitude = json['cstmlongitude'];
     referalcode = json['referalcode'];
+
+    if (json['cstmlatitude'] != null && json['cstmlatitude'] is String) {
+      cstmlatitude = double.parse(json['cstmlatitude']);
+    } else {
+      cstmlatitude = json['cstmlatitude'];
+    }
+    if (json['cstmlongitude'] != null && json['cstmlongitude'] is String) {
+      cstmlongitude = double.parse(json['cstmlongitude']);
+    } else {
+      cstmlongitude = json['cstmlongitude'];
+    }
 
     if (json['cstmtype'] != null) {
       cstmtype = DBType.fromJson(json['cstmtype']);
