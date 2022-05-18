@@ -31,7 +31,7 @@ class NearbyPresenter {
     Map<String, dynamic> data = {
       'sbcbpid': bpid.toString(),
     };
-    return await _customerService.select(data);
+    return await _bpCustomerService.select(data);
   }
 
   Future<UserDetail?> _findActiveUser() async {

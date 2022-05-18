@@ -31,14 +31,15 @@ class CustomerFormCreateFormSource {
   TextEditingController addressTEC = TextEditingController();
   TextEditingController phoneTEC = TextEditingController();
 
+  int? cstmid;
   File? picture;
   int? sbccstmstatusid;
   int? sbcbpid;
+  int? provinceid;
+  int? cityid;
+  int? subdistrictid;
 
   final Rx<int?> _cstmtypeid = Rx<int?>(null);
-  Rx<int?> _provinceid = Rx(null);
-  Rx<int?> _cityid = Rx(null);
-  Rx<int?> _subdistrictid = Rx(null);
 
   String get cstmlatitude => latitudeTEC.text;
   String get cstmlongitude => longitudeTEC.text;
@@ -47,14 +48,8 @@ class CustomerFormCreateFormSource {
   String get cstmphone => phoneTEC.text;
 
   int? get cstmtypeid => _cstmtypeid.value;
-  int? get provinceid => _provinceid.value;
-  int? get cityid => _cityid.value;
-  int? get subdistrictid => _subdistrictid.value;
 
   set cstmtypeid(int? value) => _cstmtypeid.value = value;
-  set provinceid(int? value) => _provinceid.value = value;
-  set cityid(int? value) => _cityid.value = value;
-  set subdistrictid(int? value) => _subdistrictid.value = value;
 
   init() async {
     validator = CustomerFormCreateValidator(this);
@@ -80,6 +75,11 @@ class CustomerFormCreateFormSource {
     nameTEC.text = customer.cstmname ?? "";
     addressTEC.text = customer.cstmaddress ?? "";
     phoneTEC.text = customer.cstmphone ?? "";
+    cstmtypeid = customer.cstmtypeid;
+    provinceid = customer.cstmprovinceid;
+    cityid = customer.cstmcityid;
+    subdistrictid = customer.cstmsubdistrictid;
+    cstmid = customer.cstmid;
   }
 
   Future<File> _getImageFileFromAssets(String path) async {
@@ -93,10 +93,11 @@ class CustomerFormCreateFormSource {
   }
 
   Map<String, dynamic> toJson() {
-    return {
+    Map<String, dynamic> formData = {
       'sbccstmpic': picture?.path,
       'sbcbpid': sbcbpid.toString(),
       'sbccstmstatusid': sbccstmstatusid?.toString(),
+      'cstmid': cstmid?.toString(),
       'cstmname': cstmname,
       'cstmaddress': cstmaddress,
       'cstmphone': cstmphone,
@@ -108,5 +109,7 @@ class CustomerFormCreateFormSource {
       'cstmlatitude': cstmlatitude,
       'cstmlongitude': cstmlongitude,
     };
+
+    return formData;
   }
 }

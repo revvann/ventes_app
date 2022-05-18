@@ -40,7 +40,7 @@ class _CustomerForm extends StatelessWidget {
           Obx(() {
             return RegularInput(
               label: "Customer postal code",
-              value: state.dataSource.getPostalCodeName(),
+              value: state.dataSource.getPostalCodeName() ?? state.dataSource.customer?.cstmpostalcode,
               enabled: false,
             );
           }),
@@ -69,7 +69,7 @@ class _CustomerForm extends StatelessWidget {
           Obx(() {
             return RegularInput(
               label: "Customer province",
-              value: state.dataSource.getProvinceName(),
+              value: state.dataSource.getProvinceName() ?? state.dataSource.customer?.cstmprovince?.provname,
               enabled: false,
             );
           }),
@@ -79,7 +79,7 @@ class _CustomerForm extends StatelessWidget {
           Obx(() {
             return RegularInput(
               label: "Customer city",
-              value: state.dataSource.getCityName(),
+              value: state.dataSource.getCityName() ?? state.dataSource.customer?.cstmcity?.cityname,
               enabled: false,
             );
           }),
@@ -89,7 +89,7 @@ class _CustomerForm extends StatelessWidget {
           Obx(() {
             return RegularInput(
               label: "Customer subdistrict",
-              value: state.dataSource.getSubdistrictName(),
+              value: state.dataSource.getSubdistrictName() ?? state.dataSource.customer?.cstmsubdistrict?.subdistrictname,
               enabled: false,
             );
           }),
@@ -100,6 +100,7 @@ class _CustomerForm extends StatelessWidget {
             return KeyableSelectBox<int>(
               label: "Customer type",
               onSelected: state.listener.onTypeSelected,
+              activeIndex: state.formSource.cstmtypeid,
               items: state.dataSource.types,
             );
           }),

@@ -69,7 +69,7 @@ class NearbyDataSource implements FetchDataContract {
     }
 
     if (data['bpcustomers'] != null) {
-      bpCustomers = data['bpcustomers'].map((e) => BpCustomer.fromJson(e)).toList();
+      bpCustomers = List<BpCustomer>.from(data['bpcustomers'].map((e) => BpCustomer.fromJson(e)));
     }
 
     if (data['customers'] != null) {

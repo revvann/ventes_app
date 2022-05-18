@@ -73,8 +73,8 @@ class Customer extends Model {
     cstmsubdistrictid = json['cstmsubdistrictid'];
     cstmuvid = json['cstmuvid'];
     cstmpostalcode = json['cstmpostalcode'];
-    cstmlatitude = double.tryParse(json['cstmlatitude']);
-    cstmlongitude = double.tryParse(json['cstmlongitude']);
+    cstmlatitude = json['cstmlatitude'];
+    cstmlongitude = json['cstmlongitude'];
     referalcode = json['referalcode'];
 
     if (json['cstmtype'] != null) {

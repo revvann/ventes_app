@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:ventes/app/models/auth_model.dart';
 import 'package:ventes/app/models/city_model.dart';
 import 'package:ventes/app/models/country_model.dart';
+import 'package:ventes/app/models/customer_model.dart';
 import 'package:ventes/app/models/province_model.dart';
 import 'package:ventes/app/models/subdistrict_model.dart';
 import 'package:ventes/app/models/user_detail_model.dart';
@@ -84,21 +85,46 @@ class CustomerFormCreatePresenter {
       Response customersResponse = await _getCustomers();
       Response typeResponse = await _getTypes();
       Response statusResponse = await _getStatusTypes();
-      Response locResponse = await _getLocDetail(latitude, longitude);
 
       if (cstmid != null) {
         Response customerResponse = await _getCustomer(cstmid);
         if (customerResponse.statusCode == 200) {
-          data['customer'] = customerResponse.body;
+          Customer customer = Customer.fromJson(customerResponse.body);
+          Response subdistrictResponse = await _getSubdistrict(customer.cstmsubdistrict!.subdistrictname!);
+
+          if (subdistrictResponse.statusCode == 200) {
+            Subdistrict subdistrict = Subdistrict.fromJson(subdistrictResponse.body[0] ?? {});
+            Response cityResponse = await _getCity(subdistrict.subdistrictcityid ?? 0);
+
+            if (cityResponse.statusCode == 200) {
+              City city = City.fromJson(cityResponse.body);
+              Response provinceResponse = await _getProvince(city.cityprovid ?? 0);
+
+              if (provinceResponse.statusCode == 200) {
+                // // add country to customer (mscustomer doesnt have countryid field)
+                customer.cstmcountry = Province.fromJson(provinceResponse.body).provcountry;
+
+                data['places'] = {};
+                data['places']['province'] = provinceResponse.body;
+                data['places']['city'] = cityResponse.body;
+                data['places']['subdistrict'] = subdistrict.toJson();
+                data['customer'] = customer.toJson();
+              }
+            }
+          }
+        }
+      } else {
+        Response locResponse = await _getLocDetail(latitude, longitude);
+        if (locResponse.statusCode == 200) {
+          data['location'] = locResponse.body;
         }
       }
 
-      if (customersResponse.statusCode == 200 && typeResponse.statusCode == 200 && locResponse.statusCode == 200 && statusResponse.statusCode == 200) {
+      if (customersResponse.statusCode == 200 && typeResponse.statusCode == 200 && statusResponse.statusCode == 200 && userResponse.statusCode == 200) {
         data['customers'] = customersResponse.body;
         data['types'] = typeResponse.body;
         data['statuses'] = statusResponse.body;
         data['user'] = userResponse.body;
-        data['location'] = locResponse.body;
         _fetchDataContract.onLoadSuccess(data);
       } else {
         _fetchDataContract.onLoadFailed(NearbyString.fetchFailed);

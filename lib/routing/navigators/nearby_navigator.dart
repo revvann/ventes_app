@@ -38,7 +38,11 @@ class NearbyNavigator extends ViewNavigator {
               ],
             ),
         CustomerFormCreateView.route: (args) => ViewRoute(
-              page: () => CustomerFormCreateView(latitude: args?['latitude'], longitude: args?['longitude']),
+              page: () => CustomerFormCreateView(
+                latitude: args?['latitude'],
+                longitude: args?['longitude'],
+                cstmid: args?['cstmid'],
+              ),
               bindings: [
                 BindingsBuilder(() {
                   Get.lazyPut(() => GmapsService());

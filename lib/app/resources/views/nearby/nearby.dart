@@ -49,7 +49,10 @@ class NearbyView extends View<NearbyStateController> {
         actions: [
           Obx(() {
             bool isCustomerSelected = state.properties.selectedCustomer.isNotEmpty;
-            bool isBpHasCustomer = state.dataSource.bpCustomersHas(state.properties.selectedCustomer.first);
+            bool isBpHasCustomer = false;
+            if (state.dataSource.bpCustomers.isNotEmpty && state.properties.selectedCustomer.isNotEmpty) {
+              isBpHasCustomer = state.dataSource.bpCustomersHas(state.properties.selectedCustomer.first);
+            }
             return GestureDetector(
               onTap: isCustomerSelected
                   ? isBpHasCustomer

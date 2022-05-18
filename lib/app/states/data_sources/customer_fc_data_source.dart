@@ -2,6 +2,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ventes/app/models/bp_customer_model.dart';
 import 'package:ventes/app/models/city_model.dart';
 import 'package:ventes/app/models/country_model.dart';
+import 'package:ventes/app/models/customer_model.dart';
 import 'package:ventes/app/models/maps_loc.dart';
 import 'package:ventes/app/models/province_model.dart';
 import 'package:ventes/app/models/subdistrict_model.dart';
@@ -29,6 +30,10 @@ class CustomerFormCreateDataSource implements FetchDataContract, CreateContract 
   final _customers = <BpCustomer>[].obs;
   set customers(List<BpCustomer> value) => _customers.value = value;
   List<BpCustomer> get customers => _customers.value;
+
+  final _customer = Rx<Customer?>(null);
+  set customer(Customer? value) => _customer.value = value;
+  Customer? get customer => _customer.value;
 
   final _mapsLoc = Rx<MapsLoc?>(null);
   set mapsLoc(MapsLoc? value) => _mapsLoc.value = value;
@@ -120,7 +125,7 @@ class CustomerFormCreateDataSource implements FetchDataContract, CreateContract 
   Future<List<City>> fetchCities(int provinceId, [String? search]) async => await _presenter.fetchCities(provinceId, search);
   Future<List<Subdistrict>> fetchSubdistricts(int cityId, [String? search]) async => await _presenter.fetchSubdistricts(cityId, search);
 
-  void fetchData(double latitude, double longitude) => _presenter.fetchData(latitude, longitude);
+  void fetchData(double latitude, double longitude, int? cstmid) => _presenter.fetchData(latitude, longitude, cstmid);
   void fetchPlacesIds(String subdistrict) => _presenter.fetchPlaces(subdistrict);
   void createCustomer(FormData data) => _presenter.createCustomer(data);
 
@@ -168,7 +173,9 @@ class CustomerFormCreateDataSource implements FetchDataContract, CreateContract 
       }
     }
 
-    if (data['customer'] != null) {}
+    if (data['customer'] != null) {
+      _formSource.prepareValues(Customer.fromJson(data['customer']));
+    }
 
     Get.close(1);
   }

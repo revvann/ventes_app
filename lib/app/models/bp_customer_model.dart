@@ -91,6 +91,10 @@ class BpCustomer extends Model {
       data['sbccstm'] = sbccstm?.toJson();
     }
 
+    if (data['sbccstmstatus'] != null) {
+      data['sbccstmstatus'] = sbccstmstatus?.toJson();
+    }
+
     return data;
   }
 }

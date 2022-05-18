@@ -30,7 +30,7 @@ class CustomerFormCreateStateController extends RegularStateController {
     super.onReady();
 
     if (properties.latitude != null && properties.longitude != null) {
-      dataSource.fetchData(properties.latitude!, properties.longitude!);
+      dataSource.fetchData(properties.latitude!, properties.longitude!, properties.cstmid);
 
       LatLng pos = LatLng(properties.latitude!, properties.longitude!);
       GoogleMapController controller = await properties.mapsController.future;
