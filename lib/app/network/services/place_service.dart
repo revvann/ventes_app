@@ -1,3 +1,4 @@
+import 'package:get/get.dart';
 import 'package:ventes/core/service.dart';
 
 class PlaceService extends Service {
@@ -23,5 +24,9 @@ class PlaceService extends Service {
   PlaceService subdistrict() {
     place = '/subdistrict';
     return this;
+  }
+
+  Future<Response> byName(String name) {
+    return get('$api/by-name', query: {'name': name});
   }
 }

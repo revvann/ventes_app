@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ventes/app/models/bp_customer_model.dart';
+import 'package:ventes/app/models/customer_model.dart';
 import 'package:ventes/app/resources/widgets/loader.dart';
 import 'package:ventes/app/states/controllers/nearby_state_controller.dart';
 import 'package:ventes/app/states/controllers/regular_state_controller.dart';
@@ -33,7 +34,7 @@ class CustomerFormUpdateStateController extends RegularStateController {
     super.onReady();
     properties.ready();
 
-    dataSource.fetchData();
+    dataSource.fetchData(properties.customerid ?? 0);
     Loader().show();
   }
 
@@ -48,6 +49,7 @@ class CustomerFormUpdateStateController extends RegularStateController {
 
 class CustomerFormUpdateProperties {
   CustomerFormUpdateFormSource get _formSource => Get.find<CustomerFormUpdateFormSource>();
+  CustomerFormUpdateDataSource get _dataSource => Get.find<CustomerFormUpdateDataSource>();
 
   final double defaultZoom = 20;
   final Completer<GoogleMapController> mapsController = Completer();
@@ -57,7 +59,7 @@ class CustomerFormUpdateProperties {
   GlobalKey stackKey = GlobalKey();
 
   CameraMoveType cameraMoveType = CameraMoveType.controller;
-  BpCustomer? customer;
+  int? customerid;
 
   final Rx<double> mapsHeight = Rx<double>(0);
   final Rx<double> bottomSheetHeight = Rx<double>(0);
@@ -88,25 +90,24 @@ class CustomerFormUpdateProperties {
     mapsHeight.value = (stackHeight - bottomSheetHeight) + 10;
   }
 
-  void deployCustomers(List<BpCustomer> data) {
+  void deployCustomers(List<Customer> data) async {
     List<Marker> markersList = [markers.first];
     for (var element in data) {
-      if (element.sbcid != _formSource.sbcid) {
-        Marker marker = Marker(
-          markerId: MarkerId((element.sbcid ?? "0").toString()),
-          infoWindow: InfoWindow(title: element.sbccstmname ?? "Unknown"),
-          position: LatLng(element.sbccstm!.cstmlatitude!, element.sbccstm!.cstmlongitude!),
-          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueCyan),
-        );
-        markersList.add(marker);
-      }
+      bool isInBp = _dataSource.bpCustomersHas(element);
+      Marker marker = Marker(
+        markerId: MarkerId((element.cstmid ?? "0").toString()),
+        infoWindow: InfoWindow(title: element.cstmname ?? "Unknown"),
+        position: LatLng(element.cstmlatitude!, element.cstmlongitude!),
+        icon: BitmapDescriptor.defaultMarkerWithHue(isInBp ? BitmapDescriptor.hueBlue : BitmapDescriptor.hueCyan),
+      );
+      markersList.add(marker);
     }
     markers = Set.from(markersList);
   }
 
   Future moveCamera() async {
-    if (customer != null) {
-      LatLng pos = LatLng(customer!.sbccstm!.cstmlatitude!, customer!.sbccstm!.cstmlongitude!);
+    if (_dataSource.bpCustomer != null) {
+      LatLng pos = LatLng(_dataSource.bpCustomer!.sbccstm!.cstmlatitude!, _dataSource.bpCustomer!.sbccstm!.cstmlongitude!);
       GoogleMapController controller = await mapsController.future;
       await controller.animateCamera(
         CameraUpdate.newLatLng(pos),

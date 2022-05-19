@@ -56,12 +56,8 @@ class CustomerFormCreatePresenter {
     return await _placeService.city().show(idCity);
   }
 
-  Future<Response> _getSubdistrict(String search) async {
-    return await _placeService.subdistrict().select({'search': search});
-  }
-
-  Future<Response> _getSubdistrictById(int idSubdistrict) async {
-    return await _placeService.subdistrict().show(idSubdistrict);
+  Future<Response> _getSubdistrict(String name) async {
+    return await _placeService.subdistrict().byName(name);
   }
 
   Future<UserDetail?> _findActiveUser() async {
@@ -94,7 +90,7 @@ class CustomerFormCreatePresenter {
         Response customerResponse = await _getCustomer(cstmid);
         if (customerResponse.statusCode == 200) {
           Customer customer = Customer.fromJson(customerResponse.body);
-          Response subdistrictResponse = await _getSubdistrictById(customer.cstmsubdistrictid ?? 0);
+          Response subdistrictResponse = await _getSubdistrict(customer.cstmsubdistrict?.subdistrictname ?? "");
 
           if (subdistrictResponse.statusCode == 200) {
             Subdistrict subdistrict = Subdistrict.fromJson(subdistrictResponse.body ?? {});
@@ -144,7 +140,7 @@ class CustomerFormCreatePresenter {
     try {
       Response subdistrictResponse = await _getSubdistrict(subdistrictSearch);
       if (subdistrictResponse.statusCode == 200) {
-        Subdistrict subdistrict = Subdistrict.fromJson(subdistrictResponse.body[0] ?? {});
+        Subdistrict subdistrict = Subdistrict.fromJson(subdistrictResponse.body ?? {});
         Response cityResponse = await _getCity(subdistrict.subdistrictcityid ?? 0);
 
         if (cityResponse.statusCode == 200) {

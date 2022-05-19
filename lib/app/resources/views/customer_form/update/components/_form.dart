@@ -42,12 +42,13 @@ class _CustomerForm extends StatelessWidget {
             SizedBox(
               height: RegularSize.m,
             ),
-            RegularInput(
-              label: "Customer postal code",
-              hintText: "Enter postal code",
-              controller: state.formSource.postalCodeTEC,
-              validator: state.formSource.validator.cstmpostalcode,
-            ),
+            Obx(() {
+              return RegularInput(
+                label: "Customer postal code",
+                value: state.dataSource.bpCustomer?.sbccstm?.cstmpostalcode,
+                enabled: false,
+              );
+            }),
             SizedBox(
               height: RegularSize.m,
             ),
@@ -61,87 +62,40 @@ class _CustomerForm extends StatelessWidget {
               height: RegularSize.m,
             ),
             Obx(() {
-              return _SearchList<Country, Country>(
-                hint: 'Country',
-                itemBuilder: (Country country, Country? selected) {
-                  bool isSelected = selected?.countryid == country.countryid;
-                  return _SearchListItem(
-                    isSelected: isSelected,
-                    text: country.countryname ?? "",
-                  );
-                },
-                label: 'Search country',
-                onFilter: state.listener.onCountryFilter,
-                onItemSelected: state.listener.onCountrySelected,
-                value: state.formSource.country?.countryname,
-                validator: state.formSource.validator.cstmcountry,
-                compare: state.listener.onCountryCompared,
-                controller: state.formSource.countrySearchListController,
+              return RegularInput(
+                label: "Customer country",
+                value: state.dataSource.bpCustomer?.sbccstm?.cstmcountry?.countryname,
+                enabled: false,
               );
             }),
             SizedBox(
               height: RegularSize.m,
             ),
             Obx(() {
-              return _SearchList<Province, Province>(
-                hint: 'Province',
-                itemBuilder: (Province province, Province? selected) {
-                  bool isSelected = selected?.provid == province.provid;
-                  return _SearchListItem(
-                    isSelected: isSelected,
-                    text: province.provname ?? "",
-                  );
-                },
-                label: 'Search province',
-                onFilter: state.listener.onProvinceFilter,
-                onItemSelected: state.listener.onProvinceSelected,
-                value: state.formSource.province?.provname,
-                validator: state.formSource.validator.cstmprovince,
-                compare: state.listener.onProvinceCompared,
-                controller: state.formSource.provinceSearchListController,
+              return RegularInput(
+                label: "Customer province",
+                value: state.dataSource.bpCustomer?.sbccstm?.cstmprovince?.provname,
+                enabled: false,
               );
             }),
             SizedBox(
               height: RegularSize.m,
             ),
             Obx(() {
-              return _SearchList<City, City>(
-                hint: 'City',
-                itemBuilder: (City city, City? selected) {
-                  bool isSelected = selected?.cityid == city.cityid;
-                  return _SearchListItem(
-                    isSelected: isSelected,
-                    text: city.cityname ?? "",
-                  );
-                },
-                label: 'Search city',
-                onFilter: state.listener.onCityFilter,
-                onItemSelected: state.listener.onCitySelected,
-                value: state.formSource.city?.cityname,
-                validator: state.formSource.validator.cstmcity,
-                compare: state.listener.onCityCompared,
-                controller: state.formSource.citySearchListController,
+              return RegularInput(
+                label: "Customer city",
+                value: state.dataSource.bpCustomer?.sbccstm?.cstmcity?.cityname,
+                enabled: false,
               );
             }),
             SizedBox(
               height: RegularSize.m,
             ),
             Obx(() {
-              return _SearchList<Subdistrict, Subdistrict>(
-                hint: 'Subdistrict',
-                itemBuilder: (Subdistrict subdistrict, Subdistrict? selected) {
-                  bool isSelected = selected?.subdistrictid == subdistrict.subdistrictid;
-                  return _SearchListItem(
-                    isSelected: isSelected,
-                    text: subdistrict.subdistrictname ?? "",
-                  );
-                },
-                label: 'Search subdistrict',
-                onFilter: state.listener.onSubdistrictFilter,
-                value: state.formSource.subdistrict?.subdistrictname,
-                validator: state.formSource.validator.cstmsubdistrict,
-                compare: state.listener.onSubdistrictCompared,
-                controller: state.formSource.subdistrictSearchListController,
+              return RegularInput(
+                label: "Customer subdistrict",
+                value: state.dataSource.bpCustomer?.sbccstm?.cstmsubdistrict?.subdistrictname,
+                enabled: false,
               );
             }),
             SizedBox(
@@ -155,6 +109,20 @@ class _CustomerForm extends StatelessWidget {
                 items: state.dataSource.types,
               );
             }),
+            SizedBox(
+              height: RegularSize.m,
+            ),
+            Obx(() {
+              return KeyableSelectBox<int>(
+                label: "Customer status",
+                onSelected: state.listener.onStatusSelected,
+                items: state.dataSource.statuses,
+                activeIndex: state.dataSource.bpCustomer?.sbccstmstatusid,
+              );
+            }),
+            SizedBox(
+              height: RegularSize.m,
+            ),
             SizedBox(
               height: RegularSize.l,
             ),

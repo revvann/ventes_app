@@ -31,52 +31,6 @@ class CustomerFormUpdateListener {
     Get.back(id: NearbyNavigator.id);
   }
 
-  void onCountrySelected(Country? country) {
-    Country? provcountry = _formSource.provinceSearchListController.selectedItem?.provcountry;
-    if (provcountry?.countryid != country?.countryid && provcountry != null) {
-      _formSource.provinceSearchListController.reset();
-      if (_formSource.citySearchListController.selectedItem != null) {
-        _formSource.citySearchListController.reset();
-        if (_formSource.subdistrictSearchListController.selectedItem != null) {
-          _formSource.subdistrictSearchListController.reset();
-        }
-      }
-    }
-  }
-
-  void onProvinceSelected(Province? province) {
-    Province? cityprov = _formSource.citySearchListController.selectedItem?.cityprov;
-    if (cityprov?.provid != province?.provid && cityprov != null) {
-      _formSource.citySearchListController.reset();
-      if (_formSource.subdistrictSearchListController.selectedItem != null) {
-        _formSource.subdistrictSearchListController.reset();
-      }
-    }
-  }
-
-  void onCitySelected(City? city) {
-    City? subdistrictcity = _formSource.subdistrictSearchListController.selectedItem?.subdistrictcity;
-    if (subdistrictcity?.cityid != city?.cityid && subdistrictcity != null) {
-      _formSource.subdistrictSearchListController.reset();
-    }
-  }
-
-  bool onCountryCompared(Country country, Country? selected) {
-    return country.countryid == selected?.countryid;
-  }
-
-  bool onProvinceCompared(Province province, Province? selected) {
-    return province.provid == selected?.provid;
-  }
-
-  bool onCityCompared(City city, City? selected) {
-    return city.cityid == selected?.cityid;
-  }
-
-  bool onSubdistrictCompared(Subdistrict subdistrict, Subdistrict? selected) {
-    return subdistrict.subdistrictid == selected?.subdistrictid;
-  }
-
   void onTypeSelected(int type) {
     _formSource.cstmtypeid = type;
   }
@@ -97,35 +51,6 @@ class CustomerFormUpdateListener {
     _properties.cameraMoveType = CameraMoveType.dragged;
   }
 
-  Future onCountryFilter(String? search) async {
-    List<Country> countries = await _dataSource.fetchCountries(search);
-    return countries;
-  }
-
-  Future onProvinceFilter(String? search) async {
-    if (_formSource.country == null) {
-      return <Province>[];
-    }
-    List<Province> provinces = await _dataSource.fetchProvinces(_formSource.country!.countryid!, search);
-    return provinces;
-  }
-
-  Future onCityFilter(String? search) async {
-    if (_formSource.province == null) {
-      return <City>[];
-    }
-    List<City> cities = await _dataSource.fetchCities(_formSource.province!.provid!, search);
-    return cities;
-  }
-
-  Future onSubdistrictFilter(String? search) async {
-    if (_formSource.city == null) {
-      return <Subdistrict>[];
-    }
-    List<Subdistrict> subdistricts = await _dataSource.fetchSubdistricts(_formSource.city!.cityid!, search);
-    return subdistricts;
-  }
-
   void onPicturePicked() async {
     ImagePicker _picker = ImagePicker();
     final XFile? image = await _picker.pickImage(
@@ -136,6 +61,10 @@ class CustomerFormUpdateListener {
       _formSource.picture = File(image.path);
       _formSource.defaultPicture.value = Image.file(_formSource.picture!);
     }
+  }
+
+  void onStatusSelected(int status) {
+    _formSource.sbccstmstatusid = status;
   }
 
   void onSubmitButtonClicked() async {

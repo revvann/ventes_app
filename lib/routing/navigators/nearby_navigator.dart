@@ -55,7 +55,7 @@ class NearbyNavigator extends ViewNavigator {
               ],
             ),
         CustomerFormUpdateView.route: (args) => ViewRoute(
-              page: () => CustomerFormUpdateView(args!['customer']),
+              page: () => CustomerFormUpdateView(args!['bpcustomer']),
               bindings: [
                 BindingsBuilder(() {
                   Get.lazyPut(() => GmapsService());

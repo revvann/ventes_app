@@ -83,15 +83,15 @@ class BpCustomer extends Model {
     data['sbccstmpic'] = sbccstmpic;
     data['sbccstmstatusid'] = sbccstmstatusid;
 
-    if (data['sbcbp'] != null) {
+    if (sbcbp != null) {
       data['sbcbp'] = sbcbp?.toJson();
     }
 
-    if (data['sbccstm'] != null) {
+    if (sbccstm != null) {
       data['sbccstm'] = sbccstm?.toJson();
     }
 
-    if (data['sbccstmstatus'] != null) {
+    if (sbccstmstatus != null) {
       data['sbccstmstatus'] = sbccstmstatus?.toJson();
     }
 

@@ -79,15 +79,17 @@ class NearbyListener {
     Loader().show();
     getCurrentPosition().then((position) {
       Get.close(1);
+
+      Customer customer = _properties.selectedCustomer.first;
+      BpCustomer bpcustomer = _dataSource.bpCustomers.firstWhere((element) => element.sbccstmid == customer.cstmid);
+
       double radius = calculateDistance(_properties.markers.first.position, LatLng(position.latitude, position.longitude));
       if (radius < 100) {
         Get.toNamed(
           CustomerFormUpdateView.route,
           id: NearbyNavigator.id,
           arguments: {
-            'latitude': _properties.markers.first.position.latitude,
-            'longitude': _properties.markers.first.position.longitude,
-            'customer': _properties.selectedCustomer.first,
+            'bpcustomer': bpcustomer.sbcid,
           },
         );
       } else {

@@ -30,8 +30,8 @@ part 'package:ventes/app/resources/views/customer_form/update/components/_bottom
 class CustomerFormUpdateView extends View<CustomerFormUpdateStateController> {
   static const String route = "/customer/update";
 
-  CustomerFormUpdateView(BpCustomer customer) {
-    state.properties.customer = customer;
+  CustomerFormUpdateView(int customerid) {
+    state.properties.customerid = customerid;
   }
 
   @override

@@ -11,6 +11,7 @@ import 'package:ventes/app/models/province_model.dart';
 import 'package:ventes/app/models/subdistrict_model.dart';
 import 'package:ventes/app/resources/widgets/search_list.dart';
 import 'package:ventes/app/states/controllers/customer_fu_state_controller.dart';
+import 'package:ventes/app/states/data_sources/customer_fu_data_source.dart';
 import 'package:ventes/app/states/form_validators/customer_fu_validator.dart';
 import 'package:ventes/app/states/listeners/customer_fu_listener.dart';
 import 'package:ventes/constants/strings/nearby_string.dart';
@@ -19,6 +20,7 @@ class CustomerFormUpdateFormSource {
   late CustomerFormUpdateValidator validator;
   final CustomerFormUpdateProperties _properties = Get.find<CustomerFormUpdateProperties>();
   final CustomerFormUpdateListener _listener = Get.find<CustomerFormUpdateListener>();
+  final CustomerFormUpdateDataSource _dataSource = Get.find<CustomerFormUpdateDataSource>();
 
   SearchListController<Country, Country> countrySearchListController = Get.put(SearchListController<Country, Country>());
   SearchListController<Province, Province> provinceSearchListController = Get.put(SearchListController<Province, Province>());
@@ -39,6 +41,7 @@ class CustomerFormUpdateFormSource {
   int? sbcid;
   String cstmlatitude = '0';
   String cstmlongitude = '0';
+  int? sbccstmstatusid;
 
   final Rx<int?> _cstmtypeid = Rx<int?>(null);
 
@@ -75,38 +78,38 @@ class CustomerFormUpdateFormSource {
   }
 
   void prepareFormValue() {
-    if (_properties.customer != null) {
-      sbcid = _properties.customer!.sbcid;
+    if (_dataSource.bpCustomer != null) {
+      sbcid = _dataSource.bpCustomer!.sbcid;
 
-      cstmlatitude = _properties.customer!.sbccstm!.cstmlatitude!.toString();
-      cstmlongitude = _properties.customer!.sbccstm!.cstmlongitude!.toString();
+      cstmlatitude = _dataSource.bpCustomer!.sbccstm!.cstmlatitude!.toString();
+      cstmlongitude = _dataSource.bpCustomer!.sbccstm!.cstmlongitude!.toString();
       _properties.markerLatLng = LatLng(double.parse(cstmlatitude), double.parse(cstmlongitude));
 
-      nameTEC.text = _properties.customer!.sbccstm!.cstmname ?? "";
-      addressTEC.text = _properties.customer!.sbccstm!.cstmaddress ?? "";
-      phoneTEC.text = _properties.customer!.sbccstm!.cstmphone ?? "";
-      postalCodeTEC.text = _properties.customer!.sbccstm!.cstmpostalcode ?? "";
+      nameTEC.text = _dataSource.bpCustomer!.sbccstm!.cstmname ?? "";
+      addressTEC.text = _dataSource.bpCustomer!.sbccstm!.cstmaddress ?? "";
+      phoneTEC.text = _dataSource.bpCustomer!.sbccstm!.cstmphone ?? "";
+      postalCodeTEC.text = _dataSource.bpCustomer!.sbccstm!.cstmpostalcode ?? "";
 
-      cstmtypeid = _properties.customer!.sbccstm!.cstmtypeid;
+      cstmtypeid = _dataSource.bpCustomer!.sbccstm!.cstmtypeid;
 
-      if (_properties.customer!.sbccstmpic != null) {
-        defaultPicture.value = Image.network(_properties.customer!.sbccstmpic!);
+      if (_dataSource.bpCustomer!.sbccstmpic != null) {
+        defaultPicture.value = Image.network(_dataSource.bpCustomer!.sbccstmpic!);
       }
 
-      if (_properties.customer!.sbccstm!.cstmcountry != null) {
-        countrySearchListController.selectedItem = _properties.customer!.sbccstm!.cstmcountry!;
+      if (_dataSource.bpCustomer!.sbccstm!.cstmcountry != null) {
+        countrySearchListController.selectedItem = _dataSource.bpCustomer!.sbccstm!.cstmcountry!;
       }
 
-      if (_properties.customer!.sbccstm!.cstmprovince != null) {
-        provinceSearchListController.selectedItem = _properties.customer!.sbccstm!.cstmprovince!;
+      if (_dataSource.bpCustomer!.sbccstm!.cstmprovince != null) {
+        provinceSearchListController.selectedItem = _dataSource.bpCustomer!.sbccstm!.cstmprovince!;
       }
 
-      if (_properties.customer!.sbccstm!.cstmcity != null) {
-        citySearchListController.selectedItem = _properties.customer!.sbccstm!.cstmcity!;
+      if (_dataSource.bpCustomer!.sbccstm!.cstmcity != null) {
+        citySearchListController.selectedItem = _dataSource.bpCustomer!.sbccstm!.cstmcity!;
       }
 
-      if (_properties.customer!.sbccstm!.cstmsubdistrict != null) {
-        subdistrictSearchListController.selectedItem = _properties.customer!.sbccstm!.cstmsubdistrict!;
+      if (_dataSource.bpCustomer!.sbccstm!.cstmsubdistrict != null) {
+        subdistrictSearchListController.selectedItem = _dataSource.bpCustomer!.sbccstm!.cstmsubdistrict!;
       }
     }
   }
@@ -114,14 +117,10 @@ class CustomerFormUpdateFormSource {
   Map<String, dynamic> toJson() {
     return {
       'sbccstmpic': picture?.path,
+      'sbccstmstatusid': sbccstmstatusid,
       'cstmname': cstmname,
       'cstmaddress': cstmaddress,
       'cstmphone': cstmphone,
-      'cstmpostalcode': cstmpostalcode,
-      'cstmcountryid': cstmcoutryid,
-      'cstmprovinceid': cstmprovinceid,
-      'cstmcityid': cstmcityid,
-      'cstmsubdistrictid': cstmsubdistrictid,
       'cstmtypeid': cstmtypeid?.toString(),
       'cstmlatitude': cstmlatitude,
       'cstmlongitude': cstmlongitude,
