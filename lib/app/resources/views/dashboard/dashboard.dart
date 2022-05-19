@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:ventes/app/models/bp_customer_model.dart';
+import 'package:ventes/app/resources/views/customer.dart';
 import 'package:ventes/core/view.dart';
 import 'package:ventes/app/resources/widgets/bottom_navigation.dart';
 import 'package:ventes/app/resources/widgets/customer_card.dart';
@@ -107,7 +108,9 @@ class DashboardView extends View<DashboardStateController> {
                           color: RegularColor.gray,
                           icon: "assets/svg/prospect.svg",
                           text: "Prospect",
-                          onTap: () {},
+                          onTap: () {
+                            // Get.toNamed(CustomerView.route);
+                          },
                         ),
                       ],
                     ),
