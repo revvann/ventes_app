@@ -5,7 +5,9 @@ import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
 import 'package:ventes/app/network/presenters/dashboard_presenter.dart';
 import 'package:ventes/app/states/controllers/dashboard_state_controller.dart';
 import 'package:ventes/app/states/listeners/dashboard_listener.dart';
+import 'package:ventes/constants/strings/dashboard_string.dart';
 import 'package:ventes/helpers/function_helpers.dart';
+import 'package:ventes/helpers/task_helper.dart';
 
 class DashboardDataSource implements FetchDataContract {
   DashboardProperties get _properties => Get.find<DashboardProperties>();
@@ -51,6 +53,6 @@ class DashboardDataSource implements FetchDataContract {
         LatLng(_properties.position!.latitude, _properties.position!.longitude),
       );
     }
-    Get.close(1);
+    Get.find<TaskHelper>().remove(DashboardString.taskCode);
   }
 }

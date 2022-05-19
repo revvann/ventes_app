@@ -12,9 +12,10 @@ import 'package:ventes/app/states/controllers/bottom_navigation_state_controller
 import 'package:ventes/app/states/controllers/regular_state_controller.dart';
 import 'package:ventes/app/states/data_sources/dashboard_data_source.dart';
 import 'package:ventes/app/states/listeners/dashboard_listener.dart';
-import 'package:ventes/constants/regular_size.dart';
+import 'package:ventes/constants/strings/dashboard_string.dart';
 import 'package:ventes/constants/strings/nearby_string.dart';
 import 'package:ventes/helpers/function_helpers.dart';
+import 'package:ventes/helpers/task_helper.dart';
 
 class DashboardStateController extends RegularStateController {
   BottomNavigationStateController bottomNavigation = Get.put(BottomNavigationStateController());
@@ -45,7 +46,7 @@ class DashboardProperties {
   void refresh() async {
     position = await getCurrentPosition();
     _dataSource.fetchData(LatLng(position!.latitude, position!.longitude));
-    Loader().show();
+    Get.find<TaskHelper>().add(DashboardString.taskCode);
   }
 }
 

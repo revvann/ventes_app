@@ -11,6 +11,7 @@ import 'package:ventes/app/resources/widgets/success_alert.dart';
 import 'package:ventes/app/states/data_sources/schedule_fu_data_source.dart';
 import 'package:ventes/constants/strings/schedule_string.dart';
 import 'package:ventes/helpers/function_helpers.dart';
+import 'package:ventes/helpers/task_helper.dart';
 import 'package:ventes/routing/navigators/schedule_navigator.dart';
 import 'package:ventes/app/states/controllers/daily_schedule_state_controller.dart';
 import 'package:ventes/app/states/controllers/schedule_fu_state_controller.dart';
@@ -208,7 +209,7 @@ class ScheduleFormUpdateListener {
   void onFormSubmit() {
     if (_formSource.isValid()) {
       Map<String, dynamic> data = _formSource.toJson();
-      Loader().show();
+      Get.find<TaskHelper>().add(ScheduleString.updateScheduleTaskCode);
       _dataSource.updateSchedule(data);
     }
   }
@@ -219,29 +220,30 @@ class ScheduleFormUpdateListener {
   }
 
   void onUpdateDataFailed(String message) {
-    Get.close(1);
+    Get.find<TaskHelper>().remove(ScheduleString.updateScheduleTaskCode);
     FailedAlert(ScheduleString.updateFailed).show();
   }
 
   void onUpdateDataSuccess(String message) {
-    Get.close(1);
-    SuccessAlert(ScheduleString.updateSuccess).show();
-    Get.find<DailyScheduleStateController>().properties.refetch();
-    Get.back(id: ScheduleNavigator.id);
+    Get.find<TaskHelper>().remove(ScheduleString.updateScheduleTaskCode);
+    SuccessAlert(ScheduleString.updateSuccess).show().then((value) {
+      Get.find<DailyScheduleStateController>().properties.refetch();
+      Get.back(id: ScheduleNavigator.id);
+    });
   }
 
   void onUpdateDataError(String message) {
-    Get.close(1);
+    Get.find<TaskHelper>().remove(ScheduleString.updateScheduleTaskCode);
     ErrorAlert(ScheduleString.updateError).show();
   }
 
   onLoadDataError(String message) {
-    Get.close(1);
+    Get.find<TaskHelper>().remove(ScheduleString.updateScheduleTaskCode);
     ErrorAlert(ScheduleString.fetchError).show();
   }
 
   onLoadDataFailed(String message) {
-    Get.close(1);
+    Get.find<TaskHelper>().remove(ScheduleString.updateScheduleTaskCode);
     FailedAlert(ScheduleString.fetchFailed).show();
   }
 }

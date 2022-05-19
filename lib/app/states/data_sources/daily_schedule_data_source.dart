@@ -4,6 +4,8 @@ import 'package:ventes/app/models/type_model.dart';
 import 'package:ventes/app/network/presenters/daily_schedule_presenter.dart';
 import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
 import 'package:ventes/app/states/listeners/daily_schedule_listener.dart';
+import 'package:ventes/constants/strings/schedule_string.dart';
+import 'package:ventes/helpers/task_helper.dart';
 
 class DailyScheduleDataSource implements FetchDataContract {
   DailyScheduleListener get _listener => Get.find<DailyScheduleListener>();
@@ -48,7 +50,7 @@ class DailyScheduleDataSource implements FetchDataContract {
     if (data['schedules'] != null) {
       listToAppointments(data['schedules']);
     }
-    Get.close(1);
+    Get.find<TaskHelper>().remove(ScheduleString.dailyScheduleTaskCode);
   }
 
   @override

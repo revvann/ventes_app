@@ -8,7 +8,9 @@ import 'package:ventes/app/network/contracts/update_contract.dart';
 import 'package:ventes/app/network/presenters/schedule_fu_presenter.dart';
 import 'package:ventes/app/states/form_sources/schedule_fu_form_source.dart';
 import 'package:ventes/app/states/listeners/schedule_fu_listener.dart';
+import 'package:ventes/constants/strings/schedule_string.dart';
 import 'package:ventes/helpers/auth_helper.dart';
+import 'package:ventes/helpers/task_helper.dart';
 
 class ScheduleFormUpdateDataSource implements FetchDataContract, UpdateContract {
   ScheduleFormUpdateListener get _listener => Get.find<ScheduleFormUpdateListener>();
@@ -95,6 +97,6 @@ class ScheduleFormUpdateDataSource implements FetchDataContract, UpdateContract 
     schedule = Schedule.fromJson(data['schedule']);
     insertTypes(List<Map<String, dynamic>>.from(data['types']));
     _formSource.prepareFormValue();
-    Get.close(1);
+    Get.find<TaskHelper>().remove(ScheduleString.updateScheduleTaskCode);
   }
 }

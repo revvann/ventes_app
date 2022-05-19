@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/helpers/auth_helper.dart';
 import 'package:ventes/helpers/function_helpers.dart';
+import 'package:ventes/helpers/task_helper.dart';
 import 'package:ventes/routing/routes/routes.dart';
 import 'package:ventes/app/network/services/auth_service.dart';
 import 'package:ventes/app/resources/views/splash_screen.dart';
@@ -44,6 +45,7 @@ class MyApp extends StatelessWidget {
       initialBinding: BindingsBuilder(() {
         Get.lazyPut(() => AuthService());
         Get.lazyPut(() => AuthHelper());
+        Get.lazyPut(() => TaskHelper());
       }),
     );
   }

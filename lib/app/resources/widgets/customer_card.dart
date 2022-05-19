@@ -15,7 +15,6 @@ class CustomerCard extends StatelessWidget {
     this.title,
     this.type,
     this.radius,
-    this.place,
   }) : super(key: key);
   EdgeInsets? margin;
   double width;
@@ -24,7 +23,6 @@ class CustomerCard extends StatelessWidget {
   String? title;
   String? type;
   String? radius;
-  String? place;
 
   @override
   Widget build(BuildContext context) {
@@ -36,10 +34,10 @@ class CustomerCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(RegularSize.m),
-        image: DecorationImage(
-          image: image,
-          fit: BoxFit.cover,
-        ),
+        // image: DecorationImage(
+        //   image: image,
+        //   fit: BoxFit.cover,
+        // ),
         boxShadow: [
           BoxShadow(
             offset: Offset(0, 4),
@@ -48,79 +46,53 @@ class CustomerCard extends StatelessWidget {
           ),
         ],
       ),
-      child: Column(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Expanded(
-            child: Container(
-              margin: EdgeInsets.all(RegularSize.s),
-              alignment: Alignment.topRight,
-              child: Container(
-                width: RegularSize.xl,
-                height: RegularSize.xl,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.white,
-                ),
-                child: SvgPicture.asset(
-                  'assets/svg/bookmark.svg',
-                  color: RegularColor.secondary,
-                  width: RegularSize.m,
-                ),
-              ),
+          SizedBox(
+            width: RegularSize.m,
+          ),
+          SizedBox(
+            width: 75,
+            height: 75,
+            child: Image(
+              image: image,
             ),
           ),
-          Container(
-            width: double.infinity,
-            height: place != null ? 120 : 100,
-            padding: EdgeInsets.symmetric(
-              vertical: RegularSize.s,
-              horizontal: RegularSize.m,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Text(
-                  title ?? "",
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: RegularColor.dark,
-                    fontWeight: FontWeight.w600,
+          SizedBox(
+            width: RegularSize.s,
+          ),
+          Expanded(
+            child: Container(
+              width: double.infinity,
+              padding: EdgeInsets.symmetric(
+                vertical: RegularSize.s,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Text(
+                    title ?? "",
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: RegularColor.dark,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
-                ),
-                Text(
-                  type ?? "",
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: RegularColor.secondary,
-                    fontWeight: FontWeight.w600,
+                  Text(
+                    type ?? "",
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: RegularColor.secondary,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
-                ),
-                Row(
-                  children: [
-                    SvgPicture.asset(
-                      'assets/svg/marker.svg',
-                      width: RegularSize.m,
-                      color: RegularColor.primary,
-                    ),
-                    SizedBox(
-                      width: RegularSize.xs,
-                    ),
-                    Text(
-                      radius ?? "",
-                      style: TextStyle(
-                        color: RegularColor.dark,
-                        fontSize: 12,
-                      ),
-                    ),
-                  ],
-                ),
-                if (place != null)
                   Row(
                     children: [
                       SvgPicture.asset(
-                        'assets/svg/building.svg',
+                        'assets/svg/marker.svg',
                         width: RegularSize.m,
                         color: RegularColor.primary,
                       ),
@@ -128,7 +100,7 @@ class CustomerCard extends StatelessWidget {
                         width: RegularSize.xs,
                       ),
                       Text(
-                        place ?? "",
+                        radius ?? "",
                         style: TextStyle(
                           color: RegularColor.dark,
                           fontSize: 12,
@@ -136,11 +108,15 @@ class CustomerCard extends StatelessWidget {
                       ),
                     ],
                   ),
-              ],
+                ],
+              ),
+              decoration: BoxDecoration(
+                color: Colors.white,
+              ),
             ),
-            decoration: BoxDecoration(
-              color: Colors.white,
-            ),
+          ),
+          SizedBox(
+            width: RegularSize.m,
           ),
         ],
       ),

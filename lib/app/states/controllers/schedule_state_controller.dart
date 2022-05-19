@@ -5,6 +5,8 @@ import 'package:ventes/app/resources/widgets/loader.dart';
 import 'package:ventes/app/states/controllers/regular_state_controller.dart';
 import 'package:ventes/app/states/data_sources/schedule_data_source.dart';
 import 'package:ventes/app/states/listeners/schedule_listener.dart';
+import 'package:ventes/constants/strings/schedule_string.dart';
+import 'package:ventes/helpers/task_helper.dart';
 
 class ScheduleStateController extends RegularStateController {
   ScheduleDataSource dataSource = Get.put(ScheduleDataSource());
@@ -59,6 +61,6 @@ class ScheduleProperties extends RegularStateController {
     calendarController.addPropertyChangedListener(_listener.onDateShownChanged);
 
     _dataSource.fetchData(dateShown.month);
-    Loader().show();
+    Get.find<TaskHelper>().add(ScheduleString.taskCode);
   }
 }

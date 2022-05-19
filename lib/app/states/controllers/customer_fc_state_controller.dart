@@ -11,6 +11,7 @@ import 'package:ventes/app/states/data_sources/customer_fc_data_source.dart';
 import 'package:ventes/app/states/form_sources/customer_fc_form_source.dart';
 import 'package:ventes/app/states/listeners/customer_fc_listener.dart';
 import 'package:ventes/constants/strings/nearby_string.dart';
+import 'package:ventes/helpers/task_helper.dart';
 
 class CustomerFormCreateStateController extends RegularStateController {
   CustomerFormCreateDataSource dataSource = Get.put(CustomerFormCreateDataSource());
@@ -40,7 +41,7 @@ class CustomerFormCreateStateController extends RegularStateController {
       properties.markerLatLng = pos;
     }
 
-    Loader().show();
+    Get.find<TaskHelper>().add(NearbyString.createTaskCode);
   }
 
   @override
@@ -103,6 +104,6 @@ class CustomerFormCreateProperties {
 
   void fetchPlacesIds() {
     _dataSource.fetchPlacesIds(_dataSource.getSubdistrictName()!);
-    Loader().show();
+    Get.find<TaskHelper>().add(NearbyString.createTaskCode);
   }
 }

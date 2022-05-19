@@ -32,4 +32,8 @@ class NearbyString {
 
   static const customerTypeCode = 'cstmtype';
   static const statusTypeCode = 'cstmstatus';
+
+  static const taskCode = 'nearby';
+  static const updateTaskCode = 'update';
+  static const createTaskCode = 'create';
 }

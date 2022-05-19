@@ -10,11 +10,13 @@ import 'package:ventes/app/resources/widgets/loader.dart';
 import 'package:ventes/app/resources/widgets/regular_bottom_sheet.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
+import 'package:ventes/constants/strings/schedule_string.dart';
 import 'package:ventes/helpers/function_helpers.dart';
 import 'package:ventes/app/states/controllers/regular_state_controller.dart';
 import 'package:ventes/app/states/data_sources/schedule_fu_data_source.dart';
 import 'package:ventes/app/states/form_sources/schedule_fu_form_source.dart';
 import 'package:ventes/app/states/listeners/schedule_fu_listener.dart';
+import 'package:ventes/helpers/task_helper.dart';
 
 class ScheduleFormUpdateStateController extends RegularStateController {
   ScheduleFormUpdateDataSource dataSource = Get.put(ScheduleFormUpdateDataSource());
@@ -46,12 +48,11 @@ class ScheduleFormUpdateStateController extends RegularStateController {
   void onReady() {
     super.onReady();
     dataSource.fetchData();
-    Loader().show();
+    Get.find<TaskHelper>().add(ScheduleString.updateScheduleTaskCode);
   }
 }
 
 class ScheduleFormUpdateProperties {
-  ScheduleFormUpdateDataSource get _dataSource => Get.find<ScheduleFormUpdateDataSource>();
   ScheduleFormUpdateListener get listener => Get.find<ScheduleFormUpdateListener>();
 
   final Completer<GoogleMapController> mapsController = Completer();

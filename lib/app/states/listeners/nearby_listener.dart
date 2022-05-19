@@ -12,6 +12,7 @@ import 'package:ventes/app/resources/widgets/loader.dart';
 import 'package:ventes/app/states/data_sources/nearby_data_source.dart';
 import 'package:ventes/constants/strings/nearby_string.dart';
 import 'package:ventes/helpers/function_helpers.dart';
+import 'package:ventes/helpers/task_helper.dart';
 import 'package:ventes/routing/navigators/nearby_navigator.dart';
 import 'package:ventes/app/states/controllers/nearby_state_controller.dart';
 
@@ -76,9 +77,9 @@ class NearbyListener {
   }
 
   void onEditDataClick() async {
-    Loader().show();
+    Get.find<TaskHelper>().add(NearbyString.taskCode);
     getCurrentPosition().then((position) {
-      Get.close(1);
+      Get.find<TaskHelper>().remove(NearbyString.taskCode);
 
       Customer customer = _properties.selectedCustomer.first;
       BpCustomer bpcustomer = _dataSource.bpCustomers.firstWhere((element) => element.sbccstmid == customer.cstmid);
@@ -98,13 +99,13 @@ class NearbyListener {
     });
   }
 
-  void onLoadDataError() {
-    Get.close(1);
-    ErrorAlert(NearbyString.fetchError).show();
+  void onLoadDataError(String message) {
+    Get.find<TaskHelper>().remove(NearbyString.taskCode);
+    ErrorAlert(message).show();
   }
 
-  void onLoadDataFailed() {
-    Get.close(1);
-    FailedAlert(NearbyString.fetchFailed).show();
+  void onLoadDataFailed(String message) {
+    Get.find<TaskHelper>().remove(NearbyString.taskCode);
+    FailedAlert(message).show();
   }
 }

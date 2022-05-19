@@ -14,6 +14,7 @@ import 'package:ventes/helpers/function_helpers.dart';
 import 'package:ventes/app/states/controllers/regular_state_controller.dart';
 import 'package:ventes/app/states/data_sources/nearby_data_source.dart';
 import 'package:ventes/app/states/listeners/nearby_listener.dart';
+import 'package:ventes/helpers/task_helper.dart';
 
 class NearbyStateController extends RegularStateController {
   NearbyDataSource dataSource = Get.put(NearbyDataSource());
@@ -111,7 +112,7 @@ class NearbyProperties {
       CameraUpdate.newLatLng(LatLng(position.latitude, position.longitude)),
     );
     _dataSource.fetchData(LatLng(position.latitude, position.longitude));
-    Loader().show();
+    Get.find<TaskHelper>().add(NearbyString.taskCode);
   }
 }
 

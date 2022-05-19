@@ -39,4 +39,9 @@ class ScheduleString {
 
   static const fetchFailed = "Schedules cannot be loaded";
   static const fetchError = "An error occurred while loading schedules, please try again";
+
+  static const taskCode = 'schedule';
+  static const dailyScheduleTaskCode = 'daily';
+  static const createScheduleTaskCode = 'create';
+  static const updateScheduleTaskCode = 'update';
 }

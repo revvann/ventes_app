@@ -19,6 +19,7 @@ import 'package:ventes/app/states/controllers/nearby_state_controller.dart';
 import 'package:ventes/app/states/data_sources/customer_fc_data_source.dart';
 import 'package:ventes/app/states/form_sources/customer_fc_form_source.dart';
 import 'package:ventes/constants/strings/nearby_string.dart';
+import 'package:ventes/helpers/task_helper.dart';
 import 'package:ventes/routing/navigators/nearby_navigator.dart';
 import 'package:ventes/app/states/controllers/customer_fc_state_controller.dart';
 import 'package:path/path.dart' as path;
@@ -94,28 +95,28 @@ class CustomerFormCreateListener {
   }
 
   void onLoadDataError(String message) {
-    Get.close(1);
-    ErrorAlert(NearbyString.fetchError).show();
+    Get.find<TaskHelper>().remove(NearbyString.createTaskCode);
+    ErrorAlert(message).show();
   }
 
   void onLoadDataFailed(String message) {
-    Get.close(1);
-    FailedAlert(NearbyString.fetchFailed).show();
+    Get.find<TaskHelper>().remove(NearbyString.createTaskCode);
+    FailedAlert(message).show();
   }
 
   void onCreateDataError(String message) {
-    Get.close(1);
-    ErrorAlert(NearbyString.createError).show();
+    Get.find<TaskHelper>().remove(NearbyString.createTaskCode);
+    ErrorAlert(message).show();
   }
 
   void onCreateDataFailed(String message) {
-    Get.close(1);
-    FailedAlert(NearbyString.createFailed).show();
+    Get.find<TaskHelper>().remove(NearbyString.createTaskCode);
+    FailedAlert(message).show();
   }
 
   void onCreateDataSuccess(String message) async {
-    Get.close(1);
-    SuccessAlert(NearbyString.createSuccess).show().then((res) {
+    Get.find<TaskHelper>().remove(NearbyString.createTaskCode);
+    SuccessAlert(message).show().then((res) {
       Get.find<NearbyStateController>().properties.refresh();
       Get.back(id: NearbyNavigator.id);
     });

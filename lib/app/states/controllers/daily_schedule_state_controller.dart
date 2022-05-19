@@ -3,10 +3,12 @@ import 'package:get/get.dart';
 import 'package:ventes/app/models/schedule_model.dart';
 import 'package:ventes/app/resources/widgets/loader.dart';
 import 'package:ventes/constants/regular_color.dart';
+import 'package:ventes/constants/strings/schedule_string.dart';
 import 'package:ventes/helpers/function_helpers.dart';
 import 'package:ventes/app/states/controllers/regular_state_controller.dart';
 import 'package:ventes/app/states/data_sources/daily_schedule_data_source.dart';
 import 'package:ventes/app/states/listeners/daily_schedule_listener.dart';
+import 'package:ventes/helpers/task_helper.dart';
 
 class DailyScheduleStateController extends RegularStateController {
   DailyScheduleProperties properties = Get.put(DailyScheduleProperties());
@@ -47,7 +49,7 @@ class DailyScheduleProperties {
 
   void refetch() {
     _dataSource.fetchData(dbFormatDate(date));
-    Loader().show();
+    Get.find<TaskHelper>().add(ScheduleString.dailyScheduleTaskCode);
   }
 
   Color getAppointmentColor(Schedule appointment) {

@@ -15,6 +15,8 @@ import 'package:ventes/app/states/form_sources/customer_fu_form_source.dart';
 import 'package:ventes/app/states/listeners/customer_fu_listener.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/constants/strings/nearby_string.dart';
+import 'package:ventes/constants/strings/schedule_string.dart';
+import 'package:ventes/helpers/task_helper.dart';
 
 class CustomerFormUpdateStateController extends RegularStateController {
   CustomerFormUpdateDataSource dataSource = Get.put(CustomerFormUpdateDataSource());
@@ -35,7 +37,7 @@ class CustomerFormUpdateStateController extends RegularStateController {
     properties.ready();
 
     dataSource.fetchData(properties.customerid ?? 0);
-    Loader().show();
+    Get.find<TaskHelper>().add(NearbyString.updateTaskCode);
   }
 
   @override

@@ -7,7 +7,9 @@ import 'package:ventes/app/network/presenters/nearby_presenter.dart';
 import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
 import 'package:ventes/app/states/controllers/nearby_state_controller.dart';
 import 'package:ventes/app/states/listeners/nearby_listener.dart';
+import 'package:ventes/constants/strings/nearby_string.dart';
 import 'package:ventes/helpers/function_helpers.dart';
+import 'package:ventes/helpers/task_helper.dart';
 
 class NearbyDataSource implements FetchDataContract {
   NearbyProperties get _properties => Get.find<NearbyProperties>();
@@ -57,10 +59,10 @@ class NearbyDataSource implements FetchDataContract {
   }
 
   @override
-  onLoadError(String message) => _listener.onLoadDataError();
+  onLoadError(String message) => _listener.onLoadDataError(message);
 
   @override
-  onLoadFailed(String message) => _listener.onLoadDataFailed();
+  onLoadFailed(String message) => _listener.onLoadDataFailed(message);
 
   @override
   onLoadSuccess(Map data) {
@@ -79,6 +81,6 @@ class NearbyDataSource implements FetchDataContract {
       );
       _properties.deployCustomers(customers);
     }
-    Get.close(1);
+    Get.find<TaskHelper>().remove(NearbyString.taskCode);
   }
 }

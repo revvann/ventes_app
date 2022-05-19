@@ -6,6 +6,8 @@ import 'package:ventes/app/resources/widgets/failed_alert.dart';
 import 'package:ventes/app/resources/widgets/loader.dart';
 import 'package:ventes/app/states/data_sources/schedule_data_source.dart';
 import 'package:ventes/constants/regular_color.dart';
+import 'package:ventes/constants/strings/schedule_string.dart';
+import 'package:ventes/helpers/task_helper.dart';
 import 'package:ventes/routing/navigators/schedule_navigator.dart';
 import 'package:ventes/app/states/controllers/schedule_state_controller.dart';
 
@@ -58,12 +60,12 @@ class ScheduleListener {
   }
 
   onLoadDataFailed(String message) {
-    Get.close(1);
+    Get.find<TaskHelper>().remove(ScheduleString.taskCode);
     FailedAlert(message).show();
   }
 
   onLoadDataError(String message) {
-    Get.close(1);
+    Get.find<TaskHelper>().remove(ScheduleString.taskCode);
     FailedAlert(message).show();
   }
 }

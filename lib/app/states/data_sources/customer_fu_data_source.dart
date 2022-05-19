@@ -13,7 +13,9 @@ import 'package:get/get.dart';
 import 'package:ventes/app/states/controllers/customer_fu_state_controller.dart';
 import 'package:ventes/app/states/form_sources/customer_fu_form_source.dart';
 import 'package:ventes/app/states/listeners/customer_fu_listener.dart';
+import 'package:ventes/constants/strings/nearby_string.dart';
 import 'package:ventes/helpers/function_helpers.dart';
+import 'package:ventes/helpers/task_helper.dart';
 
 class CustomerFormUpdateDataSource implements FetchDataContract, CreateContract {
   CustomerFormUpdateListener get _listener => Get.find<CustomerFormUpdateListener>();
@@ -125,7 +127,7 @@ class CustomerFormUpdateDataSource implements FetchDataContract, CreateContract 
       statusesFromList(data['statuses']);
     }
 
-    Get.close(1);
+    Get.find<TaskHelper>().remove(NearbyString.updateTaskCode);
   }
 
   @override

@@ -9,6 +9,8 @@ import 'package:ventes/app/resources/widgets/failed_alert.dart';
 import 'package:ventes/app/states/controllers/daily_schedule_state_controller.dart';
 import 'package:ventes/app/states/data_sources/daily_schedule_data_source.dart';
 import 'package:ventes/constants/regular_color.dart';
+import 'package:ventes/constants/strings/schedule_string.dart';
+import 'package:ventes/helpers/task_helper.dart';
 import 'package:ventes/routing/navigators/schedule_navigator.dart';
 
 class DailyScheduleListener {
@@ -46,12 +48,12 @@ class DailyScheduleListener {
   }
 
   onLoadDataFailed(String message) {
-    Get.close(1);
+    Get.find<TaskHelper>().remove(ScheduleString.dailyScheduleTaskCode);
     FailedAlert(message).show();
   }
 
   onLoadDataError(String message) {
-    Get.close(1);
+    Get.find<TaskHelper>().remove(ScheduleString.dailyScheduleTaskCode);
     ErrorAlert(message).show();
   }
 }

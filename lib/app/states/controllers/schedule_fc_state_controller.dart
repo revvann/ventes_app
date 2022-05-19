@@ -10,11 +10,13 @@ import 'package:ventes/app/resources/widgets/loader.dart';
 import 'package:ventes/app/resources/widgets/regular_bottom_sheet.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
+import 'package:ventes/constants/strings/schedule_string.dart';
 import 'package:ventes/helpers/function_helpers.dart';
 import 'package:ventes/app/states/controllers/regular_state_controller.dart';
 import 'package:ventes/app/states/data_sources/schedule_fc_data_source.dart';
 import 'package:ventes/app/states/form_sources/schedule_fc_form_source.dart';
 import 'package:ventes/app/states/listeners/schedule_fc_listener.dart';
+import 'package:ventes/helpers/task_helper.dart';
 
 class ScheduleFormCreateStateController extends RegularStateController {
   @override
@@ -70,7 +72,7 @@ class ScheduleFormCreateProperties {
   }
 
   void ready() async {
-    Loader().show();
+    Get.find<TaskHelper>().add(ScheduleString.createScheduleTaskCode);
     Position pos = await getCurrentPosition();
     mapsController.future.then((controller) {
       controller.animateCamera(

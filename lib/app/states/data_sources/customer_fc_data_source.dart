@@ -15,7 +15,9 @@ import 'package:get/get.dart';
 import 'package:ventes/app/states/controllers/customer_fc_state_controller.dart';
 import 'package:ventes/app/states/form_sources/customer_fc_form_source.dart';
 import 'package:ventes/app/states/listeners/customer_fc_listener.dart';
+import 'package:ventes/constants/strings/nearby_string.dart';
 import 'package:ventes/helpers/function_helpers.dart';
+import 'package:ventes/helpers/task_helper.dart';
 
 class CustomerFormCreateDataSource implements FetchDataContract, CreateContract {
   CustomerFormCreateListener get _listener => Get.find<CustomerFormCreateListener>();
@@ -183,7 +185,7 @@ class CustomerFormCreateDataSource implements FetchDataContract, CreateContract 
       _formSource.prepareValues();
     }
 
-    Get.close(1);
+    Get.find<TaskHelper>().remove(NearbyString.createTaskCode);
   }
 
   @override

@@ -3,10 +3,12 @@ import 'package:ventes/app/models/auth_model.dart';
 import 'package:ventes/app/models/type_model.dart';
 import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
 import 'package:ventes/app/states/listeners/schedule_fc_listener.dart';
+import 'package:ventes/constants/strings/schedule_string.dart';
 import 'package:ventes/helpers/auth_helper.dart';
 import 'package:ventes/app/network/contracts/create_contract.dart';
 import 'package:ventes/app/models/user_detail_model.dart';
 import 'package:ventes/app/network/presenters/schedule_fc_presenter.dart';
+import 'package:ventes/helpers/task_helper.dart';
 
 class ScheduleFormCreateDataSource implements FetchDataContract, CreateContract {
   ScheduleFormCreateListener get _listener => Get.find<ScheduleFormCreateListener>();
@@ -82,6 +84,6 @@ class ScheduleFormCreateDataSource implements FetchDataContract, CreateContract 
   @override
   onLoadSuccess(Map data) {
     insertTypes(List<Map<String, dynamic>>.from(data['types']));
-    Get.close(1);
+    Get.find<TaskHelper>().remove(ScheduleString.createScheduleTaskCode);
   }
 }

@@ -111,7 +111,6 @@ class CustomerView extends View<CustomerStateController> {
                           title: "PT. Ibu dan Anak",
                           type: "Manufacture Industry",
                           radius: "320 M",
-                          place: "Periuk, Tangerang, Banten",
                         );
                       },
                     ),

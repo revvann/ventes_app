@@ -5,11 +5,14 @@ import 'package:ventes/app/resources/widgets/error_alert.dart';
 import 'package:ventes/app/resources/widgets/failed_alert.dart';
 import 'package:ventes/app/resources/widgets/loader.dart';
 import 'package:ventes/app/resources/widgets/success_alert.dart';
+import 'package:ventes/app/states/controllers/daily_schedule_state_controller.dart';
 import 'package:ventes/app/states/data_sources/schedule_fc_data_source.dart';
 import 'package:ventes/constants/strings/schedule_string.dart';
 import 'package:ventes/helpers/function_helpers.dart';
 import 'package:ventes/app/states/controllers/schedule_fc_state_controller.dart';
 import 'package:ventes/app/states/form_sources/schedule_fc_form_source.dart';
+import 'package:ventes/helpers/task_helper.dart';
+import 'package:ventes/routing/navigators/schedule_navigator.dart';
 
 class ScheduleFormCreateListener {
   ScheduleFormCreateProperties get _properties => Get.find<ScheduleFormCreateProperties>();
@@ -203,7 +206,7 @@ class ScheduleFormCreateListener {
   void onFormSubmit() {
     if (_formSource.isValid()) {
       Map<String, dynamic> data = _formSource.toJson();
-      Loader().show();
+      Get.find<TaskHelper>().add(ScheduleString.createScheduleTaskCode);
       _dataSource.createSchedule(data);
     }
   }
@@ -214,17 +217,20 @@ class ScheduleFormCreateListener {
   }
 
   void onCreateDataFailed(String message) {
-    Get.close(1);
+    Get.find<TaskHelper>().remove(ScheduleString.createScheduleTaskCode);
     FailedAlert(ScheduleString.createFailed).show();
   }
 
   void onCreateDataSuccess(String message) {
-    Get.close(1);
-    SuccessAlert(ScheduleString.createSuccess).show();
+    Get.find<TaskHelper>().remove(ScheduleString.createScheduleTaskCode);
+    SuccessAlert(ScheduleString.createSuccess).show().then((value) {
+      Get.find<DailyScheduleStateController>().properties.refetch();
+      Get.back(id: ScheduleNavigator.id);
+    });
   }
 
   void onCreateDataError(String message) {
-    Get.close(1);
+    Get.find<TaskHelper>().remove(ScheduleString.createScheduleTaskCode);
     ErrorAlert(ScheduleString.createError).show();
   }
 
