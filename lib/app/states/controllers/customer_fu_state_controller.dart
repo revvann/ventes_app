@@ -35,9 +35,7 @@ class CustomerFormUpdateStateController extends RegularStateController {
   void onReady() async {
     super.onReady();
     properties.ready();
-
-    dataSource.fetchData(properties.customerid ?? 0);
-    Get.find<TaskHelper>().add(NearbyString.updateTaskCode);
+    properties.refresh();
   }
 
   @override
@@ -116,5 +114,10 @@ class CustomerFormUpdateProperties {
       );
       markerLatLng = pos;
     }
+  }
+
+  void refresh() {
+    _dataSource.fetchData(customerid ?? 0);
+    Get.find<TaskHelper>().add(NearbyString.updateTaskCode);
   }
 }

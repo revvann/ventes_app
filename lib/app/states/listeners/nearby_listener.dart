@@ -76,6 +76,10 @@ class NearbyListener {
     });
   }
 
+  Future onRefresh() async {
+    _properties.refresh();
+  }
+
   void onEditDataClick() async {
     Get.find<TaskHelper>().add(NearbyString.taskCode);
     getCurrentPosition().then((position) {

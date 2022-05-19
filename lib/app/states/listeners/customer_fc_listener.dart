@@ -94,6 +94,10 @@ class CustomerFormCreateListener {
     }
   }
 
+  Future onRefresh() async {
+    _properties.refresh();
+  }
+
   void onLoadDataError(String message) {
     Get.find<TaskHelper>().remove(NearbyString.createTaskCode);
     ErrorAlert(message).show();

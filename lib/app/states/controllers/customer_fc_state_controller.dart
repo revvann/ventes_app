@@ -31,17 +31,8 @@ class CustomerFormCreateStateController extends RegularStateController {
     super.onReady();
 
     if (properties.latitude != null && properties.longitude != null) {
-      dataSource.fetchData(properties.latitude!, properties.longitude!, properties.cstmid);
-
-      LatLng pos = LatLng(properties.latitude!, properties.longitude!);
-      GoogleMapController controller = await properties.mapsController.future;
-      controller.animateCamera(
-        CameraUpdate.newLatLng(pos),
-      );
-      properties.markerLatLng = pos;
+      properties.refresh();
     }
-
-    Get.find<TaskHelper>().add(NearbyString.createTaskCode);
   }
 
   @override
@@ -104,6 +95,18 @@ class CustomerFormCreateProperties {
 
   void fetchPlacesIds() {
     _dataSource.fetchPlacesIds(_dataSource.getSubdistrictName()!);
+    Get.find<TaskHelper>().add(NearbyString.createTaskCode);
+  }
+
+  void refresh() async {
+    _dataSource.fetchData(latitude!, longitude!, cstmid);
+
+    LatLng pos = LatLng(latitude!, longitude!);
+    GoogleMapController controller = await mapsController.future;
+    controller.animateCamera(
+      CameraUpdate.newLatLng(pos),
+    );
+    markerLatLng = pos;
     Get.find<TaskHelper>().add(NearbyString.createTaskCode);
   }
 }

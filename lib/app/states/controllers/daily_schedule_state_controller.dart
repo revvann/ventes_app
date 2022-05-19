@@ -24,7 +24,7 @@ class DailyScheduleStateController extends RegularStateController {
   @override
   void onReady() {
     super.onReady();
-    properties.refetch();
+    properties.refresh();
   }
 
   @override
@@ -47,7 +47,7 @@ class DailyScheduleProperties {
   Schedule? get selectedAppointment => _selectedAppointment.value;
   set selectedAppointment(Schedule? value) => _selectedAppointment.value = value;
 
-  void refetch() {
+  void refresh() {
     _dataSource.fetchData(dbFormatDate(date));
     Get.find<TaskHelper>().add(ScheduleString.dailyScheduleTaskCode);
   }

@@ -47,7 +47,7 @@ class ScheduleFormCreateStateController extends RegularStateController {
   @override
   void onReady() async {
     super.onReady();
-    properties.ready();
+    properties.refresh();
   }
 }
 
@@ -71,7 +71,7 @@ class ScheduleFormCreateProperties {
     markers = {marker};
   }
 
-  void ready() async {
+  void refresh() async {
     Get.find<TaskHelper>().add(ScheduleString.createScheduleTaskCode);
     Position pos = await getCurrentPosition();
     mapsController.future.then((controller) {

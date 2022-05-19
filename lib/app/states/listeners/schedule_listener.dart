@@ -59,6 +59,10 @@ class ScheduleListener {
     return color;
   }
 
+  Future onRefresh() async {
+    _properties.refresh();
+  }
+
   onLoadDataFailed(String message) {
     Get.find<TaskHelper>().remove(ScheduleString.taskCode);
     FailedAlert(message).show();

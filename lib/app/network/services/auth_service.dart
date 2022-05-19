@@ -9,6 +9,10 @@ class AuthService extends Service {
     return await post('$api/signin', credentials);
   }
 
+  Future<Response> signOut() async {
+    return await get('/pIeYujTv');
+  }
+
   Future<Response> verify() async {
     return await get('/RJXvksjS');
   }

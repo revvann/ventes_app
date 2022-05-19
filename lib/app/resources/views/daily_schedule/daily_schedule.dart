@@ -35,6 +35,7 @@ class DailyScheduleView extends View<DailyScheduleStateController> {
       backgroundColor: RegularColor.primary,
       extendBodyBehindAppBar: true,
       appBar: TopNavigation(
+        onTitleTap: state.listener.onRefresh,
         title: ScheduleString.appBarTitle,
         height: 85,
         appBarKey: state.appBarKey,

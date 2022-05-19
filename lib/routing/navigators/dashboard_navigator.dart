@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ventes/app/network/services/auth_service.dart';
 import 'package:ventes/app/network/services/bp_customer_service.dart';
 import 'package:ventes/app/network/services/user_service.dart';
 import 'package:ventes/core/page_route.dart';
@@ -31,6 +32,7 @@ class DashboardNavigator extends ViewNavigator {
                 BindingsBuilder(() {
                   Get.put(BpCustomerService());
                   Get.put(UserService());
+                  Get.put(AuthService());
                   Get.put(DashboardStateController());
                 })
               ],

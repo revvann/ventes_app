@@ -33,6 +33,7 @@ class NearbyView extends View<NearbyStateController> {
       extendBodyBehindAppBar: true,
       appBar: TopNavigation(
         title: NearbyString.appBarTitle,
+        onTitleTap: state.listener.onRefresh,
         height: 80,
         appBarKey: state.appBarKey,
         leading: GestureDetector(

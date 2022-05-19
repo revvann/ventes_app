@@ -14,6 +14,7 @@ class TopNavigation {
     this.actions,
     this.height = 60,
     this.below,
+    this.onTitleTap,
   });
   GlobalKey? appBarKey;
   Widget? leading;
@@ -21,6 +22,7 @@ class TopNavigation {
   List<Widget>? actions;
   double height;
   Widget? below;
+  Function()? onTitleTap;
 
   PreferredSizeWidget build(BuildContext context) {
     return AppBar(
@@ -47,12 +49,15 @@ class TopNavigation {
               Expanded(
                 child: Container(
                   alignment: Alignment.center,
-                  child: Text(
-                    title,
-                    style: TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
+                  child: GestureDetector(
+                    onTap: onTitleTap,
+                    child: Text(
+                      title,
+                      style: TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                 ),

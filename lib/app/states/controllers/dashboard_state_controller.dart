@@ -48,6 +48,11 @@ class DashboardProperties {
     _dataSource.fetchData(LatLng(position!.latitude, position!.longitude));
     Get.find<TaskHelper>().add(DashboardString.taskCode);
   }
+
+  void logout() async {
+    _dataSource.logout();
+    Get.find<TaskHelper>().add(DashboardString.taskCode);
+  }
 }
 
 enum CameraMoveType { dragged, controller }

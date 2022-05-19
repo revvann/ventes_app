@@ -47,6 +47,7 @@ class CustomerFormUpdateView extends View<CustomerFormUpdateStateController> {
       extendBodyBehindAppBar: true,
       appBar: TopNavigation(
         title: NearbyString.appBarTitle,
+        onTitleTap: state.listener.onRefresh,
         appBarKey: state.appBarKey,
         leading: GestureDetector(
           child: Container(

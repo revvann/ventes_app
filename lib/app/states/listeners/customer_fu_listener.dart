@@ -94,6 +94,10 @@ class CustomerFormUpdateListener {
     }
   }
 
+  Future onRefresh() async {
+    _properties.refresh();
+  }
+
   void onLoadDataError(String message) {
     Get.find<TaskHelper>().remove(NearbyString.updateTaskCode);
     ErrorAlert(message).show();

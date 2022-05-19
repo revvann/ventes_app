@@ -77,22 +77,25 @@ class CustomerFormCreateView extends View<CustomerFormCreateStateController> {
         ],
       ).build(context),
       body: SafeArea(
-        child: Container(
-          width: double.infinity,
-          padding: EdgeInsets.only(
-            right: RegularSize.m,
-            left: RegularSize.m,
-            top: RegularSize.l,
-          ),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(RegularSize.xl),
-              topRight: Radius.circular(RegularSize.xl),
+        child: RefreshIndicator(
+          onRefresh: state.listener.onRefresh,
+          child: Container(
+            width: double.infinity,
+            padding: EdgeInsets.only(
+              right: RegularSize.m,
+              left: RegularSize.m,
+              top: RegularSize.l,
             ),
-          ),
-          child: SingleChildScrollView(
-            child: _CustomerForm(),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(RegularSize.xl),
+                topRight: Radius.circular(RegularSize.xl),
+              ),
+            ),
+            child: SingleChildScrollView(
+              child: _CustomerForm(),
+            ),
           ),
         ),
       ),

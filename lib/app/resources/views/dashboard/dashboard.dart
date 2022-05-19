@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:ventes/app/models/bp_customer_model.dart';
 import 'package:ventes/app/resources/views/customer.dart';
+import 'package:ventes/app/resources/views/started_page.dart';
 import 'package:ventes/core/view.dart';
 import 'package:ventes/app/resources/widgets/bottom_navigation.dart';
 import 'package:ventes/app/resources/widgets/customer_card.dart';
@@ -27,155 +28,158 @@ class DashboardView extends View<DashboardStateController> {
       bottomNavigationBar: BottomNavigation(),
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              SizedBox(
-                height: 120,
-                width: double.infinity,
-                child: Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    _AppBar(),
-                    _TopPanel(),
-                  ],
+        child: RefreshIndicator(
+          onRefresh: state.listener.onRefresh,
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 120,
+                  width: double.infinity,
+                  child: Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      _AppBar(),
+                      _TopPanel(),
+                    ],
+                  ),
                 ),
-              ),
-              SizedBox(
-                height: 125,
-              ),
-              Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: RegularSize.m,
+                SizedBox(
+                  height: 125,
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Row(
-                      children: [
-                        _MenuItem(
-                          color: RegularColor.purple,
-                          icon: "assets/svg/marker.svg",
-                          text: "Nearby",
-                          onTap: () => state.bottomNavigation.currentIndex = Views.nearby,
-                        ),
-                        SizedBox(
-                          width: RegularSize.s,
-                        ),
-                        _MenuItem(
-                          color: RegularColor.yellow,
-                          icon: "assets/svg/calendar.svg",
-                          text: "Schedule",
-                          onTap: () => state.bottomNavigation.currentIndex = Views.schedule,
-                        ),
-                        SizedBox(
-                          width: RegularSize.s,
-                        ),
-                        _MenuItem(
-                          color: RegularColor.cyan,
-                          icon: "assets/svg/attendance.svg",
-                          text: "Attendance",
-                          onTap: () {
-                            Loader().show();
-                          },
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: RegularSize.s,
-                    ),
-                    Row(
-                      children: [
-                        _MenuItem(
-                          color: RegularColor.pink,
-                          icon: "assets/svg/daily-visit.svg",
-                          text: "Daily Visit",
-                          onTap: () {},
-                        ),
-                        SizedBox(
-                          width: RegularSize.s,
-                        ),
-                        _MenuItem(
-                          color: RegularColor.red,
-                          icon: "assets/svg/history.svg",
-                          text: "History",
-                          onTap: () => state.bottomNavigation.currentIndex = Views.history,
-                        ),
-                        SizedBox(
-                          width: RegularSize.s,
-                        ),
-                        _MenuItem(
-                          color: RegularColor.gray,
-                          icon: "assets/svg/prospect.svg",
-                          text: "Prospect",
-                          onTap: () {},
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: RegularSize.m,
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    SizedBox(
-                      height: RegularSize.l,
-                    ),
-                    Text(
-                      "Plan For You",
-                      textAlign: TextAlign.start,
-                      style: TextStyle(
-                        color: RegularColor.primary,
-                        fontSize: 28,
-                        fontWeight: FontWeight.w600,
+                Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: RegularSize.m,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Row(
+                        children: [
+                          _MenuItem(
+                            color: RegularColor.purple,
+                            icon: "assets/svg/marker.svg",
+                            text: "Nearby",
+                            onTap: () => state.bottomNavigation.currentIndex = Views.nearby,
+                          ),
+                          SizedBox(
+                            width: RegularSize.s,
+                          ),
+                          _MenuItem(
+                            color: RegularColor.yellow,
+                            icon: "assets/svg/calendar.svg",
+                            text: "Schedule",
+                            onTap: () => state.bottomNavigation.currentIndex = Views.schedule,
+                          ),
+                          SizedBox(
+                            width: RegularSize.s,
+                          ),
+                          _MenuItem(
+                            color: RegularColor.cyan,
+                            icon: "assets/svg/attendance.svg",
+                            text: "Attendance",
+                            onTap: () {
+                              Loader().show();
+                            },
+                          ),
+                        ],
                       ),
-                    ),
-                    SizedBox(
-                      height: RegularSize.m,
-                    ),
-                    _buildTitleHeader("Nearby Customers"),
-                  ],
+                      SizedBox(
+                        height: RegularSize.s,
+                      ),
+                      Row(
+                        children: [
+                          _MenuItem(
+                            color: RegularColor.pink,
+                            icon: "assets/svg/daily-visit.svg",
+                            text: "Daily Visit",
+                            onTap: () {},
+                          ),
+                          SizedBox(
+                            width: RegularSize.s,
+                          ),
+                          _MenuItem(
+                            color: RegularColor.red,
+                            icon: "assets/svg/history.svg",
+                            text: "History",
+                            onTap: () => state.bottomNavigation.currentIndex = Views.history,
+                          ),
+                          SizedBox(
+                            width: RegularSize.s,
+                          ),
+                          _MenuItem(
+                            color: RegularColor.gray,
+                            icon: "assets/svg/prospect.svg",
+                            text: "Prospect",
+                            onTap: () {},
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              Container(
-                height: 148,
-                child: Obx(() {
-                  return ListView.builder(
-                    physics: BouncingScrollPhysics(),
-                    itemCount: state.dataSource.customers.length,
-                    scrollDirection: Axis.horizontal,
-                    itemBuilder: (_, index) {
-                      BpCustomer customer = state.dataSource.customers[index];
-                      double mRight = 0;
-                      if (index == 9) {
-                        mRight = 16;
-                      }
-                      return CustomerCard(
-                        image: NetworkImage(customer.sbccstmpic ?? ""),
-                        margin: EdgeInsets.only(
-                          left: 16,
-                          right: mRight,
-                          top: 24,
-                          bottom: 24,
+                Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: RegularSize.m,
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      SizedBox(
+                        height: RegularSize.l,
+                      ),
+                      Text(
+                        "Plan For You",
+                        textAlign: TextAlign.start,
+                        style: TextStyle(
+                          color: RegularColor.primary,
+                          fontSize: 28,
+                          fontWeight: FontWeight.w600,
                         ),
-                        width: 250,
-                        title: customer.sbccstmname,
-                        type: customer.sbccstm?.cstmtype?.typename ?? "",
-                        radius: (customer.radius! / 1000).toStringAsFixed(2) + " KM",
-                      );
-                    },
-                  );
-                }),
-              ),
-              SizedBox(
-                height: RegularSize.xl,
-              ),
-            ],
+                      ),
+                      SizedBox(
+                        height: RegularSize.m,
+                      ),
+                      _buildTitleHeader("Nearby Customers"),
+                    ],
+                  ),
+                ),
+                Container(
+                  height: 148,
+                  child: Obx(() {
+                    return ListView.builder(
+                      physics: BouncingScrollPhysics(),
+                      itemCount: state.dataSource.customers.length,
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (_, index) {
+                        BpCustomer customer = state.dataSource.customers[index];
+                        double mRight = 0;
+                        if (index == 9) {
+                          mRight = 16;
+                        }
+                        return CustomerCard(
+                          image: NetworkImage(customer.sbccstmpic ?? ""),
+                          margin: EdgeInsets.only(
+                            left: 16,
+                            right: mRight,
+                            top: 24,
+                            bottom: 24,
+                          ),
+                          width: 250,
+                          title: customer.sbccstmname,
+                          type: customer.sbccstm?.cstmtype?.typename ?? "",
+                          radius: (customer.radius! / 1000).toStringAsFixed(2) + " KM",
+                        );
+                      },
+                    );
+                  }),
+                ),
+                SizedBox(
+                  height: RegularSize.xl,
+                ),
+              ],
+            ),
           ),
         ),
       ),

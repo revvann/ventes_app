@@ -67,8 +67,8 @@ class ScheduleFormCreateView extends View<ScheduleFormCreateStateController> {
       backgroundColor: RegularColor.primary,
       extendBodyBehindAppBar: true,
       appBar: TopNavigation(
-        height: 85,
         title: ScheduleString.appBarTitle,
+        onTitleTap: state.listener.onRefresh,
         appBarKey: state.appBarKey,
         leading: GestureDetector(
           child: Container(

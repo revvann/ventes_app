@@ -216,6 +216,10 @@ class ScheduleFormCreateListener {
     _formSource.scheloc = "https://maps.google.com?q=${position.target.latitude},${position.target.longitude}";
   }
 
+  Future onRefresh() async {
+    _properties.refresh();
+  }
+
   void onCreateDataFailed(String message) {
     Get.find<TaskHelper>().remove(ScheduleString.createScheduleTaskCode);
     FailedAlert(ScheduleString.createFailed).show();
@@ -224,7 +228,7 @@ class ScheduleFormCreateListener {
   void onCreateDataSuccess(String message) {
     Get.find<TaskHelper>().remove(ScheduleString.createScheduleTaskCode);
     SuccessAlert(ScheduleString.createSuccess).show().then((value) {
-      Get.find<DailyScheduleStateController>().properties.refetch();
+      Get.find<DailyScheduleStateController>().properties.refresh();
       Get.back(id: ScheduleNavigator.id);
     });
   }

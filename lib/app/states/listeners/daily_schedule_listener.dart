@@ -47,6 +47,10 @@ class DailyScheduleListener {
     _properties.selectedAppointment = details.appointments?.first;
   }
 
+  Future onRefresh() async {
+    _properties.refresh();
+  }
+
   onLoadDataFailed(String message) {
     Get.find<TaskHelper>().remove(ScheduleString.dailyScheduleTaskCode);
     FailedAlert(message).show();

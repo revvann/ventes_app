@@ -47,13 +47,13 @@ class ScheduleFormUpdateStateController extends RegularStateController {
   @override
   void onReady() {
     super.onReady();
-    dataSource.fetchData();
-    Get.find<TaskHelper>().add(ScheduleString.updateScheduleTaskCode);
+    properties.refresh();
   }
 }
 
 class ScheduleFormUpdateProperties {
   ScheduleFormUpdateListener get listener => Get.find<ScheduleFormUpdateListener>();
+  ScheduleFormUpdateDataSource get _dataSource => Get.find<ScheduleFormUpdateDataSource>();
 
   final Completer<GoogleMapController> mapsController = Completer();
   CameraPosition currentPos = CameraPosition(target: LatLng(0, 0), zoom: 14.4764);
@@ -78,6 +78,11 @@ class ScheduleFormUpdateProperties {
       CameraUpdate.newLatLng(LatLng(pos.latitude, pos.longitude)),
     );
     markerLatLng = LatLng(pos.latitude, pos.longitude);
+  }
+
+  void refresh() async {
+    _dataSource.fetchData();
+    Get.find<TaskHelper>().add(ScheduleString.updateScheduleTaskCode);
   }
 
   void showMapBottomSheet() {

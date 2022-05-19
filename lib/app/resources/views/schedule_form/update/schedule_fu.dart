@@ -72,7 +72,7 @@ class ScheduleFormUpdateView extends View<ScheduleFormUpdateStateController> {
       backgroundColor: RegularColor.primary,
       extendBodyBehindAppBar: true,
       appBar: TopNavigation(
-        height: 85,
+        onTitleTap: state.listener.onRefresh,
         title: ScheduleString.appBarTitle,
         appBarKey: state.appBarKey,
         leading: GestureDetector(

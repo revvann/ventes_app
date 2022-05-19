@@ -35,7 +35,7 @@ class ScheduleStateController extends RegularStateController {
   }
 }
 
-class ScheduleProperties extends RegularStateController {
+class ScheduleProperties {
   ScheduleListener get _listener => Get.find<ScheduleListener>();
   ScheduleDataSource get _dataSource => Get.find<ScheduleDataSource>();
 
@@ -59,7 +59,10 @@ class ScheduleProperties extends RegularStateController {
     initialDate = dateShown;
 
     calendarController.addPropertyChangedListener(_listener.onDateShownChanged);
+    refresh();
+  }
 
+  void refresh() {
     _dataSource.fetchData(dateShown.month);
     Get.find<TaskHelper>().add(ScheduleString.taskCode);
   }

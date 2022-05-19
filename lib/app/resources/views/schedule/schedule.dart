@@ -119,72 +119,75 @@ class ScheduleView extends View<ScheduleStateController> {
         ),
       ).build(context),
       body: SafeArea(
-        child: CustomScrollView(
-          slivers: [
-            SliverFillRemaining(
-              child: Container(
-                width: double.infinity,
-                height: double.infinity,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(RegularSize.xl),
-                    topRight: Radius.circular(RegularSize.xl),
+        child: RefreshIndicator(
+          onRefresh: state.listener.onRefresh,
+          child: CustomScrollView(
+            slivers: [
+              SliverFillRemaining(
+                child: Container(
+                  width: double.infinity,
+                  height: double.infinity,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(RegularSize.xl),
+                      topRight: Radius.circular(RegularSize.xl),
+                    ),
+                  ),
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: RegularSize.xl,
+                      ),
+                      Expanded(
+                        child: Obx(() {
+                          return _Calendar(
+                            appointmentDetailItemBuilder: (schedule) => _AppointmentItem(
+                              appointment: schedule,
+                              onFindColor: state.listener.onAppointmentFindColor,
+                            ),
+                            monthCellBuilder: (_, details) {
+                              return Obx(() {
+                                bool selected = details.date == state.properties.selectedDate;
+                                bool thisMonth = details.date.month == state.properties.dateShown.month;
+                                int appointmentsCount = details.appointments.length;
+
+                                Color textColor = RegularColor.gray;
+                                double fontSize = 14;
+
+                                if (thisMonth) {
+                                  textColor = RegularColor.dark;
+                                }
+
+                                if (selected) {
+                                  textColor = Colors.white;
+                                  fontSize = 18;
+                                }
+                                return _MonthCell(
+                                  day: "${details.date.day}",
+                                  textColor: textColor,
+                                  fontSize: fontSize,
+                                  appointmentsCount: appointmentsCount,
+                                  isSelected: selected,
+                                );
+                              });
+                            },
+                            dataSource: RegularCalendarDataSource(state.dataSource.appointments),
+                            calendarController: state.properties.calendarController,
+                            onSelectionChanged: state.listener.onDateSelectionChanged,
+                            initialDate: state.properties.initialDate,
+                          );
+                        }),
+                      ),
+                      SizedBox(
+                        height: RegularSize.s,
+                      ),
+                    ],
                   ),
                 ),
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: RegularSize.xl,
-                    ),
-                    Expanded(
-                      child: Obx(() {
-                        return _Calendar(
-                          appointmentDetailItemBuilder: (schedule) => _AppointmentItem(
-                            appointment: schedule,
-                            onFindColor: state.listener.onAppointmentFindColor,
-                          ),
-                          monthCellBuilder: (_, details) {
-                            return Obx(() {
-                              bool selected = details.date == state.properties.selectedDate;
-                              bool thisMonth = details.date.month == state.properties.dateShown.month;
-                              int appointmentsCount = details.appointments.length;
-
-                              Color textColor = RegularColor.gray;
-                              double fontSize = 14;
-
-                              if (thisMonth) {
-                                textColor = RegularColor.dark;
-                              }
-
-                              if (selected) {
-                                textColor = Colors.white;
-                                fontSize = 18;
-                              }
-                              return _MonthCell(
-                                day: "${details.date.day}",
-                                textColor: textColor,
-                                fontSize: fontSize,
-                                appointmentsCount: appointmentsCount,
-                                isSelected: selected,
-                              );
-                            });
-                          },
-                          dataSource: RegularCalendarDataSource(state.dataSource.appointments),
-                          calendarController: state.properties.calendarController,
-                          onSelectionChanged: state.listener.onDateSelectionChanged,
-                          initialDate: state.properties.initialDate,
-                        );
-                      }),
-                    ),
-                    SizedBox(
-                      height: RegularSize.s,
-                    ),
-                  ],
-                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

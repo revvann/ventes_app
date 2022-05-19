@@ -1,9 +1,9 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 part of 'package:ventes/app/resources/views/dashboard/dashboard.dart';
 
 class _AppBar extends StatelessWidget {
-  const _AppBar({Key? key}) : super(key: key);
+  DashboardStateController get state => Get.find<DashboardStateController>();
 
   @override
   Widget build(BuildContext context) {
@@ -53,97 +53,69 @@ class _AppBar extends StatelessWidget {
                   color: RegularColor.primary,
                 ),
               ),
+              onSelected: (value) {
+                if (value == "logout") {
+                  state.properties.logout();
+                }
+              },
               itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                // PopupMenuItem<String>(
+                //   value: "edit",
+                //   child: Row(
+                //     children: [
+                //       Container(
+                //         width: RegularSize.xl,
+                //         height: RegularSize.xl,
+                //         alignment: Alignment.center,
+                //         child: Text(
+                //           "SS",
+                //           style: TextStyle(
+                //             color: RegularColor.green,
+                //             fontSize: 14,
+                //             fontWeight: FontWeight.bold,
+                //           ),
+                //         ),
+                //         decoration: BoxDecoration(
+                //           shape: BoxShape.circle,
+                //           color: RegularColor.secondary,
+                //         ),
+                //       ),
+                //       SizedBox(
+                //         width: RegularSize.s,
+                //       ),
+                //       Column(
+                //         mainAxisSize: MainAxisSize.min,
+                //         crossAxisAlignment: CrossAxisAlignment.start,
+                //         children: [
+                //           Text(
+                //             "Stephen Strange",
+                //             style: TextStyle(
+                //               fontSize: 14,
+                //               color: RegularColor.dark,
+                //             ),
+                //           ),
+                //           Text(
+                //             "Sales",
+                //             style: TextStyle(
+                //               fontSize: 12,
+                //               color: RegularColor.gray,
+                //             ),
+                //           ),
+                //         ],
+                //       ),
+                //     ],
+                //   ),
+                // ),
                 PopupMenuItem<String>(
-                  value: "edit",
+                  value: "logout",
                   child: Row(
                     children: [
-                      Container(
-                        width: RegularSize.xl,
-                        height: RegularSize.xl,
-                        alignment: Alignment.center,
-                        child: Text(
-                          "SS",
-                          style: TextStyle(
-                            color: RegularColor.green,
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                          ),
+                      Text(
+                        "Log out",
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: RegularColor.dark,
                         ),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: RegularColor.secondary,
-                        ),
-                      ),
-                      SizedBox(
-                        width: RegularSize.s,
-                      ),
-                      Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Stephen Strange",
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: RegularColor.dark,
-                            ),
-                          ),
-                          Text(
-                            "Sales",
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: RegularColor.gray,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                PopupMenuItem<String>(
-                  value: "delete",
-                  child: Row(
-                    children: [
-                      Container(
-                        width: RegularSize.xl,
-                        height: RegularSize.xl,
-                        alignment: Alignment.center,
-                        child: Text(
-                          "SS",
-                          style: TextStyle(
-                            color: RegularColor.green,
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: RegularColor.secondary,
-                        ),
-                      ),
-                      SizedBox(
-                        width: RegularSize.s,
-                      ),
-                      Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Stephen Strange",
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: RegularColor.dark,
-                            ),
-                          ),
-                          Text(
-                            "Director",
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: RegularColor.gray,
-                            ),
-                          ),
-                        ],
                       ),
                     ],
                   ),
