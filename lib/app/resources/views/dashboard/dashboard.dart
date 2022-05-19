@@ -108,9 +108,7 @@ class DashboardView extends View<DashboardStateController> {
                           color: RegularColor.gray,
                           icon: "assets/svg/prospect.svg",
                           text: "Prospect",
-                          onTap: () {
-                            // Get.toNamed(CustomerView.route);
-                          },
+                          onTap: () {},
                         ),
                       ],
                     ),
