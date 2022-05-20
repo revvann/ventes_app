@@ -40,7 +40,7 @@ class SplashScreenStateController extends RegularStateController with GetTickerP
     await _logoController.forward();
     await Future.delayed(Duration(milliseconds: 300));
     await _bubbleController1.forward();
-    await Future.delayed(Duration(milliseconds: 500));
+    await Future.delayed(Duration(milliseconds: 250));
     Get.offAndToNamed(StartedPageView.route);
   }
 }

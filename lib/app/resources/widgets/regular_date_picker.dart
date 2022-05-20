@@ -30,63 +30,61 @@ class RegularDatePicker {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Container(
-            child: Column(
-              children: [
-                Text(
-                  "Choose Date",
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w600,
+          Column(
+            children: [
+              Text(
+                "Choose Date",
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w600,
+                  color: RegularColor.dark,
+                ),
+              ),
+              SfDateRangePicker(
+                initialSelectedDate: initialdate,
+                minDate: minDate,
+                maxDate: maxDate,
+                view: DateRangePickerView.month,
+                allowViewNavigation: false,
+                headerStyle: DateRangePickerHeaderStyle(
+                  textAlign: TextAlign.center,
+                  textStyle: TextStyle(
+                    fontSize: 18,
                     color: RegularColor.dark,
                   ),
                 ),
-                SfDateRangePicker(
-                  initialSelectedDate: initialdate,
-                  minDate: minDate,
-                  maxDate: maxDate,
-                  view: DateRangePickerView.month,
-                  allowViewNavigation: false,
-                  headerStyle: DateRangePickerHeaderStyle(
-                    textAlign: TextAlign.center,
-                    textStyle: TextStyle(
-                      fontSize: 18,
-                      color: RegularColor.dark,
+                onSelectionChanged: (date) {
+                  this.date = date.value;
+                },
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Expanded(
+                    child: RegularOutlinedButton(
+                      label: "Cancel",
+                      height: RegularSize.xxl,
+                      onPressed: () {
+                        Get.close(1);
+                      },
                     ),
                   ),
-                  onSelectionChanged: (date) {
-                    this.date = date.value;
-                  },
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Expanded(
-                      child: RegularOutlinedButton(
-                        label: "Cancel",
-                        height: RegularSize.xxl,
-                        onPressed: () {
-                          Get.close(1);
-                        },
-                      ),
+                  SizedBox(
+                    width: RegularSize.m,
+                  ),
+                  Expanded(
+                    child: RegularButton(
+                      label: "Choose",
+                      height: RegularSize.xxl,
+                      onPressed: () {
+                        onSelected.call(date);
+                        Get.close(1);
+                      },
                     ),
-                    SizedBox(
-                      width: RegularSize.m,
-                    ),
-                    Expanded(
-                      child: RegularButton(
-                        label: "Choose",
-                        height: RegularSize.xxl,
-                        onPressed: () {
-                          onSelected.call(date);
-                          Get.close(1);
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
+                  ),
+                ],
+              ),
+            ],
           ),
         ],
       ),

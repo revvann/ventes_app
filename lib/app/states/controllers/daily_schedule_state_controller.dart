@@ -11,6 +11,9 @@ import 'package:ventes/app/states/listeners/daily_schedule_listener.dart';
 import 'package:ventes/helpers/task_helper.dart';
 
 class DailyScheduleStateController extends RegularStateController {
+  @override
+  bool get isFixedBody => false;
+
   DailyScheduleProperties properties = Get.put(DailyScheduleProperties());
   DailyScheduleListener listener = Get.put(DailyScheduleListener());
   DailyScheduleDataSource dataSource = Get.put(DailyScheduleDataSource());

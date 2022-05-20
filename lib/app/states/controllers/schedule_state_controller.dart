@@ -9,6 +9,9 @@ import 'package:ventes/constants/strings/schedule_string.dart';
 import 'package:ventes/helpers/task_helper.dart';
 
 class ScheduleStateController extends RegularStateController {
+  @override
+  bool get isFixedBody => false;
+
   ScheduleDataSource dataSource = Get.put(ScheduleDataSource());
   ScheduleListener listener = Get.put(ScheduleListener());
   ScheduleProperties properties = Get.put(ScheduleProperties());

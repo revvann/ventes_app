@@ -6,7 +6,7 @@ import 'package:ventes/core/view.dart';
 import 'package:ventes/app/resources/widgets/bottom_navigation.dart';
 import 'package:ventes/constants/views.dart';
 import 'package:ventes/routing/navigators/dashboard_navigator.dart';
-import 'package:ventes/routing/navigators/history_navigator.dart';
+import 'package:ventes/routing/navigators/prospect_navigator.dart';
 import 'package:ventes/routing/navigators/nearby_navigator.dart';
 import 'package:ventes/routing/navigators/schedule_navigator.dart';
 import 'package:ventes/routing/navigators/settings_navigator.dart';
@@ -58,9 +58,9 @@ class MainView extends View<BottomNavigationStateController> {
                 ),
               ),
               Offstage(
-                offstage: state.currentIndex != Views.history,
-                child: HistoryNavigator(
-                  navigatorKey: state.navigatorKeys[Views.history]!,
+                offstage: state.currentIndex != Views.prospect,
+                child: ProspectNavigator(
+                  navigatorKey: state.navigatorKeys[Views.prospect]!,
                 ),
               ),
               Offstage(

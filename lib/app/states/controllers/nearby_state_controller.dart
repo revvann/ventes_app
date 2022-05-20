@@ -22,6 +22,9 @@ class NearbyStateController extends RegularStateController {
   NearbyProperties properties = Get.put(NearbyProperties());
 
   @override
+  bool get isFixedBody => false;
+
+  @override
   void onInit() async {
     super.onInit();
     properties.refresh();

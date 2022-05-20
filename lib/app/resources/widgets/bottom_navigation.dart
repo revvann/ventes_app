@@ -61,9 +61,9 @@ class BottomNavigation extends View<BottomNavigationStateController> {
           ),
           Expanded(
             child: BottomNavigationItem(
-              icon: 'assets/svg/history.svg',
+              icon: 'assets/svg/prospect.svg',
               title: "History",
-              view: Views.history,
+              view: Views.prospect,
             ),
           ),
           Expanded(

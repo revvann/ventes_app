@@ -40,14 +40,16 @@ class _AppBar extends StatelessWidget {
                 width: RegularSize.xxl,
                 height: RegularSize.xxl,
                 alignment: Alignment.center,
-                child: Text(
-                  "SS",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+                child: Obx(() {
+                  return Text(
+                    state.properties.shortName ?? "AA",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  );
+                }),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: RegularColor.primary,

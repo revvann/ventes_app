@@ -100,17 +100,17 @@ class DashboardView extends View<DashboardStateController> {
                           ),
                           _MenuItem(
                             color: RegularColor.red,
-                            icon: "assets/svg/history.svg",
-                            text: "History",
-                            onTap: () => state.bottomNavigation.currentIndex = Views.history,
+                            icon: "assets/svg/prospect.svg",
+                            text: "Prospect",
+                            onTap: () => state.bottomNavigation.currentIndex = Views.prospect,
                           ),
                           SizedBox(
                             width: RegularSize.s,
                           ),
                           _MenuItem(
                             color: RegularColor.gray,
-                            icon: "assets/svg/prospect.svg",
-                            text: "Prospect",
+                            icon: "assets/svg/help.svg",
+                            text: "Help",
                             onTap: () {},
                           ),
                         ],
