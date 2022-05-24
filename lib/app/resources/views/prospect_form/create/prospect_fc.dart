@@ -9,15 +9,20 @@ import 'package:ventes/app/models/user_detail_model.dart';
 import 'package:ventes/app/resources/widgets/editor_input.dart';
 import 'package:ventes/app/resources/widgets/icon_input.dart';
 import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
+import 'package:ventes/app/resources/widgets/keyable_selectbar.dart';
 import 'package:ventes/app/resources/widgets/regular_date_picker.dart';
 import 'package:ventes/app/resources/widgets/regular_input.dart';
 import 'package:ventes/app/resources/widgets/top_navigation.dart';
 import 'package:ventes/app/states/controllers/prospect_fc_state_controller.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
-import 'package:ventes/constants/strings/nearby_string.dart';
-import 'package:ventes/constants/strings/prospect_string.dart';
 import 'package:ventes/core/view.dart';
+
+part 'package:ventes/app/resources/views/prospect_form/create/components/_twin_date_picker.dart';
+part 'package:ventes/app/resources/views/prospect_form/create/components/_end_date_picker.dart';
+part 'package:ventes/app/resources/views/prospect_form/create/components/_owner_dropdown.dart';
+part 'package:ventes/app/resources/views/prospect_form/create/components/_customer_dropdown.dart';
+part 'package:ventes/app/resources/views/prospect_form/create/components/_follow_up_selectbar.dart';
 
 class ProspectFormCreateView extends View<ProspectFormCreateStateController> {
   static const String route = "/prospect/create";
@@ -47,7 +52,7 @@ class ProspectFormCreateView extends View<ProspectFormCreateStateController> {
         ),
         actions: [
           GestureDetector(
-            onTap: () {},
+            onTap: state.listener.onSubmitButtonClicked,
             child: Container(
               padding: EdgeInsets.symmetric(
                 vertical: RegularSize.s,
@@ -88,61 +93,23 @@ class ProspectFormCreateView extends View<ProspectFormCreateStateController> {
                 ),
                 child: SingleChildScrollView(
                   child: Form(
+                    key: state.formSource.formKey,
                     child: Column(
                       children: [
                         RegularInput(
                           label: "Name",
                           hintText: "Enter name",
+                          controller: state.formSource.prosnameTEC,
+                          validator: state.formSource.validator.prosname,
                         ),
                         SizedBox(
                           height: RegularSize.m,
                         ),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Obx(() {
-                                return GestureDetector(
-                                  onTap: () {
-                                    RegularDatePicker(
-                                      onSelected: state.listener.onDateStartSelected,
-                                      displaydate: state.formSource.prosstartdate,
-                                      initialdate: state.formSource.prosstartdate,
-                                    ).show();
-                                  },
-                                  child: IconInput(
-                                    icon: "assets/svg/calendar.svg",
-                                    label: "Start Date",
-                                    enabled: false,
-                                    hintText: "Choose Date",
-                                    value: state.formSource.prosstartdateString,
-                                  ),
-                                );
-                              }),
-                            ),
-                            SizedBox(width: RegularSize.s),
-                            Expanded(
-                              child: Obx(() {
-                                return GestureDetector(
-                                  onTap: () {
-                                    RegularDatePicker(
-                                      onSelected: state.listener.onDateEndSelected,
-                                      initialdate: state.formSource.prosenddate,
-                                      displaydate: state.formSource.prosenddate,
-                                      minDate: state.formSource.prosstartdate,
-                                    ).show();
-                                  },
-                                  child: IconInput(
-                                    icon: "assets/svg/calendar.svg",
-                                    label: "End Date",
-                                    hintText: "Choose Date",
-                                    enabled: false,
-                                    value: state.formSource.prosenddateString,
-                                  ),
-                                );
-                              }),
-                            ),
-                          ],
+                        _TwinDatePicker(),
+                        SizedBox(
+                          height: RegularSize.m,
                         ),
+                        _FollowUpSelectbar(),
                         SizedBox(
                           height: RegularSize.m,
                         ),
@@ -150,168 +117,29 @@ class ProspectFormCreateView extends View<ProspectFormCreateStateController> {
                           label: "Value",
                           hintText: "Enter value",
                           inputType: TextInputType.number,
+                          controller: state.formSource.prosvalueTEC,
+                          validator: state.formSource.validator.prosvalue,
                         ),
                         SizedBox(
                           height: RegularSize.m,
                         ),
-                        Obx(
-                          () {
-                            return GestureDetector(
-                              onTap: () {
-                                RegularDatePicker(
-                                  onSelected: state.listener.onExpDateEndSelected,
-                                  initialdate: state.formSource.prosexpenddate,
-                                  displaydate: state.formSource.prosexpenddate,
-                                ).show();
-                              },
-                              child: IconInput(
-                                icon: "assets/svg/calendar.svg",
-                                label: "Expectation End Date",
-                                hintText: "Choose Date",
-                                enabled: false,
-                                value: state.formSource.prosexpenddateString,
-                              ),
-                            );
-                          },
-                        ),
+                        _EndDatePicker(),
                         SizedBox(
                           height: RegularSize.m,
                         ),
-                        Obx(() {
-                          return KeyableDropdown<int, UserDetail>(
-                            controller: state.formSource.ownerDropdownController,
-                            child: RegularInput(
-                              enabled: false,
-                              label: "Owner",
-                              hintText: "Select user",
-                            ),
-                            onChange: (value) => print(value),
-                            items: state.dataSource.users,
-                            itemBuilder: (item, isSelected) {
-                              return Container(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: RegularSize.s,
-                                  vertical: RegularSize.s,
-                                ),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(RegularSize.s),
-                                  color: isSelected ? RegularColor.green.withOpacity(0.3) : Colors.transparent,
-                                ),
-                                child: Row(
-                                  children: [
-                                    if (!isSelected)
-                                      Container(
-                                        width: 30,
-                                        height: 30,
-                                        alignment: Alignment.center,
-                                        child: Text(
-                                          item.value.user?.userfullname?.substring(0, 2).toUpperCase() ?? "",
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 10,
-                                          ),
-                                        ),
-                                        decoration: BoxDecoration(
-                                          color: RegularColor.green,
-                                          shape: BoxShape.circle,
-                                        ),
-                                      ),
-                                    SizedBox(
-                                      width: RegularSize.s,
-                                    ),
-                                    Text(
-                                      item.value.user?.userfullname ?? "",
-                                      style: TextStyle(
-                                        color: isSelected ? RegularColor.green : RegularColor.dark,
-                                        fontSize: 14,
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: Container(),
-                                    ),
-                                    if (isSelected)
-                                      SvgPicture.asset(
-                                        "assets/svg/check.svg",
-                                        color: RegularColor.green,
-                                        height: RegularSize.m,
-                                        width: RegularSize.m,
-                                      ),
-                                  ],
-                                ),
-                              );
-                            },
-                          );
-                        }),
+                        _OwnerDropdown(),
                         SizedBox(
                           height: RegularSize.m,
                         ),
                         EditorInput(
                           label: "Description",
                           hintText: "Enter description",
+                          controller: state.formSource.prosdescTEC,
                         ),
                         SizedBox(
                           height: RegularSize.m,
                         ),
-                        Obx(() {
-                          return KeyableDropdown<int, BpCustomer>(
-                            controller: state.formSource.customerDropdownController,
-                            child: RegularInput(
-                              enabled: false,
-                              label: "Customer",
-                              hintText: "Select customer",
-                            ),
-                            onChange: (value) => print(value),
-                            items: state.dataSource.bpcustomers,
-                            itemBuilder: (item, isSelected) {
-                              return Container(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: RegularSize.s,
-                                  vertical: RegularSize.s,
-                                ),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(RegularSize.s),
-                                  color: isSelected ? RegularColor.green.withOpacity(0.3) : Colors.transparent,
-                                ),
-                                child: Row(
-                                  children: [
-                                    if (!isSelected)
-                                      Container(
-                                        width: 30,
-                                        height: 30,
-                                        alignment: Alignment.center,
-                                        child: Image.network(item.value.sbccstmpic!),
-                                        decoration: BoxDecoration(
-                                          color: RegularColor.green,
-                                          shape: BoxShape.circle,
-                                        ),
-                                      ),
-                                    SizedBox(
-                                      width: RegularSize.s,
-                                    ),
-                                    Text(
-                                      item.value.sbccstmname ?? "",
-                                      style: TextStyle(
-                                        color: isSelected ? RegularColor.green : RegularColor.dark,
-                                        fontSize: 14,
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: Container(),
-                                    ),
-                                    if (isSelected)
-                                      SvgPicture.asset(
-                                        "assets/svg/check.svg",
-                                        color: RegularColor.green,
-                                        height: RegularSize.m,
-                                        width: RegularSize.m,
-                                      ),
-                                  ],
-                                ),
-                              );
-                            },
-                          );
-                        }),
+                        _CustomerDropdown(),
                         SizedBox(
                           height: RegularSize.m,
                         ),

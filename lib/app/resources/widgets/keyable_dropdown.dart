@@ -17,6 +17,7 @@ class KeyableDropdownController<K, V> extends GetxController with GetSingleTicke
   late BuildContext context;
 
   bool isMultiple = false;
+  bool nullable = true;
   final _isOpen = false.obs;
   final _selectedItem = Rx<List<K>>([]);
   final Rx<List<DropdownItem<K, V>>> _items = Rx<List<DropdownItem<K, V>>>([]);
@@ -136,16 +137,20 @@ class KeyableDropdownController<K, V> extends GetxController with GetSingleTicke
                                         onTap: () {
                                           if (isMultiple) {
                                             if (isSelected) {
-                                              _selectedItem.update((val) {
-                                                val?.remove(item.key);
-                                              });
+                                              if (nullable) {
+                                                _selectedItem.update((val) {
+                                                  val?.remove(item.key);
+                                                });
+                                              }
                                             } else {
                                               selectedItem = [...selectedItem, item.key];
                                             }
                                             onChange?.call(items.where((item) => selectedItem.contains(item.key)).toList());
                                           } else {
                                             if (isSelected) {
-                                              selectedItem = [];
+                                              if (nullable) {
+                                                selectedItem = [];
+                                              }
                                             } else {
                                               selectedItem = [item.key];
                                             }
@@ -204,6 +209,7 @@ class KeyableDropdown<K, V> extends StatelessWidget {
     this.height,
     this.onChange,
     bool isMultiple = false,
+    bool nullable = true,
     Widget Function(DropdownItem<K, V>, bool)? itemBuilder,
     this.selectedKey,
   }) {
@@ -211,6 +217,11 @@ class KeyableDropdown<K, V> extends StatelessWidget {
     controller.onChange = onChange;
     controller.itemBuilder = itemBuilder;
     controller.isMultiple = isMultiple;
+    controller.nullable = nullable;
+
+    if (selectedKey == null && !nullable && items.isNotEmpty) {
+      selectedKey = items.first.key;
+    }
 
     if (selectedKey is K) {
       controller.selectedItem = [selectedKey];

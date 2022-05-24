@@ -71,7 +71,7 @@ class TaskHelper {
       String message = data['message'];
       Function()? onFinished = data['onFinished'];
 
-      await FailedAlert(message).show();
+      await ErrorAlert(message).show();
       errorPop(task);
       onFinished?.call();
       return errorShow();

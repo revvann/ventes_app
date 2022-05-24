@@ -25,6 +25,7 @@ class ProspectFormCreateStateController extends RegularStateController {
   void onInit() {
     super.onInit();
     dataSource.init();
+    formSource.init();
   }
 
   @override

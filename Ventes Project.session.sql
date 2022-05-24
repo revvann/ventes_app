@@ -50,4 +50,4 @@ where userdtbpid = (
         where userid = 18
     );
 select *
-from vtschedule;
+from mstype;

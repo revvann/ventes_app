@@ -33,7 +33,9 @@ class ProspectNavigator extends ViewNavigator {
         ProspectFormCreateView.route: (args) => ViewRoute(
               page: () => ProspectFormCreateView(),
               binding: BindingsBuilder(() {
+                Get.put(ProspectService());
                 Get.put(UserService());
+                Get.put(TypeService());
                 Get.put(BpCustomerService());
                 Get.put(ProspectFormCreateStateController());
               }),

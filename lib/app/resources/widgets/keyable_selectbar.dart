@@ -13,6 +13,7 @@ class KeyableSelectBar<K> extends StatelessWidget {
   double? height;
   double? width;
   bool isMultiple;
+  bool nullable;
 
   KeyableSelectBar({
     this.label,
@@ -22,11 +23,16 @@ class KeyableSelectBar<K> extends StatelessWidget {
     this.height,
     this.width,
     this.isMultiple = false,
+    this.nullable = true,
   }) {
+    if (activeIndex == null && !nullable && items.isNotEmpty) {
+      activeIndex = items.keys.first;
+    }
+
     if (activeIndex is K) {
-      activeIndex = [activeIndex];
+      this.activeIndex = [activeIndex];
     } else if (activeIndex is List<K>) {
-      activeIndex = activeIndex;
+      this.activeIndex = activeIndex;
     }
   }
 
@@ -79,7 +85,9 @@ class KeyableSelectBar<K> extends StatelessWidget {
                       if (isMultiple) {
                         _activeIndex.update((val) {
                           if (isSelected) {
-                            val?.remove(key);
+                            if (nullable) {
+                              val?.remove(key);
+                            }
                           } else {
                             val?.add(key);
                           }
@@ -87,7 +95,9 @@ class KeyableSelectBar<K> extends StatelessWidget {
                         onSelected?.call(activeIndex);
                       } else {
                         if (isSelected) {
-                          activeIndex = [];
+                          if (nullable) {
+                            activeIndex = [];
+                          }
                         } else {
                           activeIndex = [key];
                         }
