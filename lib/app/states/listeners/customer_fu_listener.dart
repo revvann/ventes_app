@@ -36,7 +36,7 @@ class CustomerFormUpdateListener {
     _formSource.cstmtypeid = type;
   }
 
-  void onMapControllerCreated(GoogleMapController controller) {
+  void onMapControllerUpdated(GoogleMapController controller) {
     if (!_properties.mapsController.isCompleted) {
       _properties.mapsController.complete(controller);
     }
@@ -87,10 +87,9 @@ class CustomerFormUpdateListener {
 
       FormData formData = FormData(data);
       _dataSource.updateCustomer(_formSource.sbcid!, formData);
-
-      Loader().show();
+      Get.find<TaskHelper>().loaderPush(NearbyString.updateTaskCode);
     } else {
-      FailedAlert(NearbyString.formInvalid).show();
+      Get.find<TaskHelper>().failedPush(NearbyString.updateTaskCode, NearbyString.formInvalid);
     }
   }
 
@@ -99,30 +98,34 @@ class CustomerFormUpdateListener {
   }
 
   void onLoadDataError(String message) {
-    Get.find<TaskHelper>().remove(NearbyString.updateTaskCode);
-    ErrorAlert(message).show();
+    Get.find<TaskHelper>().errorPush(NearbyString.updateTaskCode, message);
+    Get.find<TaskHelper>().loaderPop(NearbyString.updateTaskCode);
   }
 
   void onLoadDataFailed(String message) {
-    Get.find<TaskHelper>().remove(NearbyString.updateTaskCode);
-    FailedAlert(message).show();
+    Get.find<TaskHelper>().failedPush(NearbyString.updateTaskCode, message);
+    Get.find<TaskHelper>().loaderPop(NearbyString.updateTaskCode);
   }
 
-  void onCreateDataError(String message) {
-    Get.find<TaskHelper>().remove(NearbyString.updateTaskCode);
-    ErrorAlert(message).show();
+  void onUpdateDataError(String message) {
+    Get.find<TaskHelper>().errorPush(NearbyString.updateTaskCode, message);
+    Get.find<TaskHelper>().loaderPop(NearbyString.updateTaskCode);
   }
 
-  void onCreateDataFailed(String message) {
-    Get.find<TaskHelper>().remove(NearbyString.updateTaskCode);
-    FailedAlert(message).show();
+  void onUpdateDataFailed(String message) {
+    Get.find<TaskHelper>().failedPush(NearbyString.updateTaskCode, message);
+    Get.find<TaskHelper>().loaderPop(NearbyString.updateTaskCode);
   }
 
-  void onCreateDataSuccess(String message) async {
-    Get.find<TaskHelper>().remove(NearbyString.updateTaskCode);
-    SuccessAlert(message).show().then((res) {
-      Get.find<NearbyStateController>().properties.refresh();
-      Get.back(id: NearbyNavigator.id);
-    });
+  void onUpdateDataSuccess(String message) async {
+    Get.find<TaskHelper>().successPush(
+      NearbyString.updateTaskCode,
+      message,
+      () {
+        Get.find<NearbyStateController>().properties.refresh();
+        Get.back(id: NearbyNavigator.id);
+      },
+    );
+    Get.find<TaskHelper>().loaderPop(NearbyString.updateTaskCode);
   }
 }

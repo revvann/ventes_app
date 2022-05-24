@@ -95,7 +95,7 @@ class CustomerFormUpdateView extends View<CustomerFormUpdateStateController> {
                   initialCameraPosition: CameraPosition(target: LatLng(0, 0), zoom: state.properties.defaultZoom),
                   markers: state.properties.markers,
                   myLocationEnabled: true,
-                  onMapCreated: state.listener.onMapControllerCreated,
+                  onMapCreated: state.listener.onMapControllerUpdated,
                   onCameraMove: state.listener.onCameraMoved,
                   onCameraIdle: state.listener.onCameraMoveEnd,
                 ),

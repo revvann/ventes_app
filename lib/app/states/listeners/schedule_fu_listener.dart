@@ -1,21 +1,14 @@
 import 'package:get/get.dart';
 import 'package:ventes/app/models/schedule_guest_model.dart';
-import 'package:ventes/app/models/schedule_model.dart';
 import 'package:ventes/app/models/user_detail_model.dart';
-import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
-import 'package:ventes/app/network/contracts/update_contract.dart';
-import 'package:ventes/app/resources/widgets/error_alert.dart';
-import 'package:ventes/app/resources/widgets/failed_alert.dart';
-import 'package:ventes/app/resources/widgets/loader.dart';
-import 'package:ventes/app/resources/widgets/success_alert.dart';
+import 'package:ventes/app/states/controllers/daily_schedule_state_controller.dart';
+import 'package:ventes/app/states/controllers/schedule_fu_state_controller.dart';
 import 'package:ventes/app/states/data_sources/schedule_fu_data_source.dart';
+import 'package:ventes/app/states/form_sources/schedule_fu_form_source.dart';
 import 'package:ventes/constants/strings/schedule_string.dart';
 import 'package:ventes/helpers/function_helpers.dart';
 import 'package:ventes/helpers/task_helper.dart';
 import 'package:ventes/routing/navigators/schedule_navigator.dart';
-import 'package:ventes/app/states/controllers/daily_schedule_state_controller.dart';
-import 'package:ventes/app/states/controllers/schedule_fu_state_controller.dart';
-import 'package:ventes/app/states/form_sources/schedule_fu_form_source.dart';
 
 class ScheduleFormUpdateListener {
   ScheduleFormUpdateProperties get _properties => Get.find<ScheduleFormUpdateProperties>();
@@ -209,7 +202,7 @@ class ScheduleFormUpdateListener {
   void onFormSubmit() {
     if (_formSource.isValid()) {
       Map<String, dynamic> data = _formSource.toJson();
-      Get.find<TaskHelper>().add(ScheduleString.updateScheduleTaskCode);
+      Get.find<TaskHelper>().loaderPush(ScheduleString.updateScheduleTaskCode);
       _dataSource.updateSchedule(data);
     }
   }
@@ -224,30 +217,31 @@ class ScheduleFormUpdateListener {
   }
 
   void onUpdateDataFailed(String message) {
-    Get.find<TaskHelper>().remove(ScheduleString.updateScheduleTaskCode);
-    FailedAlert(ScheduleString.updateFailed).show();
+    Get.find<TaskHelper>().failedPush(ScheduleString.updateScheduleTaskCode, ScheduleString.updateFailed);
+    Get.find<TaskHelper>().loaderPop(ScheduleString.updateScheduleTaskCode);
   }
 
   void onUpdateDataSuccess(String message) {
-    Get.find<TaskHelper>().remove(ScheduleString.updateScheduleTaskCode);
-    SuccessAlert(ScheduleString.updateSuccess).show().then((value) {
+    Get.find<TaskHelper>().successPush(ScheduleString.updateScheduleTaskCode, ScheduleString.updateSuccess, () {
       Get.find<DailyScheduleStateController>().properties.refresh();
       Get.back(id: ScheduleNavigator.id);
-    });
+    },
+    );
+    Get.find<TaskHelper>().loaderPop(ScheduleString.updateScheduleTaskCode);
   }
 
   void onUpdateDataError(String message) {
-    Get.find<TaskHelper>().remove(ScheduleString.updateScheduleTaskCode);
-    ErrorAlert(ScheduleString.updateError).show();
+    Get.find<TaskHelper>().errorPush(ScheduleString.updateScheduleTaskCode, ScheduleString.updateError);
+    Get.find<TaskHelper>().loaderPop(ScheduleString.updateScheduleTaskCode);
   }
 
   onLoadDataError(String message) {
-    Get.find<TaskHelper>().remove(ScheduleString.updateScheduleTaskCode);
-    ErrorAlert(ScheduleString.fetchError).show();
+    Get.find<TaskHelper>().errorPush(ScheduleString.updateScheduleTaskCode, ScheduleString.fetchError);
+    Get.find<TaskHelper>().loaderPop(ScheduleString.updateScheduleTaskCode);
   }
 
   onLoadDataFailed(String message) {
-    Get.find<TaskHelper>().remove(ScheduleString.updateScheduleTaskCode);
-    FailedAlert(ScheduleString.fetchFailed).show();
+    Get.find<TaskHelper>().failedPush(ScheduleString.updateScheduleTaskCode, ScheduleString.fetchFailed);
+    Get.find<TaskHelper>().loaderPop(ScheduleString.updateScheduleTaskCode);
   }
 }

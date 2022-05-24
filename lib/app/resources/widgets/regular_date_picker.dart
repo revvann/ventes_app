@@ -15,11 +15,13 @@ class RegularDatePicker {
     this.initialdate,
     this.minDate,
     this.maxDate,
+    this.displaydate,
   }) {
     date = initialdate;
   }
   void Function(DateTime? date) onSelected;
   DateTime? initialdate;
+  DateTime? displaydate;
   DateTime? date;
   DateTime? minDate;
   DateTime? maxDate;
@@ -42,6 +44,7 @@ class RegularDatePicker {
               ),
               SfDateRangePicker(
                 initialSelectedDate: initialdate,
+                initialDisplayDate: displaydate,
                 minDate: minDate,
                 maxDate: maxDate,
                 view: DateRangePickerView.month,

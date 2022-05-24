@@ -97,6 +97,6 @@ class ScheduleFormUpdateDataSource implements FetchDataContract, UpdateContract 
     schedule = Schedule.fromJson(data['schedule']);
     insertTypes(List<Map<String, dynamic>>.from(data['types']));
     _formSource.prepareFormValue();
-    Get.find<TaskHelper>().remove(ScheduleString.updateScheduleTaskCode);
+    Get.find<TaskHelper>().loaderPop(ScheduleString.updateScheduleTaskCode);
   }
 }

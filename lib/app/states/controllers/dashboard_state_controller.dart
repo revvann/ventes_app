@@ -60,12 +60,12 @@ class DashboardProperties {
       shortName = shortName!.substring(0, 2).toUpperCase();
     });
 
-    Get.find<TaskHelper>().add(DashboardString.taskCode);
+    Get.find<TaskHelper>().loaderPush(DashboardString.taskCode);
   }
 
   void logout() async {
     _dataSource.logout();
-    Get.find<TaskHelper>().add(DashboardString.taskCode);
+    Get.find<TaskHelper>().loaderPush(DashboardString.taskCode);
   }
 }
 

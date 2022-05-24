@@ -30,7 +30,7 @@ class RegularSelectPill extends StatelessWidget {
           style: TextStyle(
             fontSize: 12,
             fontWeight: FontWeight.w600,
-            color: RegularColor.gray,
+            color: RegularColor.primary,
           ),
         ),
         SizedBox(

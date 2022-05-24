@@ -50,7 +50,7 @@ class DailyScheduleDataSource implements FetchDataContract {
     if (data['schedules'] != null) {
       listToAppointments(data['schedules']);
     }
-    Get.find<TaskHelper>().remove(ScheduleString.dailyScheduleTaskCode);
+    Get.find<TaskHelper>().loaderPop(ScheduleString.dailyScheduleTaskCode);
   }
 
   @override

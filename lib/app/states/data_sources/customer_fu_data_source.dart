@@ -8,6 +8,7 @@ import 'package:ventes/app/models/subdistrict_model.dart';
 import 'package:ventes/app/models/type_model.dart';
 import 'package:ventes/app/network/contracts/create_contract.dart';
 import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
+import 'package:ventes/app/network/contracts/update_contract.dart';
 import 'package:ventes/app/network/presenters/customer_fu_presenter.dart';
 import 'package:get/get.dart';
 import 'package:ventes/app/states/controllers/customer_fu_state_controller.dart';
@@ -17,7 +18,7 @@ import 'package:ventes/constants/strings/nearby_string.dart';
 import 'package:ventes/helpers/function_helpers.dart';
 import 'package:ventes/helpers/task_helper.dart';
 
-class CustomerFormUpdateDataSource implements FetchDataContract, CreateContract {
+class CustomerFormUpdateDataSource implements FetchDataContract, UpdateContract {
   CustomerFormUpdateListener get _listener => Get.find<CustomerFormUpdateListener>();
   CustomerFormUpdateFormSource get _formSource => Get.find<CustomerFormUpdateFormSource>();
   CustomerFormUpdateProperties get _properties => Get.find<CustomerFormUpdateProperties>();
@@ -25,7 +26,7 @@ class CustomerFormUpdateDataSource implements FetchDataContract, CreateContract 
   final CustomerFormUpdatePresenter _presenter = CustomerFormUpdatePresenter();
 
   set fetchDataContract(FetchDataContract value) => _presenter.fetchDataContract = value;
-  set createContract(CreateContract value) => _presenter.createContract = value;
+  set createContract(UpdateContract value) => _presenter.createContract = value;
 
   final _customers = <Customer>[].obs;
   set customers(List<Customer> value) => _customers.value = value;
@@ -127,15 +128,15 @@ class CustomerFormUpdateDataSource implements FetchDataContract, CreateContract 
       statusesFromList(data['statuses']);
     }
 
-    Get.find<TaskHelper>().remove(NearbyString.updateTaskCode);
+    Get.find<TaskHelper>().loaderPop(NearbyString.updateTaskCode);
   }
 
   @override
-  void onCreateError(String message) => _listener.onCreateDataError(message);
+  void onUpdateError(String message) => _listener.onUpdateDataError(message);
 
   @override
-  void onCreateFailed(String message) => _listener.onCreateDataFailed(message);
+  void onUpdateFailed(String message) => _listener.onUpdateDataFailed(message);
 
   @override
-  void onCreateSuccess(String message) => _listener.onCreateDataSuccess(message);
+  void onUpdateSuccess(String message) => _listener.onUpdateDataSuccess(message);
 }

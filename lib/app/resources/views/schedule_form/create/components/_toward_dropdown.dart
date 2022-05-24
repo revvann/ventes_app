@@ -35,7 +35,7 @@ class _TowardDropdown extends StatelessWidget {
           onItemSelected: onItemSelected,
           compare: compare,
           controller: controller,
-        ).show();
+        );
       },
     );
   }

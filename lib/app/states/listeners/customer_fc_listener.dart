@@ -88,9 +88,9 @@ class CustomerFormCreateListener {
 
       FormData formData = FormData(data);
       _dataSource.createCustomer(formData);
-      Loader().show();
+      Get.find<TaskHelper>().loaderPush(NearbyString.createTaskCode);
     } else {
-      FailedAlert(NearbyString.formInvalid).show();
+      Get.find<TaskHelper>().failedPush(NearbyString.createTaskCode, NearbyString.formInvalid);
     }
   }
 
@@ -99,30 +99,34 @@ class CustomerFormCreateListener {
   }
 
   void onLoadDataError(String message) {
-    Get.find<TaskHelper>().remove(NearbyString.createTaskCode);
-    ErrorAlert(message).show();
+    Get.find<TaskHelper>().errorPush(NearbyString.createTaskCode, message);
+    Get.find<TaskHelper>().loaderPop(NearbyString.createTaskCode);
   }
 
   void onLoadDataFailed(String message) {
-    Get.find<TaskHelper>().remove(NearbyString.createTaskCode);
-    FailedAlert(message).show();
+    Get.find<TaskHelper>().failedPush(NearbyString.createTaskCode, message);
+    Get.find<TaskHelper>().loaderPop(NearbyString.createTaskCode);
   }
 
   void onCreateDataError(String message) {
-    Get.find<TaskHelper>().remove(NearbyString.createTaskCode);
-    ErrorAlert(message).show();
+    Get.find<TaskHelper>().errorPush(NearbyString.createTaskCode, message);
+    Get.find<TaskHelper>().loaderPop(NearbyString.createTaskCode);
   }
 
   void onCreateDataFailed(String message) {
-    Get.find<TaskHelper>().remove(NearbyString.createTaskCode);
-    FailedAlert(message).show();
+    Get.find<TaskHelper>().failedPush(NearbyString.createTaskCode, message);
+    Get.find<TaskHelper>().loaderPop(NearbyString.createTaskCode);
   }
 
   void onCreateDataSuccess(String message) async {
-    Get.find<TaskHelper>().remove(NearbyString.createTaskCode);
-    SuccessAlert(message).show().then((res) {
-      Get.find<NearbyStateController>().properties.refresh();
-      Get.back(id: NearbyNavigator.id);
-    });
+    Get.find<TaskHelper>().loaderPop(NearbyString.createTaskCode);
+    Get.find<TaskHelper>().successPush(
+      NearbyString.createTaskCode,
+      message,
+      () {
+        Get.find<NearbyStateController>().properties.refresh();
+        Get.back(id: NearbyNavigator.id);
+      },
+    );
   }
 }

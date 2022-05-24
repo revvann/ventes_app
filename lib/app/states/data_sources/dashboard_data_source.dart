@@ -43,10 +43,10 @@ class DashboardDataSource implements FetchDataContract, LogoutContract {
   }
 
   @override
-  onLoadError(String message) => _listener.onLoadDataError();
+  onLoadError(String message) => _listener.onLoadDataError(message);
 
   @override
-  onLoadFailed(String message) => _listener.onLoadDataFailed();
+  onLoadFailed(String message) => _listener.onLoadDataFailed(message);
 
   @override
   onLoadSuccess(Map data) {
@@ -56,7 +56,7 @@ class DashboardDataSource implements FetchDataContract, LogoutContract {
         LatLng(_properties.position!.latitude, _properties.position!.longitude),
       );
     }
-    Get.find<TaskHelper>().remove(DashboardString.taskCode);
+    Get.find<TaskHelper>().loaderPop(DashboardString.taskCode);
   }
 
   @override

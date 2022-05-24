@@ -34,7 +34,7 @@ class KeyableSelectBox<K> extends StatelessWidget {
             style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w600,
-              color: RegularColor.dark,
+              color: RegularColor.primary,
             ),
           ),
         SizedBox(

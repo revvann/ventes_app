@@ -5,12 +5,7 @@ select table_name,
     column_default,
     is_nullable
 from INFORMATION_SCHEMA.COLUMNS
-where table_name in (
-        'trprospect',
-        'trprospectdt',
-        'trprospectassign',
-        'trprospectproduct'
-    )
+where table_name in ('trprospect')
 order by table_name,
     ordinal_position;
 -- select column_name,
@@ -47,3 +42,12 @@ order by table_name,
 --         now(),
 --         true
 --     );
+select *
+from msuserdt
+where userdtbpid = (
+        select userdtbpid
+        from msuserdt
+        where userid = 18
+    );
+select *
+from vtschedule;

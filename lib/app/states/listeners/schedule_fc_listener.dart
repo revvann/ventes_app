@@ -206,7 +206,7 @@ class ScheduleFormCreateListener {
   void onFormSubmit() {
     if (_formSource.isValid()) {
       Map<String, dynamic> data = _formSource.toJson();
-      Get.find<TaskHelper>().add(ScheduleString.createScheduleTaskCode);
+      Get.find<TaskHelper>().loaderPush(ScheduleString.createScheduleTaskCode);
       _dataSource.createSchedule(data);
     }
   }
@@ -221,28 +221,32 @@ class ScheduleFormCreateListener {
   }
 
   void onCreateDataFailed(String message) {
-    Get.find<TaskHelper>().remove(ScheduleString.createScheduleTaskCode);
-    FailedAlert(ScheduleString.createFailed).show();
+    Get.find<TaskHelper>().loaderPop(ScheduleString.createScheduleTaskCode);
+    Get.find<TaskHelper>().failedPush(ScheduleString.createScheduleTaskCode, ScheduleString.createFailed);
   }
 
   void onCreateDataSuccess(String message) {
-    Get.find<TaskHelper>().remove(ScheduleString.createScheduleTaskCode);
-    SuccessAlert(ScheduleString.createSuccess).show().then((value) {
-      Get.find<DailyScheduleStateController>().properties.refresh();
-      Get.back(id: ScheduleNavigator.id);
-    });
+    Get.find<TaskHelper>().loaderPop(ScheduleString.createScheduleTaskCode);
+    Get.find<TaskHelper>().successPush(
+      ScheduleString.createScheduleTaskCode,
+      ScheduleString.createSuccess,
+      () {
+        Get.find<DailyScheduleStateController>().properties.refresh();
+        Get.back(id: ScheduleNavigator.id);
+      },
+    );
   }
 
   void onCreateDataError(String message) {
-    Get.find<TaskHelper>().remove(ScheduleString.createScheduleTaskCode);
-    ErrorAlert(ScheduleString.createError).show();
+    Get.find<TaskHelper>().loaderPop(ScheduleString.createScheduleTaskCode);
+    Get.find<TaskHelper>().errorPush(ScheduleString.createScheduleTaskCode, ScheduleString.createError);
   }
 
   onLoadDataError(String message) {
-    ErrorAlert(ScheduleString.createError).show();
+    Get.find<TaskHelper>().errorPush(ScheduleString.createScheduleTaskCode, ScheduleString.createError);
   }
 
   onLoadDataFailed(String message) {
-    FailedAlert(ScheduleString.createFailed).show();
+    Get.find<TaskHelper>().failedPush(ScheduleString.createScheduleTaskCode, ScheduleString.createFailed);
   }
 }

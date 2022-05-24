@@ -46,7 +46,7 @@ class RegularDropdown<T> extends StatelessWidget {
             style: TextStyle(
               fontWeight: FontWeight.w600,
               fontSize: 12,
-              color: RegularColor.dark,
+              color: RegularColor.primary,
             ),
           ),
         SizedBox(

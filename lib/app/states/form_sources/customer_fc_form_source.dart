@@ -17,8 +17,8 @@ import 'package:ventes/constants/strings/nearby_string.dart';
 
 class CustomerFormCreateFormSource {
   late CustomerFormCreateValidator validator;
-  final CustomerFormCreateProperties _properties = Get.find<CustomerFormCreateProperties>();
-  final CustomerFormCreateDataSource _dataSource = Get.find<CustomerFormCreateDataSource>();
+  CustomerFormCreateProperties get _properties => Get.find<CustomerFormCreateProperties>();
+  CustomerFormCreateDataSource get _dataSource => Get.find<CustomerFormCreateDataSource>();
 
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final defaultPicture = Image.asset('assets/' + NearbyString.defaultImage).obs;

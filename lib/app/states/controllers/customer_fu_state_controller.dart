@@ -118,6 +118,6 @@ class CustomerFormUpdateProperties {
 
   void refresh() {
     _dataSource.fetchData(customerid ?? 0);
-    Get.find<TaskHelper>().add(NearbyString.updateTaskCode);
+    Get.find<TaskHelper>().loaderPush(NearbyString.updateTaskCode);
   }
 }

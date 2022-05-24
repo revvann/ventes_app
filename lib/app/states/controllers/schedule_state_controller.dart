@@ -67,6 +67,6 @@ class ScheduleProperties {
 
   void refresh() {
     _dataSource.fetchData(dateShown.month);
-    Get.find<TaskHelper>().add(ScheduleString.taskCode);
+    Get.find<TaskHelper>().loaderPush(ScheduleString.taskCode);
   }
 }

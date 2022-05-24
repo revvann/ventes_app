@@ -50,9 +50,9 @@ class NearbyListener {
   }
 
   void onAddDataClick() async {
-    Loader().show();
+    Get.find<TaskHelper>().loaderPush(NearbyString.taskCode);
     getCurrentPosition().then((position) {
-      Get.close(1);
+      Get.find<TaskHelper>().loaderPop(NearbyString.taskCode);
       double radius = calculateDistance(_properties.markers.first.position, LatLng(position.latitude, position.longitude));
 
       int? cstmid;
@@ -71,7 +71,7 @@ class NearbyListener {
           },
         );
       } else {
-        FailedAlert(NearbyString.customerOuttaRange).show();
+        Get.find<TaskHelper>().failedPush(NearbyString.taskCode, NearbyString.customerOuttaRange);
       }
     });
   }
@@ -81,9 +81,9 @@ class NearbyListener {
   }
 
   void onEditDataClick() async {
-    Get.find<TaskHelper>().add(NearbyString.taskCode);
-    getCurrentPosition().then((position) {
-      Get.find<TaskHelper>().remove(NearbyString.taskCode);
+    Get.find<TaskHelper>().loaderPush(NearbyString.taskCode);
+    getCurrentPosition().then((position) async {
+      Get.find<TaskHelper>().loaderPop(NearbyString.taskCode);
 
       Customer customer = _properties.selectedCustomer.first;
       BpCustomer bpcustomer = _dataSource.bpCustomers.firstWhere((element) => element.sbccstmid == customer.cstmid);
@@ -98,18 +98,18 @@ class NearbyListener {
           },
         );
       } else {
-        FailedAlert(NearbyString.customerOuttaRange).show();
+        await Get.find<TaskHelper>().failedPush(NearbyString.taskCode, NearbyString.customerOuttaRange);
       }
     });
   }
 
   void onLoadDataError(String message) {
-    Get.find<TaskHelper>().remove(NearbyString.taskCode);
-    ErrorAlert(message).show();
+    Get.find<TaskHelper>().errorPush(NearbyString.taskCode, message);
+    Get.find<TaskHelper>().loaderPop(NearbyString.taskCode);
   }
 
   void onLoadDataFailed(String message) {
-    Get.find<TaskHelper>().remove(NearbyString.taskCode);
-    FailedAlert(message).show();
+    Get.find<TaskHelper>().failedPush(NearbyString.taskCode, message);
+    Get.find<TaskHelper>().loaderPop(NearbyString.taskCode);
   }
 }

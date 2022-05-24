@@ -50,12 +50,13 @@ class ScheduleDataSource implements FetchDataContract {
   @override
   onLoadSuccess(Map data) {
     if (data['schedules'] != null) {
+      print(data['schedules']);
       listToAppointments(data['schedules']);
     }
     if (data['types'] != null) {
       listToTypes(data['types']);
     }
-    Get.find<TaskHelper>().remove(ScheduleString.taskCode);
+    Get.find<TaskHelper>().loaderPop(ScheduleString.taskCode);
   }
 
   @override

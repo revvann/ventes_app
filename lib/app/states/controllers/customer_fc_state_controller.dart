@@ -95,7 +95,7 @@ class CustomerFormCreateProperties {
 
   void fetchPlacesIds() {
     _dataSource.fetchPlacesIds(_dataSource.getSubdistrictName()!);
-    Get.find<TaskHelper>().add(NearbyString.createTaskCode);
+    Get.find<TaskHelper>().loaderPush(NearbyString.createTaskCode);
   }
 
   void refresh() async {
@@ -107,6 +107,6 @@ class CustomerFormCreateProperties {
       CameraUpdate.newLatLng(pos),
     );
     markerLatLng = pos;
-    Get.find<TaskHelper>().add(NearbyString.createTaskCode);
+    Get.find<TaskHelper>().loaderPush(NearbyString.createTaskCode);
   }
 }

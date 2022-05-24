@@ -52,7 +52,7 @@ class DailyScheduleProperties {
 
   void refresh() {
     _dataSource.fetchData(dbFormatDate(date));
-    Get.find<TaskHelper>().add(ScheduleString.dailyScheduleTaskCode);
+    Get.find<TaskHelper>().loaderPush(ScheduleString.dailyScheduleTaskCode);
   }
 
   Color getAppointmentColor(Schedule appointment) {

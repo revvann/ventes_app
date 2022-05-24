@@ -81,6 +81,6 @@ class NearbyDataSource implements FetchDataContract {
       );
       _properties.deployCustomers(customers);
     }
-    Get.find<TaskHelper>().remove(NearbyString.taskCode);
+    Get.find<TaskHelper>().loaderPop(NearbyString.taskCode);
   }
 }

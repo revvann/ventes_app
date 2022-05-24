@@ -115,7 +115,7 @@ class NearbyProperties {
       CameraUpdate.newLatLng(LatLng(position.latitude, position.longitude)),
     );
     _dataSource.fetchData(LatLng(position.latitude, position.longitude));
-    Get.find<TaskHelper>().add(NearbyString.taskCode);
+    Get.find<TaskHelper>().loaderPush(NearbyString.taskCode);
   }
 }
 

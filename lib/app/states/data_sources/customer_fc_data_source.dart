@@ -185,7 +185,7 @@ class CustomerFormCreateDataSource implements FetchDataContract, CreateContract 
       _formSource.prepareValues();
     }
 
-    Get.find<TaskHelper>().remove(NearbyString.createTaskCode);
+    Get.find<TaskHelper>().loaderPop(NearbyString.createTaskCode);
   }
 
   @override

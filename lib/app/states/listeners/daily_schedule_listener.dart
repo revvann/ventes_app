@@ -52,12 +52,12 @@ class DailyScheduleListener {
   }
 
   onLoadDataFailed(String message) {
-    Get.find<TaskHelper>().remove(ScheduleString.dailyScheduleTaskCode);
-    FailedAlert(message).show();
+    Get.find<TaskHelper>().failedPush(ScheduleString.dailyScheduleTaskCode, message);
+    Get.find<TaskHelper>().loaderPop(ScheduleString.dailyScheduleTaskCode);
   }
 
   onLoadDataError(String message) {
-    Get.find<TaskHelper>().remove(ScheduleString.dailyScheduleTaskCode);
-    ErrorAlert(message).show();
+    Get.find<TaskHelper>().errorPush(ScheduleString.dailyScheduleTaskCode, message);
+    Get.find<TaskHelper>().loaderPop(ScheduleString.dailyScheduleTaskCode);
   }
 }

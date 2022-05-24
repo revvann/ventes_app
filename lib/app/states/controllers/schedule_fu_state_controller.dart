@@ -82,7 +82,7 @@ class ScheduleFormUpdateProperties {
 
   void refresh() async {
     _dataSource.fetchData();
-    Get.find<TaskHelper>().add(ScheduleString.updateScheduleTaskCode);
+    Get.find<TaskHelper>().loaderPush(ScheduleString.updateScheduleTaskCode);
   }
 
   void showMapBottomSheet() {
@@ -134,7 +134,7 @@ class ScheduleFormUpdateProperties {
           ),
         ],
       ),
-    ).show();
+    );
   }
 
   Widget get _gMaps {

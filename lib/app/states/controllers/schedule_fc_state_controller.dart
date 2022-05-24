@@ -72,7 +72,7 @@ class ScheduleFormCreateProperties {
   }
 
   void refresh() async {
-    Get.find<TaskHelper>().add(ScheduleString.createScheduleTaskCode);
+    Get.find<TaskHelper>().loaderPush(ScheduleString.createScheduleTaskCode);
     Position pos = await getCurrentPosition();
     mapsController.future.then((controller) {
       controller.animateCamera(
@@ -132,7 +132,7 @@ class ScheduleFormCreateProperties {
           ),
         ],
       ),
-    ).show();
+    );
   }
 
   Widget get _gMaps {

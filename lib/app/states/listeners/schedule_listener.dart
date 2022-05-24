@@ -21,7 +21,7 @@ class ScheduleListener {
         _properties.dateShown = _properties.calendarController.displayDate!;
       }
       _dataSource.fetchSchedules(_properties.dateShown.month);
-      Loader().show();
+      Get.find<TaskHelper>().loaderPush(ScheduleString.taskCode);
     }
   }
 
@@ -64,12 +64,12 @@ class ScheduleListener {
   }
 
   onLoadDataFailed(String message) {
-    Get.find<TaskHelper>().remove(ScheduleString.taskCode);
-    FailedAlert(message).show();
+    Get.find<TaskHelper>().failedPush(ScheduleString.taskCode, message);
+    Get.find<TaskHelper>().loaderPop(ScheduleString.taskCode);
   }
 
   onLoadDataError(String message) {
-    Get.find<TaskHelper>().remove(ScheduleString.taskCode);
-    FailedAlert(message).show();
+    Get.find<TaskHelper>().failedPush(ScheduleString.taskCode, message);
+    Get.find<TaskHelper>().loaderPop(ScheduleString.taskCode);
   }
 }

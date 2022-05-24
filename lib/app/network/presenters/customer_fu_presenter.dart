@@ -8,6 +8,7 @@ import 'package:ventes/app/models/subdistrict_model.dart';
 import 'package:ventes/app/models/user_detail_model.dart';
 import 'package:ventes/app/network/contracts/create_contract.dart';
 import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
+import 'package:ventes/app/network/contracts/update_contract.dart';
 import 'package:ventes/app/network/services/bp_customer_service.dart';
 import 'package:ventes/app/network/services/customer_service.dart';
 import 'package:ventes/app/network/services/place_service.dart';
@@ -26,8 +27,8 @@ class CustomerFormUpdatePresenter {
   late FetchDataContract _fetchDataContract;
   set fetchDataContract(FetchDataContract value) => _fetchDataContract = value;
 
-  late CreateContract _createContract;
-  set createContract(CreateContract value) => _createContract = value;
+  late UpdateContract _createContract;
+  set createContract(UpdateContract value) => _createContract = value;
 
   Future<Response> _getBpCustomers() async {
     int? bpid = (await _findActiveUser())?.userdtbpid;
@@ -114,12 +115,12 @@ class CustomerFormUpdatePresenter {
         contentType: "multipart/form-data",
       );
       if (response.statusCode == 200) {
-        _createContract.onCreateSuccess(NearbyString.createSuccess);
+        _createContract.onUpdateSuccess(NearbyString.createSuccess);
       } else {
-        _createContract.onCreateFailed(NearbyString.createFailed);
+        _createContract.onUpdateFailed(NearbyString.createFailed);
       }
     } catch (err) {
-      _createContract.onCreateError(err.toString());
+      _createContract.onUpdateError(err.toString());
     }
   }
 

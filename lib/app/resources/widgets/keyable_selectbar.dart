@@ -7,24 +7,32 @@ import 'package:ventes/constants/regular_size.dart';
 
 class KeyableSelectBar<K> extends StatelessWidget {
   String? label;
-  final _activeIndex = Rx<K?>(null);
-  void Function(K)? onSelected;
+  final _activeIndex = Rx<List<K>>([]);
+  void Function(dynamic)? onSelected;
   Map<K, String> items;
   double? height;
   double? width;
+  bool isMultiple;
 
   KeyableSelectBar({
     this.label,
     this.onSelected,
     this.items = const {},
-    K? activeIndex,
+    dynamic activeIndex,
     this.height,
     this.width,
+    this.isMultiple = false,
   }) {
-    if (activeIndex != null) {
-      _activeIndex.value = activeIndex;
+    if (activeIndex is K) {
+      activeIndex = [activeIndex];
+    } else if (activeIndex is List<K>) {
+      activeIndex = activeIndex;
     }
   }
+
+  List<K> get activeIndex => _activeIndex.value;
+  K? get firstActiveIndex => activeIndex.isNotEmpty ? activeIndex.first : null;
+  set activeIndex(List<K> value) => _activeIndex.value = value;
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +48,7 @@ class KeyableSelectBar<K> extends StatelessWidget {
               style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
-                color: RegularColor.dark,
+                color: RegularColor.primary,
               ),
             ),
           SizedBox(
@@ -51,20 +59,39 @@ class KeyableSelectBar<K> extends StatelessWidget {
             height: height,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
+              physics: BouncingScrollPhysics(),
               itemCount: items.keys.length,
               itemBuilder: (_, index) {
                 K key = items.keys.elementAt(index);
                 String value = items[key]!;
                 return Obx(() {
+                  bool isSelected;
+                  if (isMultiple) {
+                    isSelected = activeIndex.contains(key);
+                  } else {
+                    isSelected = firstActiveIndex == key;
+                  }
                   return _buildItem(
                     height,
                     value,
-                    _activeIndex.value == key,
+                    isSelected,
                     () {
-                      bool isSame = _activeIndex.value == key;
-                      if (!isSame) {
-                        _activeIndex.value = key;
-                        onSelected?.call(key);
+                      if (isMultiple) {
+                        _activeIndex.update((val) {
+                          if (isSelected) {
+                            val?.remove(key);
+                          } else {
+                            val?.add(key);
+                          }
+                        });
+                        onSelected?.call(activeIndex);
+                      } else {
+                        if (isSelected) {
+                          activeIndex = [];
+                        } else {
+                          activeIndex = [key];
+                        }
+                        onSelected?.call(firstActiveIndex);
                       }
                     },
                   );

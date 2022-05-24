@@ -84,6 +84,6 @@ class ScheduleFormCreateDataSource implements FetchDataContract, CreateContract 
   @override
   onLoadSuccess(Map data) {
     insertTypes(List<Map<String, dynamic>>.from(data['types']));
-    Get.find<TaskHelper>().remove(ScheduleString.createScheduleTaskCode);
+    Get.find<TaskHelper>().loaderPop(ScheduleString.createScheduleTaskCode);
   }
 }
