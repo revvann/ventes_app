@@ -37,6 +37,8 @@ class ProspectDataSource implements FetchDataContract {
 
   void fetchData() => _presenter.fetchData();
 
+  void fetchProspect({Map<String, dynamic> params = const {}}) => _presenter.fetchProspect(params);
+
   @override
   onLoadError(String message) => _listener.onLoadError(message);
 
@@ -58,11 +60,11 @@ class ProspectDataSource implements FetchDataContract {
 
     if (data['followup'] != null) {
       List<DBType> followUp = List<DBType>.from(data['followup'].map((e) => DBType.fromJson(e)));
-      followUpItems = followUp.asMap().map((i, e) => MapEntry(e.typeid!, e.typename ?? ""));
+      followUpItems = followUp.asMap().map<int, String>((i, e) => MapEntry(e.typeid!, e.typename ?? ""));
     }
 
     if (data['prospects'] != null) {
-      prospects = List<Prospect>.from(data['prospects'].map((e) => Prospect.fromJson(e)));
+      prospects = data['prospects'].map<Prospect>((e) => Prospect.fromJson(e)).toList();
     }
 
     Get.find<TaskHelper>().loaderPop(ProspectString.taskCode);

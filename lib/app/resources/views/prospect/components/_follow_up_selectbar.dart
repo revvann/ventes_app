@@ -15,6 +15,7 @@ class _FollowUpSelectBar extends StatelessWidget {
           label: "Follow Up Type",
           items: state.dataSource.followUpItems,
           onSelected: state.listener.onFollowUpSelected,
+          activeIndex: state.formSource.prostype,
         );
       }),
     );

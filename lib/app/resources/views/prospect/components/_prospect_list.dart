@@ -16,7 +16,19 @@ class _ProspectList extends StatelessWidget {
             shrinkWrap: true,
             itemCount: state.dataSource.prospects.length,
             itemBuilder: (_, index) {
-              return Container();
+              Prospect prospect = state.dataSource.prospects[index];
+              return ProspectCard(
+                height: 120,
+                margin: EdgeInsets.only(
+                  bottom: RegularSize.s,
+                  top: RegularSize.s,
+                ),
+                name: prospect.prospectname ?? "",
+                customer: prospect.prospectcust?.sbccstmname ?? "",
+                owner: prospect.prospectowneruser?.user?.userfullname ?? "",
+                status: prospect.prospectstatus?.typename ?? "",
+                date: prospect.prospectstartdate ?? "",
+              );
             },
           );
         },

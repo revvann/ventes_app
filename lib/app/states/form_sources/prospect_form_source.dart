@@ -32,11 +32,22 @@ class ProspectFormSource {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'prospectstartdate': prosstartdateString,
-      'prospectenddate': prosenddateString,
-      'prospectstatusid': prosstatus?.typeid,
-      'prospecttypeid': prostype,
-    };
+    Map<String, dynamic> json = {};
+    if (prosstartdate != null) {
+      json['prospectstartdate'] = prosstartdateString;
+    }
+
+    if (prosenddate != null) {
+      json['prospectenddate'] = prosenddateString;
+    }
+
+    if (prosstatus != null) {
+      json['prospectstatusid'] = prosstatus?.typeid.toString();
+    }
+
+    if (prostype != null) {
+      json['prospecttypeid'] = prostype.toString();
+    }
+    return json;
   }
 }

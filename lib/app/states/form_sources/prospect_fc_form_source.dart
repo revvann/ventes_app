@@ -74,7 +74,7 @@ class ProspectFormCreateFormSource {
       'prospectexpclosedate': prosexpenddateString,
       'prospectbpid': proscustomer?.sbcbpid,
       'prospectdescription': prosdesc,
-      'prospectcustid': proscustomer?.sbccstmid,
+      'prospectcustid': proscustomer?.sbcid,
     };
   }
 }
