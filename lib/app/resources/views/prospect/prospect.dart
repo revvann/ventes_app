@@ -6,6 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:ventes/app/models/prospect_model.dart';
 import 'package:ventes/app/models/type_model.dart';
+import 'package:ventes/app/resources/views/prospect_form/update/prospect_fu.dart';
 import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
 import 'package:ventes/app/resources/widgets/keyable_selectbar.dart';
 import 'package:ventes/app/resources/widgets/prospect_card.dart';

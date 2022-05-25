@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:ventes/app/models/type_model.dart';
 import 'package:ventes/app/resources/views/prospect_form/create/prospect_fc.dart';
+import 'package:ventes/app/resources/views/prospect_form/update/prospect_fu.dart';
 import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
 import 'package:ventes/app/states/controllers/prospect_state_controller.dart';
 import 'package:ventes/app/states/data_sources/prospect_data_source.dart';
@@ -59,6 +60,16 @@ class ProspectListener {
     Map<String, dynamic> filter = _formSource.toJson();
     _dataSource.fetchProspect(params: filter);
     Get.find<TaskHelper>().loaderPush(ProspectString.taskCode);
+  }
+
+  void onProspectClicked() {
+    Get.toNamed(
+      ProspectFormUpdateView.route,
+      id: ProspectNavigator.id,
+      arguments: {
+        'prospect': _properties.selectedProspect?.prospectid,
+      },
+    );
   }
 
   void onLoadFailed(String message) {

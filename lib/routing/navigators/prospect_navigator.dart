@@ -7,7 +7,9 @@ import 'package:ventes/app/network/services/prospect_service.dart';
 import 'package:ventes/app/network/services/type_service.dart';
 import 'package:ventes/app/network/services/user_service.dart';
 import 'package:ventes/app/resources/views/prospect_form/create/prospect_fc.dart';
+import 'package:ventes/app/resources/views/prospect_form/update/prospect_fu.dart';
 import 'package:ventes/app/states/controllers/prospect_fc_state_controller.dart';
+import 'package:ventes/app/states/controllers/prospect_fu_state_controller.dart';
 import 'package:ventes/app/states/controllers/prospect_state_controller.dart';
 import 'package:ventes/app/resources/views/prospect/prospect.dart';
 import 'package:ventes/core/page_route.dart';
@@ -21,7 +23,7 @@ class ProspectNavigator extends ViewNavigator {
   String get initialRoute => ProspectView.route;
 
   @override
-  Map<String, ViewRoute Function(Map args)> get routes => {
+  Map<String, ViewRoute Function(Map? args)> get routes => {
         ProspectView.route: (args) => ViewRoute(
               page: () => ProspectView(),
               binding: BindingsBuilder(() {
@@ -38,6 +40,16 @@ class ProspectNavigator extends ViewNavigator {
                 Get.put(TypeService());
                 Get.put(BpCustomerService());
                 Get.put(ProspectFormCreateStateController());
+              }),
+            ),
+        ProspectFormUpdateView.route: (args) => ViewRoute(
+              page: () => ProspectFormUpdateView(args!['prospect']),
+              binding: BindingsBuilder(() {
+                Get.put(ProspectService());
+                Get.put(UserService());
+                Get.put(TypeService());
+                Get.put(BpCustomerService());
+                Get.put(ProspectFormUpdateStateController());
               }),
             ),
       };

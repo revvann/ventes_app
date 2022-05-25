@@ -155,3 +155,16 @@ double calculateDistance(LatLng coords1, LatLng coords2) {
   var a = 0.5 - c((coords2.latitude - coords1.latitude) * p) / 2 + c(coords1.latitude * p) * c(coords2.latitude * p) * (1 - c((coords2.longitude - coords1.longitude) * p)) / 2;
   return (12742 * asin(sqrt(a))) * 1000;
 }
+
+String currencyFormat(String number) {
+  final formatter = NumberFormat.currency(
+    locale: 'id_ID',
+    symbol: '',
+    decimalDigits: 0,
+  );
+  var value = number.replaceAll(RegExp(r'[.]'), '');
+  if (value.isEmpty) {
+    value = '0';
+  }
+  return formatter.format(double.parse(value));
+}

@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:ventes/constants/regular_color.dart';
 
 class RegularInput extends StatelessWidget {
@@ -15,6 +16,7 @@ class RegularInput extends StatelessWidget {
     this.value,
     this.enabled,
     this.maxLines,
+    this.inputFormatters,
   }) : super(key: key);
   String? label;
   String? hintText;
@@ -26,6 +28,7 @@ class RegularInput extends StatelessWidget {
   String? Function(String?)? validator;
   TextEditingController? controller;
   final GlobalKey<FormFieldState> _key = GlobalKey<FormFieldState>();
+  List<TextInputFormatter>? inputFormatters;
 
   @override
   Widget build(BuildContext context) {
@@ -51,6 +54,7 @@ class RegularInput extends StatelessWidget {
           enableSuggestions: !isPassword,
           autocorrect: !isPassword,
           validator: validator,
+          inputFormatters: inputFormatters,
           style: TextStyle(
             fontSize: 16,
             color: RegularColor.dark,

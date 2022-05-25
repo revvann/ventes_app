@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_update_immutables
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -13,19 +13,23 @@ import 'package:ventes/app/resources/widgets/keyable_selectbar.dart';
 import 'package:ventes/app/resources/widgets/regular_date_picker.dart';
 import 'package:ventes/app/resources/widgets/regular_input.dart';
 import 'package:ventes/app/resources/widgets/top_navigation.dart';
-import 'package:ventes/app/states/controllers/prospect_fc_state_controller.dart';
+import 'package:ventes/app/states/controllers/prospect_fu_state_controller.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/core/view.dart';
 
-part 'package:ventes/app/resources/views/prospect_form/create/components/_twin_date_picker.dart';
-part 'package:ventes/app/resources/views/prospect_form/create/components/_end_date_picker.dart';
-part 'package:ventes/app/resources/views/prospect_form/create/components/_owner_dropdown.dart';
-part 'package:ventes/app/resources/views/prospect_form/create/components/_customer_dropdown.dart';
-part 'package:ventes/app/resources/views/prospect_form/create/components/_follow_up_selectbar.dart';
+part 'package:ventes/app/resources/views/prospect_form/update/components/_twin_date_picker.dart';
+part 'package:ventes/app/resources/views/prospect_form/update/components/_end_date_picker.dart';
+part 'package:ventes/app/resources/views/prospect_form/update/components/_owner_dropdown.dart';
+part 'package:ventes/app/resources/views/prospect_form/update/components/_customer_dropdown.dart';
+part 'package:ventes/app/resources/views/prospect_form/update/components/_follow_up_selectbar.dart';
 
-class ProspectFormCreateView extends View<ProspectFormCreateStateController> {
-  static const String route = "/prospect/create";
+class ProspectFormUpdateView extends View<ProspectFormUpdateStateController> {
+  static const String route = "/prospect/update";
+
+  ProspectFormUpdateView(int prospectId) {
+    state.properties.prospectId = prospectId;
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -17,17 +17,23 @@ class _ProspectList extends StatelessWidget {
             itemCount: state.dataSource.prospects.length,
             itemBuilder: (_, index) {
               Prospect prospect = state.dataSource.prospects[index];
-              return ProspectCard(
-                height: 120,
-                margin: EdgeInsets.only(
-                  bottom: RegularSize.s,
-                  top: RegularSize.s,
+              return GestureDetector(
+                onTap: () {
+                  state.properties.selectedProspect = prospect;
+                  state.listener.onProspectClicked();
+                },
+                child: ProspectCard(
+                  height: 120,
+                  margin: EdgeInsets.only(
+                    bottom: RegularSize.s,
+                    top: RegularSize.s,
+                  ),
+                  name: prospect.prospectname ?? "",
+                  customer: prospect.prospectcust?.sbccstmname ?? "",
+                  owner: prospect.prospectowneruser?.user?.userfullname ?? "",
+                  status: prospect.prospectstatus?.typename ?? "",
+                  date: prospect.prospectstartdate ?? "",
                 ),
-                name: prospect.prospectname ?? "",
-                customer: prospect.prospectcust?.sbccstmname ?? "",
-                owner: prospect.prospectowneruser?.user?.userfullname ?? "",
-                status: prospect.prospectstatus?.typename ?? "",
-                date: prospect.prospectstartdate ?? "",
               );
             },
           );

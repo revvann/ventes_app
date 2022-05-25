@@ -1,8 +1,8 @@
-import 'package:ventes/app/states/form_sources/prospect_fc_form_source.dart';
+import 'package:ventes/app/states/form_sources/prospect_fu_form_source.dart';
 
-class ProspectFormCreateValidator {
-  ProspectFormCreateFormSource _formSource;
-  ProspectFormCreateValidator(this._formSource);
+class ProspectFormUpdateValidator {
+  ProspectFormUpdateFormSource _formSource;
+  ProspectFormUpdateValidator(this._formSource);
 
   String? prosname(String? value) {
     if (value == null || value.isEmpty) {
