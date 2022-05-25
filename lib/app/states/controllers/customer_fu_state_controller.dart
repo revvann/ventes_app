@@ -5,9 +5,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:ventes/app/models/bp_customer_model.dart';
 import 'package:ventes/app/models/customer_model.dart';
-import 'package:ventes/app/resources/widgets/loader.dart';
 import 'package:ventes/app/states/controllers/nearby_state_controller.dart';
 import 'package:ventes/app/states/controllers/regular_state_controller.dart';
 import 'package:ventes/app/states/data_sources/customer_fu_data_source.dart';
@@ -15,7 +13,6 @@ import 'package:ventes/app/states/form_sources/customer_fu_form_source.dart';
 import 'package:ventes/app/states/listeners/customer_fu_listener.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/constants/strings/nearby_string.dart';
-import 'package:ventes/constants/strings/schedule_string.dart';
 import 'package:ventes/helpers/task_helper.dart';
 
 class CustomerFormUpdateStateController extends RegularStateController {

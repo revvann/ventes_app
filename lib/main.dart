@@ -3,6 +3,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:ventes/app/network/services/bp_customer_service.dart';
+import 'package:ventes/app/network/services/customer_service.dart';
+import 'package:ventes/app/network/services/gmaps_service.dart';
+import 'package:ventes/app/network/services/place_service.dart';
+import 'package:ventes/app/network/services/prospect_service.dart';
+import 'package:ventes/app/network/services/schedule_service.dart';
+import 'package:ventes/app/network/services/type_service.dart';
+import 'package:ventes/app/network/services/user_service.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/helpers/auth_helper.dart';
 import 'package:ventes/helpers/function_helpers.dart';
@@ -46,6 +54,15 @@ class MyApp extends StatelessWidget {
         Get.lazyPut(() => AuthService());
         Get.lazyPut(() => AuthHelper());
         Get.lazyPut(() => TaskHelper());
+        Get.lazyPut(() => AuthService());
+        Get.lazyPut(() => BpCustomerService());
+        Get.lazyPut(() => CustomerService());
+        Get.lazyPut(() => GmapsService());
+        Get.lazyPut(() => PlaceService());
+        Get.lazyPut(() => ProspectService());
+        Get.lazyPut(() => ScheduleService());
+        Get.lazyPut(() => TypeService());
+        Get.lazyPut(() => UserService());
       }),
     );
   }

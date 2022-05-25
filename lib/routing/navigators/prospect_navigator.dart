@@ -2,10 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:ventes/app/network/services/bp_customer_service.dart';
-import 'package:ventes/app/network/services/prospect_service.dart';
-import 'package:ventes/app/network/services/type_service.dart';
-import 'package:ventes/app/network/services/user_service.dart';
 import 'package:ventes/app/resources/views/prospect_form/create/prospect_fc.dart';
 import 'package:ventes/app/resources/views/prospect_form/update/prospect_fu.dart';
 import 'package:ventes/app/states/controllers/prospect_fc_state_controller.dart';
@@ -27,28 +23,18 @@ class ProspectNavigator extends ViewNavigator {
         ProspectView.route: (args) => ViewRoute(
               page: () => ProspectView(),
               binding: BindingsBuilder(() {
-                Get.put(ProspectService());
-                Get.put(TypeService());
                 Get.put(ProspectStateController());
               }),
             ),
         ProspectFormCreateView.route: (args) => ViewRoute(
               page: () => ProspectFormCreateView(),
               binding: BindingsBuilder(() {
-                Get.put(ProspectService());
-                Get.put(UserService());
-                Get.put(TypeService());
-                Get.put(BpCustomerService());
                 Get.put(ProspectFormCreateStateController());
               }),
             ),
         ProspectFormUpdateView.route: (args) => ViewRoute(
               page: () => ProspectFormUpdateView(args!['prospect']),
               binding: BindingsBuilder(() {
-                Get.put(ProspectService());
-                Get.put(UserService());
-                Get.put(TypeService());
-                Get.put(BpCustomerService());
                 Get.put(ProspectFormUpdateStateController());
               }),
             ),

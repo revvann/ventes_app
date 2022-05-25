@@ -6,24 +6,23 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:ventes/app/models/prospect_model.dart';
 import 'package:ventes/app/models/type_model.dart';
-import 'package:ventes/app/resources/views/prospect_form/update/prospect_fu.dart';
+import 'package:ventes/app/resources/widgets/icon_input.dart';
 import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
 import 'package:ventes/app/resources/widgets/keyable_selectbar.dart';
 import 'package:ventes/app/resources/widgets/prospect_card.dart';
 import 'package:ventes/app/resources/widgets/regular_date_picker.dart';
 import 'package:ventes/app/resources/widgets/regular_input.dart';
+import 'package:ventes/app/resources/widgets/top_navigation.dart';
+import 'package:ventes/app/states/controllers/prospect_state_controller.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
-import 'package:ventes/app/states/controllers/prospect_state_controller.dart';
+import 'package:ventes/constants/strings/prospect_string.dart';
 import 'package:ventes/core/view.dart';
-import 'package:ventes/app/resources/widgets/icon_input.dart';
-import 'package:ventes/app/resources/widgets/top_navigation.dart';
-import 'package:ventes/helpers/function_helpers.dart';
 
-part 'package:ventes/app/resources/views/prospect/components/_status_dropdown.dart';
 part 'package:ventes/app/resources/views/prospect/components/_follow_up_selectbar.dart';
-part 'package:ventes/app/resources/views/prospect/components/_twin_datepicker.dart';
 part 'package:ventes/app/resources/views/prospect/components/_prospect_list.dart';
+part 'package:ventes/app/resources/views/prospect/components/_status_dropdown.dart';
+part 'package:ventes/app/resources/views/prospect/components/_twin_datepicker.dart';
 
 class ProspectView extends View<ProspectStateController> {
   static const String route = "/history";
@@ -40,7 +39,7 @@ class ProspectView extends View<ProspectStateController> {
       backgroundColor: RegularColor.primary,
       extendBodyBehindAppBar: true,
       appBar: TopNavigation(
-        title: "Prospect",
+        title: ProspectString.appBarTitle,
         appBarKey: state.appBarKey,
       ).build(context),
       body: SafeArea(

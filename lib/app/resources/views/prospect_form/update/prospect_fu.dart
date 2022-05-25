@@ -16,6 +16,7 @@ import 'package:ventes/app/resources/widgets/top_navigation.dart';
 import 'package:ventes/app/states/controllers/prospect_fu_state_controller.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
+import 'package:ventes/constants/strings/prospect_string.dart';
 import 'package:ventes/core/view.dart';
 
 part 'package:ventes/app/resources/views/prospect_form/update/components/_twin_date_picker.dart';
@@ -41,7 +42,7 @@ class ProspectFormUpdateView extends View<ProspectFormUpdateStateController> {
       backgroundColor: RegularColor.primary,
       extendBodyBehindAppBar: true,
       appBar: TopNavigation(
-        title: "Prospect",
+        title: ProspectString.appBarTitle,
         appBarKey: state.appBarKey,
         leading: GestureDetector(
           child: Container(
@@ -63,7 +64,7 @@ class ProspectFormUpdateView extends View<ProspectFormUpdateStateController> {
                 horizontal: RegularSize.m,
               ),
               child: Text(
-                "Save",
+                ProspectString.submitButtonText,
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 16,

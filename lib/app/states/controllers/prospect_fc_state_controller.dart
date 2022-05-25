@@ -1,5 +1,4 @@
 import 'package:get/get.dart';
-import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:ventes/app/states/controllers/regular_state_controller.dart';
 import 'package:ventes/app/states/data_sources/prospect_fc_data_source.dart';
 import 'package:ventes/app/states/form_sources/prospect_fc_form_source.dart';

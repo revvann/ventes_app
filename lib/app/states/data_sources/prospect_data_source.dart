@@ -49,7 +49,6 @@ class ProspectDataSource implements FetchDataContract {
   onLoadSuccess(Map data) {
     if (data['statusses'] != null) {
       List<DBType> statusses = List<DBType>.from(data['statusses'].map((e) => DBType.fromJson(e)));
-
       statusItems = statusses
           .map((e) => DropdownItem<int, DBType>(
                 value: e,

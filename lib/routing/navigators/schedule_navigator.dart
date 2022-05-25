@@ -2,9 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:ventes/app/network/services/schedule_service.dart';
-import 'package:ventes/app/network/services/type_service.dart';
-import 'package:ventes/app/network/services/user_service.dart';
 import 'package:ventes/app/resources/views/schedule_form/update/schedule_fu.dart';
 import 'package:ventes/core/page_route.dart';
 import 'package:ventes/app/states/controllers/daily_schedule_state_controller.dart';
@@ -14,7 +11,6 @@ import 'package:ventes/app/states/controllers/schedule_state_controller.dart';
 import 'package:ventes/app/resources/views/daily_schedule/daily_schedule.dart';
 import 'package:ventes/app/resources/views/schedule/schedule.dart';
 import 'package:ventes/app/resources/views/schedule_form/create/schedule_fc.dart';
-import 'package:ventes/app/resources/widgets/regular_dropdown.dart';
 import 'package:ventes/core/view_navigator.dart';
 
 class ScheduleNavigator extends ViewNavigator {
@@ -28,8 +24,6 @@ class ScheduleNavigator extends ViewNavigator {
         ScheduleView.route: (args) => ViewRoute(
               page: () => ScheduleView(),
               binding: BindingsBuilder(() {
-                Get.lazyPut(() => ScheduleService());
-                Get.lazyPut(() => TypeService());
                 Get.lazyPut(() => ScheduleStateController());
               }),
             ),
@@ -38,17 +32,12 @@ class ScheduleNavigator extends ViewNavigator {
                 date: args!["date"],
               ),
               binding: BindingsBuilder(() {
-                Get.lazyPut(() => TypeService());
-                Get.lazyPut(() => ScheduleService());
                 Get.lazyPut(() => DailyScheduleStateController());
               }),
             ),
         ScheduleFormCreateView.route: (args) => ViewRoute(
               page: () => ScheduleFormCreateView(),
               binding: BindingsBuilder(() {
-                Get.lazyPut(() => UserService());
-                Get.lazyPut(() => TypeService());
-                Get.lazyPut(() => ScheduleService());
                 Get.lazyPut(() => ScheduleFormCreateStateController());
               }),
             ),
@@ -57,9 +46,6 @@ class ScheduleNavigator extends ViewNavigator {
                 scheduleId: args!['scheduleId'],
               ),
               binding: BindingsBuilder(() {
-                Get.lazyPut(() => UserService());
-                Get.lazyPut(() => TypeService());
-                Get.lazyPut(() => ScheduleService());
                 Get.lazyPut(() => ScheduleFormUpdateStateController());
               }),
             ),

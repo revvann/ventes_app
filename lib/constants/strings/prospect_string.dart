@@ -1,4 +1,8 @@
 class ProspectString {
+  static String appBarTitle = "Prospect";
+
+  static String submitButtonText = "Save";
+
   static String taskCode = 'prospect';
   static String formCreateTaskCode = 'createprospect';
   static String formUpdateTaskCode = 'updateprospect';
