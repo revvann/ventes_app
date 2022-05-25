@@ -1,4 +1,3 @@
-import 'package:ventes/app/models/province_model.dart';
 import 'package:ventes/app/models/user_detail_model.dart';
 import 'package:ventes/core/model.dart';
 

@@ -3,12 +3,13 @@ import 'package:get/get.dart';
 import 'package:ventes/app/models/bp_customer_model.dart';
 import 'package:ventes/app/models/user_detail_model.dart';
 import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
+import 'package:ventes/app/resources/widgets/searchable_dropdown.dart';
 import 'package:ventes/app/states/form_validators/prospect_fc_validator.dart';
 import 'package:ventes/constants/formatters/currency_formatter.dart';
 import 'package:ventes/helpers/function_helpers.dart';
 
 class ProspectFormCreateFormSource {
-  KeyableDropdownController<int, UserDetail> ownerDropdownController = Get.put(KeyableDropdownController<int, UserDetail>());
+  SearchableDropdownController<int, UserDetail> ownerDropdownController = Get.put(SearchableDropdownController<int, UserDetail>());
   KeyableDropdownController<int, BpCustomer> customerDropdownController = Get.put(KeyableDropdownController<int, BpCustomer>());
 
   late ProspectFormCreateValidator validator;

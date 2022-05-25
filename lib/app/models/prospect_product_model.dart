@@ -1,5 +1,4 @@
 import 'package:ventes/app/models/prospect_model.dart';
-import 'package:ventes/app/models/province_model.dart';
 import 'package:ventes/app/models/type_model.dart';
 import 'package:ventes/core/model.dart';
 

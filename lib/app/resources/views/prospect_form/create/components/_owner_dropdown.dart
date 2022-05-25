@@ -9,7 +9,7 @@ class _OwnerDropdown extends StatelessWidget {
   Widget build(BuildContext context) {
     return Obx(
       () {
-        return KeyableDropdown<int, UserDetail>(
+        return SearchableDropdown<int, UserDetail>(
           controller: state.formSource.ownerDropdownController,
           nullable: false,
           child: Obx(() {

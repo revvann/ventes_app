@@ -6,6 +6,7 @@ import 'package:ventes/app/network/contracts/create_contract.dart';
 import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
 import 'package:ventes/app/network/presenters/prospect_fc_presenter.dart';
 import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
+import 'package:ventes/app/resources/widgets/searchable_dropdown.dart' as SearchableDropdown;
 import 'package:ventes/app/states/form_sources/prospect_fc_form_source.dart';
 import 'package:ventes/app/states/listeners/prospect_fc_listener.dart';
 import 'package:ventes/constants/strings/prospect_string.dart';
@@ -17,9 +18,9 @@ class ProspectFormCreateDataSource implements FetchDataContract, CreateContract 
 
   final ProspectFormCreatePresenter _presenter = ProspectFormCreatePresenter();
 
-  final _users = <DropdownItem<int, UserDetail>>[].obs;
-  List<DropdownItem<int, UserDetail>> get users => _users.value;
-  set users(List<DropdownItem<int, UserDetail>> value) => _users.value = value;
+  final _users = <SearchableDropdown.DropdownItem<int, UserDetail>>[].obs;
+  List<SearchableDropdown.DropdownItem<int, UserDetail>> get users => _users.value;
+  set users(List<SearchableDropdown.DropdownItem<int, UserDetail>> value) => _users.value = value;
 
   final _bpcustomers = <DropdownItem<int, BpCustomer>>[].obs;
   List<DropdownItem<int, BpCustomer>> get bpcustomers => _bpcustomers.value;
@@ -49,7 +50,7 @@ class ProspectFormCreateDataSource implements FetchDataContract, CreateContract 
       List<UserDetail> userList = data['users'].map<UserDetail>((item) => UserDetail.fromJson(item)).toList();
       _formSource.prosowner = userList.isNotEmpty ? userList.first : null;
       users = userList
-          .map<DropdownItem<int, UserDetail>>((item) => DropdownItem<int, UserDetail>(
+          .map<SearchableDropdown.DropdownItem<int, UserDetail>>((item) => SearchableDropdown.DropdownItem<int, UserDetail>(
                 value: item,
                 key: item.userdtid!,
               ))

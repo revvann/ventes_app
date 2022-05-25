@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
-import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:ventes/app/models/bp_customer_model.dart';
 import 'package:ventes/app/models/user_detail_model.dart';
 import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';

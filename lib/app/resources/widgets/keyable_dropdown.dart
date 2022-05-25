@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ventes/app/states/controllers/keyboard_state_controller.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/constants/styles/behavior_style.dart';
 
@@ -18,6 +19,7 @@ class KeyableDropdownController<K, V> extends GetxController with GetSingleTicke
 
   bool isMultiple = false;
   bool nullable = true;
+  bool isKeyboardOpen = false;
   final _isOpen = false.obs;
   final _selectedItem = Rx<List<K>>([]);
   final Rx<List<DropdownItem<K, V>>> _items = Rx<List<DropdownItem<K, V>>>([]);
@@ -38,12 +40,23 @@ class KeyableDropdownController<K, V> extends GetxController with GetSingleTicke
   @override
   void onInit() {
     super.onInit();
-
+    Get.find<KeyboardStateController>().add(testKeyboard);
     _animationController = AnimationController(vsync: this, duration: Duration(milliseconds: 200));
     _expandAnimation = CurvedAnimation(
       parent: _animationController,
       curve: Curves.easeInOut,
     );
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    Get.find<KeyboardStateController>().remove(testKeyboard);
+    super.dispose();
+  }
+
+  testKeyboard(bool visible) {
+    isKeyboardOpen = visible;
   }
 
   void toggleDropdown({bool close = false}) async {
@@ -66,13 +79,16 @@ class KeyableDropdownController<K, V> extends GetxController with GetSingleTicke
 
     return OverlayEntry(
       builder: (context) {
+        isKeyboardOpen = KeyboardStateController().isVisible;
+        double keyboardInsets = MediaQuery.of(Get.context!).viewInsets.bottom;
+
         var offset = renderBox.localToGlobal(Offset.zero);
 
         var topOffset = offset.dy + 5;
         var bottomOffset = MediaQuery.of(context).size.height - (offset.dy - 5);
 
         double bottomMaxHeight = MediaQuery.of(context).size.height - topOffset - 15;
-        bool isTop = bottomMaxHeight < 200;
+        bool isTop = bottomMaxHeight - keyboardInsets < 200;
 
         return GestureDetector(
           onTap: () => toggleDropdown(close: true),
