@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:ventes/app/models/type_model.dart';
+import 'package:ventes/app/resources/views/prospect_detail/prospect_detail.dart';
 import 'package:ventes/app/resources/views/prospect_form/create/prospect_fc.dart';
 import 'package:ventes/app/resources/views/prospect_form/update/prospect_fu.dart';
 import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
@@ -64,7 +65,7 @@ class ProspectListener {
 
   void onProspectClicked() {
     Get.toNamed(
-      ProspectFormUpdateView.route,
+      ProspectDetailView.route,
       id: ProspectNavigator.id,
       arguments: {
         'prospect': _properties.selectedProspect?.prospectid,

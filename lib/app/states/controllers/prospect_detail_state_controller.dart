@@ -24,4 +24,6 @@ class ProspectDetailStateController extends RegularStateController {
   }
 }
 
-class ProspectDetailProperties {}
+class ProspectDetailProperties {
+  late int prospectId;
+}

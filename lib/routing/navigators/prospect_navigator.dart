@@ -2,8 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ventes/app/resources/views/prospect_detail/prospect_detail.dart';
 import 'package:ventes/app/resources/views/prospect_form/create/prospect_fc.dart';
 import 'package:ventes/app/resources/views/prospect_form/update/prospect_fu.dart';
+import 'package:ventes/app/states/controllers/prospect_detail_state_controller.dart';
 import 'package:ventes/app/states/controllers/prospect_fc_state_controller.dart';
 import 'package:ventes/app/states/controllers/prospect_fu_state_controller.dart';
 import 'package:ventes/app/states/controllers/prospect_state_controller.dart';
@@ -36,6 +38,12 @@ class ProspectNavigator extends ViewNavigator {
               page: () => ProspectFormUpdateView(args!['prospect']),
               binding: BindingsBuilder(() {
                 Get.put(ProspectFormUpdateStateController());
+              }),
+            ),
+        ProspectDetailView.route: (args) => ViewRoute(
+              page: () => ProspectDetailView(args!['prospect']),
+              binding: BindingsBuilder(() {
+                Get.put(ProspectDetailStateController());
               }),
             ),
       };

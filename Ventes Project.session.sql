@@ -5,7 +5,7 @@ select table_name,
     column_default,
     is_nullable
 from INFORMATION_SCHEMA.COLUMNS
-where table_name in ('trprospect')
+where table_name in ('trprospectdt')
 order by table_name,
     ordinal_position;
 -- select column_name,
