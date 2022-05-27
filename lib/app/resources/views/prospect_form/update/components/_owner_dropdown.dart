@@ -7,24 +7,21 @@ class _OwnerDropdown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(
-      () {
-        return KeyableDropdown<int, UserDetail>(
-          controller: state.formSource.ownerDropdownController,
-          nullable: false,
-          child: Obx(() {
-            return RegularInput(
-              enabled: false,
-              label: "Owner",
-              hintText: "Select user",
-              value: state.formSource.prosownerString,
-            );
-          }),
-          onChange: state.listener.onOwnerSelected,
-          items: state.dataSource.users,
-          itemBuilder: buildItem,
+    return SearchableDropdown<UserDetail>(
+      controller: state.formSource.ownerDropdownController,
+      nullable: false,
+      child: Obx(() {
+        return RegularInput(
+          enabled: false,
+          label: "Owner",
+          hintText: "Select user",
+          value: state.formSource.prosownerString,
         );
-      },
+      }),
+      onChange: state.listener.onOwnerSelected,
+      onCompare: state.listener.onOwnerCompared,
+      onItemFilter: state.listener.onOwnerFilter,
+      itemBuilder: buildItem,
     );
   }
 

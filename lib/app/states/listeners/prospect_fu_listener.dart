@@ -45,11 +45,27 @@ class ProspectFormUpdateListener {
     _formSource.prosowner = data.value as UserDetail;
   }
 
+  bool onOwnerCompared(selectedItem, item) {
+    return (selectedItem as UserDetail).userdtid == item.userdtid;
+  }
+
+  Future<List<UserDetail>> onOwnerFilter(String? search) async {
+    return await _dataSource.fetchUser(search);
+  }
+
   void onCustomerSelected(dynamic data) {
     _formSource.proscustomer = data.value as BpCustomer;
   }
 
-  void onRefresh() {
+  bool onCustomerCompared(selectedItem, item) {
+    return (selectedItem as BpCustomer).sbcid == item.sbcid;
+  }
+
+  Future<List<BpCustomer>> onCustomerFilter(String? search) async {
+    return await _dataSource.fetchCustomer(search);
+  }
+
+  Future onRefresh() async {
     _properties.refresh();
   }
 

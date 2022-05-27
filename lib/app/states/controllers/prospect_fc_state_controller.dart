@@ -14,6 +14,7 @@ class ProspectFormCreateStateController extends RegularStateController {
 
   @override
   void onClose() {
+    formSource.close();
     Get.delete<ProspectFormCreateProperties>();
     Get.delete<ProspectFormCreateDataSource>();
     Get.delete<ProspectFormCreateFormSource>();
@@ -37,8 +38,10 @@ class ProspectFormCreateStateController extends RegularStateController {
 
 class ProspectFormCreateProperties {
   ProspectFormCreateDataSource get dataSource => Get.find<ProspectFormCreateDataSource>();
+  ProspectFormCreateFormSource get formSource => Get.find<ProspectFormCreateFormSource>();
 
   void refresh() {
+    formSource.reset();
     dataSource.fetchData();
     Get.find<TaskHelper>().loaderPush(ProspectString.formCreateTaskCode);
   }

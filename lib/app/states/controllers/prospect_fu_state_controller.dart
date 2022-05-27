@@ -38,10 +38,12 @@ class ProspectFormUpdateStateController extends RegularStateController {
 
 class ProspectFormUpdateProperties {
   ProspectFormUpdateDataSource get dataSource => Get.find<ProspectFormUpdateDataSource>();
+  ProspectFormUpdateFormSource get formSource => Get.find<ProspectFormUpdateFormSource>();
 
   late int prospectId;
 
   void refresh() {
+    formSource.reset();
     dataSource.fetchData(prospectId);
     Get.find<TaskHelper>().loaderPush(ProspectString.formUpdateTaskCode);
   }

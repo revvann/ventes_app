@@ -65,7 +65,7 @@ class ProspectFormCreateListener {
     return await _dataSource.fetchCustomer(search);
   }
 
-  void onRefresh() {
+  Future onRefresh() async {
     _properties.refresh();
   }
 

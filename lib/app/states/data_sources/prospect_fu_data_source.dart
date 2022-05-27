@@ -18,14 +18,6 @@ class ProspectFormUpdateDataSource implements FetchDataContract, UpdateContract 
 
   final ProspectFormUpdatePresenter _presenter = ProspectFormUpdatePresenter();
 
-  final _users = <DropdownItem<int, UserDetail>>[].obs;
-  List<DropdownItem<int, UserDetail>> get users => _users.value;
-  set users(List<DropdownItem<int, UserDetail>> value) => _users.value = value;
-
-  final _bpcustomers = <DropdownItem<int, BpCustomer>>[].obs;
-  List<DropdownItem<int, BpCustomer>> get bpcustomers => _bpcustomers.value;
-  set bpcustomers(List<DropdownItem<int, BpCustomer>> value) => _bpcustomers.value = value;
-
   final Rx<Map<int, String>> _followUpItems = Rx<Map<int, String>>({});
   set followUpItems(Map<int, String> value) => _followUpItems.value = value;
   Map<int, String> get followUpItems => _followUpItems.value;
@@ -38,6 +30,8 @@ class ProspectFormUpdateDataSource implements FetchDataContract, UpdateContract 
   }
 
   void fetchData(int prospectid) => _presenter.fetchData(prospectid);
+  Future<List<UserDetail>> fetchUser(String? search) async => await _presenter.fetchUsers(search);
+  Future<List<BpCustomer>> fetchCustomer(String? search) async => await _presenter.fetchCustomers(search);
   void updateProspect(int prospectid, Map<String, dynamic> data) => _presenter.updateProspect(prospectid, data);
 
   @override
@@ -48,28 +42,6 @@ class ProspectFormUpdateDataSource implements FetchDataContract, UpdateContract 
 
   @override
   onLoadSuccess(Map data) {
-    if (data['users'] != null) {
-      List<UserDetail> userList = data['users'].map<UserDetail>((item) => UserDetail.fromJson(item)).toList();
-      _formSource.prosowner = userList.isNotEmpty ? userList.first : null;
-      users = userList
-          .map<DropdownItem<int, UserDetail>>((item) => DropdownItem<int, UserDetail>(
-                value: item,
-                key: item.userdtid!,
-              ))
-          .toList();
-    }
-
-    if (data['bpcustomers'] != null) {
-      List<BpCustomer> bpCustomerList = data['bpcustomers'].map<BpCustomer>((item) => BpCustomer.fromJson(item)).toList();
-      _formSource.proscustomer = bpCustomerList.isNotEmpty ? bpCustomerList.first : null;
-      bpcustomers = bpCustomerList
-          .map<DropdownItem<int, BpCustomer>>((item) => DropdownItem<int, BpCustomer>(
-                value: item,
-                key: item.sbcid!,
-              ))
-          .toList();
-    }
-
     if (data['followup'] != null) {
       List<DBType> followUpList = data['followup'].map<DBType>((item) => DBType.fromJson(item)).toList();
       _formSource.prostype = followUpList.isEmpty ? null : followUpList.first.typeid!;

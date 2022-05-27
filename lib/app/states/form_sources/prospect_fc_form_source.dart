@@ -65,6 +65,30 @@ class ProspectFormCreateFormSource {
     validator = ProspectFormCreateValidator(this);
   }
 
+  close() {
+    prosnameTEC.dispose();
+    prosvalueTEC.dispose();
+    prosdescTEC.dispose();
+    Get.delete<SearchableDropdownController<UserDetail>>();
+    Get.delete<SearchableDropdownController<BpCustomer>>();
+  }
+
+  reset() {
+    prosnameTEC.text = '';
+    prosvalueTEC.text = '';
+    prosdescTEC.text = '';
+    prosstartdate = null;
+    prosenddate = null;
+    prosexpenddate = null;
+    prosowner = null;
+    proscustomer = null;
+    prostype = null;
+    prosstatus = null;
+    prosstage = null;
+    customerDropdownController.reset();
+    ownerDropdownController.reset();
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'prospectname': prosname,

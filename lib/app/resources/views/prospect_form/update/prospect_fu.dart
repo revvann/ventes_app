@@ -12,6 +12,7 @@ import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
 import 'package:ventes/app/resources/widgets/keyable_selectbar.dart';
 import 'package:ventes/app/resources/widgets/regular_date_picker.dart';
 import 'package:ventes/app/resources/widgets/regular_input.dart';
+import 'package:ventes/app/resources/widgets/searchable_dropdown.dart';
 import 'package:ventes/app/resources/widgets/top_navigation.dart';
 import 'package:ventes/app/states/controllers/prospect_fu_state_controller.dart';
 import 'package:ventes/constants/regular_color.dart';
@@ -76,7 +77,7 @@ class ProspectFormUpdateView extends View<ProspectFormUpdateStateController> {
       ).build(context),
       body: SafeArea(
         child: RefreshIndicator(
-          onRefresh: () async {},
+          onRefresh: state.listener.onRefresh,
           child: Obx(
             () {
               return Container(

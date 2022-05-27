@@ -73,7 +73,7 @@ class ProspectFormCreateView extends View<ProspectFormCreateStateController> {
       ).build(context),
       body: SafeArea(
         child: RefreshIndicator(
-          onRefresh: () async {},
+          onRefresh: state.listener.onRefresh,
           child: Obx(
             () {
               return Container(

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ventes/app/models/bp_customer_model.dart';
 import 'package:ventes/app/models/user_detail_model.dart';
-import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
+import 'package:ventes/app/resources/widgets/searchable_dropdown.dart';
 import 'package:ventes/app/states/data_sources/prospect_fu_data_source.dart';
 import 'package:ventes/app/states/form_validators/prospect_fu_validator.dart';
 import 'package:ventes/constants/formatters/currency_formatter.dart';
@@ -11,8 +11,8 @@ import 'package:ventes/helpers/function_helpers.dart';
 class ProspectFormUpdateFormSource {
   ProspectFormUpdateDataSource get _dataSource => Get.find<ProspectFormUpdateDataSource>();
 
-  KeyableDropdownController<int, UserDetail> ownerDropdownController = Get.put(KeyableDropdownController<int, UserDetail>());
-  KeyableDropdownController<int, BpCustomer> customerDropdownController = Get.put(KeyableDropdownController<int, BpCustomer>());
+  SearchableDropdownController<UserDetail> ownerDropdownController = Get.put(SearchableDropdownController<UserDetail>());
+  SearchableDropdownController<BpCustomer> customerDropdownController = Get.put(SearchableDropdownController<BpCustomer>());
 
   late ProspectFormUpdateValidator validator;
 
@@ -65,6 +65,30 @@ class ProspectFormUpdateFormSource {
 
   init() {
     validator = ProspectFormUpdateValidator(this);
+  }
+
+  void close() {
+    prosnameTEC.dispose();
+    prosvalueTEC.dispose();
+    prosdescTEC.dispose();
+    Get.delete<SearchableDropdownController<UserDetail>>();
+    Get.delete<SearchableDropdownController<BpCustomer>>();
+  }
+
+  reset() {
+    prosnameTEC.text = '';
+    prosvalueTEC.text = '';
+    prosdescTEC.text = '';
+    prosstartdate = null;
+    prosenddate = null;
+    prosexpenddate = null;
+    prosowner = null;
+    proscustomer = null;
+    prosstatus = null;
+    prosstage = null;
+    prostype = null;
+    customerDropdownController.reset();
+    ownerDropdownController.reset();
   }
 
   prepareValue() {

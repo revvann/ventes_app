@@ -100,6 +100,11 @@ class SearchableDropdownController<T> extends GetxController with GetSingleTicke
     isLoading = false;
   }
 
+  reset() {
+    selectedItem = [];
+    _itemFilter();
+  }
+
   void toggleDropdown({bool close = false}) async {
     OverlayState? overlay = Overlay.of(context);
     if (isOpen || close) {
@@ -229,6 +234,7 @@ class SearchableDropdownController<T> extends GetxController with GetSingleTicke
                                                           } else {
                                                             selectedItem = [...selectedItem, item.value];
                                                           }
+                                                          selectedValue = isMultiple ? selectedItem : firstSelectedItem;
                                                           onChange?.call(items.where((item) => onCompare(selectedValue, item.value)).toList());
                                                         } else {
                                                           if (isSelected) {
@@ -238,7 +244,8 @@ class SearchableDropdownController<T> extends GetxController with GetSingleTicke
                                                           } else {
                                                             selectedItem = [item.value];
                                                           }
-                                                          onChange?.call(firstSelectedItem == null ? null : items.firstWhere((item) => onCompare(selectedItem, item.value)));
+                                                          selectedValue = isMultiple ? selectedItem : firstSelectedItem;
+                                                          onChange?.call(firstSelectedItem == null ? null : items.firstWhere((item) => onCompare(selectedValue, item.value)));
                                                         }
                                                       },
                                                       child: Container(

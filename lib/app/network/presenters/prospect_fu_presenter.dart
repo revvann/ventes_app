@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:ventes/app/models/auth_model.dart';
+import 'package:ventes/app/models/bp_customer_model.dart';
 import 'package:ventes/app/models/user_detail_model.dart';
 import 'package:ventes/app/network/contracts/update_contract.dart';
 import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
@@ -36,18 +37,20 @@ class ProspectFormUpdatePresenter {
     return await _prospectService.update(id, data);
   }
 
-  Future<Response> _getUsers() async {
+  Future<Response> _getUsers([String? search]) async {
     UserDetail? activeUser = await findActiveUser();
     Map<String, dynamic> params = {
       'userdtbpid': activeUser?.userdtbpid.toString(),
+      'search': search,
     };
     return await _userService.select(params);
   }
 
-  Future<Response> _getBpCustomers() async {
+  Future<Response> _getBpCustomers([String? search]) async {
     UserDetail? activeUser = await findActiveUser();
     Map<String, dynamic> params = {
       'sbcbpid': activeUser?.userdtbpid.toString(),
+      'search': search,
     };
     return await _bpCustomerService.select(params);
   }
@@ -66,6 +69,22 @@ class ProspectFormUpdatePresenter {
 
   Future<Response> _getProspect(int id) async {
     return await _prospectService.show(id);
+  }
+
+  Future<List<UserDetail>> fetchUsers(String? search) async {
+    Response response = await _getUsers(search);
+    if (response.statusCode == 200) {
+      return response.body.map<UserDetail>((item) => UserDetail.fromJson(item)).toList();
+    }
+    return [];
+  }
+
+  Future<List<BpCustomer>> fetchCustomers(String? search) async {
+    Response response = await _getBpCustomers(search);
+    if (response.statusCode == 200) {
+      return response.body.map<BpCustomer>((item) => BpCustomer.fromJson(item)).toList();
+    }
+    return [];
   }
 
   void fetchData(int prospectid) async {

@@ -34,6 +34,7 @@ class EditorInput extends StatelessWidget {
       hintText: hintText,
       value: value,
       enabled: enabled,
+      minLines: 3,
     );
   }
 }
