@@ -7,6 +7,7 @@ import 'package:ventes/app/network/services/bp_customer_service.dart';
 import 'package:ventes/app/network/services/customer_service.dart';
 import 'package:ventes/app/network/services/gmaps_service.dart';
 import 'package:ventes/app/network/services/place_service.dart';
+import 'package:ventes/app/network/services/prospect_detail_service.dart';
 import 'package:ventes/app/network/services/prospect_service.dart';
 import 'package:ventes/app/network/services/schedule_service.dart';
 import 'package:ventes/app/network/services/type_service.dart';
@@ -65,6 +66,7 @@ class MyApp extends StatelessWidget {
         Get.lazyPut(() => TypeService());
         Get.lazyPut(() => UserService());
         Get.lazyPut(() => KeyboardStateController());
+        Get.lazyPut(() => ProspectDetailService());
       }),
     );
   }

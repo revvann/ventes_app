@@ -3,7 +3,7 @@
 part of 'package:ventes/app/resources/views/prospect_detail/prospect_detail.dart';
 
 class _FloatingButton extends StatelessWidget {
-  const _FloatingButton({Key? key}) : super(key: key);
+  ProspectDetailStateController get state => Get.find<ProspectDetailStateController>();
 
   @override
   Widget build(BuildContext context) {
@@ -19,18 +19,19 @@ class _FloatingButton extends StatelessWidget {
       children: [
         _buildChild('assets/svg/daily-visit.svg', "Visit"),
         _buildChild('assets/svg/contact.svg', "Contact"),
-        _buildChild('assets/svg/plus.svg', "Add Detail"),
+        _buildChild('assets/svg/plus.svg', "Add Detail", state.listener.navigateToProspectDetailForm),
       ],
     );
   }
 
-  SpeedDialChild _buildChild(String icon, String label) {
+  SpeedDialChild _buildChild(String icon, String label, [Function()? onTap]) {
     return SpeedDialChild(
       child: SvgPicture.asset(
         icon,
         width: RegularSize.m,
         color: Colors.white,
       ),
+      onTap: onTap,
       backgroundColor: RegularColor.primary,
       labelShadow: [
         BoxShadow(
