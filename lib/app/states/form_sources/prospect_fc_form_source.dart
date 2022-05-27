@@ -9,8 +9,8 @@ import 'package:ventes/constants/formatters/currency_formatter.dart';
 import 'package:ventes/helpers/function_helpers.dart';
 
 class ProspectFormCreateFormSource {
-  SearchableDropdownController<int, UserDetail> ownerDropdownController = Get.put(SearchableDropdownController<int, UserDetail>());
-  KeyableDropdownController<int, BpCustomer> customerDropdownController = Get.put(KeyableDropdownController<int, BpCustomer>());
+  SearchableDropdownController<UserDetail> ownerDropdownController = Get.put(SearchableDropdownController<UserDetail>());
+  SearchableDropdownController<BpCustomer> customerDropdownController = Get.put(SearchableDropdownController<BpCustomer>());
 
   late ProspectFormCreateValidator validator;
 

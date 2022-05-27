@@ -7,24 +7,21 @@ class _CustomerDropdown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(
-      () {
-        return KeyableDropdown<int, BpCustomer>(
-          controller: state.formSource.customerDropdownController,
-          nullable: false,
-          child: Obx(() {
-            return RegularInput(
-              enabled: false,
-              label: "Customer",
-              hintText: "Select customer",
-              value: state.formSource.proscustomerString,
-            );
-          }),
-          onChange: state.listener.onCustomerSelected,
-          items: state.dataSource.bpcustomers,
-          itemBuilder: buildWidget,
+    return SearchableDropdown<BpCustomer>(
+      controller: state.formSource.customerDropdownController,
+      nullable: false,
+      child: Obx(() {
+        return RegularInput(
+          enabled: false,
+          label: "Customer",
+          hintText: "Select customer",
+          value: state.formSource.proscustomerString,
         );
-      },
+      }),
+      onChange: state.listener.onCustomerSelected,
+      itemBuilder: buildWidget,
+      onCompare: state.listener.onCustomerCompared,
+      onItemFilter: state.listener.onCustomerFilter,
     );
   }
 

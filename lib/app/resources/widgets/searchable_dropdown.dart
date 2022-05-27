@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ventes/app/resources/widgets/border_input.dart';
@@ -7,7 +9,7 @@ import 'package:ventes/app/states/controllers/keyboard_state_controller.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/constants/styles/behavior_style.dart';
 
-class SearchableDropdownController<K, V> extends GetxController with GetSingleTickerProviderStateMixin {
+class SearchableDropdownController<T> extends GetxController with GetSingleTickerProviderStateMixin {
   final double maxHeight = 200;
 
   final LayerLink layerLink = LayerLink();
@@ -18,22 +20,24 @@ class SearchableDropdownController<K, V> extends GetxController with GetSingleTi
   GlobalKey buttonWidgetKey = GlobalKey();
   late BuildContext context;
 
-  BorderInput searchField = BorderInput(
-    hintText: "Search",
-  );
+  final TextEditingController _searchTEC = TextEditingController();
+  Timer? _debounce;
 
   bool isMultiple = false;
   bool nullable = true;
   final _isOpen = false.obs;
-  final _selectedItem = Rx<List<K>>([]);
-  final Rx<List<DropdownItem<K, V>>> _items = Rx<List<DropdownItem<K, V>>>([]);
+  final _isLoading = false.obs;
+  final _selectedItem = Rx<List<T>>([]);
+  final Rx<List<DropdownItem<T>>> _items = Rx<List<DropdownItem<T>>>([]);
   final Rx<bool> _keyboardIsOpen = Rx<bool>(false);
 
+  late Future<List<T>> Function(String?) onItemFilter;
   Function(dynamic selectedItem)? onChange;
-  Widget Function(DropdownItem<K, V>, bool)? itemBuilder;
+  late bool Function(dynamic selectedItem, T item) onCompare;
+  Widget Function(DropdownItem<T>, bool)? itemBuilder;
 
-  List<DropdownItem<K, V>> get items => _items.value;
-  set items(List<DropdownItem<K, V>> value) => _items.value = value;
+  List<DropdownItem<T>> get items => _items.value;
+  set items(List<DropdownItem<T>> value) => _items.value = value;
 
   bool get isOpen => _isOpen.value;
   set isOpen(bool value) => _isOpen.value = value;
@@ -41,30 +45,59 @@ class SearchableDropdownController<K, V> extends GetxController with GetSingleTi
   bool get keyboardIsOpen => _keyboardIsOpen.value;
   set keyboardIsOpen(bool value) => _keyboardIsOpen.value = value;
 
-  List<K> get selectedItem => _selectedItem.value;
-  set selectedItem(List<K> value) => _selectedItem.value = value;
-  K? get firstSelectedItem => selectedItem.isNotEmpty ? _selectedItem.value.first : null;
+  bool get isLoading => _isLoading.value;
+  set isLoading(bool value) => _isLoading.value = value;
+
+  List<T> get selectedItem => _selectedItem.value;
+  set selectedItem(List<T> value) => _selectedItem.value = value;
+  T? get firstSelectedItem => selectedItem.isNotEmpty ? _selectedItem.value.first : null;
 
   @override
   void onInit() {
     super.onInit();
-    Get.find<KeyboardStateController>().add(testKeyboard);
+    Get.find<KeyboardStateController>().add(_onKeyboardChanged);
     _animationController = AnimationController(vsync: this, duration: Duration(milliseconds: 200));
     _expandAnimation = CurvedAnimation(
       parent: _animationController,
       curve: Curves.easeInOut,
     );
+    _searchTEC.addListener(() {
+      _onSearchChanged();
+    });
   }
 
   @override
   void dispose() {
+    _debounce?.cancel();
     _animationController.dispose();
-    Get.find<KeyboardStateController>().remove(testKeyboard);
+    Get.find<KeyboardStateController>().remove(_onKeyboardChanged);
     super.dispose();
   }
 
-  testKeyboard(bool visible) {
+  _onKeyboardChanged(bool visible) {
     keyboardIsOpen = visible;
+  }
+
+  _onSearchChanged() {
+    if (_debounce?.isActive ?? false) _debounce?.cancel();
+    _debounce = Timer(const Duration(milliseconds: 500), _itemFilter);
+  }
+
+  _itemFilter() async {
+    isLoading = true;
+    List<T> newItems = await onItemFilter(_searchTEC.text);
+    items = newItems.map<DropdownItem<T>>((item) => DropdownItem(value: item)).toList();
+    if (selectedItem.isEmpty && !nullable) {
+      selectedItem = newItems.isNotEmpty ? [newItems.first] : [];
+
+      dynamic selectedValue = isMultiple ? selectedItem : firstSelectedItem;
+      if (isMultiple) {
+        onChange?.call(items.where((item) => onCompare(selectedValue, item.value)).toList());
+      } else {
+        onChange?.call(firstSelectedItem == null ? null : items.firstWhere((item) => onCompare(selectedValue, item.value)));
+      }
+    }
+    isLoading = false;
   }
 
   void toggleDropdown({bool close = false}) async {
@@ -82,6 +115,11 @@ class SearchableDropdownController<K, V> extends GetxController with GetSingleTi
   }
 
   OverlayEntry createOverlayEntry() {
+    BorderInput searchField = BorderInput(
+      hintText: "Search",
+      controller: _searchTEC,
+    );
+
     RenderBox renderBox = buttonWidgetKey.currentContext!.findRenderObject() as RenderBox;
     var size = renderBox.size;
 
@@ -110,13 +148,21 @@ class SearchableDropdownController<K, V> extends GetxController with GetSingleTi
                   double bottomMaxHeight = MediaQuery.of(context).size.height - topOffset - 15;
                   bool isTop = bottomMaxHeight - keyboardInsets < 200;
 
+                  double keyboardDy = MediaQuery.of(context).size.height - keyboardInsets;
+                  double marginBottom = 0;
+
+                  if (isTop && offset.dy > keyboardDy) {
+                    marginBottom = offset.dy - keyboardDy;
+                    bottomOffset = bottomOffset + marginBottom;
+                  }
+
                   return Positioned(
                     left: offset.dx,
                     top: !isTop ? topOffset : null,
                     bottom: isTop ? bottomOffset : null,
                     width: size.width,
                     child: CompositedTransformFollower(
-                      offset: Offset(0, !isTop ? 5 : -5),
+                      offset: Offset(0, !isTop ? 5 : -5 - marginBottom),
                       link: layerLink,
                       showWhenUnlinked: false,
                       followerAnchor: isTop ? Alignment.bottomCenter : Alignment.topCenter,
@@ -143,71 +189,71 @@ class SearchableDropdownController<K, V> extends GetxController with GetSingleTi
                               constraints: BoxConstraints(
                                 maxHeight: maxHeight,
                               ),
-                              child: Obx(() {
-                                return Column(
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: RegularSize.s,
-                                      ),
-                                      child: searchField,
+                              child: Column(
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: RegularSize.s,
                                     ),
-                                    SizedBox(height: RegularSize.xs),
-                                    Expanded(
-                                      child: ScrollConfiguration(
+                                    child: searchField,
+                                  ),
+                                  SizedBox(height: RegularSize.xs),
+                                  Expanded(
+                                    child: Obx(() {
+                                      return ScrollConfiguration(
                                         behavior: BehaviorStyle(),
-                                        child: ListView.builder(
-                                          shrinkWrap: true,
-                                          padding: EdgeInsets.all(RegularSize.s),
-                                          itemCount: items.length,
-                                          itemBuilder: (context, index) {
-                                            return Obx(() {
-                                              DropdownItem<K, V> item = items[index];
+                                        child: isLoading
+                                            ? Center(
+                                                child: CircularProgressIndicator(),
+                                              )
+                                            : ListView.builder(
+                                                shrinkWrap: true,
+                                                padding: EdgeInsets.all(RegularSize.s),
+                                                itemCount: items.length,
+                                                itemBuilder: (context, index) {
+                                                  return Obx(() {
+                                                    DropdownItem<T> item = items[index];
 
-                                              bool isSelected;
-                                              if (isMultiple) {
-                                                isSelected = selectedItem.contains(item.key);
-                                              } else {
-                                                isSelected = firstSelectedItem == item.key;
-                                              }
+                                                    dynamic selectedValue = isMultiple ? selectedItem : firstSelectedItem;
+                                                    bool isSelected = onCompare(selectedValue, item.value);
 
-                                              return GestureDetector(
-                                                onTap: () {
-                                                  if (isMultiple) {
-                                                    if (isSelected) {
-                                                      if (nullable) {
-                                                        _selectedItem.update((val) {
-                                                          val?.remove(item.key);
-                                                        });
-                                                      }
-                                                    } else {
-                                                      selectedItem = [...selectedItem, item.key];
-                                                    }
-                                                    onChange?.call(items.where((item) => selectedItem.contains(item.key)).toList());
-                                                  } else {
-                                                    if (isSelected) {
-                                                      if (nullable) {
-                                                        selectedItem = [];
-                                                      }
-                                                    } else {
-                                                      selectedItem = [item.key];
-                                                    }
-                                                    onChange?.call(firstSelectedItem == null ? null : items.firstWhere((item) => item.key == firstSelectedItem));
-                                                  }
+                                                    return GestureDetector(
+                                                      onTap: () {
+                                                        if (isMultiple) {
+                                                          if (isSelected) {
+                                                            if (nullable) {
+                                                              _selectedItem.update((val) {
+                                                                val?.removeWhere((element) => onCompare(selectedValue, element));
+                                                              });
+                                                            }
+                                                          } else {
+                                                            selectedItem = [...selectedItem, item.value];
+                                                          }
+                                                          onChange?.call(items.where((item) => onCompare(selectedValue, item.value)).toList());
+                                                        } else {
+                                                          if (isSelected) {
+                                                            if (nullable) {
+                                                              selectedItem = [];
+                                                            }
+                                                          } else {
+                                                            selectedItem = [item.value];
+                                                          }
+                                                          onChange?.call(firstSelectedItem == null ? null : items.firstWhere((item) => onCompare(selectedItem, item.value)));
+                                                        }
+                                                      },
+                                                      child: Container(
+                                                        margin: EdgeInsets.symmetric(vertical: 2),
+                                                        child: item.child ?? itemBuilder!(item, isSelected),
+                                                      ),
+                                                    );
+                                                  });
                                                 },
-                                                child: Container(
-                                                  margin: EdgeInsets.symmetric(vertical: 2),
-                                                  child: item.child ?? itemBuilder!(item, isSelected),
-                                                ),
-                                              );
-                                            });
-                                          },
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                );
-                              }),
+                                              ),
+                                      );
+                                    }),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
@@ -224,12 +270,12 @@ class SearchableDropdownController<K, V> extends GetxController with GetSingleTi
   }
 }
 
-class SearchableDropdown<K, V> extends StatelessWidget {
+class SearchableDropdown<T> extends StatelessWidget {
   final Widget child;
 
   double? width;
   double? height;
-  SearchableDropdownController<K, V> controller;
+  SearchableDropdownController<T> controller;
 
   ///
   /// If isMultiple is true, selectedItem is a list of selected items
@@ -245,31 +291,24 @@ class SearchableDropdown<K, V> extends StatelessWidget {
 
   SearchableDropdown({
     required this.child,
-    required List<DropdownItem<K, V>> items,
     required this.controller,
     this.width,
     this.height,
     this.onChange,
     bool isMultiple = false,
     bool nullable = true,
-    Widget Function(DropdownItem<K, V>, bool)? itemBuilder,
+    Widget Function(DropdownItem<T>, bool)? itemBuilder,
     this.selectedKey,
+    required Future<List<T>> Function(String?) onItemFilter,
+    required bool Function(dynamic selectedItem, T item) onCompare,
   }) {
-    controller.items = items;
     controller.onChange = onChange;
     controller.itemBuilder = itemBuilder;
     controller.isMultiple = isMultiple;
     controller.nullable = nullable;
-
-    if (selectedKey == null && !nullable && items.isNotEmpty) {
-      selectedKey = items.first.key;
-    }
-
-    if (selectedKey is K) {
-      controller.selectedItem = [selectedKey];
-    } else if (selectedKey is List<K>) {
-      controller.selectedItem = selectedKey;
-    }
+    controller.onItemFilter = onItemFilter;
+    controller.onCompare = onCompare;
+    controller._itemFilter();
   }
 
   @override
@@ -290,10 +329,9 @@ class SearchableDropdown<K, V> extends StatelessWidget {
   }
 }
 
-class DropdownItem<K, V> {
-  final K key;
-  final V value;
+class DropdownItem<T> {
+  final T value;
   final Widget? child;
 
-  DropdownItem({required this.key, required this.value, this.child});
+  DropdownItem({required this.value, this.child});
 }

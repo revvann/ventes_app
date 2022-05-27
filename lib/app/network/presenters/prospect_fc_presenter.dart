@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:ventes/app/models/auth_model.dart';
+import 'package:ventes/app/models/bp_customer_model.dart';
 import 'package:ventes/app/models/user_detail_model.dart';
 import 'package:ventes/app/network/contracts/create_contract.dart';
 import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
@@ -36,18 +37,20 @@ class ProspectFormCreatePresenter {
     return await _prospectService.store(data);
   }
 
-  Future<Response> _getUsers() async {
+  Future<Response> _getUsers([String? search]) async {
     UserDetail? activeUser = await findActiveUser();
     Map<String, dynamic> params = {
       'userdtbpid': activeUser?.userdtbpid.toString(),
+      'search': search,
     };
     return await _userService.select(params);
   }
 
-  Future<Response> _getBpCustomers() async {
+  Future<Response> _getBpCustomers([String? search]) async {
     UserDetail? activeUser = await findActiveUser();
     Map<String, dynamic> params = {
       'sbcbpid': activeUser?.userdtbpid.toString(),
+      'search': search,
     };
     return await _bpCustomerService.select(params);
   }
@@ -64,18 +67,30 @@ class ProspectFormCreatePresenter {
     return await _typeService.byCode({'typecd': ProspectString.stageTypeCode});
   }
 
+  Future<List<UserDetail>> fetchUsers(String? search) async {
+    Response response = await _getUsers(search);
+    if (response.statusCode == 200) {
+      return response.body.map<UserDetail>((item) => UserDetail.fromJson(item)).toList();
+    }
+    return [];
+  }
+
+  Future<List<BpCustomer>> fetchCustomers(String? search) async {
+    Response response = await _getBpCustomers(search);
+    if (response.statusCode == 200) {
+      return response.body.map<BpCustomer>((item) => BpCustomer.fromJson(item)).toList();
+    }
+    return [];
+  }
+
   void fetchData() async {
     Map data = {};
     try {
-      Response response = await _getUsers();
-      Response bpResponse = await _getBpCustomers();
       Response followUpResponse = await _getFollowUp();
       Response statusResponse = await _getStatus();
       Response stageResponse = await _getStage();
 
-      if (response.statusCode == 200 && bpResponse.statusCode == 200 && followUpResponse.statusCode == 200 && statusResponse.statusCode == 200 && stageResponse.statusCode == 200) {
-        data['users'] = response.body;
-        data['bpcustomers'] = bpResponse.body;
+      if (followUpResponse.statusCode == 200 && statusResponse.statusCode == 200 && stageResponse.statusCode == 200) {
         data['followup'] = followUpResponse.body;
         data['status'] = statusResponse.body;
         data['stage'] = stageResponse.body;

@@ -6,7 +6,6 @@ import 'package:ventes/app/network/contracts/create_contract.dart';
 import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
 import 'package:ventes/app/network/presenters/prospect_fc_presenter.dart';
 import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
-import 'package:ventes/app/resources/widgets/searchable_dropdown.dart' as SearchableDropdown;
 import 'package:ventes/app/states/form_sources/prospect_fc_form_source.dart';
 import 'package:ventes/app/states/listeners/prospect_fc_listener.dart';
 import 'package:ventes/constants/strings/prospect_string.dart';
@@ -18,14 +17,6 @@ class ProspectFormCreateDataSource implements FetchDataContract, CreateContract 
 
   final ProspectFormCreatePresenter _presenter = ProspectFormCreatePresenter();
 
-  final _users = <SearchableDropdown.DropdownItem<int, UserDetail>>[].obs;
-  List<SearchableDropdown.DropdownItem<int, UserDetail>> get users => _users.value;
-  set users(List<SearchableDropdown.DropdownItem<int, UserDetail>> value) => _users.value = value;
-
-  final _bpcustomers = <DropdownItem<int, BpCustomer>>[].obs;
-  List<DropdownItem<int, BpCustomer>> get bpcustomers => _bpcustomers.value;
-  set bpcustomers(List<DropdownItem<int, BpCustomer>> value) => _bpcustomers.value = value;
-
   final Rx<Map<int, String>> _followUpItems = Rx<Map<int, String>>({});
   set followUpItems(Map<int, String> value) => _followUpItems.value = value;
   Map<int, String> get followUpItems => _followUpItems.value;
@@ -36,6 +27,8 @@ class ProspectFormCreateDataSource implements FetchDataContract, CreateContract 
   }
 
   void fetchData() => _presenter.fetchData();
+  Future<List<UserDetail>> fetchUser(String? search) async => await _presenter.fetchUsers(search);
+  Future<List<BpCustomer>> fetchCustomer(String? search) async => await _presenter.fetchCustomers(search);
   void createProspect(Map<String, dynamic> data) => _presenter.createProspect(data);
 
   @override
@@ -46,28 +39,6 @@ class ProspectFormCreateDataSource implements FetchDataContract, CreateContract 
 
   @override
   onLoadSuccess(Map data) {
-    if (data['users'] != null) {
-      List<UserDetail> userList = data['users'].map<UserDetail>((item) => UserDetail.fromJson(item)).toList();
-      _formSource.prosowner = userList.isNotEmpty ? userList.first : null;
-      users = userList
-          .map<SearchableDropdown.DropdownItem<int, UserDetail>>((item) => SearchableDropdown.DropdownItem<int, UserDetail>(
-                value: item,
-                key: item.userdtid!,
-              ))
-          .toList();
-    }
-
-    if (data['bpcustomers'] != null) {
-      List<BpCustomer> bpCustomerList = data['bpcustomers'].map<BpCustomer>((item) => BpCustomer.fromJson(item)).toList();
-      _formSource.proscustomer = bpCustomerList.isNotEmpty ? bpCustomerList.first : null;
-      bpcustomers = bpCustomerList
-          .map<DropdownItem<int, BpCustomer>>((item) => DropdownItem<int, BpCustomer>(
-                value: item,
-                key: item.sbcid!,
-              ))
-          .toList();
-    }
-
     if (data['followup'] != null) {
       List<DBType> followUpList = data['followup'].map<DBType>((item) => DBType.fromJson(item)).toList();
       _formSource.prostype = followUpList.isEmpty ? null : followUpList.first.typeid!;
