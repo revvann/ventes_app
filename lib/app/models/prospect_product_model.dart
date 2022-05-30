@@ -1,3 +1,4 @@
+import 'package:ventes/app/models/product_model.dart';
 import 'package:ventes/app/models/prospect_model.dart';
 import 'package:ventes/app/models/type_model.dart';
 import 'package:ventes/core/model.dart';
@@ -5,6 +6,7 @@ import 'package:ventes/core/model.dart';
 class ProspectProduct extends Model {
   int? prosproductid;
   int? prosproductprospectid;
+  int? prosproductproductid;
   double? prosproductprice;
   int? prosproductqty;
   double? prosproducttax;
@@ -13,9 +15,11 @@ class ProspectProduct extends Model {
   int? prosproducttaxtypeid;
   Prospect? prosproductprospect;
   DBType? prosproducttaxtype;
+  Product? prosproductproduct;
 
   ProspectProduct({
     this.prosproductid,
+    this.prosproductproductid,
     this.prosproductprospectid,
     this.prosproductprice,
     this.prosproductqty,
@@ -25,6 +29,7 @@ class ProspectProduct extends Model {
     this.prosproducttaxtypeid,
     this.prosproductprospect,
     this.prosproducttaxtype,
+    this.prosproductproduct,
     String? createddate,
     String? updateddate,
     int? createdby,
@@ -40,6 +45,7 @@ class ProspectProduct extends Model {
 
   ProspectProduct.fromJson(Map<String, dynamic> json) {
     prosproductid = json['prosproductid'];
+    prosproductproductid = json['prosproductproductid'];
     prosproductprospectid = json['prosproductprospectid'];
     prosproductprice = json['prosproductprice'] is String ? double.tryParse(json['prosproductprice']) : json['prosproductprice'];
     prosproductqty = json['prosproductqty'];
@@ -56,6 +62,10 @@ class ProspectProduct extends Model {
       prosproducttaxtype = DBType.fromJson(json['prosproducttaxtype']);
     }
 
+    if (json['prosproductproduct'] != null) {
+      prosproductproduct = Product.fromJson(json['prosproductproduct']);
+    }
+
     super.fromJson(json);
   }
 
@@ -63,6 +73,7 @@ class ProspectProduct extends Model {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = super.toJson();
     data['prosproductid'] = prosproductid;
+    data['prosproductproductid'] = prosproductproductid;
     data['prosproductprospectid'] = prosproductprospectid;
     data['prosproductprice'] = prosproductprice;
     data['prosproductqty'] = prosproductqty;
@@ -77,6 +88,10 @@ class ProspectProduct extends Model {
 
     if (prosproducttaxtype != null) {
       data['prosproducttaxtype'] = prosproducttaxtype?.toJson();
+    }
+
+    if (prosproductproduct != null) {
+      data['prosproductproduct'] = prosproductproduct?.toJson();
     }
 
     return data;

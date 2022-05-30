@@ -1,20 +1,21 @@
 import 'package:get/get.dart';
+import 'package:ventes/app/models/prospect_detail_model.dart';
 import 'package:ventes/app/models/prospect_model.dart';
 import 'package:ventes/app/models/type_model.dart';
-import 'package:ventes/app/network/contracts/create_contract.dart';
+import 'package:ventes/app/network/contracts/update_contract.dart';
 import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
-import 'package:ventes/app/network/presenters/prospect_detail_fc_presenter.dart';
+import 'package:ventes/app/network/presenters/prospect_detail_fu_presenter.dart';
 import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
-import 'package:ventes/app/states/form_sources/prospect_detail_fc_form_source.dart';
-import 'package:ventes/app/states/listeners/prospect_detail_fc_listener.dart';
+import 'package:ventes/app/states/form_sources/prospect_detail_fu_form_source.dart';
+import 'package:ventes/app/states/listeners/prospect_detail_fu_listener.dart';
 import 'package:ventes/constants/strings/prospect_string.dart';
 import 'package:ventes/helpers/task_helper.dart';
 
-class ProspectDetailFormCreateDataSource implements FetchDataContract, CreateContract {
-  ProspectDetailFormCreateListener get _listener => Get.find<ProspectDetailFormCreateListener>();
-  ProspectDetailFormCreateFormSource get _formSource => Get.find<ProspectDetailFormCreateFormSource>();
+class ProspectDetailFormUpdateDataSource implements FetchDataContract, UpdateContract {
+  ProspectDetailFormUpdateListener get _listener => Get.find<ProspectDetailFormUpdateListener>();
+  ProspectDetailFormUpdateFormSource get _formSource => Get.find<ProspectDetailFormUpdateFormSource>();
 
-  final ProspectDetailFormCreatePresenter _presenter = ProspectDetailFormCreatePresenter();
+  final ProspectDetailFormUpdatePresenter _presenter = ProspectDetailFormUpdatePresenter();
 
   final Rx<List<DropdownItem<int, DBType>>> _categoryItems = Rx<List<DropdownItem<int, DBType>>>([]);
   set categoryItems(List<DropdownItem<int, DBType>> value) => _categoryItems.value = value;
@@ -28,17 +29,17 @@ class ProspectDetailFormCreateDataSource implements FetchDataContract, CreateCon
   set taxItems(List<DropdownItem<int, DBType>> value) => _taxItems.value = value;
   List<DropdownItem<int, DBType>> get taxItems => _taxItems.value;
 
-  final Rx<Prospect?> _prospect = Rx<Prospect?>(null);
-  set prospect(Prospect? value) => _prospect.value = value;
-  Prospect? get prospect => _prospect.value;
+  final Rx<ProspectDetail?> _prospectdetail = Rx<ProspectDetail?>(null);
+  set prospectdetail(ProspectDetail? value) => _prospectdetail.value = value;
+  ProspectDetail? get prospectdetail => _prospectdetail.value;
 
   init() {
     _presenter.fetchDataContract = this;
-    _presenter.createContract = this;
+    _presenter.updateContract = this;
   }
 
   void fetchData(int id) => _presenter.fetchData(id);
-  void createData(Map<String, dynamic> data) => _presenter.createData(data);
+  void updateData(int id, Map<String, dynamic> data) => _presenter.updateData(id, data);
 
   @override
   onLoadError(String message) => _listener.onLoadError(message);
@@ -50,35 +51,27 @@ class ProspectDetailFormCreateDataSource implements FetchDataContract, CreateCon
   onLoadSuccess(Map data) {
     if (data['categories'] != null) {
       List<DBType> categories = data['categories'].map<DBType>((item) => DBType.fromJson(item)).toList();
-      _formSource.prosdtcategory = categories.isNotEmpty ? categories.first : null;
       categoryItems = categories.map<DropdownItem<int, DBType>>((item) => DropdownItem<int, DBType>(key: item.typeid!, value: item)).toList();
     }
 
     if (data['types'] != null) {
       List<DBType> types = data['types'].map<DBType>((item) => DBType.fromJson(item)).toList();
-      _formSource.prosdttype = types.isNotEmpty ? types.first : null;
       typeItems = types.map<DropdownItem<int, DBType>>((item) => DropdownItem<int, DBType>(key: item.typeid!, value: item)).toList();
     }
 
-    if (data['taxes'] != null) {
-      List<DBType> taxes = data['taxes'].map<DBType>((item) => DBType.fromJson(item)).toList();
-      _formSource.prospectproducttaxdefault = taxes.isNotEmpty ? taxes.first : null;
-      taxItems = taxes.map<DropdownItem<int, DBType>>((item) => DropdownItem<int, DBType>(key: item.typeid!, value: item)).toList();
+    if (data['prospectdetail'] != null) {
+      prospectdetail = ProspectDetail.fromJson(data['prospectdetail']);
+      _formSource.prepareValue(prospectdetail!);
     }
-
-    if (data['prospect'] != null) {
-      prospect = Prospect.fromJson(data['prospect']);
-      _formSource.prospect = prospect;
-    }
-    Get.find<TaskHelper>().loaderPop(ProspectString.formCreateDetailTaskCode);
+    Get.find<TaskHelper>().loaderPop(ProspectString.formUpdateDetailTaskCode);
   }
 
   @override
-  void onCreateError(String message) => _listener.onCreateDataError(message);
+  void onUpdateError(String message) => _listener.onUpdateDataError(message);
 
   @override
-  void onCreateFailed(String message) => _listener.onCreateDataFailed(message);
+  void onUpdateFailed(String message) => _listener.onUpdateDataFailed(message);
 
   @override
-  void onCreateSuccess(String message) => _listener.onCreateDataSuccess(message);
+  void onUpdateSuccess(String message) => _listener.onUpdateDataSuccess(message);
 }

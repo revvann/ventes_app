@@ -4,15 +4,18 @@ class ProspectString {
   static String submitButtonText = "Save";
 
   static String taskCode = 'prospect';
+  static String detailTaskCode = 'prospectdetail';
   static String formCreateTaskCode = 'createprospect';
   static String formUpdateTaskCode = 'updateprospect';
   static String formCreateDetailTaskCode = 'detailcreateprospect';
+  static String formUpdateDetailTaskCode = 'detailcreateprospect';
 
   static String statusTypeCode = 'prstatus';
   static String followUpTypeCode = 'prfoll';
   static String stageTypeCode = 'prstage';
   static String categoryTypeCode = 'prcat';
   static String detailTypeCode = 'prtype';
+  static String taxTypeCode = 'taxtype';
 
   static String fetchDataFailed = "Failed to fetch prospect data";
   static String createDataFailed = "Failed to create prospect";

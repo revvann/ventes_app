@@ -1,21 +1,19 @@
 import 'package:get/get.dart';
-import 'package:ventes/app/network/contracts/create_contract.dart';
+import 'package:ventes/app/network/contracts/update_contract.dart';
 import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
 import 'package:ventes/app/network/services/prospect_detail_service.dart';
-import 'package:ventes/app/network/services/prospect_service.dart';
 import 'package:ventes/app/network/services/type_service.dart';
 import 'package:ventes/constants/strings/prospect_string.dart';
 
-class ProspectDetailFormCreatePresenter {
+class ProspectDetailFormUpdatePresenter {
   final TypeService _typeService = Get.find<TypeService>();
   final ProspectDetailService _prospectDetailService = Get.find<ProspectDetailService>();
-  final ProspectService _prospectService = Get.find<ProspectService>();
 
   late FetchDataContract _fetchDataContract;
   set fetchDataContract(FetchDataContract value) => _fetchDataContract = value;
 
-  late CreateContract _createContract;
-  set createContract(CreateContract value) => _createContract = value;
+  late UpdateContract _updateContract;
+  set updateContract(UpdateContract value) => _updateContract = value;
 
   Future<Response> _getCategories() async {
     return await _typeService.byCode({'typecd': ProspectString.categoryTypeCode});
@@ -25,16 +23,12 @@ class ProspectDetailFormCreatePresenter {
     return await _typeService.byCode({'typecd': ProspectString.detailTypeCode});
   }
 
-  Future<Response> _getTaxes() async {
-    return await _typeService.byCode({'typecd': ProspectString.taxTypeCode});
+  Future<Response> _getProspectDetail(int id) async {
+    return await _prospectDetailService.show(id);
   }
 
-  Future<Response> _getProspect(int id) async {
-    return await _prospectService.show(id);
-  }
-
-  Future<Response> _storeProspect(Map<String, dynamic> data) async {
-    return await _prospectDetailService.store(data);
+  Future<Response> _updateProspect(int id, Map<String, dynamic> data) async {
+    return await _prospectDetailService.update(id, data);
   }
 
   void fetchData(int id) async {
@@ -42,15 +36,13 @@ class ProspectDetailFormCreatePresenter {
     try {
       Response categoryResponse = await _getCategories();
       Response typeResponse = await _getTypes();
-      Response prospectResponse = await _getProspect(id);
-      Response taxesResponse = await _getTaxes();
+      Response prospectDetailResponse = await _getProspectDetail(id);
 
-      if (categoryResponse.statusCode == 200 && typeResponse.statusCode == 200 && prospectResponse.statusCode == 200 && taxesResponse.statusCode == 200) {
+      if (categoryResponse.statusCode == 200 && typeResponse.statusCode == 200 && prospectDetailResponse.statusCode == 200) {
         data = {
           'categories': categoryResponse.body,
           'types': typeResponse.body,
-          'prospect': prospectResponse.body,
-          'taxes': taxesResponse.body,
+          'prospectdetail': prospectDetailResponse.body,
         };
         _fetchDataContract.onLoadSuccess(data);
       } else {
@@ -61,16 +53,16 @@ class ProspectDetailFormCreatePresenter {
     }
   }
 
-  void createData(Map<String, dynamic> data) async {
+  void updateData(int id, Map<String, dynamic> data) async {
     try {
-      Response response = await _storeProspect(data);
+      Response response = await _updateProspect(id, data);
       if (response.statusCode == 200) {
-        _createContract.onCreateSuccess(ProspectString.createDataSuccess);
+        _updateContract.onUpdateSuccess(ProspectString.updateDataSuccess);
       } else {
-        _createContract.onCreateFailed(ProspectString.createDataFailed);
+        _updateContract.onUpdateFailed(ProspectString.updateDataFailed);
       }
     } catch (e) {
-      _createContract.onCreateError(e.toString());
+      _updateContract.onUpdateError(e.toString());
     }
   }
 }

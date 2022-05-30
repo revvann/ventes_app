@@ -27,6 +27,20 @@ void main() async {
   tz.initializeTimeZones();
   runApp(const MyApp());
   Intl.defaultLocale = 'en_ID';
+  Get.lazyPut(() => AuthService(), fenix: true);
+  Get.lazyPut(() => AuthHelper(), fenix: true);
+  Get.lazyPut(() => TaskHelper(), fenix: true);
+  Get.lazyPut(() => AuthService(), fenix: true);
+  Get.lazyPut(() => BpCustomerService(), fenix: true);
+  Get.lazyPut(() => CustomerService(), fenix: true);
+  Get.lazyPut(() => GmapsService(), fenix: true);
+  Get.lazyPut(() => PlaceService(), fenix: true);
+  Get.lazyPut(() => ProspectService(), fenix: true);
+  Get.lazyPut(() => ScheduleService(), fenix: true);
+  Get.lazyPut(() => TypeService(), fenix: true);
+  Get.lazyPut(() => UserService(), fenix: true);
+  Get.lazyPut(() => ProspectDetailService(), fenix: true);
+  Get.lazyPut(() => KeyboardStateController(), fenix: true);
 }
 
 class MyApp extends StatelessWidget {
@@ -52,22 +66,6 @@ class MyApp extends StatelessWidget {
       ),
       getPages: Routes.all,
       initialRoute: SplashScreenView.route,
-      initialBinding: BindingsBuilder(() {
-        Get.lazyPut(() => AuthService());
-        Get.lazyPut(() => AuthHelper());
-        Get.lazyPut(() => TaskHelper());
-        Get.lazyPut(() => AuthService());
-        Get.lazyPut(() => BpCustomerService());
-        Get.lazyPut(() => CustomerService());
-        Get.lazyPut(() => GmapsService());
-        Get.lazyPut(() => PlaceService());
-        Get.lazyPut(() => ProspectService());
-        Get.lazyPut(() => ScheduleService());
-        Get.lazyPut(() => TypeService());
-        Get.lazyPut(() => UserService());
-        Get.lazyPut(() => KeyboardStateController());
-        Get.lazyPut(() => ProspectDetailService());
-      }),
     );
   }
 }

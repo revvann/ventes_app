@@ -1,8 +1,8 @@
-import 'package:ventes/app/states/form_sources/prospect_detail_fc_form_source.dart';
+import 'package:ventes/app/states/form_sources/prospect_detail_fu_form_source.dart';
 
-class ProspectDetailFormCreateValidator {
-  late ProspectDetailFormCreateFormSource _formSource;
-  ProspectDetailFormCreateValidator(this._formSource);
+class ProspectDetailFormUpdateValidator {
+  late ProspectDetailFormUpdateFormSource _formSource;
+  ProspectDetailFormUpdateValidator(this._formSource);
 
   String? prosdtdesc(String? value) {
     if (value == null) {

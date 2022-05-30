@@ -5,7 +5,7 @@ select table_name,
     column_default,
     is_nullable
 from INFORMATION_SCHEMA.COLUMNS
-where table_name in ('trprospectdt')
+where table_name in ('trprospectproduct', 'msproduct')
 order by table_name,
     ordinal_position;
 -- select column_name,
@@ -15,9 +15,9 @@ order by table_name,
 --     is_nullable
 -- from INFORMATION_SCHEMA.COLUMNS
 -- where table_name = 'stbpcustomer';
--- select *
--- from INFORMATION_SCHEMA.TABLES
--- where TABLE_SCHEMA = 'public';
+select *
+from INFORMATION_SCHEMA.TABLES
+where TABLE_SCHEMA = 'public';
 -- select *
 -- from mscustomer;
 -- INSERT INTO mscustomer
@@ -50,4 +50,7 @@ where userdtbpid = (
         where userid = 18
     );
 select *
-from mstype;
+from trprospectproduct;
+TRUNCATE trprospectdt RESTART IDENTITY;
+TRUNCATE msproduct RESTART IDENTITY;
+TRUNCATE trprospectproduct RESTART IDENTITY;

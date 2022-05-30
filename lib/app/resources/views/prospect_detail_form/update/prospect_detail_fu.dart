@@ -6,31 +6,26 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:ventes/app/models/type_model.dart';
 import 'package:ventes/app/resources/widgets/editor_input.dart';
-import 'package:ventes/app/resources/widgets/icon_button.dart' as custom_ib;
 import 'package:ventes/app/resources/widgets/icon_input.dart';
 import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
-import 'package:ventes/app/resources/widgets/regular_button.dart';
 import 'package:ventes/app/resources/widgets/regular_date_picker.dart';
 import 'package:ventes/app/resources/widgets/regular_input.dart';
 import 'package:ventes/app/resources/widgets/top_navigation.dart';
-import 'package:ventes/app/states/controllers/prospect_detail_fc_state_controller.dart';
-import 'package:ventes/constants/formatters/currency_formatter.dart';
-import 'package:ventes/constants/formatters/range_number_formatter.dart';
+import 'package:ventes/app/states/controllers/prospect_detail_fu_state_controller.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/constants/strings/prospect_string.dart';
 import 'package:ventes/core/view.dart';
 
-part 'package:ventes/app/resources/views/prospect_detail_form/create/components/_category_dropdown.dart';
-part 'package:ventes/app/resources/views/prospect_detail_form/create/components/_type_dropdown.dart';
-part 'package:ventes/app/resources/views/prospect_detail_form/create/components/_date_picker.dart';
-part 'package:ventes/app/resources/views/prospect_detail_form/create/components/_product_list.dart';
+part 'package:ventes/app/resources/views/prospect_detail_form/update/components/_category_dropdown.dart';
+part 'package:ventes/app/resources/views/prospect_detail_form/update/components/_type_dropdown.dart';
+part 'package:ventes/app/resources/views/prospect_detail_form/update/components/_date_picker.dart';
 
-class ProspectDetailFormCreateView extends View<ProspectDetailFormCreateStateController> {
-  static const String route = "/prospect/detail/create";
+class ProspectDetailFormUpdateView extends View<ProspectDetailFormUpdateStateController> {
+  static const String route = "/prospect/detail/update";
 
-  ProspectDetailFormCreateView(int prospectId) {
-    state.properties.prospectId = prospectId;
+  ProspectDetailFormUpdateView(int prospectDetailId) {
+    state.properties.prospectDetailId = prospectDetailId;
   }
 
   @override
@@ -150,13 +145,6 @@ class ProspectDetailFormCreateView extends View<ProspectDetailFormCreateStateCon
                         ),
                         SizedBox(
                           height: RegularSize.m,
-                        ),
-                        _ProductList(),
-                        RegularButton(
-                          label: "Add Product",
-                          primary: RegularColor.green,
-                          height: RegularSize.xl,
-                          onPressed: state.listener.onAddProduct,
                         ),
                       ],
                     ),
