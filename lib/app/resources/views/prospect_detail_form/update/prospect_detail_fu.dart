@@ -132,20 +132,6 @@ class ProspectDetailFormUpdateView extends View<ProspectDetailFormUpdateStateCon
                         SizedBox(
                           height: RegularSize.m,
                         ),
-                        Container(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            "Products",
-                            style: TextStyle(
-                              color: RegularColor.primary,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: RegularSize.m,
-                        ),
                       ],
                     ),
                   ),
