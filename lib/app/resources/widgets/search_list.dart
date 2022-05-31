@@ -102,7 +102,7 @@ class SearchListController<T, V> extends GetxController {
   }
 
   bool _isMultiple() {
-    return V is List<T>?;
+    return V is List;
   }
 
   void setSelectedItem(T item) {

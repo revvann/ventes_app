@@ -127,17 +127,17 @@ class ScheduleFormUpdateListener {
     }
   }
 
-  bool onGuestCompared(UserDetail a, List<UserDetail?>? b) {
-    return b?.any((element) => element?.userid == a.userid) ?? false;
+  bool onGuestCompared(dynamic a, UserDetail b) {
+    return a?.any((element) => element?.userid == b.userid) ?? false;
   }
 
-  bool onTowardCompared(UserDetail a, UserDetail? b) {
+  bool onTowardCompared(dynamic a, UserDetail? b) {
     return a.userid == b?.userid;
   }
 
-  void onGuestChanged(List<UserDetail?>? user) {
+  void onGuestChanged(dynamic user) {
     _formSource.guests = List<ScheduleGuest>.from(
-      user!.map(
+      _formSource.guestDropdownController.selectedItem.map(
         (UserDetail? user) => ScheduleGuest(
           scheuserid: user?.userid,
           schebpid: user?.userdtbpid,
@@ -178,12 +178,8 @@ class ScheduleFormUpdateListener {
     }
   }
 
-  void onTowardSelected(UserDetail? value) {
-    if (value != null) {
-      _formSource.schetoward = value;
-    } else {
-      _formSource.schetoward = _formSource.userDefault;
-    }
+  void onTowardSelected(dynamic item) {
+    _formSource.schetoward = item.value;
   }
 
   Future<List<UserDetail>> onGuestFilter(String? search) async {
@@ -222,10 +218,13 @@ class ScheduleFormUpdateListener {
   }
 
   void onUpdateDataSuccess(String message) {
-    Get.find<TaskHelper>().successPush(ScheduleString.updateScheduleTaskCode, ScheduleString.updateSuccess, () {
-      Get.find<DailyScheduleStateController>().properties.refresh();
-      Get.back(id: ScheduleNavigator.id);
-    },
+    Get.find<TaskHelper>().successPush(
+      ScheduleString.updateScheduleTaskCode,
+      ScheduleString.updateSuccess,
+      () {
+        Get.find<DailyScheduleStateController>().properties.refresh();
+        Get.back(id: ScheduleNavigator.id);
+      },
     );
     Get.find<TaskHelper>().loaderPop(ScheduleString.updateScheduleTaskCode);
   }

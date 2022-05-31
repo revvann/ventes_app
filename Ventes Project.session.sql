@@ -5,7 +5,7 @@ select table_name,
     column_default,
     is_nullable
 from INFORMATION_SCHEMA.COLUMNS
-where table_name in ('trprospectproduct', 'msproduct')
+where table_name in ('mscontactperson')
 order by table_name,
     ordinal_position;
 -- select column_name,
@@ -50,7 +50,7 @@ where userdtbpid = (
         where userid = 18
     );
 select *
-from trprospectproduct;
+from mstype;
 TRUNCATE trprospectdt RESTART IDENTITY;
 TRUNCATE msproduct RESTART IDENTITY;
 TRUNCATE trprospectproduct RESTART IDENTITY;

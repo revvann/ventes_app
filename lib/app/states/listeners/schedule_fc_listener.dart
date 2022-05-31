@@ -131,17 +131,17 @@ class ScheduleFormCreateListener {
     }
   }
 
-  bool onGuestCompared(UserDetail a, List<UserDetail?>? b) {
-    return b?.any((element) => element?.userid == a.userid) ?? false;
+  bool onGuestCompared(dynamic a, UserDetail b) {
+    return a?.any((element) => element?.userid == b.userid) ?? false;
   }
 
-  bool onTowardCompared(UserDetail a, UserDetail? b) {
-    return a.userid == b?.userid;
+  bool onTowardCompared(dynamic a, UserDetail? b) {
+    return a.userdtid == b?.userdtid;
   }
 
-  void onGuestChanged(List<UserDetail?>? user) {
+  void onGuestChanged(dynamic user) {
     _formSource.guests = List<ScheduleGuest>.from(
-      user!.map(
+      _formSource.guestDropdownController.selectedItem.map(
         (UserDetail? user) => ScheduleGuest(
           scheuserid: user?.userid,
           schebpid: user?.userdtbpid,
@@ -182,12 +182,8 @@ class ScheduleFormCreateListener {
     }
   }
 
-  void onTowardSelected(UserDetail? value) {
-    if (value != null) {
-      _formSource.schetoward = value;
-    } else {
-      _formSource.schetoward = _formSource.userDefault;
-    }
+  void onTowardSelected(dynamic selectedItem) {
+    _formSource.schetoward = selectedItem?.value;
   }
 
   Future<List<UserDetail>> onGuestFilter(String? search) async {
@@ -221,12 +217,11 @@ class ScheduleFormCreateListener {
   }
 
   void onCreateDataFailed(String message) {
-    Get.find<TaskHelper>().loaderPop(ScheduleString.createScheduleTaskCode);
     Get.find<TaskHelper>().failedPush(ScheduleString.createScheduleTaskCode, ScheduleString.createFailed);
+    Get.find<TaskHelper>().loaderPop(ScheduleString.createScheduleTaskCode);
   }
 
   void onCreateDataSuccess(String message) {
-    Get.find<TaskHelper>().loaderPop(ScheduleString.createScheduleTaskCode);
     Get.find<TaskHelper>().successPush(
       ScheduleString.createScheduleTaskCode,
       ScheduleString.createSuccess,
@@ -235,18 +230,21 @@ class ScheduleFormCreateListener {
         Get.back(id: ScheduleNavigator.id);
       },
     );
+    Get.find<TaskHelper>().loaderPop(ScheduleString.createScheduleTaskCode);
   }
 
   void onCreateDataError(String message) {
-    Get.find<TaskHelper>().loaderPop(ScheduleString.createScheduleTaskCode);
     Get.find<TaskHelper>().errorPush(ScheduleString.createScheduleTaskCode, ScheduleString.createError);
+    Get.find<TaskHelper>().loaderPop(ScheduleString.createScheduleTaskCode);
   }
 
   onLoadDataError(String message) {
     Get.find<TaskHelper>().errorPush(ScheduleString.createScheduleTaskCode, ScheduleString.createError);
+    Get.find<TaskHelper>().loaderPop(ScheduleString.createScheduleTaskCode);
   }
 
   onLoadDataFailed(String message) {
     Get.find<TaskHelper>().failedPush(ScheduleString.createScheduleTaskCode, ScheduleString.createFailed);
+    Get.find<TaskHelper>().loaderPop(ScheduleString.createScheduleTaskCode);
   }
 }

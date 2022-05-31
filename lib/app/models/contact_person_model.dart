@@ -6,7 +6,7 @@ class ContactPerson extends Model {
   int? contactpersonid;
   int? contactcustomerid;
   int? contacttypeid;
-  int? contactvalueid;
+  String? contactvalueid;
   BpCustomer? contactcustomer;
   DBType? contacttype;
 

@@ -88,7 +88,7 @@ class ProspectDetailFormCreateListener {
 
   void onCreateDataSuccess(String message) {
     Get.find<TaskHelper>().successPush(ProspectString.formCreateDetailTaskCode, message, () {
-      // Get.find<ProspectDetailStateController>().properties.refresh();
+      Get.find<ProspectDetailStateController>().properties.refresh();
       Get.back(id: ProspectNavigator.id);
     });
     Get.find<TaskHelper>().loaderPop(ProspectString.formCreateDetailTaskCode);

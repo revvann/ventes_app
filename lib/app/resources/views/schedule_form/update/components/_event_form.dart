@@ -103,38 +103,11 @@ class _EventForm extends StatelessWidget {
         SizedBox(
           height: RegularSize.m,
         ),
-        Obx(() {
-          return _TowardDropdown(
-            selected: state.formSource.schetoward?.user?.userfullname,
-            onFilter: state.listener.onTowardFilter,
-            onItemSelected: state.listener.onTowardSelected,
-            itemBuilder: (UserDetail user, UserDetail? selected) {
-              bool isSelected = selected?.userid == user.userid;
-              return _GuestListItem(
-                userDetail: user,
-                isSelected: isSelected,
-              );
-            },
-            compare: state.listener.onTowardCompared,
-            controller: state.formSource.towardSearchListController,
-          );
-        }),
+        _TowardDropdown(),
         SizedBox(
           height: RegularSize.m,
         ),
-        _GuestDropdown(
-          onFilter: state.listener.onGuestFilter,
-          onItemSelected: state.listener.onGuestChanged,
-          itemBuilder: (UserDetail user, List<UserDetail?>? selected) {
-            bool isSelected = selected?.any((g) => g?.userid == user.userid) ?? false;
-            return _GuestListItem(
-              userDetail: user,
-              isSelected: isSelected,
-            );
-          },
-          compare: state.listener.onGuestCompared,
-          controller: state.formSource.guestSearchListController,
-        ),
+        _GuestDropdown(),
         Obx(() {
           return state.formSource.guests.isNotEmpty
               ? Column(

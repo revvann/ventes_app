@@ -6,7 +6,6 @@ import 'package:ventes/core/page_route.dart';
 import 'package:ventes/app/states/controllers/contact_state_controller.dart';
 import 'package:ventes/app/states/controllers/customer_state_controller.dart';
 import 'package:ventes/app/states/controllers/dashboard_state_controller.dart';
-import 'package:ventes/app/resources/views/contact.dart';
 import 'package:ventes/app/resources/views/customer.dart';
 import 'package:ventes/app/resources/views/dashboard/dashboard.dart';
 import 'package:ventes/core/view_navigator.dart';
@@ -28,14 +27,6 @@ class DashboardNavigator extends ViewNavigator {
               bindings: [
                 BindingsBuilder(() {
                   Get.put(DashboardStateController());
-                })
-              ],
-            ),
-        ContactView.route: (args) => ViewRoute(
-              page: () => ContactView(),
-              bindings: [
-                BindingsBuilder(() {
-                  Get.put(ContactStateController());
                 })
               ],
             ),

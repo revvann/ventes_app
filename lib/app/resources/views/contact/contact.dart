@@ -2,28 +2,23 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:ventes/app/models/prospect_detail_model.dart';
-import 'package:ventes/app/resources/widgets/regular_dialog.dart';
-import 'package:ventes/app/resources/widgets/regular_outlined_button.dart';
+import 'package:ventes/app/models/contact_person_model.dart';
 import 'package:ventes/app/resources/widgets/top_navigation.dart';
-import 'package:ventes/app/states/controllers/prospect_detail_state_controller.dart';
+import 'package:ventes/app/states/controllers/contact_person_state_controller.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/constants/strings/prospect_string.dart';
 import 'package:ventes/core/view.dart';
-import 'package:ventes/helpers/function_helpers.dart';
 
-part 'package:ventes/app/resources/views/prospect_detail/components/_floating_button.dart';
-part 'package:ventes/app/resources/views/prospect_detail/components/_detail_list.dart';
+part 'package:ventes/app/resources/views/contact/components/_contact_list.dart';
 
-class ProspectDetailView extends View<ProspectDetailStateController> {
-  static const String route = "/prospect/detail";
+class ContactPersonView extends View<ContactPersonStateController> {
+  static const String route = "/contactperson";
 
-  ProspectDetailView(int prospectId) {
-    state.properties.prospectId = prospectId;
+  ContactPersonView(int customerid) {
+    state.properties.customerid = customerid;
   }
 
   @override
@@ -51,7 +46,6 @@ class ProspectDetailView extends View<ProspectDetailStateController> {
           onTap: state.listener.goBack,
         ),
         below: GestureDetector(
-          onTap: showDetailDialog,
           child: Container(
             padding: EdgeInsets.symmetric(
               horizontal: RegularSize.xl,
@@ -59,7 +53,7 @@ class ProspectDetailView extends View<ProspectDetailStateController> {
             alignment: Alignment.center,
             child: Obx(() {
               return Text(
-                state.dataSource.prospect?.prospectcust?.sbccstmname ?? "",
+                state.dataSource.bpcustomer?.sbccstmname ?? "",
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   color: Colors.white,
@@ -99,7 +93,7 @@ class ProspectDetailView extends View<ProspectDetailStateController> {
                       Container(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          "Prospect Details",
+                          "Contact Person",
                           style: TextStyle(
                             color: RegularColor.primary,
                             fontWeight: FontWeight.bold,
@@ -110,7 +104,7 @@ class ProspectDetailView extends View<ProspectDetailStateController> {
                       SizedBox(
                         height: RegularSize.m,
                       ),
-                      _DetailList(),
+                      _ContactList(),
                     ],
                   ),
                 ),
@@ -119,37 +113,16 @@ class ProspectDetailView extends View<ProspectDetailStateController> {
           ),
         ),
       ),
-      floatingActionButton: _FloatingButton(),
+      floatingActionButton: FloatingActionButton(
+        onPressed: state.listener.onAddButtonClicked,
+        backgroundColor: RegularColor.primary,
+        child: SvgPicture.asset(
+          'assets/svg/plus.svg',
+          color: Colors.white,
+          width: RegularSize.l,
+        ),
+      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
-  }
-
-  void showDetailDialog() {
-    RegularDialog(
-      width: Get.width * 0.9,
-      child: Column(
-        children: [
-          Text(
-            "Oops, There is nothing here",
-            style: TextStyle(
-              color: RegularColor.red,
-              fontSize: 14,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          SizedBox(
-            height: RegularSize.m,
-          ),
-          RegularOutlinedButton(
-            label: "Cancel",
-            primary: RegularColor.secondary,
-            height: RegularSize.xxl,
-            onPressed: () {
-              Get.close(1);
-            },
-          ),
-        ],
-      ),
-    ).show();
   }
 }

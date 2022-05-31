@@ -18,8 +18,16 @@ class _FloatingButton extends StatelessWidget {
       spacing: RegularSize.s,
       children: [
         _buildChild('assets/svg/daily-visit.svg', "Visit"),
-        _buildChild('assets/svg/contact.svg', "Contact"),
-        _buildChild('assets/svg/plus.svg', "Add Detail", state.listener.navigateToProspectDetailForm),
+        _buildChild(
+          'assets/svg/contact.svg',
+          "Contact",
+          state.listener.navigateToContactPerson,
+        ),
+        _buildChild(
+          'assets/svg/plus.svg',
+          "Add Detail",
+          state.listener.navigateToProspectDetailForm,
+        ),
       ],
     );
   }

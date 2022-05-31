@@ -14,6 +14,7 @@ import 'package:ventes/app/resources/widgets/regular_dropdown.dart';
 import 'package:ventes/app/resources/widgets/regular_input.dart';
 import 'package:ventes/app/resources/widgets/regular_select_box.dart';
 import 'package:ventes/app/resources/widgets/search_list.dart';
+import 'package:ventes/app/resources/widgets/searchable_dropdown.dart';
 import 'package:ventes/app/resources/widgets/top_navigation.dart';
 import 'package:ventes/app/states/controllers/schedule_fc_state_controller.dart';
 import 'package:ventes/app/states/form_sources/schedule_fc_form_source.dart';

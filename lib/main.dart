@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:ventes/app/network/services/bp_customer_service.dart';
+import 'package:ventes/app/network/services/contact_person_service.dart';
 import 'package:ventes/app/network/services/customer_service.dart';
 import 'package:ventes/app/network/services/gmaps_service.dart';
 import 'package:ventes/app/network/services/place_service.dart';
@@ -40,6 +41,7 @@ void main() async {
   Get.lazyPut(() => TypeService(), fenix: true);
   Get.lazyPut(() => UserService(), fenix: true);
   Get.lazyPut(() => ProspectDetailService(), fenix: true);
+  Get.lazyPut(() => ContactPersonService(), fenix: true);
   Get.lazyPut(() => KeyboardStateController(), fenix: true);
 }
 

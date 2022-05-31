@@ -42,7 +42,9 @@ class ProspectFormCreateListener {
   }
 
   void onOwnerSelected(dynamic data) {
-    _formSource.prosowner = data.value as UserDetail;
+    if (data != null) {
+      _formSource.prosowner = data.value as UserDetail;
+    }
   }
 
   bool onOwnerCompared(selectedItem, item) {
@@ -54,7 +56,9 @@ class ProspectFormCreateListener {
   }
 
   void onCustomerSelected(dynamic data) {
-    _formSource.proscustomer = data.value as BpCustomer;
+    if (data != null) {
+      _formSource.proscustomer = data.value as BpCustomer;
+    }
   }
 
   bool onCustomerCompared(selectedItem, item) {

@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:ventes/app/resources/widgets/loader.dart';
 import 'package:ventes/app/resources/widgets/regular_bottom_sheet.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
@@ -132,7 +131,7 @@ class ScheduleFormCreateProperties {
           ),
         ],
       ),
-    );
+    ).show();
   }
 
   Widget get _gMaps {

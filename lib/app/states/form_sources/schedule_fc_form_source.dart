@@ -9,6 +9,7 @@ import 'package:ventes/app/models/schedule_guest_model.dart';
 import 'package:ventes/app/models/user_detail_model.dart';
 import 'package:ventes/app/resources/widgets/regular_dropdown.dart';
 import 'package:ventes/app/resources/widgets/search_list.dart';
+import 'package:ventes/app/resources/widgets/searchable_dropdown.dart';
 import 'package:ventes/app/states/data_sources/schedule_fc_data_source.dart';
 import 'package:ventes/helpers/function_helpers.dart';
 import 'package:ventes/app/states/controllers/schedule_fc_state_controller.dart';
@@ -37,8 +38,8 @@ class ScheduleFormCreateFormSource {
   final scheendtimeDC = DropdownController<String?>(null);
   final schetzDC = DropdownController<String?>(null);
   final formKey = GlobalKey<FormState>();
-  final towardSearchListController = Get.put(SearchListController<UserDetail, UserDetail>());
-  final guestSearchListController = Get.put(SearchListController<UserDetail, List<UserDetail>>());
+  SearchableDropdownController<UserDetail> guestDropdownController = Get.put(SearchableDropdownController<UserDetail>(), tag: "DropdownGuest");
+  SearchableDropdownController<UserDetail> towardDropdownController = Get.put(SearchableDropdownController<UserDetail>(), tag: "DropdownToward");
 
   String _scheonlink = "";
   String _scheloc = "";
@@ -190,6 +191,7 @@ class ScheduleFormCreateFormSource {
   void removeGuest(ScheduleGuest guest) {
     int? userid = guest.scheuserid;
     _guests.update((value) => value!..removeWhere((g) => g.scheuserid == userid));
+    guestDropdownController.selectedItem = guestDropdownController.selectedItem.where((g) => g.userid != userid).toList();
   }
 
   void setPermission(int userid, List<int> permission) {
@@ -277,13 +279,12 @@ class ScheduleFormCreateFormSource {
     scheremindTEC.dispose();
     schedescTEC.dispose();
     scheonlinkTEC.dispose();
-    Get.delete<SearchListController<UserDetail, UserDetail>>();
-    Get.delete<SearchListController<UserDetail, List<UserDetail>>>();
+    Get.delete<SearchableDropdownController<UserDetail>>(tag: "DropdownToward");
+    Get.delete<SearchableDropdownController<UserDetail>>(tag: "DropdownGuest");
   }
 
   init() async {
     validator = ScheduleFormCreateValidator(this);
-    towardSearchListController.selectedItem = schetoward;
 
     setStartTimeList();
 
@@ -292,7 +293,7 @@ class ScheduleFormCreateFormSource {
     schelocTEC.addListener(_listener.onLocationChanged);
 
     userDefault = await _dataSource.userActive;
-    userDefault = await _dataSource.userActive;
+    towardDropdownController.selectedItem = userDefault != null ? [userDefault!] : [];
     schetoward = userDefault;
     schetzDC.items = getTimezoneList();
     String currentTimeZone = await FlutterNativeTimezone.getLocalTimezone();

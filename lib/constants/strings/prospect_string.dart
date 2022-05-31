@@ -9,6 +9,8 @@ class ProspectString {
   static String formUpdateTaskCode = 'updateprospect';
   static String formCreateDetailTaskCode = 'detailcreateprospect';
   static String formUpdateDetailTaskCode = 'detailcreateprospect';
+  static String contactPersonTaskCode = 'contactperson';
+  static String formCreateContactTaskCode = 'contactcreate';
 
   static String statusTypeCode = 'prstatus';
   static String followUpTypeCode = 'prfoll';
@@ -16,6 +18,7 @@ class ProspectString {
   static String categoryTypeCode = 'prcat';
   static String detailTypeCode = 'prtype';
   static String taxTypeCode = 'taxtype';
+  static String contactTypeCode = 'contact';
 
   static String fetchDataFailed = "Failed to fetch prospect data";
   static String createDataFailed = "Failed to create prospect";
