@@ -43,7 +43,7 @@ List<Map<String, String>> getTimezoneList() {
   locations = locations..sort((a, b) => a.currentTimeZone.offset.compareTo(b.currentTimeZone.offset));
   return locations.map((location) {
     int offset = location.currentTimeZone.offset ~/ (1000 * 60 * 60);
-    String sign = offset >= 0 ? '+' : '-';
+    String sign = offset >= 0 ? '+' : '';
     String gmt = "GMT$sign$offset";
     return {
       'value': location.name,

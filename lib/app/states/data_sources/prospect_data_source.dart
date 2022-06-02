@@ -13,9 +13,9 @@ class ProspectDataSource implements FetchDataContract {
 
   final ProspectPresenter _presenter = ProspectPresenter();
 
-  final Rx<List<DropdownItem<int, DBType>>> _statusItems = Rx<List<DropdownItem<int, DBType>>>([]);
-  set statusItems(List<DropdownItem<int, DBType>> value) => _statusItems.value = value;
-  List<DropdownItem<int, DBType>> get statusItems => _statusItems.value;
+  final Rx<List<KeyableDropdownItem<int, DBType>>> _statusItems = Rx<List<KeyableDropdownItem<int, DBType>>>([]);
+  set statusItems(List<KeyableDropdownItem<int, DBType>> value) => _statusItems.value = value;
+  List<KeyableDropdownItem<int, DBType>> get statusItems => _statusItems.value;
 
   final Rx<Map<int, String>> _followUpItems = Rx<Map<int, String>>({});
   set followUpItems(Map<int, String> value) => _followUpItems.value = value;
@@ -50,7 +50,7 @@ class ProspectDataSource implements FetchDataContract {
     if (data['statusses'] != null) {
       List<DBType> statusses = List<DBType>.from(data['statusses'].map((e) => DBType.fromJson(e)));
       statusItems = statusses
-          .map((e) => DropdownItem<int, DBType>(
+          .map((e) => KeyableDropdownItem<int, DBType>(
                 value: e,
                 key: e.typeid!,
               ))

@@ -41,9 +41,7 @@ class _EventForm extends StatelessWidget {
         SizedBox(
           height: RegularSize.m,
         ),
-        _TimezoneDropdown(
-          controller: state.formSource.schetzDC,
-        ),
+        _TimezoneDropdown(),
         SizedBox(
           height: RegularSize.m,
         ),

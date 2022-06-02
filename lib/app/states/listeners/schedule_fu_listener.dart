@@ -127,6 +127,10 @@ class ScheduleFormUpdateListener {
     }
   }
 
+  void onTimezoneChanged(selectedItem) {
+    _formSource.schetz = selectedItem.key;
+  }
+
   bool onGuestCompared(dynamic a, UserDetail b) {
     return a?.any((element) => element?.userid == b.userid) ?? false;
   }
@@ -137,12 +141,12 @@ class ScheduleFormUpdateListener {
 
   void onGuestChanged(dynamic user) {
     _formSource.guests = List<ScheduleGuest>.from(
-      _formSource.guestDropdownController.selectedItem.map(
-        (UserDetail? user) => ScheduleGuest(
-          scheuserid: user?.userid,
-          schebpid: user?.userdtbpid,
-          scheuser: user?.user,
-          businesspartner: user?.businesspartner,
+      _formSource.guestDropdownController.selectedKeys.map(
+        (user) => ScheduleGuest(
+          scheuserid: user.userid,
+          schebpid: user.userdtbpid,
+          scheuser: user.user,
+          businesspartner: user.businesspartner,
         ),
       ),
     );

@@ -17,17 +17,17 @@ class ProspectDetailFormUpdateDataSource implements FetchDataContract, UpdateCon
 
   final ProspectDetailFormUpdatePresenter _presenter = ProspectDetailFormUpdatePresenter();
 
-  final Rx<List<DropdownItem<int, DBType>>> _categoryItems = Rx<List<DropdownItem<int, DBType>>>([]);
-  set categoryItems(List<DropdownItem<int, DBType>> value) => _categoryItems.value = value;
-  List<DropdownItem<int, DBType>> get categoryItems => _categoryItems.value;
+  final Rx<List<KeyableDropdownItem<int, DBType>>> _categoryItems = Rx<List<KeyableDropdownItem<int, DBType>>>([]);
+  set categoryItems(List<KeyableDropdownItem<int, DBType>> value) => _categoryItems.value = value;
+  List<KeyableDropdownItem<int, DBType>> get categoryItems => _categoryItems.value;
 
-  final Rx<List<DropdownItem<int, DBType>>> _typeItems = Rx<List<DropdownItem<int, DBType>>>([]);
-  set typeItems(List<DropdownItem<int, DBType>> value) => _typeItems.value = value;
-  List<DropdownItem<int, DBType>> get typeItems => _typeItems.value;
+  final Rx<List<KeyableDropdownItem<int, DBType>>> _typeItems = Rx<List<KeyableDropdownItem<int, DBType>>>([]);
+  set typeItems(List<KeyableDropdownItem<int, DBType>> value) => _typeItems.value = value;
+  List<KeyableDropdownItem<int, DBType>> get typeItems => _typeItems.value;
 
-  final Rx<List<DropdownItem<int, DBType>>> _taxItems = Rx<List<DropdownItem<int, DBType>>>([]);
-  set taxItems(List<DropdownItem<int, DBType>> value) => _taxItems.value = value;
-  List<DropdownItem<int, DBType>> get taxItems => _taxItems.value;
+  final Rx<List<KeyableDropdownItem<int, DBType>>> _taxItems = Rx<List<KeyableDropdownItem<int, DBType>>>([]);
+  set taxItems(List<KeyableDropdownItem<int, DBType>> value) => _taxItems.value = value;
+  List<KeyableDropdownItem<int, DBType>> get taxItems => _taxItems.value;
 
   final Rx<ProspectDetail?> _prospectdetail = Rx<ProspectDetail?>(null);
   set prospectdetail(ProspectDetail? value) => _prospectdetail.value = value;
@@ -51,12 +51,12 @@ class ProspectDetailFormUpdateDataSource implements FetchDataContract, UpdateCon
   onLoadSuccess(Map data) {
     if (data['categories'] != null) {
       List<DBType> categories = data['categories'].map<DBType>((item) => DBType.fromJson(item)).toList();
-      categoryItems = categories.map<DropdownItem<int, DBType>>((item) => DropdownItem<int, DBType>(key: item.typeid!, value: item)).toList();
+      categoryItems = categories.map<KeyableDropdownItem<int, DBType>>((item) => KeyableDropdownItem<int, DBType>(key: item.typeid!, value: item)).toList();
     }
 
     if (data['types'] != null) {
       List<DBType> types = data['types'].map<DBType>((item) => DBType.fromJson(item)).toList();
-      typeItems = types.map<DropdownItem<int, DBType>>((item) => DropdownItem<int, DBType>(key: item.typeid!, value: item)).toList();
+      typeItems = types.map<KeyableDropdownItem<int, DBType>>((item) => KeyableDropdownItem<int, DBType>(key: item.typeid!, value: item)).toList();
     }
 
     if (data['prospectdetail'] != null) {

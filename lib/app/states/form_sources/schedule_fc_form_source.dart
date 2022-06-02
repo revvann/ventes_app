@@ -7,6 +7,7 @@ import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:get/get.dart';
 import 'package:ventes/app/models/schedule_guest_model.dart';
 import 'package:ventes/app/models/user_detail_model.dart';
+import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
 import 'package:ventes/app/resources/widgets/regular_dropdown.dart';
 import 'package:ventes/app/resources/widgets/search_list.dart';
 import 'package:ventes/app/resources/widgets/searchable_dropdown.dart';
@@ -26,6 +27,7 @@ class ScheduleFormCreateFormSource {
   late ScheduleFormCreateValidator validator;
 
   UserDetail? userDefault;
+  final Rx<List<KeyableDropdownItem<String, String>>> _timezones = Rx<List<KeyableDropdownItem<String, String>>>([]);
 
   final schenmTEC = TextEditingController();
   final schestartdateTEC = TextEditingController();
@@ -36,10 +38,10 @@ class ScheduleFormCreateFormSource {
   final scheonlinkTEC = TextEditingController();
   final schestarttimeDC = DropdownController<String?>(null);
   final scheendtimeDC = DropdownController<String?>(null);
-  final schetzDC = DropdownController<String?>(null);
   final formKey = GlobalKey<FormState>();
   SearchableDropdownController<UserDetail> guestDropdownController = Get.put(SearchableDropdownController<UserDetail>(), tag: "DropdownGuest");
   SearchableDropdownController<UserDetail> towardDropdownController = Get.put(SearchableDropdownController<UserDetail>(), tag: "DropdownToward");
+  KeyableDropdownController<String, String> timezoneDropdownController = Get.put(KeyableDropdownController<String, String>(), tag: "DropdownTimezone");
 
   String _scheonlink = "";
   String _scheloc = "";
@@ -53,6 +55,7 @@ class ScheduleFormCreateFormSource {
   final Rx<bool> _scheonline = Rx<bool>(false);
   final Rx<List<ScheduleGuest>> _guests = Rx<List<ScheduleGuest>>([]);
   final Rx<UserDetail?> _schetoward = Rx<UserDetail?>(null);
+  final Rx<String?> _schetz = Rx<String?>(null);
 
   bool get isEvent => _dataSource.typeName(schetype) == "Event";
   bool get isTask => _dataSource.typeName(schetype) == "Task";
@@ -155,9 +158,14 @@ class ScheduleFormCreateFormSource {
     _scheonlink = value;
   }
 
-  String? get schetz => schetzDC.value;
+  String? get schetz => _schetz.value;
   set schetz(String? value) {
-    schetzDC.value = value;
+    _schetz.value = value;
+  }
+
+  List<KeyableDropdownItem<String, String>> get timezones => _timezones.value;
+  set timezones(List<KeyableDropdownItem<String, String>> value) {
+    _timezones.value = value;
   }
 
   List<ScheduleGuest> get guests => _guests.value;
@@ -191,7 +199,7 @@ class ScheduleFormCreateFormSource {
   void removeGuest(ScheduleGuest guest) {
     int? userid = guest.scheuserid;
     _guests.update((value) => value!..removeWhere((g) => g.scheuserid == userid));
-    guestDropdownController.selectedItem = guestDropdownController.selectedItem.where((g) => g.userid != userid).toList();
+    guestDropdownController.selectedKeys = guestDropdownController.selectedKeys.where((g) => g.userid != userid).toList();
   }
 
   void setPermission(int userid, List<int> permission) {
@@ -281,6 +289,7 @@ class ScheduleFormCreateFormSource {
     scheonlinkTEC.dispose();
     Get.delete<SearchableDropdownController<UserDetail>>(tag: "DropdownToward");
     Get.delete<SearchableDropdownController<UserDetail>>(tag: "DropdownGuest");
+    Get.delete<KeyableDropdownController<String, String>>(tag: "DropdownTimezone");
   }
 
   init() async {
@@ -293,11 +302,13 @@ class ScheduleFormCreateFormSource {
     schelocTEC.addListener(_listener.onLocationChanged);
 
     userDefault = await _dataSource.userActive;
-    towardDropdownController.selectedItem = userDefault != null ? [userDefault!] : [];
+    towardDropdownController.selectedKeys = userDefault != null ? [userDefault!] : [];
     schetoward = userDefault;
-    schetzDC.items = getTimezoneList();
+
+    timezones = getTimezoneList().map<KeyableDropdownItem<String, String>>((e) => KeyableDropdownItem<String, String>(key: e['value']!, value: e['text']!)).toList();
     String currentTimeZone = await FlutterNativeTimezone.getLocalTimezone();
-    schetzDC.value = currentTimeZone;
+    timezoneDropdownController.selectedKeys = [currentTimeZone];
+    schetz = currentTimeZone;
   }
 
   Map<String, dynamic> toJson() {

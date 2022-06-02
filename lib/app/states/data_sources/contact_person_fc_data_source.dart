@@ -20,9 +20,9 @@ class ContactPersonFormCreateDataSource implements FetchDataContract, CreateCont
   Customer? get customer => _customer.value;
   set customer(Customer? value) => _customer.value = value;
 
-  final Rx<List<DropdownItem<int, DBType>>> _types = Rx<List<DropdownItem<int, DBType>>>([]);
-  List<DropdownItem<int, DBType>> get types => _types.value;
-  set types(List<DropdownItem<int, DBType>> value) => _types.value = value;
+  final Rx<List<KeyableDropdownItem<int, DBType>>> _types = Rx<List<KeyableDropdownItem<int, DBType>>>([]);
+  List<KeyableDropdownItem<int, DBType>> get types => _types.value;
+  set types(List<KeyableDropdownItem<int, DBType>> value) => _types.value = value;
 
   init() {
     _presenter.fetchDataContract = this;
@@ -48,7 +48,7 @@ class ContactPersonFormCreateDataSource implements FetchDataContract, CreateCont
     if (data['types'] != null) {
       List<DBType> types = data['types'].map<DBType>((type) => DBType.fromJson(type)).toList();
       _formSource.contacttype = types.isNotEmpty ? types.first : null;
-      this.types = types.map<DropdownItem<int, DBType>>((type) => DropdownItem<int, DBType>(key: type.typeid!, value: type)).toList();
+      this.types = types.map<KeyableDropdownItem<int, DBType>>((type) => KeyableDropdownItem<int, DBType>(key: type.typeid!, value: type)).toList();
     }
     Get.find<TaskHelper>().loaderPop(ProspectString.formCreateContactTaskCode);
   }

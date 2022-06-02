@@ -2,7 +2,6 @@ import 'package:get/get.dart';
 import 'package:ventes/app/models/type_model.dart';
 import 'package:ventes/app/resources/views/prospect_detail/prospect_detail.dart';
 import 'package:ventes/app/resources/views/prospect_form/create/prospect_fc.dart';
-import 'package:ventes/app/resources/views/prospect_form/update/prospect_fu.dart';
 import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
 import 'package:ventes/app/states/controllers/prospect_state_controller.dart';
 import 'package:ventes/app/states/data_sources/prospect_data_source.dart';
@@ -37,7 +36,7 @@ class ProspectListener {
 
   void onStatusSelected(selectedItem) {
     if (selectedItem != null) {
-      _formSource.prosstatus = (selectedItem as DropdownItem<int, DBType>).value;
+      _formSource.prosstatus = (selectedItem as KeyableDropdownItem<int, DBType>).value;
     } else {
       _formSource.prosstatus = null;
     }

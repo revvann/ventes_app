@@ -50,7 +50,7 @@ where userdtbpid = (
         where userid = 18
     );
 select *
-from mstype;
+from vtschedule;
 TRUNCATE trprospectdt RESTART IDENTITY;
 TRUNCATE msproduct RESTART IDENTITY;
 TRUNCATE trprospectproduct RESTART IDENTITY;

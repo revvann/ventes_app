@@ -11,12 +11,16 @@ class RegularDialog {
     required this.child,
     this.dismissable = true,
     this.backgroundColor = Colors.white,
+    this.padding,
+    this.alignment = Alignment.center,
   });
   double width;
   double? height;
   Widget child;
   bool dismissable;
   Color? backgroundColor;
+  EdgeInsets? padding;
+  Alignment alignment;
 
   Future show() {
     return Get.dialog(
@@ -32,7 +36,8 @@ class RegularDialog {
           mainAxisSize: height == null ? MainAxisSize.min : MainAxisSize.max,
           children: [
             Container(
-              padding: EdgeInsets.all(RegularSize.m),
+              padding: padding ?? EdgeInsets.all(RegularSize.m),
+              alignment: alignment,
               child: child,
             ),
           ],

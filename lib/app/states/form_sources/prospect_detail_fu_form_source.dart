@@ -62,9 +62,9 @@ class ProspectDetailFormUpdateFormSource {
     prosdtdescTEC.text = prospectDetail.prospectdtdesc ?? "";
     date = dbParseDate(prospectDetail.prospectdtdate!);
     prosdtcategory = prospectDetail.prospectdtcat;
-    categoryDropdownController.selectedItem = [prosdtcategory!.typeid!];
+    categoryDropdownController.selectedKeys = [prosdtcategory!.typeid!];
     prosdttype = prospectDetail.prospectdttype;
-    typeDropdownController.selectedItem = [prosdttype!.typeid!];
+    typeDropdownController.selectedKeys = [prosdttype!.typeid!];
   }
 
   Map<String, dynamic> toJson() {
