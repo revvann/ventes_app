@@ -119,6 +119,14 @@ String dbDateFormat(DateTime date) {
   return DateFormat('yyyy-MM-dd').format(date);
 }
 
+DateTime firstWeekDate(DateTime date) {
+  return date.subtract(Duration(days: date.weekday - 1));
+}
+
+DateTime lastWeekDate(DateTime date) {
+  return date.add(Duration(days: DateTime.daysPerWeek - date.weekday));
+}
+
 List<Map<String, dynamic>> createTimeList([int? minHour, int? minMinutes]) {
   List<Map<String, dynamic>> items = [];
   DateTime time = DateTime(0, 0, 0, minHour ?? 0, minMinutes ?? 0);
