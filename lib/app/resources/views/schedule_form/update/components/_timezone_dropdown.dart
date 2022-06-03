@@ -20,6 +20,7 @@ class _TimezoneDropdown extends StatelessWidget {
             );
           },
         ),
+        nullable: false,
         items: state.formSource.timezones,
         onChange: state.listener.onTimezoneChanged,
         itemBuilder: (item, isSelected) {

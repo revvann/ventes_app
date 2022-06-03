@@ -3,7 +3,7 @@
 part of 'package:ventes/app/resources/views/dashboard/dashboard.dart';
 
 class _TopPanel extends StatelessWidget {
-  const _TopPanel({Key? key}) : super(key: key);
+  DashboardStateController state = Get.find<DashboardStateController>();
 
   @override
   Widget build(BuildContext context) {
@@ -32,30 +32,36 @@ class _TopPanel extends StatelessWidget {
         ),
         child: Column(
           children: [
-            Text(
-              "Norman Osborn",
-              style: TextStyle(
-                fontSize: 16,
-                color: RegularColor.dark,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+            Obx(() {
+              return Text(
+                state.dataSource.activeUser?.user?.userfullname ?? "",
+                style: TextStyle(
+                  fontSize: 16,
+                  color: RegularColor.dark,
+                  fontWeight: FontWeight.bold,
+                ),
+              );
+            }),
             SizedBox(
               height: RegularSize.xs,
             ),
-            Text(
-              "New York City, United States",
-              style: TextStyle(
-                color: RegularColor.dark,
-                fontSize: 14,
-              ),
-            ),
+            Obx(() {
+              return Text(
+                state.dataSource.currentPosition?.adresses?.first.formattedAddress ?? "",
+                style: TextStyle(
+                  color: RegularColor.dark,
+                  fontSize: 14,
+                ),
+              );
+            }),
             SizedBox(
               height: RegularSize.m,
             ),
             Row(
               children: [
-                _TopPanelItem('assets/svg/marker.svg', "15", "Nearby"),
+                Obx(() {
+                  return _TopPanelItem('assets/svg/user.svg', state.dataSource.customers.length.toString(), "Customer");
+                }),
                 _TopPanelItem('assets/svg/calendar.svg', "8", "Scheduled"),
                 _TopPanelItem('assets/svg/time-check.svg', "3", "Done"),
               ],

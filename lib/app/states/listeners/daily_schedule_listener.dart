@@ -4,8 +4,6 @@ import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:ventes/app/models/schedule_model.dart';
 import 'package:ventes/app/resources/views/schedule_form/create/schedule_fc.dart';
 import 'package:ventes/app/resources/views/schedule_form/update/schedule_fu.dart';
-import 'package:ventes/app/resources/widgets/error_alert.dart';
-import 'package:ventes/app/resources/widgets/failed_alert.dart';
 import 'package:ventes/app/states/controllers/daily_schedule_state_controller.dart';
 import 'package:ventes/app/states/data_sources/daily_schedule_data_source.dart';
 import 'package:ventes/constants/regular_color.dart';

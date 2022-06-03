@@ -1,6 +1,8 @@
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ventes/app/models/bp_customer_model.dart';
+import 'package:ventes/app/models/maps_loc.dart';
+import 'package:ventes/app/models/user_detail_model.dart';
 import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
 import 'package:ventes/app/network/contracts/logout_contract.dart';
 import 'package:ventes/app/network/presenters/dashboard_presenter.dart';
@@ -19,6 +21,14 @@ class DashboardDataSource implements FetchDataContract, LogoutContract {
   final _customers = <BpCustomer>[].obs;
   set customers(List<BpCustomer> value) => _customers.value = value;
   List<BpCustomer> get customers => _customers.value;
+
+  final _activeUser = Rx<UserDetail?>(null);
+  UserDetail? get activeUser => _activeUser.value;
+  set activeUser(UserDetail? value) => _activeUser.value = value;
+
+  final _currentPosition = Rx<MapsLoc?>(null);
+  MapsLoc? get currentPosition => _currentPosition.value;
+  set currentPosition(MapsLoc? value) => _currentPosition.value = value;
 
   void init() {
     _presenter.fetchDataContract = this;
@@ -56,6 +66,15 @@ class DashboardDataSource implements FetchDataContract, LogoutContract {
         LatLng(_properties.position!.latitude, _properties.position!.longitude),
       );
     }
+
+    if (data['activeUser'] != null) {
+      activeUser = UserDetail.fromJson(data['activeUser']);
+    }
+
+    if (data['currentPosition'] != null) {
+      currentPosition = MapsLoc.fromJson(data['currentPosition']);
+    }
+
     Get.find<TaskHelper>().loaderPop(DashboardString.taskCode);
   }
 

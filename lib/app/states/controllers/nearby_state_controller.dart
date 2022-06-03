@@ -7,7 +7,6 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ventes/app/models/customer_model.dart';
-import 'package:ventes/app/resources/widgets/loader.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/constants/strings/nearby_string.dart';
 import 'package:ventes/helpers/function_helpers.dart';

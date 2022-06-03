@@ -50,6 +50,7 @@ dependencies:
   path: ^1.8.0
   flutter_keyboard_visibility: ^5.2.0
   flutter_speed_dial: ^6.0.0
+  flutter_local_notifications: ^9.5.3+1
 
 dev_dependencies:
   flutter_test:

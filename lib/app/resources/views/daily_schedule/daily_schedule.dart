@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
-import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:ventes/app/models/schedule_model.dart';
 import 'package:ventes/app/resources/widgets/popup_button.dart';
 import 'package:ventes/app/resources/widgets/regular_appointment_card.dart';

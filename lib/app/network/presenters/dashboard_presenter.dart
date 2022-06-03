@@ -1,3 +1,4 @@
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:ventes/app/models/auth_model.dart';
 import 'package:ventes/app/models/user_detail_model.dart';
@@ -5,14 +6,17 @@ import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
 import 'package:ventes/app/network/contracts/logout_contract.dart';
 import 'package:ventes/app/network/services/auth_service.dart';
 import 'package:ventes/app/network/services/bp_customer_service.dart';
+import 'package:ventes/app/network/services/gmaps_service.dart';
 import 'package:ventes/app/network/services/user_service.dart';
 import 'package:ventes/constants/strings/nearby_string.dart';
 import 'package:ventes/helpers/auth_helper.dart';
+import 'package:ventes/helpers/function_helpers.dart';
 
 class DashboardPresenter {
   final _bpCustomerService = Get.find<BpCustomerService>();
   final _userService = Get.find<UserService>();
   final _authService = Get.find<AuthService>();
+  final _gmapsService = Get.find<GmapsService>();
 
   late FetchDataContract _fetchDataContract;
   set fetchDataContract(FetchDataContract value) => _fetchDataContract = value;
@@ -38,15 +42,29 @@ class DashboardPresenter {
     return null;
   }
 
+  Future<Response> _getActiveUser() async {
+    AuthModel? authModel = await Get.find<AuthHelper>().get();
+    return await _userService.show(authModel!.accountActive!);
+  }
+
+  Future<Response> _getCurrentPosition() async {
+    Position position = await getCurrentPosition();
+    return await _gmapsService.getDetail(position.latitude, position.longitude);
+  }
+
   void fetchData(double latitude, double longitude) async {
     Map data = {};
-    Response customersResponse = await _getCustomers();
     try {
-      if (customersResponse.statusCode == 200) {
+      Response customersResponse = await _getCustomers();
+      Response activeUserResponse = await _getActiveUser();
+      Response currentPositionResponse = await _getCurrentPosition();
+      if (customersResponse.statusCode == 200 && activeUserResponse.statusCode == 200 && currentPositionResponse.statusCode == 200) {
         data['customers'] = customersResponse.body;
+        data['activeUser'] = activeUserResponse.body;
+        data['currentPosition'] = currentPositionResponse.body;
         _fetchDataContract.onLoadSuccess(data);
       } else {
-        _fetchDataContract.onLoadFailed(NearbyString.fetchFailed);
+        _fetchDataContract.onLoadFailed(customersResponse.statusCode.toString());
       }
     } catch (err) {
       _fetchDataContract.onLoadError(err.toString());

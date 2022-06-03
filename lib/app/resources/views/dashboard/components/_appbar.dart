@@ -61,53 +61,6 @@ class _AppBar extends StatelessWidget {
                 }
               },
               itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                // PopupMenuItem<String>(
-                //   value: "edit",
-                //   child: Row(
-                //     children: [
-                //       Container(
-                //         width: RegularSize.xl,
-                //         height: RegularSize.xl,
-                //         alignment: Alignment.center,
-                //         child: Text(
-                //           "SS",
-                //           style: TextStyle(
-                //             color: RegularColor.green,
-                //             fontSize: 14,
-                //             fontWeight: FontWeight.bold,
-                //           ),
-                //         ),
-                //         decoration: BoxDecoration(
-                //           shape: BoxShape.circle,
-                //           color: RegularColor.secondary,
-                //         ),
-                //       ),
-                //       SizedBox(
-                //         width: RegularSize.s,
-                //       ),
-                //       Column(
-                //         mainAxisSize: MainAxisSize.min,
-                //         crossAxisAlignment: CrossAxisAlignment.start,
-                //         children: [
-                //           Text(
-                //             "Stephen Strange",
-                //             style: TextStyle(
-                //               fontSize: 14,
-                //               color: RegularColor.dark,
-                //             ),
-                //           ),
-                //           Text(
-                //             "Sales",
-                //             style: TextStyle(
-                //               fontSize: 12,
-                //               color: RegularColor.gray,
-                //             ),
-                //           ),
-                //         ],
-                //       ),
-                //     ],
-                //   ),
-                // ),
                 PopupMenuItem<String>(
                   value: "logout",
                   child: Row(

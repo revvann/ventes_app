@@ -3,16 +3,28 @@
 part of 'package:ventes/app/resources/views/daily_schedule/daily_schedule.dart';
 
 class _ScheduleDetail extends StatelessWidget {
-  const _ScheduleDetail({Key? key}) : super(key: key);
+  DailyScheduleStateController state = Get.find<DailyScheduleStateController>();
+
+  Schedule? get schedule => state.properties.selectedAppointment;
+
+  String? get startDate => schedule?.schestartdate != null ? schedule!.schestartdate! : null;
+  String? get endDate => schedule?.scheenddate != null ? schedule!.scheenddate! : null;
+  String? get startTime => schedule?.schestarttime != null ? schedule!.schestarttime! : null;
+  String? get endTime => schedule?.scheendtime != null ? schedule!.scheendtime! : null;
 
   @override
   Widget build(BuildContext context) {
+    String formattedStartDate = startDate != null ? formatDate(dbParseDate(startDate!)) : "";
+    String formattedEndDate = endDate != null ? formatDate(dbParseDate(endDate!)) : "";
+    String formattedStartTime = startTime != null ? formatTime(parseTime(startTime!)) : "";
+    String formattedEndTime = endTime != null ? formatTime(parseTime(endTime!)) : "";
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          "My schedule of my life",
+          schedule?.schenm ?? "",
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w600,
@@ -23,7 +35,7 @@ class _ScheduleDetail extends StatelessWidget {
           height: RegularSize.xs,
         ),
         Text(
-          "Johann A. Schmidt ",
+          schedule?.schetoward?.userfullname ?? "Unknown",
           style: TextStyle(
             fontSize: 14,
             color: RegularColor.gray,
@@ -32,104 +44,115 @@ class _ScheduleDetail extends StatelessWidget {
         SizedBox(
           height: RegularSize.m,
         ),
-        _DetailItem(
-          title: "Date",
-          value: "June 23, 2020 - June 24, 2020",
-        ),
-        SizedBox(
-          height: RegularSize.s,
-        ),
-        _DetailItem(
-          title: "Time",
-          value: "10:00 - 18:00",
-        ),
-        SizedBox(
-          height: RegularSize.s,
-        ),
-        _DetailItem(
-          title: "Timezone",
-          value: "America/New_York",
-        ),
-        SizedBox(
-          height: RegularSize.s,
-        ),
+        if (formattedStartDate.isNotEmpty || formattedEndDate.isNotEmpty) ...[
+          _DetailItem(
+            title: "Date",
+            value: "$formattedStartDate${formattedStartDate.isNotEmpty && formattedEndDate.isNotEmpty ? ' - ' : ''}$formattedEndDate",
+          ),
+          SizedBox(
+            height: RegularSize.s,
+          ),
+        ],
+        if (formattedStartTime.isNotEmpty || formattedEndTime.isNotEmpty) ...[
+          _DetailItem(
+            title: "Time",
+            value: "$formattedStartTime${formattedStartTime.isNotEmpty && formattedEndTime.isNotEmpty ? ' - ' : ''}$formattedEndTime",
+          ),
+          SizedBox(
+            height: RegularSize.s,
+          ),
+        ],
+        if (schedule?.schetz != null) ...[
+          _DetailItem(
+            title: "Timezone",
+            value: schedule!.schetz!,
+          ),
+          SizedBox(
+            height: RegularSize.s,
+          ),
+        ],
         _DetailItem(
           title: "Remind In",
-          value: "5 Minutes",
+          value: schedule?.scheremind != null ? "${schedule!.scheremind} Minutes" : 'No Reminder',
         ),
         SizedBox(
           height: RegularSize.s,
         ),
-        Text(
-          "Location",
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-            color: RegularColor.dark,
-          ),
-        ),
-        SizedBox(
-          height: RegularSize.xs,
-        ),
-        RichText(
-          text: TextSpan(
-            text: "http://google.maps.com?q=location&z=15&t=m&hl=en",
+        if (schedule?.scheloc != null) ...[
+          Text(
+            "Location",
             style: TextStyle(
-              fontSize: 14,
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
               color: RegularColor.dark,
             ),
-            children: [
-              TextSpan(
-                text: " Copy",
-                style: TextStyle(
-                  color: RegularColor.primary,
-                ),
+          ),
+          SizedBox(
+            height: RegularSize.xs,
+          ),
+          RichText(
+            text: TextSpan(
+              text: schedule?.scheloc ?? '-',
+              style: TextStyle(
+                fontSize: 14,
+                color: RegularColor.dark,
               ),
-            ],
+              children: [
+                TextSpan(
+                  text: " Copy",
+                  style: TextStyle(
+                    color: RegularColor.primary,
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
-        SizedBox(
-          height: RegularSize.s,
-        ),
-        Text(
-          "Meeting Link",
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-            color: RegularColor.dark,
+          SizedBox(
+            height: RegularSize.s,
           ),
-        ),
-        SizedBox(
-          height: RegularSize.xs,
-        ),
-        RichText(
-          text: TextSpan(
-            text: "https://zoom.us/j/123456789",
+        ],
+        if (schedule?.scheonlink != null) ...[
+          Text(
+            "Meeting Link",
             style: TextStyle(
-              fontSize: 14,
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
               color: RegularColor.dark,
             ),
-            children: [
-              TextSpan(
-                text: " Copy",
-                style: TextStyle(
-                  color: RegularColor.primary,
-                ),
-              ),
-            ],
           ),
-        ),
-        SizedBox(
-          height: RegularSize.s,
-        ),
-        _DetailItem(
-          title: "Description",
-          value:
-              "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-        ),
-        SizedBox(
-          height: RegularSize.s,
-        ),
+          SizedBox(
+            height: RegularSize.xs,
+          ),
+          RichText(
+            text: TextSpan(
+              text: schedule?.scheonlink ?? '-',
+              style: TextStyle(
+                fontSize: 14,
+                color: RegularColor.dark,
+              ),
+              children: [
+                TextSpan(
+                  text: " Copy",
+                  style: TextStyle(
+                    color: RegularColor.primary,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(
+            height: RegularSize.s,
+          ),
+        ],
+        if (schedule?.schedesc != null) ...[
+          _DetailItem(
+            title: "Description",
+            value: schedule?.schedesc ?? '-',
+          ),
+          SizedBox(
+            height: RegularSize.s,
+          ),
+        ],
         Text(
           "Tags",
           style: TextStyle(
@@ -145,20 +168,36 @@ class _ScheduleDetail extends StatelessWidget {
           spacing: RegularSize.s,
           runSpacing: RegularSize.s,
           children: [
+            Builder(builder: (context) {
+              Color color;
+              String scheduletype = schedule?.schetype?.typename ?? "Unknown";
+
+              if (scheduletype == "Event") {
+                color = RegularColor.yellow;
+              } else if (scheduletype == "Task") {
+                color = RegularColor.red;
+              } else if (scheduletype == "Reminder") {
+                color = RegularColor.cyan;
+              } else {
+                color = RegularColor.gray;
+              }
+              return _DetailTag(
+                text: scheduletype,
+                color: color,
+              );
+            }),
+            if (schedule?.scheallday ?? false)
+              _DetailTag(
+                text: "Allday",
+                color: RegularColor.indigo,
+              ),
+            if (schedule?.scheprivate ?? false)
+              _DetailTag(
+                text: "Private",
+                color: RegularColor.pink,
+              ),
             _DetailTag(
-              text: "Event",
-              color: RegularColor.yellow,
-            ),
-            _DetailTag(
-              text: "Allday",
-              color: RegularColor.indigo,
-            ),
-            _DetailTag(
-              text: "Private",
-              color: RegularColor.pink,
-            ),
-            _DetailTag(
-              text: "On Site",
+              text: schedule?.scheonline ?? false ? "Online" : "On Site",
               color: RegularColor.green,
             ),
           ],

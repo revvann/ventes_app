@@ -57,7 +57,7 @@ class SchedulePresenter {
         data["types"] = typesResponse.body;
         _fetchContract.onLoadSuccess(data);
       } else {
-        _fetchContract.onLoadFailed(ScheduleString.fetchFailed);
+        _fetchContract.onLoadFailed("${scheduleResponse.statusCode} ${typesResponse.statusCode}");
       }
     } catch (e) {
       _fetchContract.onLoadFailed(e.toString());

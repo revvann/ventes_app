@@ -17,6 +17,7 @@ import 'package:ventes/app/states/controllers/keyboard_state_controller.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/helpers/auth_helper.dart';
 import 'package:ventes/helpers/function_helpers.dart';
+import 'package:ventes/helpers/notification_helper.dart';
 import 'package:ventes/helpers/task_helper.dart';
 import 'package:ventes/routing/routes/routes.dart';
 import 'package:ventes/app/network/services/auth_service.dart';
@@ -29,8 +30,6 @@ void main() async {
   runApp(const MyApp());
   Intl.defaultLocale = 'en_ID';
   Get.lazyPut(() => AuthService(), fenix: true);
-  Get.lazyPut(() => AuthHelper(), fenix: true);
-  Get.lazyPut(() => TaskHelper(), fenix: true);
   Get.lazyPut(() => AuthService(), fenix: true);
   Get.lazyPut(() => BpCustomerService(), fenix: true);
   Get.lazyPut(() => CustomerService(), fenix: true);
@@ -43,6 +42,10 @@ void main() async {
   Get.lazyPut(() => ProspectDetailService(), fenix: true);
   Get.lazyPut(() => ContactPersonService(), fenix: true);
   Get.lazyPut(() => KeyboardStateController(), fenix: true);
+  Get.lazyPut(() => ContactPersonService(), fenix: true);
+  Get.lazyPut(() => AuthHelper(), fenix: true);
+  Get.lazyPut(() => NotificationHelper(), fenix: true);
+  Get.lazyPut(() => TaskHelper(), fenix: true);
 }
 
 class MyApp extends StatelessWidget {

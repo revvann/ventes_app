@@ -15,6 +15,7 @@ import 'package:ventes/app/states/controllers/regular_state_controller.dart';
 import 'package:ventes/app/states/data_sources/schedule_fc_data_source.dart';
 import 'package:ventes/app/states/form_sources/schedule_fc_form_source.dart';
 import 'package:ventes/app/states/listeners/schedule_fc_listener.dart';
+import 'package:ventes/helpers/notification_helper.dart';
 import 'package:ventes/helpers/task_helper.dart';
 
 class ScheduleFormCreateStateController extends RegularStateController {
@@ -53,6 +54,7 @@ class ScheduleFormCreateStateController extends RegularStateController {
 class ScheduleFormCreateProperties {
   ScheduleFormCreateDataSource get _dataSource => Get.find<ScheduleFormCreateDataSource>();
   ScheduleFormCreateListener get _listener => Get.find<ScheduleFormCreateListener>();
+  ScheduleFormCreateFormSource get _formSource => Get.find<ScheduleFormCreateFormSource>();
 
   final Completer<GoogleMapController> mapsController = Completer();
   CameraPosition currentPos = CameraPosition(target: LatLng(0, 0), zoom: 14.4764);
@@ -149,5 +151,31 @@ class ScheduleFormCreateProperties {
         onCameraMove: _listener.onCameraMove,
       );
     });
+  }
+
+  Future scheduleNotification() async {
+    if (_formSource.isEvent && _formSource.scheremind != 0) {
+      String title = "Ventes Schedule";
+      DateTime? startTime = _formSource.schestarttime;
+      DateTime? startDate = _formSource.schestartdate;
+      DateTime date;
+
+      if (!_formSource.scheallday) {
+        date = DateTime(startDate.year, startDate.month, startDate.day, startTime!.hour, startTime.minute);
+      } else {
+        date = DateTime(startDate.year, startDate.month, startDate.day, 0, 0);
+      }
+
+      date = date.subtract(Duration(minutes: _formSource.scheremind));
+
+      String message = "${_formSource.schenm} will start in ${_formSource.scheremind} minutes, be ready!";
+
+      await Get.find<NotificationHelper>().scheduleNotification(
+        title: title,
+        body: message,
+        scheduledDate: date,
+        timeZone: _formSource.schetz,
+      );
+    }
   }
 }

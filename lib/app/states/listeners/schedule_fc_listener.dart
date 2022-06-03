@@ -229,7 +229,8 @@ class ScheduleFormCreateListener {
     Get.find<TaskHelper>().successPush(
       ScheduleString.createScheduleTaskCode,
       ScheduleString.createSuccess,
-      () {
+      () async {
+        await _properties.scheduleNotification();
         Get.find<DailyScheduleStateController>().properties.refresh();
         Get.back(id: ScheduleNavigator.id);
       },
