@@ -63,6 +63,10 @@ class ProspectFormCreatePresenter {
     return await _typeService.byCode({'typecd': ProspectString.statusTypeCode});
   }
 
+  Future<Response> _getTaxes() async {
+    return await _typeService.byCode({'typecd': ProspectString.taxTypeCode});
+  }
+
   Future<Response> _getStage() async {
     return await _typeService.byCode({'typecd': ProspectString.stageTypeCode});
   }
@@ -89,11 +93,13 @@ class ProspectFormCreatePresenter {
       Response followUpResponse = await _getFollowUp();
       Response statusResponse = await _getStatus();
       Response stageResponse = await _getStage();
+       Response taxesResponse = await _getTaxes();
 
-      if (followUpResponse.statusCode == 200 && statusResponse.statusCode == 200 && stageResponse.statusCode == 200) {
+      if (followUpResponse.statusCode == 200 && statusResponse.statusCode == 200 && stageResponse.statusCode == 200 && taxesResponse.statusCode == 200) {
         data['followup'] = followUpResponse.body;
         data['status'] = statusResponse.body;
         data['stage'] = stageResponse.body;
+        data['taxes'] = taxesResponse.body;
         _fetchDataContract.onLoadSuccess(data);
       } else {
         _fetchDataContract.onLoadFailed(ProspectString.fetchUsersDataFailed);

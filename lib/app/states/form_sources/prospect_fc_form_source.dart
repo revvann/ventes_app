@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ventes/app/models/bp_customer_model.dart';
+import 'package:ventes/app/models/type_model.dart';
 import 'package:ventes/app/models/user_detail_model.dart';
-import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
 import 'package:ventes/app/resources/widgets/searchable_dropdown.dart';
 import 'package:ventes/app/states/form_validators/prospect_fc_validator.dart';
 import 'package:ventes/constants/formatters/currency_formatter.dart';
@@ -28,9 +28,12 @@ class ProspectFormCreateFormSource {
   final Rx<UserDetail?> _prosowner = Rx<UserDetail?>(null);
   final Rx<BpCustomer?> _proscustomer = Rx<BpCustomer?>(null);
 
+  final Rx<List<Map<String, dynamic>>> _prosproducts = Rx<List<Map<String, dynamic>>>([]);
+
   final Rx<int?> _prostype = Rx<int?>(null);
   int? prosstatus;
   int? prosstage;
+  DBType? prospectproducttaxdefault;
 
   DateTime? get prosstartdate => _prosstartdate.value;
   set prosstartdate(DateTime? value) => _prosstartdate.value = value;
@@ -59,6 +62,11 @@ class ProspectFormCreateFormSource {
   String? get prosownerString => _prosowner.value?.user?.userfullname;
   String? get proscustomerString => _proscustomer.value?.sbccstmname;
 
+  List<Map<String, dynamic>> get prosproducts => _prosproducts.value;
+  set prosproducts(List<Map<String, dynamic>> value) => _prosproducts.value = value;
+  set addprosproduct(Map<String, dynamic> value) => _prosproducts.update((rxprosproduct) => rxprosproduct?.add(value));
+  set removeprosproduct(Map<String, dynamic> value) => _prosproducts.update((rxprosproduct) => rxprosproduct?.remove(value));
+
   bool get isValid => formKey.currentState?.validate() ?? false;
 
   init() {
@@ -71,6 +79,14 @@ class ProspectFormCreateFormSource {
     prosdescTEC.dispose();
     Get.delete<SearchableDropdownController<UserDetail>>();
     Get.delete<SearchableDropdownController<BpCustomer>>();
+
+    for (var element in prosproducts) {
+      element['nameTEC'].dispose();
+      element['priceTEC'].dispose();
+      element['qtyTEC'].dispose();
+      element['discTEC'].dispose();
+      element['taxTEC'].dispose();
+    }
   }
 
   reset() {
@@ -103,6 +119,30 @@ class ProspectFormCreateFormSource {
       'prospectbpid': proscustomer?.sbcbpid,
       'prospectdescription': prosdesc,
       'prospectcustid': proscustomer?.sbcid,
+      'products': productsToJson(),
     };
+  }
+
+  List<Map<String, dynamic>> productsToJson() {
+    return prosproducts.map((prosproduct) {
+      String priceString = prosproduct['priceTEC'].text.replaceAll(RegExp(r'[.]'), '').replaceAll(RegExp(r'[,]'), '.');
+      String qtyString = prosproduct['qtyTEC'].text.replaceAll(RegExp(r'[.]'), '').replaceAll(RegExp(r'[,]'), '.');
+      String taxString = prosproduct['taxTEC'].text.replaceAll(RegExp(r'[.]'), '').replaceAll(RegExp(r'[,]'), '.');
+
+      double price = double.tryParse(priceString) ?? 0;
+      double qty = double.tryParse(qtyString) ?? 0;
+
+      double total = price * qty;
+      return {
+        'productname': prosproduct['nameTEC'].text,
+        'productbpid': proscustomer?.sbcbpid,
+        'prosproductprice': priceString,
+        'prosproductqty': qtyString,
+        'prosproducttax': taxString,
+        'prosproductdiscount': prosproduct['discTEC'].text,
+        'prosproductamount': total.toString(),
+        'prosproducttaxtypeid': prosproduct['taxType'].value.typeid.toString(),
+      };
+    }).toList();
   }
 }

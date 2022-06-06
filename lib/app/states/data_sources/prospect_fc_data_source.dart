@@ -21,6 +21,10 @@ class ProspectFormCreateDataSource implements FetchDataContract, CreateContract 
   set followUpItems(Map<int, String> value) => _followUpItems.value = value;
   Map<int, String> get followUpItems => _followUpItems.value;
 
+  final Rx<List<KeyableDropdownItem<int, DBType>>> _taxItems = Rx<List<KeyableDropdownItem<int, DBType>>>([]);
+  set taxItems(List<KeyableDropdownItem<int, DBType>> value) => _taxItems.value = value;
+  List<KeyableDropdownItem<int, DBType>> get taxItems => _taxItems.value;
+
   init() {
     _presenter.fetchDataContract = this;
     _presenter.createContract = this;
@@ -48,6 +52,12 @@ class ProspectFormCreateDataSource implements FetchDataContract, CreateContract 
     if (data['status'] != null) {
       List<DBType> statusList = data['status'].map<DBType>((item) => DBType.fromJson(item)).toList();
       _formSource.prosstatus = statusList.isEmpty ? null : statusList.first.typeid!;
+    }
+
+    if (data['taxes'] != null) {
+      List<DBType> taxes = data['taxes'].map<DBType>((item) => DBType.fromJson(item)).toList();
+      _formSource.prospectproducttaxdefault = taxes.isNotEmpty ? taxes.first : null;
+      taxItems = taxes.map<KeyableDropdownItem<int, DBType>>((item) => KeyableDropdownItem<int, DBType>(key: item.typeid!, value: item)).toList();
     }
 
     if (data['stage'] != null) {
