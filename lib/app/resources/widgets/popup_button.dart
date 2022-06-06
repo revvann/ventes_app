@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ventes/constants/regular_size.dart';
 
-class PopupMenuController<K, V> extends GetxController with GetSingleTickerProviderStateMixin {
+class PopupMenuController extends GetxController with GetSingleTickerProviderStateMixin {
   late DropdownSettings dropdownSettings;
 
   final LayerLink layerLink = LayerLink();
@@ -108,13 +108,13 @@ class PopupMenuController<K, V> extends GetxController with GetSingleTickerProvi
   }
 }
 
-class PopupMenu<K, V> extends StatelessWidget {
+class PopupMenu extends StatelessWidget {
   final Widget child;
 
   double? width;
   double? height;
   DropdownSettings dropdownSettings;
-  PopupMenuController<K, V> controller;
+  PopupMenuController controller;
 
   PopupMenu({
     required this.child,

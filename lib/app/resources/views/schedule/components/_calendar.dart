@@ -50,7 +50,10 @@ class _Calendar extends StatelessWidget {
             child: ListView.builder(
               itemCount: appointments.length,
               itemBuilder: (_, index) {
-                return appointmentDetailItemBuilder(appointments[index]);
+                return GestureDetector(
+                  onTap: () => openScheduleDialog(appointments[index]),
+                  child: appointmentDetailItemBuilder(appointments[index]),
+                );
               },
             ),
           ),
@@ -81,6 +84,20 @@ class _Calendar extends StatelessWidget {
             ],
           ),
         ],
+      ),
+    ).show();
+  }
+
+  void openScheduleDialog(Schedule schedule) {
+    RegularDialog(
+      width: Get.width * 0.9,
+      alignment: Alignment.centerLeft,
+      padding: EdgeInsets.symmetric(
+        vertical: RegularSize.m,
+        horizontal: RegularSize.m,
+      ),
+      child: SingleChildScrollView(
+        child: ScheduleDetail(schedule),
       ),
     ).show();
   }

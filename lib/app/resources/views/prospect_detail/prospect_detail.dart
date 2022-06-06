@@ -6,6 +6,8 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:ventes/app/models/prospect_detail_model.dart';
+import 'package:ventes/app/resources/widgets/pop_up_item.dart';
+import 'package:ventes/app/resources/widgets/popup_button.dart';
 import 'package:ventes/app/resources/widgets/regular_dialog.dart';
 import 'package:ventes/app/resources/widgets/regular_outlined_button.dart';
 import 'package:ventes/app/resources/widgets/top_navigation.dart';
@@ -18,6 +20,7 @@ import 'package:ventes/helpers/function_helpers.dart';
 
 part 'package:ventes/app/resources/views/prospect_detail/components/_floating_button.dart';
 part 'package:ventes/app/resources/views/prospect_detail/components/_detail_list.dart';
+part 'package:ventes/app/resources/views/prospect_detail/components/_app_bar_menu.dart';
 
 class ProspectDetailView extends View<ProspectDetailStateController> {
   static const String route = "/prospect/detail";
@@ -50,6 +53,10 @@ class ProspectDetailView extends View<ProspectDetailStateController> {
           ),
           onTap: state.listener.goBack,
         ),
+        actions: [
+          _AppBarMenu(),
+          SizedBox(width: RegularSize.s),
+        ],
         below: GestureDetector(
           onTap: showDetailDialog,
           child: Container(

@@ -6,9 +6,11 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:ventes/app/models/schedule_model.dart';
+import 'package:ventes/app/resources/widgets/pop_up_item.dart';
 import 'package:ventes/app/resources/widgets/popup_button.dart';
 import 'package:ventes/app/resources/widgets/regular_appointment_card.dart';
 import 'package:ventes/app/resources/widgets/regular_dialog.dart';
+import 'package:ventes/app/resources/widgets/schedule_detail.dart';
 import 'package:ventes/app/resources/widgets/top_navigation.dart';
 import 'package:ventes/app/states/controllers/daily_schedule_state_controller.dart';
 import 'package:ventes/constants/regular_color.dart';
@@ -19,7 +21,6 @@ import 'package:ventes/helpers/function_helpers.dart';
 
 part 'package:ventes/app/resources/views/daily_schedule/components/_calendar.dart';
 part 'package:ventes/app/resources/views/daily_schedule/components/_app_bar_menu.dart';
-part 'package:ventes/app/resources/views/daily_schedule/components/_schedule_detail.dart';
 
 class DailyScheduleView extends View<DailyScheduleStateController> {
   static const String route = "/schedule/daily";

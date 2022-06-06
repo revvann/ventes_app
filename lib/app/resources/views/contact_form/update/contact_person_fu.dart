@@ -1,28 +1,26 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
-
-import 'dart:math';
+// ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:ventes/app/models/contact_person_model.dart';
-import 'package:ventes/app/resources/widgets/pop_up_item.dart';
-import 'package:ventes/app/resources/widgets/popup_button.dart';
+import 'package:ventes/app/models/type_model.dart';
+import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
+import 'package:ventes/app/resources/widgets/regular_input.dart';
 import 'package:ventes/app/resources/widgets/top_navigation.dart';
-import 'package:ventes/app/states/controllers/contact_person_state_controller.dart';
+import 'package:ventes/app/states/controllers/contact_person_fu_state_controller.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/constants/strings/prospect_string.dart';
 import 'package:ventes/core/view.dart';
 
-part 'package:ventes/app/resources/views/contact/components/_contact_list.dart';
+part 'package:ventes/app/resources/views/contact_form/update/components/_type_dropdown.dart';
 
-class ContactPersonView extends View<ContactPersonStateController> {
-  static const String route = "/contactperson";
+class ContactPersonFormUpdateView extends View<ContactPersonFormUpdateStateController> {
+  static const String route = "/contactperson/update";
 
-  ContactPersonView(int customerid) {
-    state.properties.customerid = customerid;
+  ContactPersonFormUpdateView(int contact) {
+    state.properties.contactid = contact;
   }
 
   @override
@@ -36,7 +34,6 @@ class ContactPersonView extends View<ContactPersonStateController> {
       extendBodyBehindAppBar: true,
       appBar: TopNavigation(
         title: ProspectString.appBarTitle,
-        height: 80,
         appBarKey: state.appBarKey,
         leading: GestureDetector(
           child: Container(
@@ -49,24 +46,24 @@ class ContactPersonView extends View<ContactPersonStateController> {
           ),
           onTap: state.listener.goBack,
         ),
-        below: GestureDetector(
-          child: Container(
-            padding: EdgeInsets.symmetric(
-              horizontal: RegularSize.xl,
-            ),
-            alignment: Alignment.center,
-            child: Obx(() {
-              return Text(
-                state.dataSource.bpcustomer?.sbccstmname ?? "",
-                overflow: TextOverflow.ellipsis,
+        actions: [
+          GestureDetector(
+            onTap: state.listener.onSubmitButtonClicked,
+            child: Container(
+              padding: EdgeInsets.symmetric(
+                vertical: RegularSize.s,
+                horizontal: RegularSize.m,
+              ),
+              child: Text(
+                ProspectString.submitButtonText,
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 14,
+                  fontSize: 16,
                 ),
-              );
-            }),
+              ),
+            ),
           ),
-        ),
+        ],
       ).build(context),
       body: SafeArea(
         child: RefreshIndicator(
@@ -92,24 +89,29 @@ class ContactPersonView extends View<ContactPersonStateController> {
                 ),
                 child: SingleChildScrollView(
                   physics: AlwaysScrollableScrollPhysics(),
-                  child: Column(
-                    children: [
-                      Container(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          "Contact Person",
-                          style: TextStyle(
-                            color: RegularColor.primary,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
-                          ),
+                  child: Form(
+                    key: state.formSource.formKey,
+                    child: Column(
+                      children: [
+                        Obx(() {
+                          return RegularInput(
+                            label: "Customer",
+                            value: state.dataSource.customerName,
+                            enabled: false,
+                          );
+                        }),
+                        SizedBox(height: RegularSize.m),
+                        _TypeDropdown(),
+                        SizedBox(height: RegularSize.m),
+                        RegularInput(
+                          label: "Contact Value",
+                          hintText: "Enter contact (e.g. email, phone, etc.)",
+                          controller: state.formSource.valueTEC,
+                          validator: state.formSource.validator.contactvalue,
                         ),
-                      ),
-                      SizedBox(
-                        height: RegularSize.m,
-                      ),
-                      _ContactList(),
-                    ],
+                        SizedBox(height: RegularSize.m),
+                      ],
+                    ),
                   ),
                 ),
               );
@@ -117,16 +119,6 @@ class ContactPersonView extends View<ContactPersonStateController> {
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: state.listener.onAddButtonClicked,
-        backgroundColor: RegularColor.primary,
-        child: SvgPicture.asset(
-          'assets/svg/plus.svg',
-          color: Colors.white,
-          width: RegularSize.l,
-        ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 }

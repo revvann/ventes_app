@@ -36,6 +36,7 @@ class _ContactList extends StatelessWidget {
                 ],
               ),
               child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Expanded(
                     child: Text(
@@ -63,6 +64,45 @@ class _ContactList extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 12,
                         color: Colors.white,
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: RegularSize.s),
+                  PopupMenu(
+                    controller: state.properties.createPopupController(index),
+                    dropdownSettings: DropdownSettings(
+                      width: 100,
+                      offset: Offset(10, 5),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: RegularSize.s,
+                          horizontal: RegularSize.s,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            MenuItem(
+                              title: "Edit",
+                              icon: "assets/svg/edit.svg",
+                              onTap: () => state.listener.navigateToUpdateForm(_contact.contactpersonid!),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                    child: Container(
+                      width: 20,
+                      height: 20,
+                      padding: EdgeInsets.all(RegularSize.xs),
+                      alignment: Alignment.center,
+                      child: Transform.rotate(
+                        angle: pi / 2,
+                        child: SvgPicture.asset(
+                          "assets/svg/menu-dots.svg",
+                          color: RegularColor.dark,
+                          width: RegularSize.m,
+                        ),
                       ),
                     ),
                   ),

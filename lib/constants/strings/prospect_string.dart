@@ -11,6 +11,7 @@ class ProspectString {
   static String formUpdateDetailTaskCode = 'detailcreateprospect';
   static String contactPersonTaskCode = 'contactperson';
   static String formCreateContactTaskCode = 'contactcreate';
+  static String formUpdateContactTaskCode = 'contactupdate';
 
   static String statusTypeCode = 'prstatus';
   static String followUpTypeCode = 'prfoll';
@@ -21,11 +22,19 @@ class ProspectString {
   static String contactTypeCode = 'contact';
 
   static String fetchDataFailed = "Failed to fetch prospect data";
+
   static String createDataFailed = "Failed to create prospect";
   static String createDataSuccess = "Prospect created successfully";
 
+  static String fetchContactFailed = "Failed to fetch contact data";
+
+  static String createContactFailed = "Failed to create contact";
+  static String createContactSuccess = "Contact created successfully";
+
   static String updateDataFailed = "Failed to update prospect";
   static String updateDataSuccess = "Prospect updated successfully";
+  static String updateContactFailed = "Failed to update contact";
+  static String updateContactSuccess = "Contact updated successfully";
 
   static String fetchUsersDataFailed = "Failed to fetch users data";
 

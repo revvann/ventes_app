@@ -1,24 +1,22 @@
 import 'package:get/get.dart';
-import 'package:ventes/app/network/contracts/create_contract.dart';
+import 'package:ventes/app/network/contracts/update_contract.dart';
 import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
 import 'package:ventes/app/network/services/contact_person_service.dart';
-import 'package:ventes/app/network/services/customer_service.dart';
 import 'package:ventes/app/network/services/type_service.dart';
 import 'package:ventes/constants/strings/prospect_string.dart';
 
-class ContactPersonFormCreatePresenter {
+class ContactPersonFormUpdatePresenter {
   final TypeService _typeService = Get.find<TypeService>();
-  final CustomerService _customerService = Get.find<CustomerService>();
   final ContactPersonService _contactPersonService = Get.find<ContactPersonService>();
 
   late FetchDataContract _fetchDataContract;
   set fetchDataContract(FetchDataContract value) => _fetchDataContract = value;
 
-  late CreateContract _createContract;
-  set createContract(CreateContract value) => _createContract = value;
+  late UpdateContract _updateContract;
+  set updateContract(UpdateContract value) => _updateContract = value;
 
-  Future<Response> _getCustomer(int customerid) {
-    return _customerService.show(customerid);
+  Future<Response> _getContactPerson(int contactpersonid) {
+    return _contactPersonService.show(contactpersonid);
   }
 
   Future<Response> _getTypes() {
@@ -28,10 +26,10 @@ class ContactPersonFormCreatePresenter {
   void fetchData(int id) async {
     Map<String, dynamic> data = {};
     try {
-      Response customerResponse = await _getCustomer(id);
       Response typeResponse = await _getTypes();
-      if (customerResponse.statusCode == 200) {
-        data['customer'] = customerResponse.body;
+      Response contactPersonResponse = await _getContactPerson(id);
+      if (typeResponse.statusCode == 200 && contactPersonResponse.statusCode == 200) {
+        data['contactperson'] = contactPersonResponse.body;
         data['types'] = typeResponse.body;
         _fetchDataContract.onLoadSuccess(data);
       } else {
@@ -42,16 +40,16 @@ class ContactPersonFormCreatePresenter {
     }
   }
 
-  void createData(Map<String, dynamic> data) async {
+  void updateData(int id, Map<String, dynamic> data) async {
     try {
-      Response response = await _contactPersonService.store(data);
+      Response response = await _contactPersonService.update(id, data);
       if (response.statusCode == 200) {
-        _createContract.onCreateSuccess(ProspectString.createContactSuccess);
+        _updateContract.onUpdateSuccess(ProspectString.updateContactSuccess);
       } else {
-        _createContract.onCreateFailed(ProspectString.createContactFailed);
+        _updateContract.onUpdateFailed(ProspectString.updateContactFailed);
       }
     } catch (e) {
-      _createContract.onCreateError(e.toString());
+      _updateContract.onUpdateError(e.toString());
     }
   }
 }

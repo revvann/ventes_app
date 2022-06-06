@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ventes/app/models/bp_customer_model.dart';
 import 'package:ventes/app/models/maps_loc.dart';
+import 'package:ventes/app/models/schedule_model.dart';
 import 'package:ventes/app/models/user_detail_model.dart';
 import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
 import 'package:ventes/app/network/contracts/logout_contract.dart';
@@ -21,6 +22,10 @@ class DashboardDataSource implements FetchDataContract, LogoutContract {
   final _customers = <BpCustomer>[].obs;
   set customers(List<BpCustomer> value) => _customers.value = value;
   List<BpCustomer> get customers => _customers.value;
+
+  final _scheduleCount = 0.obs;
+  set scheduleCount(int value) => _scheduleCount.value = value;
+  int get scheduleCount => _scheduleCount.value;
 
   final _activeUser = Rx<UserDetail?>(null);
   UserDetail? get activeUser => _activeUser.value;
@@ -73,6 +78,10 @@ class DashboardDataSource implements FetchDataContract, LogoutContract {
 
     if (data['currentPosition'] != null) {
       currentPosition = MapsLoc.fromJson(data['currentPosition']);
+    }
+
+    if (data['scheduleCount'] != null) {
+      scheduleCount = data['scheduleCount'];
     }
 
     Get.find<TaskHelper>().loaderPop(DashboardString.taskCode);

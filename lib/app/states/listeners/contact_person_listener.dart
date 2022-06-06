@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:ventes/app/resources/views/contact_form/create/contact_person_fc.dart';
+import 'package:ventes/app/resources/views/contact_form/update/contact_person_fu.dart';
 import 'package:ventes/app/states/controllers/contact_person_state_controller.dart';
 import 'package:ventes/constants/strings/prospect_string.dart';
 import 'package:ventes/helpers/task_helper.dart';
@@ -22,6 +23,16 @@ class ContactPersonListener {
       id: ProspectNavigator.id,
       arguments: {
         'customer': _properties.customerid,
+      },
+    );
+  }
+
+  void navigateToUpdateForm(int contactid) {
+    Get.toNamed(
+      ContactPersonFormUpdateView.route,
+      id: ProspectNavigator.id,
+      arguments: {
+        'contact': contactid,
       },
     );
   }

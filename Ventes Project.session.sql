@@ -126,4 +126,4 @@ WHERE get_schedule_from_dates(
 --         '2022-12-30'
 --     ) AS b;
 select *
-from vtschedule;
+from mscontactperson;

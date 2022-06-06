@@ -88,6 +88,7 @@ class ContactPersonFormCreateView extends View<ContactPersonFormCreateStateContr
                   ),
                 ),
                 child: SingleChildScrollView(
+                  physics: AlwaysScrollableScrollPhysics(),
                   child: Form(
                     key: state.formSource.formKey,
                     child: Column(
