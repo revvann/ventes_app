@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
@@ -7,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:ventes/app/models/type_model.dart';
 import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
 import 'package:ventes/app/resources/widgets/regular_input.dart';
+import 'package:ventes/app/resources/widgets/searchable_dropdown.dart';
 import 'package:ventes/app/resources/widgets/top_navigation.dart';
 import 'package:ventes/app/states/controllers/contact_person_fc_state_controller.dart';
 import 'package:ventes/constants/regular_color.dart';
@@ -108,6 +110,64 @@ class ContactPersonFormCreateView extends View<ContactPersonFormCreateStateContr
                           hintText: "Enter contact (e.g. email, phone, etc.)",
                           controller: state.formSource.valueTEC,
                           validator: state.formSource.validator.contactvalue,
+                        ),
+                        SizedBox(height: RegularSize.m),
+                        SearchableDropdown<Contact>(
+                          controller: state.formSource.contactDropdownController,
+                          isMultiple: false,
+                          child: RegularInput(
+                            enabled: false,
+                            label: "Phone Number",
+                            hintText: "select phone number",
+                          ),
+                          onChange: state.listener.onContactChanged,
+                          onCompare: state.listener.onContactCompared,
+                          onItemFilter: state.listener.onContactFilter,
+                          itemBuilder: (item, isSelected) {
+                            return Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: RegularSize.s,
+                                vertical: RegularSize.s,
+                              ),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(RegularSize.s),
+                                color: isSelected ? RegularColor.green.withOpacity(0.3) : Colors.transparent,
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Text(
+                                        item.value.givenName ?? "",
+                                        style: TextStyle(
+                                          color: isSelected ? RegularColor.green : RegularColor.dark,
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                      SizedBox(height: RegularSize.xs),
+                                      Text(
+                                        item.value.phones?.first.value ?? "",
+                                        style: TextStyle(
+                                          color: isSelected ? RegularColor.green : RegularColor.dark,
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  if (isSelected)
+                                    SvgPicture.asset(
+                                      "assets/svg/check.svg",
+                                      color: RegularColor.green,
+                                      height: RegularSize.m,
+                                      width: RegularSize.m,
+                                    ),
+                                ],
+                              ),
+                            );
+                          },
                         ),
                         SizedBox(height: RegularSize.m),
                       ],

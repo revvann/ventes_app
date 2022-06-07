@@ -25,10 +25,6 @@ class ProspectDetailFormCreatePresenter {
     return await _typeService.byCode({'typecd': ProspectString.detailTypeCode});
   }
 
-  Future<Response> _getTaxes() async {
-    return await _typeService.byCode({'typecd': ProspectString.taxTypeCode});
-  }
-
   Future<Response> _getProspect(int id) async {
     return await _prospectService.show(id);
   }
@@ -43,14 +39,12 @@ class ProspectDetailFormCreatePresenter {
       Response categoryResponse = await _getCategories();
       Response typeResponse = await _getTypes();
       Response prospectResponse = await _getProspect(id);
-      Response taxesResponse = await _getTaxes();
 
-      if (categoryResponse.statusCode == 200 && typeResponse.statusCode == 200 && prospectResponse.statusCode == 200 && taxesResponse.statusCode == 200) {
+      if (categoryResponse.statusCode == 200 && typeResponse.statusCode == 200 && prospectResponse.statusCode == 200) {
         data = {
           'categories': categoryResponse.body,
           'types': typeResponse.body,
           'prospect': prospectResponse.body,
-          'taxes': taxesResponse.body,
         };
         _fetchDataContract.onLoadSuccess(data);
       } else {

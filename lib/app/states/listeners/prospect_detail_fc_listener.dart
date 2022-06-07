@@ -1,7 +1,4 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:ventes/app/models/type_model.dart';
-import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
 import 'package:ventes/app/states/controllers/prospect_detail_fc_state_controller.dart';
 import 'package:ventes/app/states/controllers/prospect_detail_state_controller.dart';
 import 'package:ventes/app/states/data_sources/prospect_detail_fc_data_source.dart';
@@ -45,35 +42,6 @@ class ProspectDetailFormCreateListener {
 
   Future onRefresh() async {
     _properties.refresh();
-  }
-
-  void onAddProduct() {
-    int index = _formSource.prosproducts.length;
-    KeyableDropdownController<int, DBType> taxDropdownController = Get.put(
-      KeyableDropdownController<int, DBType>(),
-      tag: 'taxDropdownController$index',
-    );
-    TextEditingController nameTEC = TextEditingController();
-    TextEditingController priceTEC = TextEditingController();
-    TextEditingController qtyTEC = TextEditingController(text: "1");
-    TextEditingController discTEC = TextEditingController(text: "0");
-    TextEditingController taxTEC = TextEditingController();
-
-    _formSource.addprosproduct = {
-      'taxDropdownController': taxDropdownController,
-      'taxType': Rx<DBType>(_formSource.prospectproducttaxdefault!),
-      "nameTEC": nameTEC,
-      "priceTEC": priceTEC,
-      "qtyTEC": qtyTEC,
-      "discTEC": discTEC,
-      "taxTEC": taxTEC,
-    };
-  }
-
-  void onRemoveProduct(Map<String, dynamic> product) {
-    int index = _formSource.prosproducts.indexOf(product);
-    Get.delete<KeyableDropdownController<int, DBType>>(tag: 'taxDropdownController$index');
-    _formSource.removeprosproduct = product;
   }
 
   void onLoadFailed(String message) {

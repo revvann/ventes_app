@@ -1,7 +1,5 @@
-import 'package:flutter/material.dart';
+import 'package:contacts_service/contacts_service.dart';
 import 'package:get/get.dart';
-import 'package:ventes/app/models/type_model.dart';
-import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
 import 'package:ventes/app/states/controllers/contact_person_fc_state_controller.dart';
 import 'package:ventes/app/states/controllers/contact_person_state_controller.dart';
 import 'package:ventes/app/states/data_sources/contact_person_fc_data_source.dart';
@@ -27,6 +25,18 @@ class ContactPersonFormCreateListener {
 
   void onTypeSelected(type) {
     _formSource.contacttype = type.value;
+  }
+
+  Future<List<Contact>> onContactFilter(String? search) async {
+    return await ContactsService.getContacts(query: search);
+  }
+
+  void onContactChanged(contactItem) {
+    _formSource.contact = contactItem.value;
+  }
+
+  bool onContactCompared(selectedItem, item) {
+    return selectedItem == item;
   }
 
   void onSubmitButtonClicked() {

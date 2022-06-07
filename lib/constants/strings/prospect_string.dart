@@ -21,6 +21,7 @@ class ProspectString {
   static String detailTypeCode = 'prtype';
   static String taxTypeCode = 'taxtype';
   static String contactTypeCode = 'contact';
+  static String localContactCode = 'localcontact';
 
   static String fetchDataFailed = "Failed to fetch prospect data";
   static String fetchContactFailed = "Failed to fetch contact data";
