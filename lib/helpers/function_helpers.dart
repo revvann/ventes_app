@@ -170,7 +170,7 @@ String currencyFormat(String number) {
     symbol: '',
     decimalDigits: 0,
   );
-  var value = number.replaceAll(RegExp(r'[.]'), '');
+  var value = number.replaceAll(RegExp(r'[.]'), '').replaceAll(RegExp(r'[,]'), '.');
   if (value.isEmpty) {
     value = '0';
   }

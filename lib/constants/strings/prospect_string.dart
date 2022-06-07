@@ -5,6 +5,7 @@ class ProspectString {
 
   static String taskCode = 'prospect';
   static String detailTaskCode = 'prospectdetail';
+  static String productTaskCode = 'product';
   static String formCreateTaskCode = 'createprospect';
   static String formUpdateTaskCode = 'updateprospect';
   static String formCreateDetailTaskCode = 'detailcreateprospect';
@@ -22,11 +23,12 @@ class ProspectString {
   static String contactTypeCode = 'contact';
 
   static String fetchDataFailed = "Failed to fetch prospect data";
+  static String fetchContactFailed = "Failed to fetch contact data";
+  static String fetchUsersDataFailed = "Failed to fetch users data";
+  static String fetchProductFailed = "Failed to fetch products";
 
   static String createDataFailed = "Failed to create prospect";
   static String createDataSuccess = "Prospect created successfully";
-
-  static String fetchContactFailed = "Failed to fetch contact data";
 
   static String createContactFailed = "Failed to create contact";
   static String createContactSuccess = "Contact created successfully";
@@ -35,8 +37,6 @@ class ProspectString {
   static String updateDataSuccess = "Prospect updated successfully";
   static String updateContactFailed = "Failed to update contact";
   static String updateContactSuccess = "Contact updated successfully";
-
-  static String fetchUsersDataFailed = "Failed to fetch users data";
 
   static String categoryDropdownTag = "category";
   static String detailTypeDropdownTag = "detailtype";

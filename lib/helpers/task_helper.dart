@@ -12,6 +12,11 @@ class TaskHelper {
   List<Map<String, dynamic>> errors = [];
   List<Map<String, dynamic>> success = [];
 
+  bool taskExists(String task) => tasks.contains(task);
+  bool failedExists(String task) => faileds.firstWhereOrNull((e) => e['task'] == task) != null;
+  bool errorExists(String task) => errors.firstWhereOrNull((e) => e['task'] == task) != null;
+  bool successExists(String task) => success.firstWhereOrNull((e) => e['task'] == task) != null;
+
   loaderPush(String task) {
     if (tasks.isEmpty) {
       Loader().show();
@@ -20,10 +25,12 @@ class TaskHelper {
   }
 
   loaderPop(String task) async {
-    tasks.remove(task);
-    if (tasks.isEmpty) {
-      Get.close(1);
-      successShow().then((__) => failedShow().then((_) => errorShow()));
+    if (taskExists(task)) {
+      tasks.remove(task);
+      if (tasks.isEmpty) {
+        Get.close(1);
+        successShow().then((__) => failedShow().then((_) => errorShow()));
+      }
     }
   }
 
@@ -35,7 +42,9 @@ class TaskHelper {
   }
 
   failedPop(String task) {
-    faileds.removeWhere((item) => item.containsValue(task));
+    if (failedExists(task)) {
+      faileds.removeWhere((item) => item.containsValue(task));
+    }
   }
 
   Future failedShow() async {
@@ -61,7 +70,9 @@ class TaskHelper {
   }
 
   errorPop(String task) {
-    errors.removeWhere((item) => item.containsValue(task));
+    if (errorExists(task)) {
+      errors.removeWhere((item) => item.containsValue(task));
+    }
   }
 
   Future errorShow() async {
@@ -87,7 +98,9 @@ class TaskHelper {
   }
 
   successPop(String task) {
-    success.removeWhere((item) => item.containsValue(task));
+    if (successExists(task)) {
+      success.removeWhere((item) => item.containsValue(task));
+    }
   }
 
   Future successShow() async {

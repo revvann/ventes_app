@@ -126,4 +126,7 @@ WHERE get_schedule_from_dates(
 --         '2022-12-30'
 --     ) AS b;
 select *
-from mscontactperson;
+from trprospectproduct;
+TRUNCATE trprospect RESTART IDENTITY;
+TRUNCATE trprospectproduct RESTART IDENTITY;
+TRUNCATE msproduct RESTART IDENTITY;
