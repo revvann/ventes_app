@@ -139,12 +139,14 @@ class ContactPersonFormCreateView extends View<ContactPersonFormCreateStateContr
                                 children: [
                                   Column(
                                     mainAxisSize: MainAxisSize.min,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         item.value.givenName ?? "",
                                         style: TextStyle(
                                           color: isSelected ? RegularColor.green : RegularColor.dark,
                                           fontSize: 14,
+                                          fontWeight: FontWeight.bold,
                                         ),
                                       ),
                                       SizedBox(height: RegularSize.xs),
