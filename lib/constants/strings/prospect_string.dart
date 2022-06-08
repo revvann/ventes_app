@@ -13,6 +13,7 @@ class ProspectString {
   static String contactPersonTaskCode = 'contactperson';
   static String formCreateContactTaskCode = 'contactcreate';
   static String formUpdateContactTaskCode = 'contactupdate';
+  static String formUpdateProductTaskCode = 'productupdate';
 
   static String statusTypeCode = 'prstatus';
   static String followUpTypeCode = 'prfoll';
@@ -38,8 +39,11 @@ class ProspectString {
   static String updateDataSuccess = "Prospect updated successfully";
   static String updateContactFailed = "Failed to update contact";
   static String updateContactSuccess = "Contact updated successfully";
+  static String updateProductFailed = "Failed to update product";
+  static String updateProductSuccess = "Product updated successfully";
 
   static String categoryDropdownTag = "category";
   static String detailTypeDropdownTag = "detailtype";
   static String statusDropdownTag = "status";
+  static String taxDropdownTag = "tax";
 }

@@ -1,9 +1,9 @@
 import 'package:flutter/services.dart';
 
 class RangeInputFormatter extends TextInputFormatter {
-  int? minNumber;
-  int? maxNumber;
-  int? defaultNumber;
+  double? minNumber;
+  double? maxNumber;
+  double? defaultNumber;
 
   RangeInputFormatter({
     this.minNumber,
@@ -19,14 +19,21 @@ class RangeInputFormatter extends TextInputFormatter {
     if (newValue.selection.baseOffset == 0) {
       return newValue;
     }
-    int number = int.tryParse(newValue.text) ?? 0;
-    if (number < (minNumber ?? number - 1) || number > (maxNumber ?? number + 1)) {
-      number = defaultNumber ?? 0;
+    String value = newValue.text.replaceAll(',', '.');
+
+    if (value.split('').last != '.') {
+      double number = double.tryParse(value) ?? 0;
+
+      if (number < (minNumber ?? number - 1) || number > (maxNumber ?? number + 1)) {
+        number = defaultNumber ?? 0;
+      }
+      value = number % 1 == 0 ? number.toStringAsFixed(0) : number.toString();
     }
+
     return newValue.copyWith(
-      text: "$number",
+      text: value.replaceAll('.', ','),
       selection: TextSelection.collapsed(
-        offset: "$number".length,
+        offset: value.length,
       ),
     );
   }

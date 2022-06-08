@@ -6,6 +6,7 @@ import 'package:ventes/app/resources/views/contact/contact.dart';
 import 'package:ventes/app/resources/views/contact_form/create/contact_person_fc.dart';
 import 'package:ventes/app/resources/views/contact_form/update/contact_person_fu.dart';
 import 'package:ventes/app/resources/views/product/product.dart';
+import 'package:ventes/app/resources/views/product_form/update/product_fu.dart';
 import 'package:ventes/app/resources/views/prospect_detail/prospect_detail.dart';
 import 'package:ventes/app/resources/views/prospect_detail_form/create/prospect_detail_fc.dart';
 import 'package:ventes/app/resources/views/prospect_detail_form/update/prospect_detail_fu.dart';
@@ -14,6 +15,7 @@ import 'package:ventes/app/resources/views/prospect_form/update/prospect_fu.dart
 import 'package:ventes/app/states/controllers/contact_person_fc_state_controller.dart';
 import 'package:ventes/app/states/controllers/contact_person_fu_state_controller.dart';
 import 'package:ventes/app/states/controllers/contact_person_state_controller.dart';
+import 'package:ventes/app/states/controllers/product_fu_state_controller.dart';
 import 'package:ventes/app/states/controllers/product_state_controller.dart';
 import 'package:ventes/app/states/controllers/prospect_detail_fc_state_controller.dart';
 import 'package:ventes/app/states/controllers/prospect_detail_fu_state_controller.dart';
@@ -92,6 +94,12 @@ class ProspectNavigator extends ViewNavigator {
               page: () => ProductView(args!['prospect']),
               binding: BindingsBuilder(() {
                 Get.put(ProductStateController());
+              }),
+            ),
+        ProductFormUpdateView.route: (args) => ViewRoute(
+              page: () => ProductFormUpdateView(args!['product']),
+              binding: BindingsBuilder(() {
+                Get.put(ProductFormUpdateStateController());
               }),
             ),
       };

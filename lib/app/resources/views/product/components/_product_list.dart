@@ -90,7 +90,7 @@ class _ProductList extends StatelessWidget {
                                 MenuItem(
                                   title: "Edit",
                                   icon: "assets/svg/edit.svg",
-                                  onTap: () {},
+                                  onTap: () => state.listener.navigateToFormEdit(product.prosproductid!),
                                 )
                               ],
                             ),

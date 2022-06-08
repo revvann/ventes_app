@@ -17,6 +17,7 @@ import 'package:ventes/constants/strings/prospect_string.dart';
 import 'package:ventes/core/view.dart';
 
 part 'package:ventes/app/resources/views/contact_form/create/components/_type_dropdown.dart';
+part 'package:ventes/app/resources/views/contact_form/create/components/_contact_dropdown.dart';
 
 class ContactPersonFormCreateView extends View<ContactPersonFormCreateStateController> {
   static const String route = "/contactperson/create";
@@ -105,72 +106,24 @@ class ContactPersonFormCreateView extends View<ContactPersonFormCreateStateContr
                         SizedBox(height: RegularSize.m),
                         _TypeDropdown(),
                         SizedBox(height: RegularSize.m),
-                        RegularInput(
-                          label: "Contact Value",
-                          hintText: "Enter contact (e.g. email, phone, etc.)",
-                          controller: state.formSource.valueTEC,
-                          validator: state.formSource.validator.contactvalue,
-                        ),
-                        SizedBox(height: RegularSize.m),
-                        SearchableDropdown<Contact>(
-                          controller: state.formSource.contactDropdownController,
-                          isMultiple: false,
-                          child: RegularInput(
-                            enabled: false,
-                            label: "Phone Number",
-                            hintText: "select phone number",
-                          ),
-                          onChange: state.listener.onContactChanged,
-                          onCompare: state.listener.onContactCompared,
-                          onItemFilter: state.listener.onContactFilter,
-                          itemBuilder: (item, isSelected) {
-                            return Container(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: RegularSize.s,
-                                vertical: RegularSize.s,
-                              ),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(RegularSize.s),
-                                color: isSelected ? RegularColor.green.withOpacity(0.3) : Colors.transparent,
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        item.value.givenName ?? "",
-                                        style: TextStyle(
-                                          color: isSelected ? RegularColor.green : RegularColor.dark,
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      SizedBox(height: RegularSize.xs),
-                                      Text(
-                                        item.value.phones?.first.value ?? "",
-                                        style: TextStyle(
-                                          color: isSelected ? RegularColor.green : RegularColor.dark,
-                                          fontSize: 14,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  if (isSelected)
-                                    SvgPicture.asset(
-                                      "assets/svg/check.svg",
-                                      color: RegularColor.green,
-                                      height: RegularSize.m,
-                                      width: RegularSize.m,
-                                    ),
-                                ],
-                              ),
-                            );
-                          },
-                        ),
+                        Obx(() {
+                          return Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              if (!state.formSource.isPhone) ...[
+                                RegularInput(
+                                  label: "Contact Value",
+                                  hintText: "Enter contact (e.g. email, phone, etc.)",
+                                  controller: state.formSource.valueTEC,
+                                  validator: state.formSource.validator.contactvalue,
+                                ),
+                                SizedBox(height: RegularSize.m),
+                              ] else ...[
+                                _ContactDropdown(),
+                              ],
+                            ],
+                          );
+                        }),
                         SizedBox(height: RegularSize.m),
                       ],
                     ),

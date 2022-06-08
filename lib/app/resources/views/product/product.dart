@@ -72,69 +72,67 @@ class ProductView extends View<ProductStateController> {
           ),
         ),
       ).build(context),
-      body: KeyboardDismissOnTap(
-        child: SafeArea(
-          child: RefreshIndicator(
-            onRefresh: state.listener.onRefresh,
-            child: Obx(
-              () {
-                return Container(
-                  width: double.infinity,
-                  constraints: BoxConstraints(
-                    minHeight: state.minHeight,
+      body: SafeArea(
+        child: RefreshIndicator(
+          onRefresh: state.listener.onRefresh,
+          child: Obx(
+            () {
+              return Container(
+                width: double.infinity,
+                constraints: BoxConstraints(
+                  minHeight: state.minHeight,
+                ),
+                padding: EdgeInsets.only(
+                  right: RegularSize.m,
+                  left: RegularSize.m,
+                  top: RegularSize.l,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(RegularSize.xl),
+                    topRight: Radius.circular(RegularSize.xl),
                   ),
-                  padding: EdgeInsets.only(
-                    right: RegularSize.m,
-                    left: RegularSize.m,
-                    top: RegularSize.l,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(RegularSize.xl),
-                      topRight: Radius.circular(RegularSize.xl),
-                    ),
-                  ),
-                  child: SingleChildScrollView(
-                    physics: AlwaysScrollableScrollPhysics(),
-                    child: Column(
-                      children: [
-                        Container(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            "Products List",
-                            style: TextStyle(
-                              color: RegularColor.primary,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                            ),
+                ),
+                child: SingleChildScrollView(
+                  physics: AlwaysScrollableScrollPhysics(),
+                  child: Column(
+                    children: [
+                      Container(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          "Products List",
+                          style: TextStyle(
+                            color: RegularColor.primary,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
                           ),
                         ),
-                        SizedBox(
-                          height: RegularSize.m,
-                        ),
-                        IconInput(
-                          icon: "assets/svg/search.svg",
-                          hintText: "Search",
-                          controller: state.properties.searchTEC,
-                        ),
-                        SizedBox(
-                          height: RegularSize.m,
-                        ),
-                        Obx(
-                          () => state.properties.isLoading.value
-                              ? LoaderAnimation(
-                                  strokeWidth: 9,
-                                  width: 42,
-                                )
-                              : _ProductList(),
-                        ),
-                      ],
-                    ),
+                      ),
+                      SizedBox(
+                        height: RegularSize.m,
+                      ),
+                      IconInput(
+                        icon: "assets/svg/search.svg",
+                        hintText: "Search",
+                        controller: state.properties.searchTEC,
+                      ),
+                      SizedBox(
+                        height: RegularSize.m,
+                      ),
+                      Obx(
+                        () => state.properties.isLoading.value
+                            ? LoaderAnimation(
+                                strokeWidth: 9,
+                                width: 42,
+                              )
+                            : _ProductList(),
+                      ),
+                    ],
                   ),
-                );
-              },
-            ),
+                ),
+              );
+            },
           ),
         ),
       ),

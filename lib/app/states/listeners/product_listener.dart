@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:ventes/app/resources/views/product_form/update/product_fu.dart';
 import 'package:ventes/app/states/controllers/product_state_controller.dart';
 import 'package:ventes/constants/strings/prospect_string.dart';
 import 'package:ventes/helpers/task_helper.dart';
@@ -13,6 +14,16 @@ class ProductListener {
 
   Future onRefresh() async {
     _properties.refresh();
+  }
+
+  void navigateToFormEdit(int id) {
+    Get.toNamed(
+      ProductFormUpdateView.route,
+      id: ProspectNavigator.id,
+      arguments: {
+        "product": id,
+      },
+    );
   }
 
   void onLoadFailed(String message) {

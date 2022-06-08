@@ -1,3 +1,4 @@
+import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ventes/app/models/type_model.dart';
@@ -27,6 +28,18 @@ class ContactPersonFormUpdateListener {
 
   void onTypeSelected(type) {
     _formSource.contacttype = type.value;
+  }
+
+  Future<List<Contact>> onContactFilter(String? search) async {
+    return await ContactsService.getContacts(query: search);
+  }
+
+  void onContactChanged(contactItem) {
+    _formSource.contact = contactItem.value;
+  }
+
+  bool onContactCompared(selectedItem, item) {
+    return selectedItem == item;
   }
 
   void onSubmitButtonClicked() {

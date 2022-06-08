@@ -9,14 +9,16 @@ class Service extends GetConnect {
   String get api => '';
 
   @override
-  void onInit() {
+  void onInit() async {
     httpClient.baseUrl = RegularString.api;
+
     httpClient.addRequestModifier<dynamic>((request) async {
       AuthModel? session = await Get.find<AuthHelper>().get();
       if (session?.jwtToken != null) request.headers['Authorization'] = "Bearer ${session?.jwtToken}";
       return request;
     });
     httpClient.timeout = Duration(hours: 5);
+    httpClient.maxAuthRetries = 1;
   }
 
   Future<Response> select([Map<String, dynamic>? params]) {

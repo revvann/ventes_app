@@ -25,6 +25,7 @@ class ContactPersonFormCreateFormSource {
   late ContactPersonFormCreateValidator validator;
 
   bool get isValid => formKey.currentState?.validate() ?? false;
+  bool get isPhone => contacttype?.typename == "Phone";
 
   final Rx<DBType?> _contacttype = Rx<DBType?>(null);
   DBType? get contacttype => _contacttype.value;
@@ -48,7 +49,7 @@ class ContactPersonFormCreateFormSource {
   Map<String, dynamic> toJson() {
     return {
       'contacttypeid': contacttype?.typeid?.toString(),
-      'contactvalueid': valueTEC.text,
+      'contactvalueid': isPhone ? contact?.phones?.first.value : valueTEC.text,
       'contactcustomerid': customerid?.toString(),
     };
   }
