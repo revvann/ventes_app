@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:ventes/app/models/bp_customer_model.dart';
+import 'package:ventes/app/resources/widgets/pop_up_item.dart';
+import 'package:ventes/app/resources/widgets/popup_button.dart';
 import 'package:ventes/core/view.dart';
 import 'package:ventes/app/resources/widgets/bottom_navigation.dart';
 import 'package:ventes/app/resources/widgets/customer_card.dart';
@@ -143,7 +145,7 @@ class DashboardView extends View<DashboardStateController> {
                     ],
                   ),
                 ),
-                Container(
+                SizedBox(
                   height: 148,
                   child: Obx(() {
                     return ListView.builder(

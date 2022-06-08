@@ -130,3 +130,5 @@ from trprospect;
 TRUNCATE trprospect RESTART IDENTITY;
 TRUNCATE trprospectproduct RESTART IDENTITY;
 TRUNCATE msproduct RESTART IDENTITY;
+select *
+from msuserdt;

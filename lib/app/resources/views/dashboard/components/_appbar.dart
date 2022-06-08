@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_unnecessary_containers
 
 part of 'package:ventes/app/resources/views/dashboard/dashboard.dart';
 
@@ -30,52 +30,51 @@ class _AppBar extends StatelessWidget {
                 ),
               ],
             ),
-            PopupMenuButton<String>(
-              elevation: 0.3,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(RegularSize.m),
-              ),
-              padding: EdgeInsets.zero,
-              child: Container(
-                width: RegularSize.xxl,
-                height: RegularSize.xxl,
-                alignment: Alignment.center,
-                child: Obx(() {
-                  return Text(
-                    state.properties.shortName ?? "AA",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  );
-                }),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: RegularColor.primary,
-                ),
-              ),
-              onSelected: (value) {
-                if (value == "logout") {
-                  state.properties.logout();
-                }
-              },
-              itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                PopupMenuItem<String>(
-                  value: "logout",
-                  child: Row(
+            PopupMenu(
+              controller: Get.put(PopupMenuController(), tag: "SchedulePopup"),
+              dropdownSettings: DropdownSettings(
+                width: 150,
+                offset: Offset(10, 0),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: RegularSize.s,
+                    horizontal: RegularSize.s,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text(
-                        "Log out",
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: RegularColor.dark,
-                        ),
+                      MenuItem(
+                        title: "Sign Out",
+                        icon: "assets/svg/signout.svg",
+                        onTap: state.properties.logout,
+                        color: RegularColor.red,
                       ),
                     ],
                   ),
                 ),
-              ],
+              ),
+              child: Container(
+                child: Container(
+                  width: RegularSize.xxl,
+                  height: RegularSize.xxl,
+                  alignment: Alignment.center,
+                  child: Obx(() {
+                    return Text(
+                      state.properties.shortName ?? "AA",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    );
+                  }),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: RegularColor.primary,
+                  ),
+                ),
+              ),
             ),
           ],
         ),
