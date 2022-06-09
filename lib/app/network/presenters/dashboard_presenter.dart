@@ -80,17 +80,11 @@ class DashboardPresenter {
     Map data = {};
     try {
       Response customersResponse = await _getCustomers();
-      Response activeUserResponse = await _getActiveUser();
       Response currentPositionResponse = await _getCurrentPosition();
       Response scheduleResponse = await _getSchedule();
       Response userResponse = await _getUser();
-      if (customersResponse.statusCode == 200 &&
-          activeUserResponse.statusCode == 200 &&
-          currentPositionResponse.statusCode == 200 &&
-          scheduleResponse.statusCode == 200 &&
-          userResponse.statusCode == 200) {
+      if (customersResponse.statusCode == 200 && currentPositionResponse.statusCode == 200 && scheduleResponse.statusCode == 200 && userResponse.statusCode == 200) {
         data['customers'] = customersResponse.body;
-        data['activeUser'] = activeUserResponse.body;
         data['currentPosition'] = currentPositionResponse.body;
         data['scheduleCount'] = scheduleResponse.body['count'];
         data['user'] = userResponse.body;

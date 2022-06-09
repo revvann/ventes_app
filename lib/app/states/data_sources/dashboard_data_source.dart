@@ -37,10 +37,6 @@ class DashboardDataSource implements FetchDataContract, LogoutContract {
   set scheduleCount(int value) => _scheduleCount.value = value;
   int get scheduleCount => _scheduleCount.value;
 
-  final _activeUser = Rx<UserDetail?>(null);
-  UserDetail? get activeUser => _activeUser.value;
-  set activeUser(UserDetail? value) => _activeUser.value = value;
-
   final _currentPosition = Rx<MapsLoc?>(null);
   MapsLoc? get currentPosition => _currentPosition.value;
   set currentPosition(MapsLoc? value) => _currentPosition.value = value;
@@ -80,10 +76,6 @@ class DashboardDataSource implements FetchDataContract, LogoutContract {
         data['customers'],
         LatLng(_properties.position!.latitude, _properties.position!.longitude),
       );
-    }
-
-    if (data['activeUser'] != null) {
-      activeUser = UserDetail.fromJson(data['activeUser']);
     }
 
     if (data['currentPosition'] != null) {

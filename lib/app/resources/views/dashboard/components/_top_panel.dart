@@ -34,7 +34,7 @@ class _TopPanel extends StatelessWidget {
           children: [
             Obx(() {
               return Text(
-                state.dataSource.activeUser?.user?.userfullname ?? "",
+                state.dataSource.account?.user?.userfullname ?? "",
                 style: TextStyle(
                   fontSize: 16,
                   color: RegularColor.dark,
