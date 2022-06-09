@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:ventes/app/models/bp_customer_model.dart';
+import 'package:ventes/app/models/user_detail_model.dart';
+import 'package:ventes/app/resources/widgets/menu_divider.dart';
 import 'package:ventes/app/resources/widgets/pop_up_item.dart';
 import 'package:ventes/app/resources/widgets/popup_button.dart';
 import 'package:ventes/core/view.dart';
@@ -14,10 +16,12 @@ import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/constants/views.dart';
 import 'package:ventes/app/states/controllers/dashboard_state_controller.dart';
+import 'package:ventes/helpers/function_helpers.dart';
 
 part 'package:ventes/app/resources/views/dashboard/components/_menu_item.dart';
 part 'package:ventes/app/resources/views/dashboard/components/_appbar.dart';
 part 'package:ventes/app/resources/views/dashboard/components/_top_panel.dart';
+part 'package:ventes/app/resources/views/dashboard/components/_user_menu_item.dart';
 
 class DashboardView extends View<DashboardStateController> {
   static const route = "/dashboard";

@@ -9,6 +9,7 @@ import 'package:ventes/app/network/services/bp_customer_service.dart';
 import 'package:ventes/app/network/services/gmaps_service.dart';
 import 'package:ventes/app/network/services/schedule_service.dart';
 import 'package:ventes/app/network/services/user_service.dart';
+import 'package:ventes/constants/strings/dashboard_string.dart';
 import 'package:ventes/helpers/auth_helper.dart';
 import 'package:ventes/helpers/function_helpers.dart';
 
@@ -59,6 +60,12 @@ class DashboardPresenter {
     return null;
   }
 
+  Future<Response> _getUser() async {
+    AuthModel? authModel = await Get.find<AuthHelper>().get();
+    Map<String, dynamic> params = {'userid': authModel!.userId!.toString()};
+    return await _userService.select(params);
+  }
+
   Future<Response> _getActiveUser() async {
     AuthModel? authModel = await Get.find<AuthHelper>().get();
     return await _userService.show(authModel!.accountActive!);
@@ -76,14 +83,20 @@ class DashboardPresenter {
       Response activeUserResponse = await _getActiveUser();
       Response currentPositionResponse = await _getCurrentPosition();
       Response scheduleResponse = await _getSchedule();
-      if (customersResponse.statusCode == 200 && activeUserResponse.statusCode == 200 && currentPositionResponse.statusCode == 200 && scheduleResponse.statusCode == 200) {
+      Response userResponse = await _getUser();
+      if (customersResponse.statusCode == 200 &&
+          activeUserResponse.statusCode == 200 &&
+          currentPositionResponse.statusCode == 200 &&
+          scheduleResponse.statusCode == 200 &&
+          userResponse.statusCode == 200) {
         data['customers'] = customersResponse.body;
         data['activeUser'] = activeUserResponse.body;
         data['currentPosition'] = currentPositionResponse.body;
         data['scheduleCount'] = scheduleResponse.body['count'];
+        data['user'] = userResponse.body;
         _fetchDataContract.onLoadSuccess(data);
       } else {
-        _fetchDataContract.onLoadFailed(customersResponse.statusCode.toString());
+        _fetchDataContract.onLoadFailed(DashboardString.fetchFailed);
       }
     } catch (err) {
       _fetchDataContract.onLoadError(err.toString());

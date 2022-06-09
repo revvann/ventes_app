@@ -33,7 +33,7 @@ class _AppBar extends StatelessWidget {
             PopupMenu(
               controller: Get.put(PopupMenuController(), tag: "SchedulePopup"),
               dropdownSettings: DropdownSettings(
-                width: 150,
+                width: 200,
                 offset: Offset(10, 0),
                 child: Padding(
                   padding: const EdgeInsets.symmetric(
@@ -44,6 +44,28 @@ class _AppBar extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     mainAxisSize: MainAxisSize.min,
                     children: [
+                      Obx(() {
+                        return _UserMenuItem(
+                          user: state.dataSource.account!,
+                          isActive: true,
+                        );
+                      }),
+                      MenuDivider(text: "Account"),
+                      Obx(() {
+                        return Container(
+                          child: ListView.builder(
+                            padding: EdgeInsets.zero,
+                            itemCount: state.dataSource.accounts.length,
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemBuilder: (_, index) {
+                              UserDetail user = state.dataSource.accounts[index];
+                              return _UserMenuItem(user: user, onTap: () => state.listener.switchAccount(user.userdtid!));
+                            },
+                          ),
+                        );
+                      }),
+                      MenuDivider(),
                       MenuItem(
                         title: "Sign Out",
                         icon: "assets/svg/signout.svg",

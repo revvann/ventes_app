@@ -46,19 +46,12 @@ class DashboardStateController extends RegularStateController {
 class DashboardProperties {
   final DashboardDataSource _dataSource = Get.find<DashboardDataSource>();
   Position? position;
-  final Rx<String?> _shortName = Rx<String?>(null);
 
-  String? get shortName => _shortName.value;
-  set shortName(String? value) => _shortName.value = value;
+  String? get shortName => getInitials(_dataSource.account?.user?.userfullname ?? "");
 
   void refresh() async {
     position = await getCurrentPosition();
     _dataSource.fetchData(LatLng(position!.latitude, position!.longitude));
-
-    Get.find<AuthHelper>().get().then((value) {
-      shortName = value?.username ?? "Guest";
-      shortName = shortName!.substring(0, 2).toUpperCase();
-    });
 
     Get.find<TaskHelper>().loaderPush(DashboardString.taskCode);
   }

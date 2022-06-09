@@ -5,7 +5,7 @@ select table_name,
     column_default,
     is_nullable
 from INFORMATION_SCHEMA.COLUMNS
-where table_name in ('mscontactperson')
+where table_name in ('msuserdt')
 order by table_name,
     ordinal_position;
 -- select column_name,
@@ -132,3 +132,18 @@ TRUNCATE trprospectproduct RESTART IDENTITY;
 TRUNCATE msproduct RESTART IDENTITY;
 select *
 from msuserdt;
+-- INSERT INTO msuserdt
+-- VALUES (
+--         default,
+--         8,
+--         2,
+--         2,
+--         null,
+--         null,
+--         null,
+--         1,
+--         now(),
+--         1,
+--         now(),
+--         true
+--     );

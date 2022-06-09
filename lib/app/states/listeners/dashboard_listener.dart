@@ -1,12 +1,15 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:get/get.dart';
+import 'package:ventes/app/resources/views/main.dart';
+import 'package:ventes/app/resources/views/splash_screen.dart';
 import 'package:ventes/app/resources/views/started_page.dart';
 import 'package:ventes/app/states/controllers/dashboard_state_controller.dart';
 import 'package:ventes/app/states/data_sources/dashboard_data_source.dart';
 import 'package:ventes/constants/strings/dashboard_string.dart';
 import 'package:ventes/helpers/auth_helper.dart';
 import 'package:ventes/helpers/task_helper.dart';
+import 'package:ventes/routing/navigators/dashboard_navigator.dart';
 
 class DashboardListener {
   DashboardProperties get _properties => Get.find<DashboardProperties>();
@@ -46,5 +49,10 @@ class DashboardListener {
 
   Future onRefresh() async {
     _properties.refresh();
+  }
+
+  void switchAccount(int userdtid) async {
+    Get.find<AuthHelper>().accountActive.val = userdtid;
+    Get.offAllNamed(SplashScreenView.route);
   }
 }
