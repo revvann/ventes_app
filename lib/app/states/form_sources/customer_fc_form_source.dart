@@ -1,23 +1,9 @@
-import 'dart:io';
+part of 'package:ventes/app/states/controllers/customer_fc_state_controller.dart';
 
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/services.dart' show rootBundle;
-import 'package:path_provider/path_provider.dart';
-import 'package:get/get.dart';
-import 'package:ventes/app/models/city_model.dart';
-import 'package:ventes/app/models/country_model.dart';
-import 'package:ventes/app/models/province_model.dart';
-import 'package:ventes/app/models/subdistrict_model.dart';
-import 'package:ventes/app/resources/widgets/search_list.dart';
-import 'package:ventes/app/states/controllers/customer_fc_state_controller.dart';
-import 'package:ventes/app/states/data_sources/customer_fc_data_source.dart';
-import 'package:ventes/app/states/form_validators/customer_fc_validator.dart';
-import 'package:ventes/constants/strings/nearby_string.dart';
-
-class CustomerFormCreateFormSource {
-  late CustomerFormCreateValidator validator;
-  CustomerFormCreateProperties get _properties => Get.find<CustomerFormCreateProperties>();
-  CustomerFormCreateDataSource get _dataSource => Get.find<CustomerFormCreateDataSource>();
+class _FormSource extends UpdateFormSource {
+  _Validator validator = _Validator();
+  _Properties get _properties => Get.find<_Properties>();
+  _DataSource get _dataSource => Get.find<_DataSource>();
 
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final defaultPicture = Image.asset('assets/' + NearbyString.defaultImage).obs;
@@ -50,15 +36,18 @@ class CustomerFormCreateFormSource {
 
   set cstmtypeid(int? value) => _cstmtypeid.value = value;
 
+  @override
   init() async {
-    validator = CustomerFormCreateValidator(this);
+    super.init();
     picture = await _getImageFileFromAssets(NearbyString.defaultImage);
 
     latitudeTEC.text = _properties.latitude!.toString();
     longitudeTEC.text = _properties.longitude!.toString();
   }
 
-  dispose() {
+  @override
+  void close() {
+    super.close();
     nameTEC.dispose();
     addressTEC.dispose();
     phoneTEC.dispose();
@@ -70,7 +59,8 @@ class CustomerFormCreateFormSource {
     Get.delete<SearchListController<Subdistrict, Subdistrict>>();
   }
 
-  void prepareValues() {
+  @override
+  void prepareFormValues() {
     nameTEC.text = _dataSource.customer!.cstmname ?? "";
     addressTEC.text = _dataSource.customer!.cstmaddress ?? "";
     phoneTEC.text = _dataSource.customer!.cstmphone ?? "";
@@ -91,6 +81,7 @@ class CustomerFormCreateFormSource {
     return file;
   }
 
+  @override
   Map<String, dynamic> toJson() {
     Map<String, dynamic> formData = {
       'sbccstmpic': picture?.path,

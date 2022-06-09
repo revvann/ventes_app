@@ -1,33 +1,11 @@
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:ventes/app/models/bp_customer_model.dart';
-import 'package:ventes/app/models/city_model.dart';
-import 'package:ventes/app/models/country_model.dart';
-import 'package:ventes/app/models/customer_model.dart';
-import 'package:ventes/app/models/maps_loc.dart';
-import 'package:ventes/app/models/province_model.dart';
-import 'package:ventes/app/models/subdistrict_model.dart';
-import 'package:ventes/app/models/type_model.dart';
-import 'package:ventes/app/models/user_detail_model.dart';
-import 'package:ventes/app/network/contracts/create_contract.dart';
-import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
-import 'package:ventes/app/network/presenters/customer_fc_presenter.dart';
-import 'package:get/get.dart';
-import 'package:ventes/app/states/controllers/customer_fc_state_controller.dart';
-import 'package:ventes/app/states/form_sources/customer_fc_form_source.dart';
-import 'package:ventes/app/states/listeners/customer_fc_listener.dart';
-import 'package:ventes/constants/strings/nearby_string.dart';
-import 'package:ventes/helpers/function_helpers.dart';
-import 'package:ventes/helpers/task_helper.dart';
+part of 'package:ventes/app/states/controllers/customer_fc_state_controller.dart';
 
-class CustomerFormCreateDataSource implements FetchDataContract, CreateContract {
-  CustomerFormCreateListener get _listener => Get.find<CustomerFormCreateListener>();
-  CustomerFormCreateFormSource get _formSource => Get.find<CustomerFormCreateFormSource>();
-  CustomerFormCreateProperties get _properties => Get.find<CustomerFormCreateProperties>();
+class _DataSource extends RegularDataSource<CustomerFormCreatePresenter> implements CustomerCreateContract {
+  _Listener get _listener => Get.find<_Listener>();
+  _FormSource get _formSource => Get.find<_FormSource>();
+  _Properties get _properties => Get.find<_Properties>();
 
   final CustomerFormCreatePresenter _presenter = CustomerFormCreatePresenter();
-
-  set fetchDataContract(FetchDataContract value) => _presenter.fetchDataContract = value;
-  set createContract(CreateContract value) => _presenter.createContract = value;
 
   final _customers = <BpCustomer>[].obs;
   set customers(List<BpCustomer> value) => _customers.value = value;
@@ -48,11 +26,6 @@ class CustomerFormCreateDataSource implements FetchDataContract, CreateContract 
   final _statuses = <int, String>{}.obs;
   set statuses(Map<int, String> value) => _statuses.value = value;
   Map<int, String> get statuses => _statuses.value;
-
-  void init() {
-    _presenter.createContract = this;
-    _presenter.fetchDataContract = this;
-  }
 
   void customersFromList(List data, LatLng currentPos) {
     customers = data.map((e) => BpCustomer.fromJson(e)).toList();
@@ -182,7 +155,7 @@ class CustomerFormCreateDataSource implements FetchDataContract, CreateContract 
 
     if (data['customer'] != null) {
       customer = Customer.fromJson(data['customer']);
-      _formSource.prepareValues();
+      _formSource.prepareFormValues();
     }
 
     Get.find<TaskHelper>().loaderPop(NearbyString.createTaskCode);

@@ -4,10 +4,11 @@ import 'package:get/get.dart';
 import 'package:ventes/app/models/type_model.dart';
 import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
 import 'package:ventes/app/resources/widgets/searchable_dropdown.dart';
+import 'package:ventes/app/states/form_sources/regular_form_source.dart';
 import 'package:ventes/app/states/form_validators/contact_person_fc_validator.dart';
 import 'package:ventes/constants/strings/prospect_string.dart';
 
-class ContactPersonFormCreateFormSource {
+class ContactPersonFormCreateFormSource extends RegularFormSource {
   KeyableDropdownController<int, DBType> typeDropdownController = Get.put(
     KeyableDropdownController<int, DBType>(),
     tag: ProspectString.contactTypeCode,
@@ -22,7 +23,7 @@ class ContactPersonFormCreateFormSource {
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
-  late ContactPersonFormCreateValidator validator;
+  ContactPersonFormCreateValidator validator = ContactPersonFormCreateValidator();
 
   bool get isValid => formKey.currentState?.validate() ?? false;
   bool get isPhone => contacttype?.typename == "Phone";
@@ -37,15 +38,15 @@ class ContactPersonFormCreateFormSource {
 
   int? customerid;
 
-  init() {
-    validator = ContactPersonFormCreateValidator(this);
-  }
-
+  @override
   close() {
+    super.close();
     Get.delete<KeyableDropdownController<int, DBType>>(tag: ProspectString.contactTypeCode);
-    valueTEC.clear();
+    Get.delete<SearchableDropdownController<Contact>>(tag: ProspectString.localContactCode);
+    valueTEC.dispose();
   }
 
+  @override
   Map<String, dynamic> toJson() {
     return {
       'contacttypeid': contacttype?.typeid?.toString(),

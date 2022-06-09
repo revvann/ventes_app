@@ -1,33 +1,9 @@
-import 'dart:io';
+part of 'package:ventes/app/states/controllers/customer_fc_state_controller.dart';
 
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:ventes/app/models/city_model.dart';
-import 'package:ventes/app/models/country_model.dart';
-import 'package:ventes/app/models/province_model.dart';
-import 'package:ventes/app/models/subdistrict_model.dart';
-import 'package:ventes/app/models/user_detail_model.dart';
-import 'package:ventes/app/network/contracts/create_contract.dart';
-import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
-import 'package:ventes/app/resources/widgets/error_alert.dart';
-import 'package:ventes/app/resources/widgets/failed_alert.dart';
-import 'package:ventes/app/resources/widgets/loader.dart';
-import 'package:ventes/app/resources/widgets/success_alert.dart';
-import 'package:ventes/app/states/controllers/nearby_state_controller.dart';
-import 'package:ventes/app/states/data_sources/customer_fc_data_source.dart';
-import 'package:ventes/app/states/form_sources/customer_fc_form_source.dart';
-import 'package:ventes/constants/strings/nearby_string.dart';
-import 'package:ventes/helpers/task_helper.dart';
-import 'package:ventes/routing/navigators/nearby_navigator.dart';
-import 'package:ventes/app/states/controllers/customer_fc_state_controller.dart';
-import 'package:path/path.dart' as path;
-
-class CustomerFormCreateListener {
-  CustomerFormCreateProperties get _properties => Get.find<CustomerFormCreateProperties>();
-  CustomerFormCreateFormSource get _formSource => Get.find<CustomerFormCreateFormSource>();
-  CustomerFormCreateDataSource get _dataSource => Get.find<CustomerFormCreateDataSource>();
+class _Listener extends RegularListener {
+  _Properties get _properties => Get.find<_Properties>();
+  _FormSource get _formSource => Get.find<_FormSource>();
+  _DataSource get _dataSource => Get.find<_DataSource>();
 
   void goBack() {
     Get.back(id: NearbyNavigator.id);
@@ -94,10 +70,6 @@ class CustomerFormCreateListener {
     }
   }
 
-  Future onRefresh() async {
-    _properties.refresh();
-  }
-
   void onLoadDataError(String message) {
     Get.find<TaskHelper>().errorPush(NearbyString.createTaskCode, message);
     Get.find<TaskHelper>().loaderPop(NearbyString.createTaskCode);
@@ -128,5 +100,10 @@ class CustomerFormCreateListener {
         Get.back(id: NearbyNavigator.id);
       },
     );
+  }
+
+  @override
+  Future onRefresh() async {
+    _properties.refresh();
   }
 }

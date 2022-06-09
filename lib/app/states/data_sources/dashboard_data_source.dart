@@ -1,25 +1,8 @@
-import 'package:get/get.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:ventes/app/models/auth_model.dart';
-import 'package:ventes/app/models/bp_customer_model.dart';
-import 'package:ventes/app/models/maps_loc.dart';
-import 'package:ventes/app/models/user_detail_model.dart';
-import 'package:ventes/app/models/user_model.dart';
-import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
-import 'package:ventes/app/network/contracts/logout_contract.dart';
-import 'package:ventes/app/network/presenters/dashboard_presenter.dart';
-import 'package:ventes/app/states/controllers/dashboard_state_controller.dart';
-import 'package:ventes/app/states/listeners/dashboard_listener.dart';
-import 'package:ventes/constants/strings/dashboard_string.dart';
-import 'package:ventes/helpers/auth_helper.dart';
-import 'package:ventes/helpers/function_helpers.dart';
-import 'package:ventes/helpers/task_helper.dart';
+part of 'package:ventes/app/states/controllers/dashboard_state_controller.dart';
 
-class DashboardDataSource implements FetchDataContract, LogoutContract {
-  DashboardProperties get _properties => Get.find<DashboardProperties>();
-  DashboardListener get _listener => Get.find<DashboardListener>();
-
-  final DashboardPresenter _presenter = DashboardPresenter();
+class _DataSource extends RegularDataSource<DashboardPresenter> implements DashboardContract {
+  _Properties get _properties => Get.find<_Properties>();
+  _Listener get _listener => Get.find<_Listener>();
 
   final _customers = <BpCustomer>[].obs;
   set customers(List<BpCustomer> value) => _customers.value = value;
@@ -41,27 +24,23 @@ class DashboardDataSource implements FetchDataContract, LogoutContract {
   MapsLoc? get currentPosition => _currentPosition.value;
   set currentPosition(MapsLoc? value) => _currentPosition.value = value;
 
-  void init() {
-    _presenter.fetchDataContract = this;
-    _presenter.logoutContract = this;
-  }
+  void fetchData(LatLng position) => presenter.fetchData(position.latitude, position.longitude);
+  void logout() => presenter.logout();
 
-  void fetchData(LatLng position) => _presenter.fetchData(position.latitude, position.longitude);
-  void logout() => _presenter.logout();
-
-  void customersFromList(List data, LatLng currentPos) {
+  void _customersFromList(List data, LatLng currentPos) {
     customers = data.map((e) => BpCustomer.fromJson(e)).toList();
     LatLng coords2 = LatLng(currentPos.latitude, currentPos.longitude);
-    customers = customers
-        .map((element) {
-          LatLng coords1 = LatLng(element.sbccstm?.cstmlatitude ?? 0.0, element.sbccstm?.cstmlongitude ?? 0.0);
-          double radius = calculateDistance(coords1, coords2);
-          element.radius = radius;
-          return element;
-        })
-        .where((element) => element.radius != null ? element.radius! <= 100 : false)
-        .toList();
+    customers = customers.map((element) => _filterBpCustomer(element, coords2)).where(_isBpCustomer100Meters).toList();
   }
+
+  BpCustomer _filterBpCustomer(BpCustomer element, LatLng currentCoordinates) {
+    LatLng coords1 = LatLng(element.sbccstm?.cstmlatitude ?? 0.0, element.sbccstm?.cstmlongitude ?? 0.0);
+    double radius = calculateDistance(coords1, currentCoordinates);
+    element.radius = radius;
+    return element;
+  }
+
+  bool _isBpCustomer100Meters(BpCustomer element) => element.radius != null ? element.radius! <= 100 : false;
 
   @override
   onLoadError(String message) => _listener.onLoadDataError(message);
@@ -72,7 +51,7 @@ class DashboardDataSource implements FetchDataContract, LogoutContract {
   @override
   onLoadSuccess(Map data) async {
     if (data['customers'] != null) {
-      customersFromList(
+      _customersFromList(
         data['customers'],
         LatLng(_properties.position!.latitude, _properties.position!.longitude),
       );

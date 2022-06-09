@@ -1,26 +1,29 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'dart:async';
-
-import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:ventes/app/models/auth_model.dart';
 import 'package:ventes/app/models/bp_customer_model.dart';
-import 'package:ventes/app/resources/widgets/loader.dart';
+import 'package:ventes/app/models/maps_loc.dart';
+import 'package:ventes/app/models/user_detail_model.dart';
+import 'package:ventes/app/network/presenters/dashboard_presenter.dart';
+import 'package:ventes/app/resources/views/splash_screen.dart';
+import 'package:ventes/app/resources/views/started_page.dart';
 import 'package:ventes/app/states/controllers/bottom_navigation_state_controller.dart';
 import 'package:ventes/app/states/controllers/regular_state_controller.dart';
-import 'package:ventes/app/states/data_sources/dashboard_data_source.dart';
-import 'package:ventes/app/states/listeners/dashboard_listener.dart';
+import 'package:ventes/app/states/data_sources/regular_data_source.dart';
+import 'package:ventes/app/states/listeners/regular_listener.dart';
 import 'package:ventes/constants/strings/dashboard_string.dart';
+import 'package:ventes/helpers/auth_helper.dart';
 import 'package:ventes/helpers/function_helpers.dart';
 import 'package:ventes/helpers/task_helper.dart';
 
-class DashboardStateController extends RegularStateController {
+part 'package:ventes/app/states/listeners/dashboard_listener.dart';
+part 'package:ventes/app/states/data_sources/dashboard_data_source.dart';
+
+class DashboardStateController extends RegularStateController<_Properties, _Listener, _DataSource> {
   BottomNavigationStateController bottomNavigation = Get.put(BottomNavigationStateController());
-  DashboardDataSource dataSource = Get.put(DashboardDataSource());
-  DashboardListener listener = Get.put(DashboardListener());
-  DashboardProperties properties = Get.put(DashboardProperties());
 
   @override
   bool get isFixedBody => false;
@@ -28,33 +31,17 @@ class DashboardStateController extends RegularStateController {
   @override
   void onInit() async {
     super.onInit();
-    properties.refresh();
     dataSource.init();
-  }
-
-  @override
-  void onClose() {
-    Get.delete<DashboardProperties>();
-    Get.delete<DashboardListener>();
-    Get.delete<DashboardDataSource>();
-    super.onClose();
   }
 }
 
-class DashboardProperties {
-  final DashboardDataSource _dataSource = Get.find<DashboardDataSource>();
+class _Properties {
+  final _DataSource _dataSource = Get.find<_DataSource>();
   Position? position;
 
   String? get shortName => getInitials(_dataSource.account?.user?.userfullname ?? "");
 
-  void refresh() async {
-    position = await getCurrentPosition();
-    _dataSource.fetchData(LatLng(position!.latitude, position!.longitude));
-
-    Get.find<TaskHelper>().loaderPush(DashboardString.taskCode);
-  }
-
-  void logout() async {
+  void logout() {
     _dataSource.logout();
     Get.find<TaskHelper>().loaderPush(DashboardString.taskCode);
   }

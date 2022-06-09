@@ -1,19 +1,19 @@
 // ignore_for_file: prefer_const_constructors
+part of 'package:ventes/app/states/controllers/dashboard_state_controller.dart';
 
-import 'package:get/get.dart';
-import 'package:ventes/app/resources/views/main.dart';
-import 'package:ventes/app/resources/views/splash_screen.dart';
-import 'package:ventes/app/resources/views/started_page.dart';
-import 'package:ventes/app/states/controllers/dashboard_state_controller.dart';
-import 'package:ventes/app/states/data_sources/dashboard_data_source.dart';
-import 'package:ventes/constants/strings/dashboard_string.dart';
-import 'package:ventes/helpers/auth_helper.dart';
-import 'package:ventes/helpers/task_helper.dart';
-import 'package:ventes/routing/navigators/dashboard_navigator.dart';
+class _Listener extends RegularListener {
+  _Properties get _properties => Get.find<_Properties>();
+  _DataSource get _dataSource => Get.find<_DataSource>();
 
-class DashboardListener {
-  DashboardProperties get _properties => Get.find<DashboardProperties>();
-  DashboardDataSource get _dataSource => Get.find<DashboardDataSource>();
+  void switchAccount(int userdtid) async {
+    Get.find<AuthHelper>().accountActive.val = userdtid;
+    Get.offAllNamed(SplashScreenView.route);
+  }
+
+  void _logout() async {
+    await Get.find<AuthHelper>().destroy();
+    Get.offAllNamed(StartedPageView.route);
+  }
 
   void onLoadDataError(String message) {
     Get.find<TaskHelper>().errorPush(DashboardString.taskCode, message);
@@ -40,19 +40,15 @@ class DashboardListener {
     Get.find<TaskHelper>().successPush(
       DashboardString.taskCode,
       message,
-      () async {
-        await Get.find<AuthHelper>().destroy();
-        Get.offAllNamed(StartedPageView.route);
-      },
+      _logout,
     );
   }
 
+  @override
   Future onRefresh() async {
-    _properties.refresh();
-  }
+    _properties.position = await getCurrentPosition();
+    _dataSource.fetchData(LatLng(_properties.position!.latitude, _properties.position!.longitude));
 
-  void switchAccount(int userdtid) async {
-    Get.find<AuthHelper>().accountActive.val = userdtid;
-    Get.offAllNamed(SplashScreenView.route);
+    Get.find<TaskHelper>().loaderPush(DashboardString.taskCode);
   }
 }

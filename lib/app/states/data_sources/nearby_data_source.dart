@@ -1,19 +1,8 @@
-import 'package:get/get.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:ventes/app/models/bp_customer_model.dart';
-import 'package:ventes/app/models/customer_model.dart';
-import 'package:ventes/app/models/maps_loc.dart';
-import 'package:ventes/app/network/presenters/nearby_presenter.dart';
-import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
-import 'package:ventes/app/states/controllers/nearby_state_controller.dart';
-import 'package:ventes/app/states/listeners/nearby_listener.dart';
-import 'package:ventes/constants/strings/nearby_string.dart';
-import 'package:ventes/helpers/function_helpers.dart';
-import 'package:ventes/helpers/task_helper.dart';
+part of 'package:ventes/app/states/controllers/nearby_state_controller.dart';
 
-class NearbyDataSource implements FetchDataContract {
-  NearbyProperties get _properties => Get.find<NearbyProperties>();
-  NearbyListener get _listener => Get.find<NearbyListener>();
+class _DataSource extends RegularDataSource<NearbyPresenter> implements FetchDataContract {
+  _Properties get _properties => Get.find<_Properties>();
+  _Listener get _listener => Get.find<_Listener>();
 
   final NearbyPresenter _presenter = NearbyPresenter();
 
@@ -27,16 +16,12 @@ class NearbyDataSource implements FetchDataContract {
   set mapsLoc(MapsLoc value) => _mapsLoc.value = value;
   MapsLoc get mapsLoc => _mapsLoc.value;
 
-  void init() {
-    _presenter.fetchDataContract = this;
-  }
-
   bool bpCustomersHas(Customer customer) {
     return bpCustomers.any((element) => element.sbccstmid == customer.cstmid);
   }
 
   void fetchData(LatLng position) => _presenter.fetchData(position.latitude, position.longitude);
-  void locationDetailLoaded(Map<String, dynamic> data) {
+  void _locationDetailLoaded(Map<String, dynamic> data) {
     mapsLoc = MapsLoc.fromJson(data);
   }
 
@@ -44,19 +29,20 @@ class NearbyDataSource implements FetchDataContract {
     bpCustomers = data.map((e) => BpCustomer.fromJson(e)).toList();
   }
 
-  void customersFromList(List data, LatLng currentPos) {
+  void _customersFromList(List data, LatLng currentPos) {
     customers = data.map((e) => Customer.fromJson(e)).toList();
     LatLng coords2 = LatLng(currentPos.latitude, currentPos.longitude);
-    customers = customers
-        .map((element) {
-          LatLng coords1 = LatLng(element.cstmlatitude ?? 0.0, element.cstmlongitude ?? 0.0);
-          double radius = calculateDistance(coords1, coords2);
-          element.radius = radius;
-          return element;
-        })
-        .where((element) => element.radius != null ? element.radius! <= 100 : false)
-        .toList();
+    customers = customers.map((element) => _filterBpCustomer(element, coords2)).where(_isCustomerOuttaRange).toList();
   }
+
+  Customer _filterBpCustomer(Customer element, LatLng currentCoordinates) {
+    LatLng coords1 = LatLng(element.cstmlatitude ?? 0.0, element.cstmlongitude ?? 0.0);
+    double radius = calculateDistance(coords1, currentCoordinates);
+    element.radius = radius;
+    return element;
+  }
+
+  bool _isCustomerOuttaRange(element) => element.radius != null ? element.radius! >= 100 : true;
 
   @override
   onLoadError(String message) => _listener.onLoadDataError(message);
@@ -67,7 +53,7 @@ class NearbyDataSource implements FetchDataContract {
   @override
   onLoadSuccess(Map data) {
     if (data['location'] != null) {
-      locationDetailLoaded(data['location'] as Map<String, dynamic>);
+      _locationDetailLoaded(data['location'] as Map<String, dynamic>);
     }
 
     if (data['bpcustomers'] != null) {
@@ -75,7 +61,7 @@ class NearbyDataSource implements FetchDataContract {
     }
 
     if (data['customers'] != null) {
-      customersFromList(
+      _customersFromList(
         data['customers'],
         LatLng(_properties.markers.first.position.latitude, _properties.markers.first.position.longitude),
       );

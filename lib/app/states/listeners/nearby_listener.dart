@@ -1,24 +1,9 @@
 // ignore_for_file: prefer_const_constructors
+part of 'package:ventes/app/states/controllers/nearby_state_controller.dart';
 
-import 'package:get/get.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:ventes/app/models/bp_customer_model.dart';
-import 'package:ventes/app/models/customer_model.dart';
-import 'package:ventes/app/resources/views/customer_form/create/customer_fc.dart';
-import 'package:ventes/app/resources/views/customer_form/update/customer_fu.dart';
-import 'package:ventes/app/resources/widgets/error_alert.dart';
-import 'package:ventes/app/resources/widgets/failed_alert.dart';
-import 'package:ventes/app/resources/widgets/loader.dart';
-import 'package:ventes/app/states/data_sources/nearby_data_source.dart';
-import 'package:ventes/constants/strings/nearby_string.dart';
-import 'package:ventes/helpers/function_helpers.dart';
-import 'package:ventes/helpers/task_helper.dart';
-import 'package:ventes/routing/navigators/nearby_navigator.dart';
-import 'package:ventes/app/states/controllers/nearby_state_controller.dart';
-
-class NearbyListener {
-  NearbyProperties get _properties => Get.find<NearbyProperties>();
-  NearbyDataSource get _dataSource => Get.find<NearbyDataSource>();
+class _Listener extends RegularListener {
+  _Properties get _properties => Get.find<_Properties>();
+  _DataSource get _dataSource => Get.find<_DataSource>();
 
   void onMapControllerCreated(GoogleMapController controller) {
     if (!_properties.mapsController.isCompleted) {
@@ -76,10 +61,6 @@ class NearbyListener {
     });
   }
 
-  Future onRefresh() async {
-    _properties.refresh();
-  }
-
   void onEditDataClick() async {
     Get.find<TaskHelper>().loaderPush(NearbyString.taskCode);
     getCurrentPosition().then((position) async {
@@ -111,5 +92,10 @@ class NearbyListener {
   void onLoadDataFailed(String message) {
     Get.find<TaskHelper>().failedPush(NearbyString.taskCode, message);
     Get.find<TaskHelper>().loaderPop(NearbyString.taskCode);
+  }
+
+  @override
+  Future onRefresh() async {
+    _properties.refresh();
   }
 }
