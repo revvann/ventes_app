@@ -17,7 +17,7 @@ class _FloatingButton extends StatelessWidget {
       overlayOpacity: 0,
       spacing: RegularSize.s,
       children: [
-        _buildChild('assets/svg/daily-visit.svg', "Visit"),
+        _buildChild('assets/svg/product-list.svg', "Products", state.listener.navigateToProduct),
         _buildChild(
           'assets/svg/contact.svg',
           "Contact",

@@ -35,7 +35,7 @@ class ContactPersonFormCreatePresenter {
         data['types'] = typeResponse.body;
         _fetchDataContract.onLoadSuccess(data);
       } else {
-        _fetchDataContract.onLoadFailed(ProspectString.fetchDataFailed);
+        _fetchDataContract.onLoadFailed(ProspectString.fetchContactFailed);
       }
     } catch (e) {
       _fetchDataContract.onLoadError(e.toString());
@@ -46,9 +46,9 @@ class ContactPersonFormCreatePresenter {
     try {
       Response response = await _contactPersonService.store(data);
       if (response.statusCode == 200) {
-        _createContract.onCreateSuccess(ProspectString.createDataSuccess);
+        _createContract.onCreateSuccess(ProspectString.createContactSuccess);
       } else {
-        _createContract.onCreateFailed(ProspectString.createDataFailed);
+        _createContract.onCreateFailed(ProspectString.createContactFailed);
       }
     } catch (e) {
       _createContract.onCreateError(e.toString());

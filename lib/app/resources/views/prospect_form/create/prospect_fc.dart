@@ -5,26 +5,32 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:ventes/app/models/bp_customer_model.dart';
+import 'package:ventes/app/models/type_model.dart';
 import 'package:ventes/app/models/user_detail_model.dart';
 import 'package:ventes/app/resources/widgets/editor_input.dart';
 import 'package:ventes/app/resources/widgets/icon_input.dart';
 import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
 import 'package:ventes/app/resources/widgets/keyable_selectbar.dart';
+import 'package:ventes/app/resources/widgets/regular_button.dart';
 import 'package:ventes/app/resources/widgets/regular_date_picker.dart';
 import 'package:ventes/app/resources/widgets/regular_input.dart';
 import 'package:ventes/app/resources/widgets/searchable_dropdown.dart';
 import 'package:ventes/app/resources/widgets/top_navigation.dart';
 import 'package:ventes/app/states/controllers/prospect_fc_state_controller.dart';
+import 'package:ventes/constants/formatters/currency_formatter.dart';
+import 'package:ventes/constants/formatters/range_number_formatter.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/constants/strings/prospect_string.dart';
 import 'package:ventes/core/view.dart';
+import 'package:ventes/app/resources/widgets/icon_button.dart' as custom_ib;
 
 part 'package:ventes/app/resources/views/prospect_form/create/components/_twin_date_picker.dart';
 part 'package:ventes/app/resources/views/prospect_form/create/components/_end_date_picker.dart';
 part 'package:ventes/app/resources/views/prospect_form/create/components/_owner_dropdown.dart';
 part 'package:ventes/app/resources/views/prospect_form/create/components/_customer_dropdown.dart';
 part 'package:ventes/app/resources/views/prospect_form/create/components/_follow_up_selectbar.dart';
+part 'package:ventes/app/resources/views/prospect_form/create/components/_product_list.dart';
 
 class ProspectFormCreateView extends View<ProspectFormCreateStateController> {
   static const String route = "/prospect/create";
@@ -98,6 +104,20 @@ class ProspectFormCreateView extends View<ProspectFormCreateStateController> {
                     key: state.formSource.formKey,
                     child: Column(
                       children: [
+                        Container(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            "Prospect Detail",
+                            style: TextStyle(
+                              color: RegularColor.primary,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: RegularSize.m,
+                        ),
                         RegularInput(
                           label: "Name",
                           hintText: "Enter name",
@@ -147,6 +167,27 @@ class ProspectFormCreateView extends View<ProspectFormCreateStateController> {
                         _CustomerDropdown(),
                         SizedBox(
                           height: RegularSize.m,
+                        ),
+                        Container(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            "Products",
+                            style: TextStyle(
+                              color: RegularColor.primary,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: RegularSize.m,
+                        ),
+                        _ProductList(),
+                        RegularButton(
+                          label: "Add Product",
+                          primary: RegularColor.green,
+                          height: RegularSize.xl,
+                          onPressed: state.listener.onAddProduct,
                         ),
                       ],
                     ),

@@ -23,7 +23,13 @@ class Loader {
 }
 
 class LoaderAnimation extends StatefulWidget {
-  const LoaderAnimation({Key? key}) : super(key: key);
+  LoaderAnimation({
+    Key? key,
+    this.strokeWidth = 15,
+    this.width = 70,
+  }) : super(key: key);
+  double strokeWidth;
+  double width;
 
   @override
   State<LoaderAnimation> createState() => _LoaderAnimationState();
@@ -35,7 +41,7 @@ class _LoaderAnimationState extends State<LoaderAnimation> with AnimationMixin {
   @override
   initState() {
     super.initState();
-    double bubbleSize = 37.5;
+    double bubbleSize = widget.width / 2;
 
     Tween<Offset> bubbleTween0 = Tween<Offset>(begin: Offset(bubbleSize, 0), end: Offset(bubbleSize, 0));
     Tween<Offset> bubbleTween1 = Tween<Offset>(begin: Offset(bubbleSize, 0), end: Offset(0, bubbleSize));
@@ -82,8 +88,8 @@ class _LoaderAnimationState extends State<LoaderAnimation> with AnimationMixin {
             Transform.translate(
               offset: value.get(AnimationType.translate),
               child: Container(
-                width: 15,
-                height: 15,
+                width: widget.strokeWidth,
+                height: widget.strokeWidth,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: RegularColor.yellow,
@@ -93,8 +99,8 @@ class _LoaderAnimationState extends State<LoaderAnimation> with AnimationMixin {
             Transform.rotate(
               angle: value.get(AnimationType.rotate),
               child: CustomPaint(
-                size: Size(70, 70),
-                painter: QuarterBorderPainter(),
+                size: Size(widget.width, widget.width),
+                painter: QuarterBorderPainter(widget.strokeWidth),
               ),
             ),
           ],
@@ -105,9 +111,11 @@ class _LoaderAnimationState extends State<LoaderAnimation> with AnimationMixin {
 }
 
 class QuarterBorderPainter extends CustomPainter {
+  QuarterBorderPainter(this.strokeWidth);
+  double strokeWidth;
+
   @override
   void paint(Canvas canvas, Size size) {
-    double strokeWidth = 15;
     Rect myRect = Rect.fromLTWH(0, 0, size.width, size.height);
 
     var paint1 = Paint()

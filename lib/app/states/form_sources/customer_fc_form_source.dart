@@ -6,7 +6,6 @@ import 'package:path_provider/path_provider.dart';
 import 'package:get/get.dart';
 import 'package:ventes/app/models/city_model.dart';
 import 'package:ventes/app/models/country_model.dart';
-import 'package:ventes/app/models/customer_model.dart';
 import 'package:ventes/app/models/province_model.dart';
 import 'package:ventes/app/models/subdistrict_model.dart';
 import 'package:ventes/app/resources/widgets/search_list.dart';

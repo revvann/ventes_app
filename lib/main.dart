@@ -9,6 +9,7 @@ import 'package:ventes/app/network/services/customer_service.dart';
 import 'package:ventes/app/network/services/gmaps_service.dart';
 import 'package:ventes/app/network/services/place_service.dart';
 import 'package:ventes/app/network/services/prospect_detail_service.dart';
+import 'package:ventes/app/network/services/prospect_product_service.dart';
 import 'package:ventes/app/network/services/prospect_service.dart';
 import 'package:ventes/app/network/services/schedule_service.dart';
 import 'package:ventes/app/network/services/type_service.dart';
@@ -40,6 +41,7 @@ void main() async {
   Get.lazyPut(() => TypeService(), fenix: true);
   Get.lazyPut(() => UserService(), fenix: true);
   Get.lazyPut(() => ProspectDetailService(), fenix: true);
+  Get.lazyPut(() => ProspectProductService(), fenix: true);
   Get.lazyPut(() => ContactPersonService(), fenix: true);
   Get.lazyPut(() => KeyboardStateController(), fenix: true);
   Get.lazyPut(() => ContactPersonService(), fenix: true);

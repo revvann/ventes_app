@@ -51,6 +51,7 @@ dependencies:
   flutter_keyboard_visibility: ^5.2.0
   flutter_speed_dial: ^6.0.0
   flutter_local_notifications: ^9.5.3+1
+  contacts_service: ^0.6.3
 
 dev_dependencies:
   flutter_test:

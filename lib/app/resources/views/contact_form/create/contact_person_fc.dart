@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
@@ -7,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:ventes/app/models/type_model.dart';
 import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
 import 'package:ventes/app/resources/widgets/regular_input.dart';
+import 'package:ventes/app/resources/widgets/searchable_dropdown.dart';
 import 'package:ventes/app/resources/widgets/top_navigation.dart';
 import 'package:ventes/app/states/controllers/contact_person_fc_state_controller.dart';
 import 'package:ventes/constants/regular_color.dart';
@@ -15,6 +17,7 @@ import 'package:ventes/constants/strings/prospect_string.dart';
 import 'package:ventes/core/view.dart';
 
 part 'package:ventes/app/resources/views/contact_form/create/components/_type_dropdown.dart';
+part 'package:ventes/app/resources/views/contact_form/create/components/_contact_dropdown.dart';
 
 class ContactPersonFormCreateView extends View<ContactPersonFormCreateStateController> {
   static const String route = "/contactperson/create";
@@ -88,6 +91,7 @@ class ContactPersonFormCreateView extends View<ContactPersonFormCreateStateContr
                   ),
                 ),
                 child: SingleChildScrollView(
+                  physics: AlwaysScrollableScrollPhysics(),
                   child: Form(
                     key: state.formSource.formKey,
                     child: Column(
@@ -102,12 +106,24 @@ class ContactPersonFormCreateView extends View<ContactPersonFormCreateStateContr
                         SizedBox(height: RegularSize.m),
                         _TypeDropdown(),
                         SizedBox(height: RegularSize.m),
-                        RegularInput(
-                          label: "Contact Value",
-                          hintText: "Enter contact (e.g. email, phone, etc.)",
-                          controller: state.formSource.valueTEC,
-                          validator: state.formSource.validator.contactvalue,
-                        ),
+                        Obx(() {
+                          return Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              if (!state.formSource.isPhone) ...[
+                                RegularInput(
+                                  label: "Contact Value",
+                                  hintText: "Enter contact (e.g. email, phone, etc.)",
+                                  controller: state.formSource.valueTEC,
+                                  validator: state.formSource.validator.contactvalue,
+                                ),
+                                SizedBox(height: RegularSize.m),
+                              ] else ...[
+                                _ContactDropdown(),
+                              ],
+                            ],
+                          );
+                        }),
                         SizedBox(height: RegularSize.m),
                       ],
                     ),

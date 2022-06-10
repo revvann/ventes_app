@@ -1,7 +1,5 @@
 import 'package:get/get.dart';
-import 'package:ventes/app/models/contact_person_model.dart';
 import 'package:ventes/app/states/controllers/regular_state_controller.dart';
-import 'package:ventes/app/states/data_sources/contact_person_data_source.dart';
 import 'package:ventes/app/states/data_sources/contact_person_fc_data_source.dart';
 import 'package:ventes/app/states/form_sources/contact_person_fc_form_source.dart';
 import 'package:ventes/app/states/listeners/contact_person_fc_listener.dart';

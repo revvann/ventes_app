@@ -1,9 +1,9 @@
 // ignore_for_file: prefer_const_constructors
 
-part of 'package:ventes/app/resources/views/prospect_detail_form/create/prospect_detail_fc.dart';
+part of 'package:ventes/app/resources/views/prospect_form/create/prospect_fc.dart';
 
 class _ProductList extends StatelessWidget {
-  ProspectDetailFormCreateStateController state = Get.find<ProspectDetailFormCreateStateController>();
+  ProspectFormCreateStateController state = Get.find<ProspectFormCreateStateController>();
 
   @override
   Widget build(BuildContext context) {

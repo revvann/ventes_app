@@ -1,4 +1,4 @@
-import 'package:ventes/app/models/bp_customer_model.dart';
+import 'package:ventes/app/models/customer_model.dart';
 import 'package:ventes/app/models/type_model.dart';
 import 'package:ventes/core/model.dart';
 
@@ -7,7 +7,7 @@ class ContactPerson extends Model {
   int? contactcustomerid;
   int? contacttypeid;
   String? contactvalueid;
-  BpCustomer? contactcustomer;
+  Customer? contactcustomer;
   DBType? contacttype;
 
   ContactPerson({
@@ -37,7 +37,7 @@ class ContactPerson extends Model {
     contactvalueid = json['contactvalueid'];
 
     if (json['contactcustomer'] != null) {
-      contactcustomer = BpCustomer.fromJson(json['contactcustomer']);
+      contactcustomer = Customer.fromJson(json['contactcustomer']);
     }
 
     if (json['contacttype'] != null) {

@@ -34,7 +34,7 @@ class _TopPanel extends StatelessWidget {
           children: [
             Obx(() {
               return Text(
-                state.dataSource.activeUser?.user?.userfullname ?? "",
+                state.dataSource.account?.user?.userfullname ?? "",
                 style: TextStyle(
                   fontSize: 16,
                   color: RegularColor.dark,
@@ -48,6 +48,8 @@ class _TopPanel extends StatelessWidget {
             Obx(() {
               return Text(
                 state.dataSource.currentPosition?.adresses?.first.formattedAddress ?? "",
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   color: RegularColor.dark,
                   fontSize: 14,
@@ -62,7 +64,9 @@ class _TopPanel extends StatelessWidget {
                 Obx(() {
                   return _TopPanelItem('assets/svg/user.svg', state.dataSource.customers.length.toString(), "Customer");
                 }),
-                _TopPanelItem('assets/svg/calendar.svg', "8", "Scheduled"),
+                Obx(() {
+                  return _TopPanelItem('assets/svg/calendar.svg', state.dataSource.scheduleCount.toString(), "Scheduled");
+                }),
                 _TopPanelItem('assets/svg/time-check.svg', "3", "Done"),
               ],
             ),

@@ -170,9 +170,24 @@ String currencyFormat(String number) {
     symbol: '',
     decimalDigits: 0,
   );
-  var value = number.replaceAll(RegExp(r'[.]'), '');
+  var value = number.replaceAll(RegExp(r'[.]'), '').replaceAll(RegExp(r'[,]'), '.');
   if (value.isEmpty) {
     value = '0';
   }
   return formatter.format(double.parse(value));
+}
+
+String getInitials(String name) {
+  if (name.isEmpty) {
+    return '';
+  }
+  var names = name.split(' ');
+  if (names.length == 1) {
+    return names[0].substring(0, 1).toUpperCase();
+  }
+  var initials = '';
+  for (var name in names) {
+    initials += name[0];
+  }
+  return initials;
 }

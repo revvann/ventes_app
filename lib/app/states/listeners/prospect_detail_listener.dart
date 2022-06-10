@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:ventes/app/resources/views/contact/contact.dart';
+import 'package:ventes/app/resources/views/product/product.dart';
 import 'package:ventes/app/resources/views/prospect_detail_form/create/prospect_detail_fc.dart';
 import 'package:ventes/app/resources/views/prospect_detail_form/update/prospect_detail_fu.dart';
 import 'package:ventes/app/states/controllers/prospect_detail_state_controller.dart';
@@ -19,6 +20,16 @@ class ProspectDetailListener {
   void navigateToProspectDetailForm() {
     Get.toNamed(
       ProspectDetailFormCreateView.route,
+      id: ProspectNavigator.id,
+      arguments: {
+        'prospect': _properties.prospectId,
+      },
+    );
+  }
+
+  void navigateToProduct() {
+    Get.toNamed(
+      ProductView.route,
       id: ProspectNavigator.id,
       arguments: {
         'prospect': _properties.prospectId,

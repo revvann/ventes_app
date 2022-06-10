@@ -325,7 +325,7 @@ class ScheduleFormCreateFormSource {
       "scheonlink": isEvent ? scheonlink : null,
       "scheallday": scheallday,
       "schetypeid": _dataSource.typeId(schetype),
-      "schetz": isEvent ? schetz : null,
+      "schetz": schetz,
       "scheprivate": isEvent ? scheprivate : false,
       "schetowardid": isEvent ? schetoward?.userid : userDefault?.userid,
       "schebpid": isEvent ? schebpid : userDefault?.userdtbpid,

@@ -1,16 +1,20 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_constructors
 
-part of 'package:ventes/app/resources/views/daily_schedule/daily_schedule.dart';
+import 'package:flutter/material.dart';
+import 'package:ventes/app/models/schedule_model.dart';
+import 'package:ventes/constants/regular_color.dart';
+import 'package:ventes/constants/regular_size.dart';
+import 'package:ventes/helpers/function_helpers.dart';
 
-class _ScheduleDetail extends StatelessWidget {
-  DailyScheduleStateController state = Get.find<DailyScheduleStateController>();
+class ScheduleDetail extends StatelessWidget {
+  Schedule schedule;
 
-  Schedule? get schedule => state.properties.selectedAppointment;
+  ScheduleDetail(this.schedule);
 
-  String? get startDate => schedule?.schestartdate != null ? schedule!.schestartdate! : null;
-  String? get endDate => schedule?.scheenddate != null ? schedule!.scheenddate! : null;
-  String? get startTime => schedule?.schestarttime != null ? schedule!.schestarttime! : null;
-  String? get endTime => schedule?.scheendtime != null ? schedule!.scheendtime! : null;
+  String? get startDate => schedule.schestartdate != null ? schedule.schestartdate! : null;
+  String? get endDate => schedule.scheenddate != null ? schedule.scheenddate! : null;
+  String? get startTime => schedule.schestarttime != null ? schedule.schestarttime! : null;
+  String? get endTime => schedule.scheendtime != null ? schedule.scheendtime! : null;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +28,7 @@ class _ScheduleDetail extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          schedule?.schenm ?? "",
+          schedule.schenm ?? "",
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w600,
@@ -35,7 +39,7 @@ class _ScheduleDetail extends StatelessWidget {
           height: RegularSize.xs,
         ),
         Text(
-          schedule?.schetoward?.userfullname ?? "Unknown",
+          schedule.schetoward?.userfullname ?? "Unknown",
           style: TextStyle(
             fontSize: 14,
             color: RegularColor.gray,
@@ -62,10 +66,10 @@ class _ScheduleDetail extends StatelessWidget {
             height: RegularSize.s,
           ),
         ],
-        if (schedule?.schetz != null) ...[
+        if (schedule.schetz != null) ...[
           _DetailItem(
             title: "Timezone",
-            value: schedule!.schetz!,
+            value: schedule.schetz!,
           ),
           SizedBox(
             height: RegularSize.s,
@@ -73,12 +77,12 @@ class _ScheduleDetail extends StatelessWidget {
         ],
         _DetailItem(
           title: "Remind In",
-          value: schedule?.scheremind != null ? "${schedule!.scheremind} Minutes" : 'No Reminder',
+          value: schedule.scheremind != null ? "${schedule.scheremind} Minutes" : 'No Reminder',
         ),
         SizedBox(
           height: RegularSize.s,
         ),
-        if (schedule?.scheloc != null) ...[
+        if (schedule.scheloc != null) ...[
           Text(
             "Location",
             style: TextStyle(
@@ -92,7 +96,7 @@ class _ScheduleDetail extends StatelessWidget {
           ),
           RichText(
             text: TextSpan(
-              text: schedule?.scheloc ?? '-',
+              text: schedule.scheloc ?? '-',
               style: TextStyle(
                 fontSize: 14,
                 color: RegularColor.dark,
@@ -111,7 +115,7 @@ class _ScheduleDetail extends StatelessWidget {
             height: RegularSize.s,
           ),
         ],
-        if (schedule?.scheonlink != null) ...[
+        if (schedule.scheonlink != null) ...[
           Text(
             "Meeting Link",
             style: TextStyle(
@@ -125,7 +129,7 @@ class _ScheduleDetail extends StatelessWidget {
           ),
           RichText(
             text: TextSpan(
-              text: schedule?.scheonlink ?? '-',
+              text: schedule.scheonlink ?? '-',
               style: TextStyle(
                 fontSize: 14,
                 color: RegularColor.dark,
@@ -144,10 +148,10 @@ class _ScheduleDetail extends StatelessWidget {
             height: RegularSize.s,
           ),
         ],
-        if (schedule?.schedesc != null) ...[
+        if (schedule.schedesc != null) ...[
           _DetailItem(
             title: "Description",
-            value: schedule?.schedesc ?? '-',
+            value: schedule.schedesc ?? '-',
           ),
           SizedBox(
             height: RegularSize.s,
@@ -170,34 +174,34 @@ class _ScheduleDetail extends StatelessWidget {
           children: [
             Builder(builder: (context) {
               Color color;
-              String scheduletype = schedule?.schetype?.typename ?? "Unknown";
+              String scheduleype = schedule.schetype?.typename ?? "Unknown";
 
-              if (scheduletype == "Event") {
+              if (scheduleype == "Event") {
                 color = RegularColor.yellow;
-              } else if (scheduletype == "Task") {
+              } else if (scheduleype == "Task") {
                 color = RegularColor.red;
-              } else if (scheduletype == "Reminder") {
+              } else if (scheduleype == "Reminder") {
                 color = RegularColor.cyan;
               } else {
                 color = RegularColor.gray;
               }
               return _DetailTag(
-                text: scheduletype,
+                text: scheduleype,
                 color: color,
               );
             }),
-            if (schedule?.scheallday ?? false)
+            if (schedule.scheallday ?? false)
               _DetailTag(
                 text: "Allday",
                 color: RegularColor.indigo,
               ),
-            if (schedule?.scheprivate ?? false)
+            if (schedule.scheprivate ?? false)
               _DetailTag(
                 text: "Private",
                 color: RegularColor.pink,
               ),
             _DetailTag(
-              text: schedule?.scheonline ?? false ? "Online" : "On Site",
+              text: schedule.scheonline ?? false ? "Online" : "On Site",
               color: RegularColor.green,
             ),
           ],

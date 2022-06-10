@@ -2,22 +2,21 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:ventes/app/models/auth_model.dart';
 import 'package:ventes/app/network/services/auth_service.dart';
-import 'package:ventes/app/network/services/user_service.dart';
 
 class AuthHelper {
   final _authService = Get.find<AuthService>();
 
-  static GetStorage get container => GetStorage("VentesAuth");
-  static const String idKey = "userId";
-  static const String tokenKey = "jwtToken";
-  static const String accountKey = "accountActive";
-  static const String passwordKey = "password";
-  static const String usernameKey = "username";
-  static var userId = ReadWriteValue<int?>(AuthHelper.idKey, null, () => AuthHelper.container);
-  static var jwtToken = ReadWriteValue<String?>(AuthHelper.tokenKey, null, () => AuthHelper.container);
-  static var accountActive = ReadWriteValue<int?>(AuthHelper.accountKey, null, () => AuthHelper.container);
-  static var username = ReadWriteValue<String?>(AuthHelper.usernameKey, null, () => AuthHelper.container);
-  static var password = ReadWriteValue<String?>(AuthHelper.passwordKey, null, () => AuthHelper.container);
+  GetStorage get container => GetStorage("VentesAuth");
+  String idKey = "userId";
+  String tokenKey = "jwtToken";
+  String accountKey = "accountActive";
+  String passwordKey = "password";
+  String usernameKey = "username";
+  ReadWriteValue<int?> get userId => ReadWriteValue<int?>(idKey, null, () => container);
+  ReadWriteValue<String?> get jwtToken => ReadWriteValue<String?>(tokenKey, null, () => container);
+  ReadWriteValue<int?> get accountActive => ReadWriteValue<int?>(accountKey, null, () => container);
+  ReadWriteValue<String?> get username => ReadWriteValue<String?>(usernameKey, null, () => container);
+  ReadWriteValue<String?> get password => ReadWriteValue<String?>(passwordKey, null, () => container);
 
   Future<bool> save(AuthModel authModel) async {
     userId.val = authModel.userId;
@@ -39,7 +38,10 @@ class AuthHelper {
         'password': password.val,
       };
       Response response = await _authService.signIn(credentials);
+
       if (response.statusCode == 200) {
+        userId.val = response.body['userid'];
+        accountActive.val = response.body['userdetails'].first['userdtid'];
         jwtToken.val = response.body['jwt_token'];
       }
     }

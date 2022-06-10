@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:get/get.dart';
 import 'package:ventes/core/view.dart';
 import 'package:ventes/app/resources/widgets/bottom_navigation.dart';
@@ -36,40 +37,42 @@ class MainView extends View<BottomNavigationStateController> {
       child: Scaffold(
         // resizeToAvoidBottomInset: false,
         backgroundColor: Colors.white,
-        body: Obx(
-          () => Stack(
-            children: <Widget>[
-              Offstage(
-                offstage: state.currentIndex != Views.dashboard,
-                child: DashboardNavigator(
-                  navigatorKey: state.navigatorKeys[Views.dashboard]!,
+        body: KeyboardDismissOnTap(
+          child: Obx(
+            () => Stack(
+              children: <Widget>[
+                Offstage(
+                  offstage: state.currentIndex != Views.dashboard,
+                  child: DashboardNavigator(
+                    navigatorKey: state.navigatorKeys[Views.dashboard]!,
+                  ),
                 ),
-              ),
-              Offstage(
-                offstage: state.currentIndex != Views.nearby,
-                child: NearbyNavigator(
-                  navigatorKey: state.navigatorKeys[Views.nearby]!,
+                Offstage(
+                  offstage: state.currentIndex != Views.nearby,
+                  child: NearbyNavigator(
+                    navigatorKey: state.navigatorKeys[Views.nearby]!,
+                  ),
                 ),
-              ),
-              Offstage(
-                offstage: state.currentIndex != Views.schedule,
-                child: ScheduleNavigator(
-                  navigatorKey: state.navigatorKeys[Views.schedule]!,
+                Offstage(
+                  offstage: state.currentIndex != Views.schedule,
+                  child: ScheduleNavigator(
+                    navigatorKey: state.navigatorKeys[Views.schedule]!,
+                  ),
                 ),
-              ),
-              Offstage(
-                offstage: state.currentIndex != Views.prospect,
-                child: ProspectNavigator(
-                  navigatorKey: state.navigatorKeys[Views.prospect]!,
+                Offstage(
+                  offstage: state.currentIndex != Views.prospect,
+                  child: ProspectNavigator(
+                    navigatorKey: state.navigatorKeys[Views.prospect]!,
+                  ),
                 ),
-              ),
-              Offstage(
-                offstage: state.currentIndex != Views.settings,
-                child: SettingsNavigator(
-                  navigatorKey: state.navigatorKeys[Views.settings]!,
+                Offstage(
+                  offstage: state.currentIndex != Views.settings,
+                  child: SettingsNavigator(
+                    navigatorKey: state.navigatorKeys[Views.settings]!,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

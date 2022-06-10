@@ -45,4 +45,48 @@ class ProspectFormCreateValidator {
     }
     return null;
   }
+
+  String? prosproductname(String? value) {
+    if (value == null) {
+      return 'Product name is required';
+    }
+
+    if (value.isEmpty) {
+      return 'Product name is required';
+    }
+
+    return null;
+  }
+
+  String? prosproductprice(String? value) {
+    if (value == null) {
+      return 'Product price is required';
+    }
+
+    if (value.isEmpty) {
+      return 'Product price is required';
+    }
+
+    if (double.tryParse(value.replaceAll(RegExp(r'[.,]'), '')) == null) {
+      return 'Product price is invalid';
+    }
+
+    return null;
+  }
+
+  String? prosproducttax(String? value) {
+    if (value == null) {
+      return 'Product price is required';
+    }
+
+    if (value.isEmpty) {
+      return 'Product price is required';
+    }
+
+    if (double.tryParse(value.replaceAll(RegExp(r'[.,]'), '')) == null) {
+      return 'Product price is invalid';
+    }
+
+    return null;
+  }
 }

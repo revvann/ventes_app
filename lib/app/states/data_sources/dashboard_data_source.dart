@@ -1,14 +1,17 @@
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:ventes/app/models/auth_model.dart';
 import 'package:ventes/app/models/bp_customer_model.dart';
 import 'package:ventes/app/models/maps_loc.dart';
 import 'package:ventes/app/models/user_detail_model.dart';
+import 'package:ventes/app/models/user_model.dart';
 import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
 import 'package:ventes/app/network/contracts/logout_contract.dart';
 import 'package:ventes/app/network/presenters/dashboard_presenter.dart';
 import 'package:ventes/app/states/controllers/dashboard_state_controller.dart';
 import 'package:ventes/app/states/listeners/dashboard_listener.dart';
 import 'package:ventes/constants/strings/dashboard_string.dart';
+import 'package:ventes/helpers/auth_helper.dart';
 import 'package:ventes/helpers/function_helpers.dart';
 import 'package:ventes/helpers/task_helper.dart';
 
@@ -22,9 +25,17 @@ class DashboardDataSource implements FetchDataContract, LogoutContract {
   set customers(List<BpCustomer> value) => _customers.value = value;
   List<BpCustomer> get customers => _customers.value;
 
-  final _activeUser = Rx<UserDetail?>(null);
-  UserDetail? get activeUser => _activeUser.value;
-  set activeUser(UserDetail? value) => _activeUser.value = value;
+  final _accounts = Rx<List<UserDetail>>([]);
+  set accounts(List<UserDetail> value) => _accounts.value = value;
+  List<UserDetail> get accounts => _accounts.value;
+
+  final _account = Rx<UserDetail?>(null);
+  set account(UserDetail? value) => _account.value = value;
+  UserDetail? get account => _account.value;
+
+  final _scheduleCount = 0.obs;
+  set scheduleCount(int value) => _scheduleCount.value = value;
+  int get scheduleCount => _scheduleCount.value;
 
   final _currentPosition = Rx<MapsLoc?>(null);
   MapsLoc? get currentPosition => _currentPosition.value;
@@ -59,7 +70,7 @@ class DashboardDataSource implements FetchDataContract, LogoutContract {
   onLoadFailed(String message) => _listener.onLoadDataFailed(message);
 
   @override
-  onLoadSuccess(Map data) {
+  onLoadSuccess(Map data) async {
     if (data['customers'] != null) {
       customersFromList(
         data['customers'],
@@ -67,12 +78,21 @@ class DashboardDataSource implements FetchDataContract, LogoutContract {
       );
     }
 
-    if (data['activeUser'] != null) {
-      activeUser = UserDetail.fromJson(data['activeUser']);
-    }
-
     if (data['currentPosition'] != null) {
       currentPosition = MapsLoc.fromJson(data['currentPosition']);
+    }
+
+    if (data['scheduleCount'] != null) {
+      scheduleCount = data['scheduleCount'];
+    }
+
+    if (data['user'] != null) {
+      AuthModel? authModel = await Get.find<AuthHelper>().get();
+      if (authModel != null) {
+        accounts = data['user'].map<UserDetail>((e) => UserDetail.fromJson(e)).toList();
+        account = accounts.firstWhere((element) => element.userdtid == authModel.accountActive);
+        accounts.removeWhere((element) => element.userdtid == authModel.accountActive);
+      }
     }
 
     Get.find<TaskHelper>().loaderPop(DashboardString.taskCode);
