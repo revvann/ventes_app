@@ -1,16 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:ventes/app/models/prospect_model.dart';
-import 'package:ventes/app/models/type_model.dart';
-import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
-import 'package:ventes/app/states/form_validators/prospect_detail_fc_validator.dart';
-import 'package:ventes/constants/strings/prospect_string.dart';
-import 'package:ventes/helpers/function_helpers.dart';
+part of 'package:ventes/app/states/controllers/prospect_detail_fc_state_controller.dart';
 
-class ProspectDetailFormCreateFormSource {
+class _FormSource extends RegularFormSource {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
-  late ProspectDetailFormCreateValidator validator;
+  _Validator validator = _Validator();
 
   KeyableDropdownController<int, DBType> categoryDropdownController = Get.put(
     KeyableDropdownController<int, DBType>(),
@@ -43,12 +36,15 @@ class ProspectDetailFormCreateFormSource {
 
   String? get dateString => date != null ? formatDate(date!) : null;
 
+  @override
   init() {
+    super.init();
     date = DateTime.now();
-    validator = ProspectDetailFormCreateValidator(this);
   }
 
-  void dispose() {
+  @override
+  void close() {
+    super.close();
     prosdtdescTEC.dispose();
     Get.delete<KeyableDropdownController<int, DBType>>(
       tag: ProspectString.categoryDropdownTag,
@@ -58,6 +54,7 @@ class ProspectDetailFormCreateFormSource {
     );
   }
 
+  @override
   Map<String, dynamic> toJson() {
     return {
       'prospectdtprospectid': prospect?.prospectid?.toString(),

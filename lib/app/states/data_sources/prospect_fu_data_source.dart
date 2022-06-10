@@ -1,22 +1,8 @@
-import 'package:get/get.dart';
-import 'package:ventes/app/models/bp_customer_model.dart';
-import 'package:ventes/app/models/prospect_model.dart';
-import 'package:ventes/app/models/type_model.dart';
-import 'package:ventes/app/models/user_detail_model.dart';
-import 'package:ventes/app/network/contracts/update_contract.dart';
-import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
-import 'package:ventes/app/network/presenters/prospect_fu_presenter.dart';
-import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
-import 'package:ventes/app/states/form_sources/prospect_fu_form_source.dart';
-import 'package:ventes/app/states/listeners/prospect_fu_listener.dart';
-import 'package:ventes/constants/strings/prospect_string.dart';
-import 'package:ventes/helpers/task_helper.dart';
+part of 'package:ventes/app/states/controllers/prospect_fu_state_controller.dart';
 
-class ProspectFormUpdateDataSource implements FetchDataContract, UpdateContract {
-  ProspectFormUpdateListener get _listener => Get.find<ProspectFormUpdateListener>();
-  ProspectFormUpdateFormSource get _formSource => Get.find<ProspectFormUpdateFormSource>();
-
-  final ProspectFormUpdatePresenter _presenter = ProspectFormUpdatePresenter();
+class _DataSource extends RegularDataSource<ProspectFormUpdatePresenter> implements ProspectUpdateContract {
+  _Listener get _listener => Get.find<_Listener>(tag: ProspectString.prospectUpdateTag);
+  _FormSource get _formSource => Get.find<_FormSource>(tag: ProspectString.prospectUpdateTag);
 
   final Rx<Map<int, String>> _followUpItems = Rx<Map<int, String>>({});
   set followUpItems(Map<int, String> value) => _followUpItems.value = value;
@@ -24,15 +10,13 @@ class ProspectFormUpdateDataSource implements FetchDataContract, UpdateContract 
 
   Prospect? prospect;
 
-  init() {
-    _presenter.fetchDataContract = this;
-    _presenter.updateContract = this;
-  }
+  void fetchData(int prospectid) => presenter.fetchData(prospectid);
+  Future<List<UserDetail>> fetchUser(String? search) async => await presenter.fetchUsers(search);
+  Future<List<BpCustomer>> fetchCustomer(String? search) async => await presenter.fetchCustomers(search);
+  void updateProspect(int prospectid, Map<String, dynamic> data) => presenter.updateProspect(prospectid, data);
 
-  void fetchData(int prospectid) => _presenter.fetchData(prospectid);
-  Future<List<UserDetail>> fetchUser(String? search) async => await _presenter.fetchUsers(search);
-  Future<List<BpCustomer>> fetchCustomer(String? search) async => await _presenter.fetchCustomers(search);
-  void updateProspect(int prospectid, Map<String, dynamic> data) => _presenter.updateProspect(prospectid, data);
+  @override
+  ProspectFormUpdatePresenter presenterBuilder() => ProspectFormUpdatePresenter();
 
   @override
   onLoadError(String message) => _listener.onDataLoadError(message);
@@ -60,7 +44,7 @@ class ProspectFormUpdateDataSource implements FetchDataContract, UpdateContract 
 
     if (data['prospect'] != null) {
       prospect = Prospect.fromJson(data['prospect']);
-      _formSource.prepareValue();
+      _formSource.prepareFormValues();
     }
 
     Get.find<TaskHelper>().loaderPop(ProspectString.formUpdateTaskCode);

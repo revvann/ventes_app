@@ -9,7 +9,6 @@ import 'package:ventes/constants/strings/signin_string.dart';
 import 'package:ventes/app/network/contracts/auth_contract.dart';
 import 'package:ventes/app/states/controllers/signin_state_controller.dart';
 import 'package:ventes/app/resources/views/dashboard/dashboard.dart';
-import 'package:ventes/core/view.dart';
 import 'package:ventes/app/resources/widgets/regular_bottom_sheet.dart';
 import 'package:ventes/app/resources/widgets/regular_button.dart';
 import 'package:ventes/app/resources/widgets/regular_dialog.dart';
@@ -18,11 +17,11 @@ import 'package:ventes/app/resources/widgets/regular_input.dart';
 part 'package:ventes/app/resources/views/signin/components/_username_input.dart';
 part 'package:ventes/app/resources/views/signin/components/_password_input.dart';
 
-class SigninView extends View<SigninStateController> implements AuthContract {
+class SigninView extends GetView<SigninStateController> implements AuthContract {
   static const String route = "/signin";
 
   SigninView() {
-    state.dataSource.authContract = this;
+    controller.dataSource.authContract = this;
   }
 
   @override
@@ -103,7 +102,7 @@ class SigninView extends View<SigninStateController> implements AuthContract {
     RegularBottomSheet(
       backgroundColor: Colors.white,
       child: Form(
-        key: state.formSource.key,
+        key: controller.formSource.key,
         child: Column(
           children: [
             SizedBox(
@@ -121,13 +120,13 @@ class SigninView extends View<SigninStateController> implements AuthContract {
               height: RegularSize.m,
             ),
             _UsernameInput(
-              controller: state.formSource.usernameTEC,
+              controller: controller.formSource.usernameTEC,
             ),
             SizedBox(
               height: RegularSize.m,
             ),
             _PasswordInput(
-              controller: state.formSource.passwordTEC,
+              controller: controller.formSource.passwordTEC,
             ),
             SizedBox(
               height: RegularSize.xl,
@@ -135,10 +134,10 @@ class SigninView extends View<SigninStateController> implements AuthContract {
             Obx(() {
               return RegularButton(
                 primary: RegularColor.yellow,
-                isLoading: state.dataSource.isLoading,
+                isLoading: controller.dataSource.isLoading,
                 label: SigninString.signinButton,
                 height: RegularSize.xxl,
-                onPressed: state.formSubmit,
+                onPressed: controller.formSubmit,
               );
             }),
           ],
@@ -149,7 +148,7 @@ class SigninView extends View<SigninStateController> implements AuthContract {
 
   @override
   void onAuthFailed(String message) {
-    state.dataSource.isLoading = false;
+    controller.dataSource.isLoading = false;
     RegularDialog(
       width: Get.width * 0.7,
       child: Column(
@@ -198,7 +197,7 @@ class SigninView extends View<SigninStateController> implements AuthContract {
 
   @override
   void onAuthSuccess(String message) {
-    state.dataSource.isLoading = false;
+    controller.dataSource.isLoading = false;
     Get.offAllNamed(DashboardView.route);
   }
 }

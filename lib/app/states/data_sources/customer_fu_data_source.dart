@@ -1,32 +1,11 @@
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:ventes/app/models/bp_customer_model.dart';
-import 'package:ventes/app/models/city_model.dart';
-import 'package:ventes/app/models/country_model.dart';
-import 'package:ventes/app/models/customer_model.dart';
-import 'package:ventes/app/models/province_model.dart';
-import 'package:ventes/app/models/subdistrict_model.dart';
-import 'package:ventes/app/models/type_model.dart';
-import 'package:ventes/app/network/contracts/create_contract.dart';
-import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
-import 'package:ventes/app/network/contracts/update_contract.dart';
-import 'package:ventes/app/network/presenters/customer_fu_presenter.dart';
-import 'package:get/get.dart';
-import 'package:ventes/app/states/controllers/customer_fu_state_controller.dart';
-import 'package:ventes/app/states/form_sources/customer_fu_form_source.dart';
-import 'package:ventes/app/states/listeners/customer_fu_listener.dart';
-import 'package:ventes/constants/strings/nearby_string.dart';
-import 'package:ventes/helpers/function_helpers.dart';
-import 'package:ventes/helpers/task_helper.dart';
+part of 'package:ventes/app/states/controllers/customer_fu_state_controller.dart';
 
-class CustomerFormUpdateDataSource implements FetchDataContract, UpdateContract {
-  CustomerFormUpdateListener get _listener => Get.find<CustomerFormUpdateListener>();
-  CustomerFormUpdateFormSource get _formSource => Get.find<CustomerFormUpdateFormSource>();
-  CustomerFormUpdateProperties get _properties => Get.find<CustomerFormUpdateProperties>();
+class _DataSource extends RegularDataSource<CustomerFormUpdatePresenter> implements CustomerUpdateContract {
+  _Listener get _listener => Get.find<_Listener>(tag: NearbyString.customerUpdateTag);
+  _FormSource get _formSource => Get.find<_FormSource>(tag: NearbyString.customerUpdateTag);
+  _Properties get _properties => Get.find<_Properties>(tag: NearbyString.customerUpdateTag);
 
   final CustomerFormUpdatePresenter _presenter = CustomerFormUpdatePresenter();
-
-  set fetchDataContract(FetchDataContract value) => _presenter.fetchDataContract = value;
-  set createContract(UpdateContract value) => _presenter.createContract = value;
 
   final _customers = <Customer>[].obs;
   set customers(List<Customer> value) => _customers.value = value;
@@ -47,11 +26,6 @@ class CustomerFormUpdateDataSource implements FetchDataContract, UpdateContract 
   final _statuses = <int, String>{}.obs;
   set statuses(Map<int, String> value) => _statuses.value = value;
   Map<int, String> get statuses => _statuses.value;
-
-  void init() {
-    _presenter.createContract = this;
-    _presenter.fetchDataContract = this;
-  }
 
   bool bpCustomersHas(Customer customer) {
     return bpCustomers.any((element) => element.sbccstmid == customer.cstmid);
@@ -95,6 +69,9 @@ class CustomerFormUpdateDataSource implements FetchDataContract, UpdateContract 
   void updateCustomer(int id, FormData data) => _presenter.updateCustomer(id, data);
 
   @override
+  CustomerFormUpdatePresenter presenterBuilder() => CustomerFormUpdatePresenter();
+
+  @override
   onLoadError(String message) => _listener.onLoadDataError(message);
 
   @override
@@ -105,7 +82,7 @@ class CustomerFormUpdateDataSource implements FetchDataContract, UpdateContract 
     if (data['bpcustomer'] != null) {
       bpCustomer = BpCustomer.fromJson(data['bpcustomer']);
       await _properties.moveCamera();
-      _formSource.prepareFormValue();
+      _formSource.prepareFormValues();
     }
 
     if (data['customers'] != null) {

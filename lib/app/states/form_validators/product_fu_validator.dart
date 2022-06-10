@@ -1,9 +1,6 @@
-import 'package:ventes/app/states/form_sources/product_fu_form_source.dart';
+part of 'package:ventes/app/states/controllers/product_fu_state_controller.dart';
 
-class ProductFormUpdateValidator {
-  ProductFormUpdateFormSource _formSource;
-  ProductFormUpdateValidator(this._formSource);
-
+class _Validator {
   String? prosproductname(String? value) {
     if (value == null || value.isEmpty) {
       return 'Product name is required';

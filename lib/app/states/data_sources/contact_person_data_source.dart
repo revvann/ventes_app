@@ -1,16 +1,7 @@
-import 'package:get/get.dart';
-import 'package:ventes/app/models/bp_customer_model.dart';
-import 'package:ventes/app/models/contact_person_model.dart';
-import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
-import 'package:ventes/app/network/presenters/contact_person_presenter.dart';
-import 'package:ventes/app/states/listeners/contact_person_listener.dart';
-import 'package:ventes/constants/strings/prospect_string.dart';
-import 'package:ventes/helpers/task_helper.dart';
+part of 'package:ventes/app/states/controllers/contact_person_state_controller.dart';
 
-class ContactPersonDataSource implements FetchDataContract {
-  ContactPersonListener get _listener => Get.find<ContactPersonListener>();
-
-  final ContactPersonPresenter _presenter = ContactPersonPresenter();
+class _DataSource extends RegularDataSource<ContactPersonPresenter> implements FetchDataContract {
+  _Listener get _listener => Get.find<_Listener>(tag: ProspectString.contactTag);
 
   final Rx<BpCustomer?> _bpcustomer = Rx<BpCustomer?>(null);
   final Rx<List<ContactPerson>> _contactPersons = Rx<List<ContactPerson>>([]);
@@ -21,11 +12,10 @@ class ContactPersonDataSource implements FetchDataContract {
   List<ContactPerson> get contactPersons => _contactPersons.value;
   set contactPersons(List<ContactPerson> value) => _contactPersons.value = value;
 
-  init() {
-    _presenter.fetchDataContract = this;
-  }
+  void fetchData(int customerid) => presenter.fetchData(customerid);
 
-  void fetchData(int customerid) => _presenter.fetchData(customerid);
+  @override
+  ContactPersonPresenter presenterBuilder() => ContactPersonPresenter();
 
   @override
   onLoadError(String message) => _listener.onLoadError(message);

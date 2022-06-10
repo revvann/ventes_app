@@ -2,8 +2,8 @@ part of 'package:ventes/app/states/controllers/customer_fc_state_controller.dart
 
 class _FormSource extends UpdateFormSource {
   _Validator validator = _Validator();
-  _Properties get _properties => Get.find<_Properties>();
-  _DataSource get _dataSource => Get.find<_DataSource>();
+  _Properties get _properties => Get.find<_Properties>(tag: NearbyString.customerCreateTag);
+  _DataSource get _dataSource => Get.find<_DataSource>(tag: NearbyString.customerCreateTag);
 
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final defaultPicture = Image.asset('assets/' + NearbyString.defaultImage).obs;

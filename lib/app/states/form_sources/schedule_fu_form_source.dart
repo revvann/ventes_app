@@ -1,31 +1,15 @@
 // ignore_for_file: unnecessary_getters_setters, prefer_const_constructors
 
-import 'dart:convert';
+part of 'package:ventes/app/states/controllers/schedule_fu_state_controller.dart';
 
-import 'package:flutter/material.dart';
-import 'package:flutter_native_timezone/flutter_native_timezone.dart';
-import 'package:get/get.dart';
-import 'package:ventes/app/models/schedule_guest_model.dart';
-import 'package:ventes/app/models/schedule_model.dart';
-import 'package:ventes/app/models/user_detail_model.dart';
-import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
-import 'package:ventes/app/resources/widgets/regular_dropdown.dart';
-import 'package:ventes/app/resources/widgets/search_list.dart';
-import 'package:ventes/app/resources/widgets/searchable_dropdown.dart';
-import 'package:ventes/app/states/data_sources/schedule_fu_data_source.dart';
-import 'package:ventes/helpers/function_helpers.dart';
-import 'package:ventes/app/states/form_sources/schedule_fc_form_source.dart';
-import 'package:ventes/app/states/form_validators/schedule_fu_validator.dart';
-import 'package:ventes/app/states/listeners/schedule_fu_listener.dart';
-
-class ScheduleFormUpdateFormSource {
+class _FormSource extends UpdateFormSource {
   int readOnlyId = 14;
   int addMemberId = 15;
   int shareLinkId = 16;
 
-  ScheduleFormUpdateDataSource get _dataSource => Get.find<ScheduleFormUpdateDataSource>();
-  ScheduleFormUpdateListener get _listener => Get.find<ScheduleFormUpdateListener>();
-  late ScheduleFormUpdateValidator validator;
+  _DataSource get _dataSource => Get.find<_DataSource>(tag: ScheduleString.scheduleUpdateTag);
+  _Listener get _listener => Get.find<_Listener>(tag: ScheduleString.scheduleUpdateTag);
+  late _Validator validator;
 
   UserDetail? userDefault;
   final Rx<List<KeyableDropdownItem<String, String>>> _timezones = Rx<List<KeyableDropdownItem<String, String>>>([]);
@@ -292,7 +276,8 @@ class ScheduleFormUpdateFormSource {
     setEndTimeList();
   }
 
-  void prepareFormValue() {
+  @override
+  void prepareFormValues() {
     if (_dataSource.schedule != null) {
       Schedule schedule = _dataSource.schedule!;
       scheid = schedule.scheid ?? -1;
@@ -330,7 +315,9 @@ class ScheduleFormUpdateFormSource {
     }
   }
 
-  formSourceDispose() {
+  @override
+  close() {
+    super.close();
     schenmTEC.dispose();
     schestartdateTEC.dispose();
     scheenddateTEC.dispose();
@@ -343,9 +330,9 @@ class ScheduleFormUpdateFormSource {
     Get.delete<KeyableDropdownController<String, String>>(tag: "DropdownTimezone");
   }
 
-  formSourceInit() async {
-    validator = ScheduleFormUpdateValidator(this);
-
+  @override
+  init() async {
+    super.init();
     setStartTimeList();
 
     scheremindTEC.text = "0";
@@ -359,6 +346,7 @@ class ScheduleFormUpdateFormSource {
     timezones = getTimezoneList().map<KeyableDropdownItem<String, String>>((e) => KeyableDropdownItem<String, String>(key: e['value']!, value: e['text']!)).toList();
   }
 
+  @override
   Map<String, dynamic> toJson() {
     return {
       "scheid": scheid,

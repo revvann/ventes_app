@@ -1,18 +1,9 @@
-import 'package:get/get.dart';
-import 'package:ventes/app/models/bp_customer_model.dart';
-import 'package:ventes/app/models/user_detail_model.dart';
-import 'package:ventes/app/states/controllers/prospect_fu_state_controller.dart';
-import 'package:ventes/app/states/controllers/prospect_state_controller.dart';
-import 'package:ventes/app/states/data_sources/prospect_fu_data_source.dart';
-import 'package:ventes/app/states/form_sources/prospect_fu_form_source.dart';
-import 'package:ventes/constants/strings/prospect_string.dart';
-import 'package:ventes/helpers/task_helper.dart';
-import 'package:ventes/routing/navigators/prospect_navigator.dart';
+part of 'package:ventes/app/states/controllers/prospect_fu_state_controller.dart';
 
-class ProspectFormUpdateListener {
-  ProspectFormUpdateFormSource get _formSource => Get.find<ProspectFormUpdateFormSource>();
-  ProspectFormUpdateDataSource get _dataSource => Get.find<ProspectFormUpdateDataSource>();
-  ProspectFormUpdateProperties get _properties => Get.find<ProspectFormUpdateProperties>();
+class _Listener extends RegularListener {
+  _FormSource get _formSource => Get.find<_FormSource>(tag: ProspectString.prospectUpdateTag);
+  _DataSource get _dataSource => Get.find<_DataSource>(tag: ProspectString.prospectUpdateTag);
+  _Properties get _properties => Get.find<_Properties>(tag: ProspectString.prospectUpdateTag);
 
   void onDateStartSelected(DateTime? value) {
     if (value != null) {
@@ -65,10 +56,6 @@ class ProspectFormUpdateListener {
     return await _dataSource.fetchCustomer(search);
   }
 
-  Future onRefresh() async {
-    _properties.refresh();
-  }
-
   void onSubmitButtonClicked() {
     if (_formSource.isValid) {
       Map<String, dynamic> data = _formSource.toJson();
@@ -109,5 +96,10 @@ class ProspectFormUpdateListener {
   void onUpdateDataError(String message) {
     Get.find<TaskHelper>().errorPush(ProspectString.formUpdateTaskCode, message);
     Get.find<TaskHelper>().loaderPop(ProspectString.formUpdateTaskCode);
+  }
+
+  @override
+  Future onRefresh() async {
+    _properties.refresh();
   }
 }

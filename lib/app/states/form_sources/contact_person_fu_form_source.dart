@@ -1,14 +1,6 @@
-import 'package:contacts_service/contacts_service.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:ventes/app/models/contact_person_model.dart';
-import 'package:ventes/app/models/type_model.dart';
-import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
-import 'package:ventes/app/resources/widgets/searchable_dropdown.dart';
-import 'package:ventes/app/states/form_validators/contact_person_fu_validator.dart';
-import 'package:ventes/constants/strings/prospect_string.dart';
+part of 'package:ventes/app/states/controllers/contact_person_fu_state_controller.dart';
 
-class ContactPersonFormUpdateFormSource {
+class _FormSource extends RegularFormSource {
   KeyableDropdownController<int, DBType> typeDropdownController = Get.put(
     KeyableDropdownController<int, DBType>(),
     tag: ProspectString.contactTypeCode,
@@ -23,7 +15,7 @@ class ContactPersonFormUpdateFormSource {
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
-  late ContactPersonFormUpdateValidator validator;
+  _Validator validator = _Validator();
 
   bool get isValid => formKey.currentState?.validate() ?? false;
   bool get isPhone => contacttype?.typename == "Phone";
@@ -36,11 +28,9 @@ class ContactPersonFormUpdateFormSource {
   Contact? get contact => _contact.value;
   set contact(Contact? value) => _contact.value = value;
 
-  init() {
-    validator = ContactPersonFormUpdateValidator(this);
-  }
-
+  @override
   close() {
+    super.close();
     Get.delete<KeyableDropdownController<int, DBType>>(tag: ProspectString.contactTypeCode);
     valueTEC.clear();
   }
@@ -51,6 +41,7 @@ class ContactPersonFormUpdateFormSource {
     typeDropdownController.selectedKeys = contact.contacttype?.typeid != null ? [contact.contacttype!.typeid!] : [];
   }
 
+  @override
   Map<String, dynamic> toJson() {
     return {
       'contacttypeid': contacttype?.typeid?.toString(),

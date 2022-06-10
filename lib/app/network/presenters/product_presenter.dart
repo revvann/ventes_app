@@ -1,15 +1,13 @@
 import 'package:get/get.dart';
 import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
+import 'package:ventes/app/network/presenters/regular_presenter.dart';
 import 'package:ventes/app/network/services/prospect_product_service.dart';
 import 'package:ventes/app/network/services/prospect_service.dart';
 import 'package:ventes/constants/strings/prospect_string.dart';
 
-class ProductPresenter {
+class ProductPresenter extends RegularPresenter<FetchDataContract> {
   final _prospectService = Get.find<ProspectService>();
   final _prospectProductService = Get.find<ProspectProductService>();
-
-  late FetchDataContract _fetchContract;
-  set fetchContract(FetchDataContract value) => _fetchContract = value;
 
   Future<Response> _getProspect(int prospectId) async {
     return await _prospectService.show(prospectId);
@@ -33,12 +31,12 @@ class ProductPresenter {
       if (prospectResponse.statusCode == 200 && prospectProductResponse.statusCode == 200) {
         data['prospect'] = prospectResponse.body;
         data['prospectproducts'] = prospectProductResponse.body;
-        _fetchContract.onLoadSuccess(data);
+        contract.onLoadSuccess(data);
       } else {
-        _fetchContract.onLoadFailed(ProspectString.fetchProductFailed);
+        contract.onLoadFailed(ProspectString.fetchProductFailed);
       }
     } catch (e) {
-      _fetchContract.onLoadError(e.toString());
+      contract.onLoadError(e.toString());
     }
   }
 
@@ -50,12 +48,12 @@ class ProductPresenter {
 
       if (prospectProductResponse.statusCode == 200) {
         data['prospectproducts'] = prospectProductResponse.body;
-        _fetchContract.onLoadSuccess(data);
+        contract.onLoadSuccess(data);
       } else {
-        _fetchContract.onLoadFailed(ProspectString.fetchProductFailed);
+        contract.onLoadFailed(ProspectString.fetchProductFailed);
       }
     } catch (e) {
-      _fetchContract.onLoadError(e.toString());
+      contract.onLoadError(e.toString());
     }
   }
 }

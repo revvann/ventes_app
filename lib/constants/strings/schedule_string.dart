@@ -44,4 +44,9 @@ class ScheduleString {
   static const dailyScheduleTaskCode = 'daily';
   static const createScheduleTaskCode = 'create';
   static const updateScheduleTaskCode = 'update';
+
+  static const scheduleTag = "schedule";
+  static const dailyScheduleTag = "daily";
+  static const scheduleCreateTag = "createschedule";
+  static const scheduleUpdateTag = "updateschedule";
 }

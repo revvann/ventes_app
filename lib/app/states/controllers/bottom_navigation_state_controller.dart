@@ -6,12 +6,8 @@ import 'package:ventes/routing/navigators/prospect_navigator.dart';
 import 'package:ventes/routing/navigators/nearby_navigator.dart';
 import 'package:ventes/routing/navigators/schedule_navigator.dart';
 import 'package:ventes/routing/navigators/settings_navigator.dart';
-import 'package:ventes/app/states/controllers/regular_state_controller.dart';
 
-class BottomNavigationStateController extends RegularStateController {
-  @override
-  get isFixedBody => false;
-
+class BottomNavigationStateController extends GetxController {
   final _currentIndex = Views.dashboard.obs;
 
   final _navigatorKeys = {

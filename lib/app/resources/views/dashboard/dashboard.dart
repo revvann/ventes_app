@@ -27,13 +27,13 @@ class DashboardView extends View<DashboardStateController> {
   static const route = "/dashboard";
 
   @override
-  Widget build(BuildContext context) {
+  Widget buildWidget(BuildContext context, state) {
     return Scaffold(
       bottomNavigationBar: BottomNavigation(),
       backgroundColor: Colors.white,
       body: SafeArea(
         child: RefreshIndicator(
-          onRefresh: state.listener.onRefresh,
+          onRefresh: () async => state.refreshStates,
           child: SingleChildScrollView(
             child: Column(
               children: [

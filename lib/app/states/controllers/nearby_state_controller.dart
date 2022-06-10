@@ -27,24 +27,29 @@ part 'package:ventes/app/states/data_sources/nearby_data_source.dart';
 
 class NearbyStateController extends RegularStateController<_Properties, _Listener, _DataSource> {
   @override
+  String get tag => NearbyString.nearbyTag;
+
+  @override
   bool get isFixedBody => false;
 
   @override
-  void onInit() async {
-    super.onInit();
-    properties.refresh();
-    dataSource.init();
-  }
+  _Properties propertiesBuilder() => _Properties();
 
   @override
-  onReady() {
-    super.onReady();
+  _Listener listenerBuilder() => _Listener();
+
+  @override
+  _DataSource dataSourceBuilder() => _DataSource();
+
+  @override
+  ready() {
+    super.ready();
     properties.ready();
   }
 }
 
 class _Properties {
-  final _DataSource _dataSource = Get.find<_DataSource>();
+  _DataSource get _dataSource => Get.find<_DataSource>(tag: NearbyString.nearbyTag);
 
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   GlobalKey bottomSheetKey = GlobalKey();

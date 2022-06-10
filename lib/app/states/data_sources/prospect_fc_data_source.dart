@@ -1,21 +1,8 @@
-import 'package:get/get.dart';
-import 'package:ventes/app/models/bp_customer_model.dart';
-import 'package:ventes/app/models/type_model.dart';
-import 'package:ventes/app/models/user_detail_model.dart';
-import 'package:ventes/app/network/contracts/create_contract.dart';
-import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
-import 'package:ventes/app/network/presenters/prospect_fc_presenter.dart';
-import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
-import 'package:ventes/app/states/form_sources/prospect_fc_form_source.dart';
-import 'package:ventes/app/states/listeners/prospect_fc_listener.dart';
-import 'package:ventes/constants/strings/prospect_string.dart';
-import 'package:ventes/helpers/task_helper.dart';
+part of 'package:ventes/app/states/controllers/prospect_fc_state_controller.dart';
 
-class ProspectFormCreateDataSource implements FetchDataContract, CreateContract {
-  ProspectFormCreateListener get _listener => Get.find<ProspectFormCreateListener>();
-  ProspectFormCreateFormSource get _formSource => Get.find<ProspectFormCreateFormSource>();
-
-  final ProspectFormCreatePresenter _presenter = ProspectFormCreatePresenter();
+class _DataSource extends RegularDataSource<ProspectFormCreatePresenter> implements ProspectCreateContract {
+  _Listener get _listener => Get.find<_Listener>(tag: ProspectString.prospectCreateTag);
+  _FormSource get _formSource => Get.find<_FormSource>(tag: ProspectString.prospectCreateTag);
 
   final Rx<Map<int, String>> _followUpItems = Rx<Map<int, String>>({});
   set followUpItems(Map<int, String> value) => _followUpItems.value = value;
@@ -25,15 +12,13 @@ class ProspectFormCreateDataSource implements FetchDataContract, CreateContract 
   set taxItems(List<KeyableDropdownItem<int, DBType>> value) => _taxItems.value = value;
   List<KeyableDropdownItem<int, DBType>> get taxItems => _taxItems.value;
 
-  init() {
-    _presenter.fetchDataContract = this;
-    _presenter.createContract = this;
-  }
+  void fetchData() => presenter.fetchData();
+  Future<List<UserDetail>> fetchUser(String? search) async => await presenter.fetchUsers(search);
+  Future<List<BpCustomer>> fetchCustomer(String? search) async => await presenter.fetchCustomers(search);
+  void createProspect(Map<String, dynamic> data) => presenter.createProspect(data);
 
-  void fetchData() => _presenter.fetchData();
-  Future<List<UserDetail>> fetchUser(String? search) async => await _presenter.fetchUsers(search);
-  Future<List<BpCustomer>> fetchCustomer(String? search) async => await _presenter.fetchCustomers(search);
-  void createProspect(Map<String, dynamic> data) => _presenter.createProspect(data);
+  @override
+  ProspectFormCreatePresenter presenterBuilder() => ProspectFormCreatePresenter();
 
   @override
   onLoadError(String message) => _listener.onDataLoadError(message);

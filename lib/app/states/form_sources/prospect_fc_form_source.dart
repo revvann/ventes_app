@@ -1,18 +1,10 @@
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:ventes/app/models/bp_customer_model.dart';
-import 'package:ventes/app/models/type_model.dart';
-import 'package:ventes/app/models/user_detail_model.dart';
-import 'package:ventes/app/resources/widgets/searchable_dropdown.dart';
-import 'package:ventes/app/states/form_validators/prospect_fc_validator.dart';
-import 'package:ventes/constants/formatters/currency_formatter.dart';
-import 'package:ventes/helpers/function_helpers.dart';
+part of 'package:ventes/app/states/controllers/prospect_fc_state_controller.dart';
 
-class ProspectFormCreateFormSource {
+class _FormSource extends RegularFormSource {
   SearchableDropdownController<UserDetail> ownerDropdownController = Get.put(SearchableDropdownController<UserDetail>());
   SearchableDropdownController<BpCustomer> customerDropdownController = Get.put(SearchableDropdownController<BpCustomer>());
 
-  late ProspectFormCreateValidator validator;
+  _Validator validator = _Validator();
 
   final TextEditingController prosnameTEC = TextEditingController();
   final TextEditingController prosvalueTEC = TextEditingController();
@@ -69,11 +61,23 @@ class ProspectFormCreateFormSource {
 
   bool get isValid => formKey.currentState?.validate() ?? false;
 
-  init() {
-    validator = ProspectFormCreateValidator(this);
-  }
-
+  @override
   close() {
+    super.close();
+    prosnameTEC.text = '';
+    prosvalueTEC.text = '';
+    prosdescTEC.text = '';
+    prosstartdate = null;
+    prosenddate = null;
+    prosexpenddate = null;
+    prosowner = null;
+    proscustomer = null;
+    prostype = null;
+    prosstatus = null;
+    prosstage = null;
+    customerDropdownController.reset();
+    ownerDropdownController.reset();
+
     prosnameTEC.dispose();
     prosvalueTEC.dispose();
     prosdescTEC.dispose();
@@ -89,22 +93,7 @@ class ProspectFormCreateFormSource {
     }
   }
 
-  reset() {
-    prosnameTEC.text = '';
-    prosvalueTEC.text = '';
-    prosdescTEC.text = '';
-    prosstartdate = null;
-    prosenddate = null;
-    prosexpenddate = null;
-    prosowner = null;
-    proscustomer = null;
-    prostype = null;
-    prosstatus = null;
-    prosstage = null;
-    customerDropdownController.reset();
-    ownerDropdownController.reset();
-  }
-
+  @override
   Map<String, dynamic> toJson() {
     return {
       'prospectname': prosname,

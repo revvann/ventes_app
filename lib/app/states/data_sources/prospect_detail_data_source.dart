@@ -1,16 +1,7 @@
-import 'package:get/get.dart';
-import 'package:ventes/app/models/prospect_detail_model.dart';
-import 'package:ventes/app/models/prospect_model.dart';
-import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
-import 'package:ventes/app/network/presenters/prospect_detail_presenter.dart';
-import 'package:ventes/app/states/listeners/prospect_detail_listener.dart';
-import 'package:ventes/constants/strings/prospect_string.dart';
-import 'package:ventes/helpers/task_helper.dart';
+part of 'package:ventes/app/states/controllers/prospect_detail_state_controller.dart';
 
-class ProspectDetailDataSource implements FetchDataContract {
-  ProspectDetailListener get _listener => Get.find<ProspectDetailListener>();
-
-  final ProspectDetailPresenter _presenter = ProspectDetailPresenter();
+class _DataSource extends RegularDataSource<ProspectDetailPresenter> implements FetchDataContract {
+  _Listener get _listener => Get.find<_Listener>(tag: ProspectString.detailCreateTag);
 
   final _prospect = Rx<Prospect?>(null);
   Prospect? get prospect => _prospect.value;
@@ -20,11 +11,10 @@ class ProspectDetailDataSource implements FetchDataContract {
   List<ProspectDetail> get prospectDetails => _prospectDetails.value;
   set prospectDetails(List<ProspectDetail> value) => _prospectDetails.value = value;
 
-  void fetchData(int prospectid) => _presenter.fetchData(prospectid);
+  void fetchData(int prospectid) => presenter.fetchData(prospectid);
 
-  init() {
-    _presenter.fetchDataContract = this;
-  }
+  @override
+  ProspectDetailPresenter presenterBuilder() => ProspectDetailPresenter();
 
   @override
   onLoadError(String message) => _listener.onLoadError(message);

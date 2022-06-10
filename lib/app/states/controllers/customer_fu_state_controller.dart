@@ -6,47 +6,60 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ventes/app/models/customer_model.dart';
+import 'package:ventes/app/states/controllers/form_state_controller.dart';
 import 'package:ventes/app/states/controllers/nearby_state_controller.dart';
-import 'package:ventes/app/states/controllers/regular_state_controller.dart';
-import 'package:ventes/app/states/data_sources/customer_fu_data_source.dart';
-import 'package:ventes/app/states/form_sources/customer_fu_form_source.dart';
-import 'package:ventes/app/states/listeners/customer_fu_listener.dart';
+import 'package:ventes/app/states/form_sources/update_form_source.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/constants/strings/nearby_string.dart';
 import 'package:ventes/helpers/task_helper.dart';
+import 'package:ventes/app/models/bp_customer_model.dart';
+import 'package:ventes/app/models/city_model.dart';
+import 'package:ventes/app/models/country_model.dart';
+import 'package:ventes/app/models/province_model.dart';
+import 'package:ventes/app/models/subdistrict_model.dart';
+import 'package:ventes/app/models/type_model.dart';
+import 'package:ventes/app/network/presenters/customer_fu_presenter.dart';
+import 'package:ventes/app/states/data_sources/regular_data_source.dart';
+import 'package:ventes/helpers/function_helpers.dart';
+import 'dart:io';
 
-class CustomerFormUpdateStateController extends RegularStateController {
-  CustomerFormUpdateDataSource dataSource = Get.put(CustomerFormUpdateDataSource());
-  CustomerFormUpdateProperties properties = Get.put(CustomerFormUpdateProperties());
-  CustomerFormUpdateListener listener = Get.put(CustomerFormUpdateListener());
-  CustomerFormUpdateFormSource formSource = Get.put(CustomerFormUpdateFormSource());
+import 'package:image_picker/image_picker.dart';
+import 'package:ventes/app/states/listeners/regular_listener.dart';
+import 'package:ventes/routing/navigators/nearby_navigator.dart';
+import 'package:path/path.dart' as path;
+import 'package:ventes/app/resources/widgets/search_list.dart';
+
+part 'package:ventes/app/states/form_sources/customer_fu_form_source.dart';
+part 'package:ventes/app/states/listeners/customer_fu_listener.dart';
+part 'package:ventes/app/states/data_sources/customer_fu_data_source.dart';
+part 'package:ventes/app/states/form_validators/customer_fu_validator.dart';
+
+class CustomerFormUpdateStateController extends FormStateController<_Properties, _Listener, _DataSource, _FormSource> {
+  @override
+  String get tag => NearbyString.customerUpdateTag;
 
   @override
-  onInit() {
-    super.onInit();
-    dataSource.init();
-    formSource.init();
-  }
+  _Properties propertiesBuilder() => _Properties();
 
   @override
-  void onReady() async {
-    super.onReady();
+  _Listener listenerBuilder() => _Listener();
+
+  @override
+  _DataSource dataSourceBuilder() => _DataSource();
+
+  @override
+  _FormSource formSourceBuilder() => _FormSource();
+
+  @override
+  void ready() async {
+    super.ready();
     properties.ready();
-    properties.refresh();
-  }
-
-  @override
-  void onClose() {
-    Get.delete<CustomerFormUpdateProperties>();
-    Get.delete<CustomerFormUpdateListener>();
-    Get.delete<CustomerFormUpdateFormSource>();
-    super.onClose();
   }
 }
 
-class CustomerFormUpdateProperties {
-  CustomerFormUpdateFormSource get _formSource => Get.find<CustomerFormUpdateFormSource>();
-  CustomerFormUpdateDataSource get _dataSource => Get.find<CustomerFormUpdateDataSource>();
+class _Properties {
+  _FormSource get _formSource => Get.find<_FormSource>(tag: NearbyString.customerUpdateTag);
+  _DataSource get _dataSource => Get.find<_DataSource>(tag: NearbyString.customerUpdateTag);
 
   final double defaultZoom = 20;
   final Completer<GoogleMapController> mapsController = Completer();

@@ -4,6 +4,7 @@ import 'package:ventes/app/models/bp_customer_model.dart';
 import 'package:ventes/app/models/user_detail_model.dart';
 import 'package:ventes/app/network/contracts/create_contract.dart';
 import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
+import 'package:ventes/app/network/presenters/regular_presenter.dart';
 import 'package:ventes/app/network/services/bp_customer_service.dart';
 import 'package:ventes/app/network/services/prospect_service.dart';
 import 'package:ventes/app/network/services/type_service.dart';
@@ -11,17 +12,11 @@ import 'package:ventes/app/network/services/user_service.dart';
 import 'package:ventes/constants/strings/prospect_string.dart';
 import 'package:ventes/helpers/auth_helper.dart';
 
-class ProspectFormCreatePresenter {
+class ProspectFormCreatePresenter extends RegularPresenter<ProspectCreateContract> {
   final _userService = Get.find<UserService>();
   final _prospectService = Get.find<ProspectService>();
   final _typeService = Get.find<TypeService>();
   final _bpCustomerService = Get.find<BpCustomerService>();
-
-  late final FetchDataContract _fetchDataContract;
-  set fetchDataContract(FetchDataContract contract) => _fetchDataContract = contract;
-
-  late final CreateContract _createContract;
-  set createContract(CreateContract contract) => _createContract = contract;
 
   Future<UserDetail?> findActiveUser() async {
     AuthModel? authModel = await Get.find<AuthHelper>().get();
@@ -93,19 +88,19 @@ class ProspectFormCreatePresenter {
       Response followUpResponse = await _getFollowUp();
       Response statusResponse = await _getStatus();
       Response stageResponse = await _getStage();
-       Response taxesResponse = await _getTaxes();
+      Response taxesResponse = await _getTaxes();
 
       if (followUpResponse.statusCode == 200 && statusResponse.statusCode == 200 && stageResponse.statusCode == 200 && taxesResponse.statusCode == 200) {
         data['followup'] = followUpResponse.body;
         data['status'] = statusResponse.body;
         data['stage'] = stageResponse.body;
         data['taxes'] = taxesResponse.body;
-        _fetchDataContract.onLoadSuccess(data);
+        contract.onLoadSuccess(data);
       } else {
-        _fetchDataContract.onLoadFailed(ProspectString.fetchUsersDataFailed);
+        contract.onLoadFailed(ProspectString.fetchUsersDataFailed);
       }
     } catch (err) {
-      _fetchDataContract.onLoadError(err.toString());
+      contract.onLoadError(err.toString());
     }
   }
 
@@ -113,12 +108,14 @@ class ProspectFormCreatePresenter {
     try {
       Response response = await _createProspect(data);
       if (response.statusCode == 200) {
-        _createContract.onCreateSuccess(ProspectString.createDataSuccess);
+        contract.onCreateSuccess(ProspectString.createDataSuccess);
       } else {
-        _createContract.onCreateFailed(ProspectString.createDataFailed);
+        contract.onCreateFailed(ProspectString.createDataFailed);
       }
     } catch (err) {
-      _createContract.onCreateError(err.toString());
+      contract.onCreateError(err.toString());
     }
   }
 }
+
+abstract class ProspectCreateContract implements FetchDataContract, CreateContract {}

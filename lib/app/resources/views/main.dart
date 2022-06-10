@@ -13,22 +13,18 @@ import 'package:ventes/routing/navigators/schedule_navigator.dart';
 import 'package:ventes/routing/navigators/settings_navigator.dart';
 import 'package:ventes/app/states/controllers/bottom_navigation_state_controller.dart';
 
-class MainView extends View<BottomNavigationStateController> {
+class MainView extends GetView<BottomNavigationStateController> {
   static const String route = "/";
-  late BottomNavigationStateController state;
-  MainView() {
-    state = controller;
-  }
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        final isFirstRouteInCurrentTab = !await state.navigatorKeys[state.currentIndex]!.currentState!.maybePop();
+        final isFirstRouteInCurrentTab = !await controller.navigatorKeys[controller.currentIndex]!.currentState!.maybePop();
 
         if (isFirstRouteInCurrentTab) {
-          if (state.currentIndex != Views.dashboard) {
-            state.selectTab(Views.dashboard);
+          if (controller.currentIndex != Views.dashboard) {
+            controller.selectTab(Views.dashboard);
             return false;
           }
         }
@@ -42,33 +38,33 @@ class MainView extends View<BottomNavigationStateController> {
             () => Stack(
               children: <Widget>[
                 Offstage(
-                  offstage: state.currentIndex != Views.dashboard,
+                  offstage: controller.currentIndex != Views.dashboard,
                   child: DashboardNavigator(
-                    navigatorKey: state.navigatorKeys[Views.dashboard]!,
+                    navigatorKey: controller.navigatorKeys[Views.dashboard]!,
                   ),
                 ),
                 Offstage(
-                  offstage: state.currentIndex != Views.nearby,
+                  offstage: controller.currentIndex != Views.nearby,
                   child: NearbyNavigator(
-                    navigatorKey: state.navigatorKeys[Views.nearby]!,
+                    navigatorKey: controller.navigatorKeys[Views.nearby]!,
                   ),
                 ),
                 Offstage(
-                  offstage: state.currentIndex != Views.schedule,
+                  offstage: controller.currentIndex != Views.schedule,
                   child: ScheduleNavigator(
-                    navigatorKey: state.navigatorKeys[Views.schedule]!,
+                    navigatorKey: controller.navigatorKeys[Views.schedule]!,
                   ),
                 ),
                 Offstage(
-                  offstage: state.currentIndex != Views.prospect,
+                  offstage: controller.currentIndex != Views.prospect,
                   child: ProspectNavigator(
-                    navigatorKey: state.navigatorKeys[Views.prospect]!,
+                    navigatorKey: controller.navigatorKeys[Views.prospect]!,
                   ),
                 ),
                 Offstage(
-                  offstage: state.currentIndex != Views.settings,
+                  offstage: controller.currentIndex != Views.settings,
                   child: SettingsNavigator(
-                    navigatorKey: state.navigatorKeys[Views.settings]!,
+                    navigatorKey: controller.navigatorKeys[Views.settings]!,
                   ),
                 ),
               ],

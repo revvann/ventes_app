@@ -2,19 +2,17 @@ import 'package:get/get.dart';
 import 'package:ventes/app/models/auth_model.dart';
 import 'package:ventes/app/models/user_detail_model.dart';
 import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
+import 'package:ventes/app/network/presenters/regular_presenter.dart';
 import 'package:ventes/app/network/services/bp_customer_service.dart';
 import 'package:ventes/app/network/services/contact_person_service.dart';
 import 'package:ventes/app/network/services/user_service.dart';
 import 'package:ventes/constants/strings/prospect_string.dart';
 import 'package:ventes/helpers/auth_helper.dart';
 
-class ContactPersonPresenter {
+class ContactPersonPresenter extends RegularPresenter<FetchDataContract> {
   final BpCustomerService _bpCustomerService = Get.find<BpCustomerService>();
   final UserService _userService = Get.find<UserService>();
   final ContactPersonService _contactPersonService = Get.find<ContactPersonService>();
-
-  late FetchDataContract _fetchDataContract;
-  set fetchDataContract(FetchDataContract value) => _fetchDataContract = value;
 
   Future<UserDetail?> _findActiveUser() async {
     AuthModel? authModel = await Get.find<AuthHelper>().get();
@@ -50,12 +48,12 @@ class ContactPersonPresenter {
       if (bpCustomerResponse.statusCode == 200 && contactPersonResponse.statusCode == 200) {
         data['bpcustomer'] = bpCustomerResponse.body;
         data['contacts'] = contactPersonResponse.body;
-        _fetchDataContract.onLoadSuccess(data);
+        contract.onLoadSuccess(data);
       } else {
-        _fetchDataContract.onLoadFailed(ProspectString.fetchDataFailed);
+        contract.onLoadFailed(ProspectString.fetchDataFailed);
       }
     } catch (e) {
-      _fetchDataContract.onLoadError(e.toString());
+      contract.onLoadError(e.toString());
     }
   }
 }

@@ -1,9 +1,6 @@
-import 'package:ventes/app/states/form_sources/contact_person_fu_form_source.dart';
+part of 'package:ventes/app/states/controllers/contact_person_fu_state_controller.dart';
 
-class ContactPersonFormUpdateValidator {
-  late ContactPersonFormUpdateFormSource _formSource;
-  ContactPersonFormUpdateValidator(this._formSource);
-
+class _Validator {
   String? contactvalue(String? value) {
     if (value == null || value.isEmpty) {
       return "Contact value is required";

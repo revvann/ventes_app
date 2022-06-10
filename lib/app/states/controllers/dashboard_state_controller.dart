@@ -26,17 +26,23 @@ class DashboardStateController extends RegularStateController<_Properties, _List
   BottomNavigationStateController bottomNavigation = Get.put(BottomNavigationStateController());
 
   @override
+  String get tag => DashboardString.dashboardTag;
+
+  @override
   bool get isFixedBody => false;
 
   @override
-  void onInit() async {
-    super.onInit();
-    dataSource.init();
-  }
+  _Properties propertiesBuilder() => _Properties();
+
+  @override
+  _Listener listenerBuilder() => _Listener();
+
+  @override
+  _DataSource dataSourceBuilder() => _DataSource();
 }
 
 class _Properties {
-  final _DataSource _dataSource = Get.find<_DataSource>();
+  _DataSource get _dataSource => Get.find<_DataSource>(tag: DashboardString.dashboardTag);
   Position? position;
 
   String? get shortName => getInitials(_dataSource.account?.user?.userfullname ?? "");

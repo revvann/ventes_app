@@ -1,43 +1,44 @@
 import 'package:get/get.dart';
-import 'package:ventes/app/states/controllers/regular_state_controller.dart';
-import 'package:ventes/app/states/data_sources/contact_person_fc_data_source.dart';
-import 'package:ventes/app/states/form_sources/contact_person_fc_form_source.dart';
-import 'package:ventes/app/states/listeners/contact_person_fc_listener.dart';
+import 'package:ventes/app/states/controllers/form_state_controller.dart';
+import 'package:ventes/app/states/data_sources/regular_data_source.dart';
+import 'package:ventes/app/states/listeners/regular_listener.dart';
 import 'package:ventes/constants/strings/prospect_string.dart';
 import 'package:ventes/helpers/task_helper.dart';
+import 'package:contacts_service/contacts_service.dart';
+import 'package:ventes/app/states/controllers/contact_person_state_controller.dart';
+import 'package:ventes/routing/navigators/prospect_navigator.dart';
+import 'package:ventes/app/models/customer_model.dart';
+import 'package:ventes/app/models/type_model.dart';
+import 'package:ventes/app/network/presenters/contact_person_fc_presenter.dart';
+import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
+import 'package:flutter/material.dart';
+import 'package:ventes/app/resources/widgets/searchable_dropdown.dart';
+import 'package:ventes/app/states/form_sources/regular_form_source.dart';
 
-class ContactPersonFormCreateStateController extends RegularStateController {
-  ContactPersonFormCreateListener listener = Get.put(ContactPersonFormCreateListener());
-  ContactPersonFormCreateFormSource formSource = Get.put(ContactPersonFormCreateFormSource());
-  ContactPersonFormCreateDataSource dataSource = Get.put(ContactPersonFormCreateDataSource());
-  ContactPersonFormCreateProperties properties = Get.put(ContactPersonFormCreateProperties());
+part 'package:ventes/app/states/form_validators/contact_person_fc_validator.dart';
+part 'package:ventes/app/states/data_sources/contact_person_fc_data_source.dart';
+part 'package:ventes/app/states/form_sources/contact_person_fc_form_source.dart';
+part 'package:ventes/app/states/listeners/contact_person_fc_listener.dart';
+
+class ContactPersonFormCreateStateController extends FormStateController<_Properties, _Listener, _DataSource, _FormSource> {
+  @override
+  String get tag => ProspectString.contactCreateTag;
 
   @override
-  void onClose() {
-    formSource.close();
-    Get.delete<ContactPersonFormCreateProperties>();
-    Get.delete<ContactPersonFormCreateDataSource>();
-    Get.delete<ContactPersonFormCreateFormSource>();
-    Get.delete<ContactPersonFormCreateListener>();
-    super.onClose();
-  }
+  _Properties propertiesBuilder() => _Properties();
 
   @override
-  void onInit() {
-    super.onInit();
-    dataSource.init();
-    formSource.init();
-  }
+  _Listener listenerBuilder() => _Listener();
 
   @override
-  void onReady() {
-    super.onReady();
-    properties.refresh();
-  }
+  _DataSource dataSourceBuilder() => _DataSource();
+
+  @override
+  _FormSource formSourceBuilder() => _FormSource();
 }
 
-class ContactPersonFormCreateProperties {
-  ContactPersonFormCreateDataSource get _dataSource => Get.find<ContactPersonFormCreateDataSource>();
+class _Properties {
+  _DataSource get _dataSource => Get.find<_DataSource>(tag: ProspectString.contactCreateTag);
 
   late int customerid;
   void refresh() {

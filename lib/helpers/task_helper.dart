@@ -25,6 +25,7 @@ class TaskHelper {
   }
 
   loaderPop(String task) async {
+    print("$task popped");
     if (taskExists(task)) {
       tasks.remove(task);
       if (tasks.isEmpty) {

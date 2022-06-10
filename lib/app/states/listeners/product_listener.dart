@@ -1,19 +1,10 @@
-import 'package:get/get.dart';
-import 'package:ventes/app/resources/views/product_form/update/product_fu.dart';
-import 'package:ventes/app/states/controllers/product_state_controller.dart';
-import 'package:ventes/constants/strings/prospect_string.dart';
-import 'package:ventes/helpers/task_helper.dart';
-import 'package:ventes/routing/navigators/prospect_navigator.dart';
+part of 'package:ventes/app/states/controllers/product_state_controller.dart';
 
-class ProductListener {
-  ProductProperties get _properties => Get.find<ProductProperties>();
+class _Listener extends RegularListener {
+  _Properties get _properties => Get.find<_Properties>(tag: ProspectString.productTag);
 
   void goBack() {
     Get.back(id: ProspectNavigator.id);
-  }
-
-  Future onRefresh() async {
-    _properties.refresh();
   }
 
   void navigateToFormEdit(int id) {
@@ -36,5 +27,10 @@ class ProductListener {
     Get.find<TaskHelper>().errorPush(ProspectString.productTaskCode, message);
     Get.find<TaskHelper>().loaderPop(ProspectString.productTaskCode);
     _properties.isLoading.value = false;
+  }
+
+  @override
+  Future onRefresh() async {
+    _properties.refresh();
   }
 }

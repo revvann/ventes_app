@@ -1,13 +1,6 @@
-import 'package:ventes/app/models/city_model.dart';
-import 'package:ventes/app/models/country_model.dart';
-import 'package:ventes/app/models/province_model.dart';
-import 'package:ventes/app/models/subdistrict_model.dart';
-import 'package:ventes/app/states/form_sources/customer_fu_form_source.dart';
+part of 'package:ventes/app/states/controllers/customer_fu_state_controller.dart';
 
-class CustomerFormUpdateValidator {
-  CustomerFormUpdateValidator(this._formSource);
-  CustomerFormUpdateFormSource _formSource;
-
+class _Validator {
   String? cstmname(String? value) {
     if (value == null || value.isEmpty) {
       return 'Name cannot be empty';

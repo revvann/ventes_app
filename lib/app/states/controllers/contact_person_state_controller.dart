@@ -1,43 +1,45 @@
 import 'package:get/get.dart';
 import 'package:ventes/app/resources/widgets/popup_button.dart';
 import 'package:ventes/app/states/controllers/regular_state_controller.dart';
-import 'package:ventes/app/states/data_sources/contact_person_data_source.dart';
-import 'package:ventes/app/states/listeners/contact_person_listener.dart';
+import 'package:ventes/app/states/data_sources/regular_data_source.dart';
+import 'package:ventes/app/states/listeners/regular_listener.dart';
 import 'package:ventes/constants/strings/prospect_string.dart';
 import 'package:ventes/helpers/task_helper.dart';
+import 'package:ventes/app/resources/views/contact_form/create/contact_person_fc.dart';
+import 'package:ventes/app/resources/views/contact_form/update/contact_person_fu.dart';
+import 'package:ventes/routing/navigators/prospect_navigator.dart';
+import 'package:ventes/app/models/bp_customer_model.dart';
+import 'package:ventes/app/models/contact_person_model.dart';
+import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
+import 'package:ventes/app/network/presenters/contact_person_presenter.dart';
 
-class ContactPersonStateController extends RegularStateController {
-  ContactPersonListener listener = Get.put(ContactPersonListener());
-  ContactPersonDataSource dataSource = Get.put(ContactPersonDataSource());
-  ContactPersonProperties properties = Get.put(ContactPersonProperties());
+part 'package:ventes/app/states/data_sources/contact_person_data_source.dart';
+part 'package:ventes/app/states/listeners/contact_person_listener.dart';
+
+class ContactPersonStateController extends RegularStateController<_Properties, _Listener, _DataSource> {
+  @override
+  String get tag => ProspectString.contactTag;
 
   @override
-  void onInit() {
-    super.onInit();
-    dataSource.init();
-  }
+  _Properties propertiesBuilder() => _Properties();
 
   @override
-  void onReady() {
-    super.onReady();
-    properties.refresh();
-  }
+  _Listener listenerBuilder() => _Listener();
 
   @override
-  void onClose() {
-    Get.delete<ContactPersonListener>();
-    Get.delete<ContactPersonDataSource>();
-    Get.delete<ContactPersonProperties>();
+  _DataSource dataSourceBuilder() => _DataSource();
 
+  @override
+  void close() {
     for (var element in properties.popupControllers) {
       Get.delete<PopupMenuController>(tag: element);
     }
-    super.onClose();
+    super.close();
   }
 }
 
-class ContactPersonProperties {
-  ContactPersonDataSource get _dataSource => Get.find<ContactPersonDataSource>();
+class _Properties {
+  _DataSource get _dataSource => Get.find<_DataSource>(tag: ProspectString.contactTag);
   Set<String> popupControllers = {};
 
   late int customerid;

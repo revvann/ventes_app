@@ -1,17 +1,9 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'package:get/get.dart';
-import 'package:ventes/app/models/schedule_model.dart';
-import 'package:ventes/app/models/type_model.dart';
-import 'package:ventes/app/network/presenters/schedule_presenter.dart';
-import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
-import 'package:ventes/app/states/listeners/schedule_listener.dart';
-import 'package:ventes/constants/strings/schedule_string.dart';
-import 'package:ventes/helpers/task_helper.dart';
+part of 'package:ventes/app/states/controllers/schedule_state_controller.dart';
 
-class ScheduleDataSource implements FetchDataContract {
-  ScheduleListener get _listener => Get.find<ScheduleListener>();
-  final SchedulePresenter _presenter = SchedulePresenter();
+class _DataSource extends RegularDataSource<SchedulePresenter> implements FetchDataContract {
+  _Listener get _listener => Get.find<_Listener>(tag: ScheduleString.scheduleTag);
 
   final _types = <String, int>{}.obs;
   Map<String, int> get types => _types.value;
@@ -20,10 +12,6 @@ class ScheduleDataSource implements FetchDataContract {
   final _appointments = <Schedule>[].obs;
   List<Schedule> get appointments => _appointments.value;
   set appointments(List<Schedule> value) => _appointments.value = value;
-
-  void init() {
-    _presenter.fetchContract = this;
-  }
 
   void listToTypes(List types) {
     List<DBType> dbType = List<DBType>.from(types.map((e) => DBType.fromJson(e)).toList());
@@ -37,12 +25,15 @@ class ScheduleDataSource implements FetchDataContract {
   }
 
   void fetchSchedules([int? month]) {
-    _presenter.fetchSchedules(month);
+    presenter.fetchSchedules(month);
   }
 
   void fetchData([int? scheduleMonth]) {
-    _presenter.fetchData(scheduleMonth);
+    presenter.fetchData(scheduleMonth);
   }
+
+  @override
+  SchedulePresenter presenterBuilder() => SchedulePresenter();
 
   @override
   onLoadFailed(String message) => _listener.onLoadDataFailed(message);

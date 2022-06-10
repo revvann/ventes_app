@@ -6,14 +6,15 @@ import 'package:ventes/app/states/listeners/regular_listener.dart';
 abstract class RegularStateController<P, L extends RegularListener, D extends RegularDataSource> extends GetxController {
   final GlobalKey appBarKey = GlobalKey();
   bool get isFixedBody => true;
+  String get tag => "";
 
   final _minHeight = 0.0.obs;
   double get minHeight => _minHeight.value;
   set minHeight(double value) => _minHeight.value = value;
 
-  P get properties => Get.find<P>();
-  L get listener => Get.find<L>();
-  D get dataSource => Get.find<D>();
+  late P properties;
+  late L listener;
+  late D dataSource;
 
   P propertiesBuilder() {
     throw UnimplementedError();
@@ -27,21 +28,38 @@ abstract class RegularStateController<P, L extends RegularListener, D extends Re
     throw UnimplementedError();
   }
 
-  List<Function> get _builders => [
-        propertiesBuilder,
-        listenerBuilder,
-        dataSourceBuilder,
-      ];
-
   @mustCallSuper
   void init() {
-    for (var builder in _builders) {
-      try {
-        Get.replace(builder());
-      } catch (e) {
-        debugPrint(e.toString());
-      }
+    try {
+      listener = listenerBuilder();
+      Get.replace<L>(
+        listener,
+        tag: tag,
+      );
+    } catch (e) {
+      debugPrint(e.toString());
     }
+
+    try {
+      properties = propertiesBuilder();
+      Get.replace<P>(
+        properties,
+        tag: tag,
+      );
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+
+    try {
+      dataSource = dataSourceBuilder();
+      Get.replace<D>(
+        dataSource,
+        tag: tag,
+      );
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    dataSource.init();
   }
 
   @mustCallSuper
@@ -51,27 +69,43 @@ abstract class RegularStateController<P, L extends RegularListener, D extends Re
       double distraction = renderBox.size.height;
       _minHeight.value = Get.height - distraction;
     }
+    listener.onRefresh();
   }
 
   @mustCallSuper
   void close() {
-    Get.delete<P>();
-    Get.delete<L>();
-    Get.delete<D>();
+    Get.delete<P>(
+      tag: tag,
+    );
+    Get.delete<L>(
+      tag: tag,
+    );
+    Get.delete<D>(
+      tag: tag,
+    );
+  }
+
+  @mustCallSuper
+  void reInit() {
+    init();
+    ready();
+  }
+
+  void refreshStates() {
+    reInit();
+    update([tag]);
   }
 
   @override
   void onInit() {
     super.onInit();
     init();
-    dataSource.init();
   }
 
   @override
   void onReady() {
     super.onReady();
     ready();
-    listener.onRefresh();
   }
 
   @override

@@ -1,21 +1,16 @@
 import 'package:get/get.dart';
 import 'package:ventes/app/network/contracts/create_contract.dart';
 import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
+import 'package:ventes/app/network/presenters/regular_presenter.dart';
 import 'package:ventes/app/network/services/prospect_detail_service.dart';
 import 'package:ventes/app/network/services/prospect_service.dart';
 import 'package:ventes/app/network/services/type_service.dart';
 import 'package:ventes/constants/strings/prospect_string.dart';
 
-class ProspectDetailFormCreatePresenter {
+class ProspectDetailFormCreatePresenter extends RegularPresenter<ProspectDetailCreateContract> {
   final TypeService _typeService = Get.find<TypeService>();
   final ProspectDetailService _prospectDetailService = Get.find<ProspectDetailService>();
   final ProspectService _prospectService = Get.find<ProspectService>();
-
-  late FetchDataContract _fetchDataContract;
-  set fetchDataContract(FetchDataContract value) => _fetchDataContract = value;
-
-  late CreateContract _createContract;
-  set createContract(CreateContract value) => _createContract = value;
 
   Future<Response> _getCategories() async {
     return await _typeService.byCode({'typecd': ProspectString.categoryTypeCode});
@@ -46,12 +41,12 @@ class ProspectDetailFormCreatePresenter {
           'types': typeResponse.body,
           'prospect': prospectResponse.body,
         };
-        _fetchDataContract.onLoadSuccess(data);
+        contract.onLoadSuccess(data);
       } else {
-        _fetchDataContract.onLoadFailed(ProspectString.fetchDataFailed);
+        contract.onLoadFailed(ProspectString.fetchDataFailed);
       }
     } catch (e) {
-      _fetchDataContract.onLoadError(e.toString());
+      contract.onLoadError(e.toString());
     }
   }
 
@@ -59,12 +54,14 @@ class ProspectDetailFormCreatePresenter {
     try {
       Response response = await _storeProspect(data);
       if (response.statusCode == 200) {
-        _createContract.onCreateSuccess(ProspectString.createDataSuccess);
+        contract.onCreateSuccess(ProspectString.createDataSuccess);
       } else {
-        _createContract.onCreateFailed(ProspectString.createDataFailed);
+        contract.onCreateFailed(ProspectString.createDataFailed);
       }
     } catch (e) {
-      _createContract.onCreateError(e.toString());
+      contract.onCreateError(e.toString());
     }
   }
 }
+
+abstract class ProspectDetailCreateContract implements FetchDataContract, CreateContract {}

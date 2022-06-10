@@ -1,9 +1,9 @@
 part of 'package:ventes/app/states/controllers/customer_fc_state_controller.dart';
 
 class _DataSource extends RegularDataSource<CustomerFormCreatePresenter> implements CustomerCreateContract {
-  _Listener get _listener => Get.find<_Listener>();
-  _FormSource get _formSource => Get.find<_FormSource>();
-  _Properties get _properties => Get.find<_Properties>();
+  _Listener get _listener => Get.find<_Listener>(tag: NearbyString.customerCreateTag);
+  _FormSource get _formSource => Get.find<_FormSource>(tag: NearbyString.customerCreateTag);
+  _Properties get _properties => Get.find<_Properties>(tag: NearbyString.customerCreateTag);
 
   final CustomerFormCreatePresenter _presenter = CustomerFormCreatePresenter();
 
@@ -108,6 +108,9 @@ class _DataSource extends RegularDataSource<CustomerFormCreatePresenter> impleme
   void fetchData(double latitude, double longitude, int? cstmid) => _presenter.fetchData(latitude, longitude, cstmid);
   void fetchPlacesIds(String subdistrict) => _presenter.fetchPlaces(subdistrict);
   void createCustomer(FormData data) => _presenter.createCustomer(data);
+
+  @override
+  CustomerFormCreatePresenter presenterBuilder() => CustomerFormCreatePresenter();
 
   @override
   onLoadError(String message) => _listener.onLoadDataError(message);

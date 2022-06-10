@@ -6,10 +6,9 @@ import 'package:ventes/app/resources/widgets/regular_button.dart';
 import 'package:ventes/app/states/controllers/settings_state_controller.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
-import 'package:ventes/core/view.dart';
 import 'package:ventes/helpers/notification_helper.dart';
 
-class SettingsView extends View<SettingsStateController> {
+class SettingsView extends GetView<SettingsStateController> {
   static const String route = "/settings";
 
   @override

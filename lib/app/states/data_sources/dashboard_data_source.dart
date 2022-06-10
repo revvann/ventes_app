@@ -1,8 +1,8 @@
 part of 'package:ventes/app/states/controllers/dashboard_state_controller.dart';
 
 class _DataSource extends RegularDataSource<DashboardPresenter> implements DashboardContract {
-  _Properties get _properties => Get.find<_Properties>();
-  _Listener get _listener => Get.find<_Listener>();
+  _Properties get _properties => Get.find<_Properties>(tag: DashboardString.dashboardTag);
+  _Listener get _listener => Get.find<_Listener>(tag: DashboardString.dashboardTag);
 
   final _customers = <BpCustomer>[].obs;
   set customers(List<BpCustomer> value) => _customers.value = value;
@@ -41,6 +41,9 @@ class _DataSource extends RegularDataSource<DashboardPresenter> implements Dashb
   }
 
   bool _isBpCustomer100Meters(BpCustomer element) => element.radius != null ? element.radius! <= 100 : false;
+
+  @override
+  DashboardPresenter presenterBuilder() => DashboardPresenter();
 
   @override
   onLoadError(String message) => _listener.onLoadDataError(message);

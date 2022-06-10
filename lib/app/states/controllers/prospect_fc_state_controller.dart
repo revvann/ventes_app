@@ -1,47 +1,49 @@
 import 'package:get/get.dart';
-import 'package:ventes/app/states/controllers/regular_state_controller.dart';
-import 'package:ventes/app/states/data_sources/prospect_fc_data_source.dart';
-import 'package:ventes/app/states/form_sources/prospect_fc_form_source.dart';
-import 'package:ventes/app/states/listeners/prospect_fc_listener.dart';
+import 'package:ventes/app/states/controllers/form_state_controller.dart';
+import 'package:ventes/app/states/data_sources/regular_data_source.dart';
+import 'package:ventes/app/states/form_sources/regular_form_source.dart';
 import 'package:ventes/constants/strings/prospect_string.dart';
 import 'package:ventes/helpers/task_helper.dart';
+import 'package:ventes/app/models/bp_customer_model.dart';
+import 'package:ventes/app/models/type_model.dart';
+import 'package:ventes/app/models/user_detail_model.dart';
+import 'package:ventes/app/network/presenters/prospect_fc_presenter.dart';
+import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
+import 'package:flutter/material.dart';
+import 'package:ventes/app/states/controllers/prospect_state_controller.dart';
+import 'package:ventes/app/states/listeners/regular_listener.dart';
+import 'package:ventes/routing/navigators/prospect_navigator.dart';
+import 'package:ventes/app/resources/widgets/searchable_dropdown.dart';
+import 'package:ventes/constants/formatters/currency_formatter.dart';
+import 'package:ventes/helpers/function_helpers.dart';
 
-class ProspectFormCreateStateController extends RegularStateController {
-  ProspectFormCreateListener listener = Get.put(ProspectFormCreateListener());
-  ProspectFormCreateFormSource formSource = Get.put(ProspectFormCreateFormSource());
-  ProspectFormCreateDataSource dataSource = Get.put(ProspectFormCreateDataSource());
-  ProspectFormCreateProperties properties = Get.put(ProspectFormCreateProperties());
+part 'package:ventes/app/states/data_sources/prospect_fc_data_source.dart';
+part 'package:ventes/app/states/form_sources/prospect_fc_form_source.dart';
+part 'package:ventes/app/states/form_validators/prospect_fc_validator.dart';
+part 'package:ventes/app/states/listeners/prospect_fc_listener.dart';
+
+class ProspectFormCreateStateController extends FormStateController<_Properties, _Listener, _DataSource, _FormSource> {
+  @override
+  String get tag => ProspectString.prospectCreateTag;
 
   @override
-  void onClose() {
-    formSource.close();
-    Get.delete<ProspectFormCreateProperties>();
-    Get.delete<ProspectFormCreateDataSource>();
-    Get.delete<ProspectFormCreateFormSource>();
-    Get.delete<ProspectFormCreateListener>();
-    super.onClose();
-  }
+  _Properties propertiesBuilder() => _Properties();
 
   @override
-  void onInit() {
-    super.onInit();
-    dataSource.init();
-    formSource.init();
-  }
+  _Listener listenerBuilder() => _Listener();
 
   @override
-  void onReady() {
-    super.onReady();
-    properties.refresh();
-  }
+  _DataSource dataSourceBuilder() => _DataSource();
+
+  @override
+  _FormSource formSourceBuilder() => _FormSource();
 }
 
-class ProspectFormCreateProperties {
-  ProspectFormCreateDataSource get dataSource => Get.find<ProspectFormCreateDataSource>();
-  ProspectFormCreateFormSource get formSource => Get.find<ProspectFormCreateFormSource>();
+class _Properties {
+  _DataSource get dataSource => Get.find<_DataSource>(tag: ProspectString.prospectCreateTag);
+  _FormSource get formSource => Get.find<_FormSource>(tag: ProspectString.prospectCreateTag);
 
   void refresh() {
-    formSource.reset();
     dataSource.fetchData();
     Get.find<TaskHelper>().loaderPush(ProspectString.formCreateTaskCode);
   }

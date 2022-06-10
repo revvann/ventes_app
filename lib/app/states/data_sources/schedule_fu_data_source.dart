@@ -1,22 +1,8 @@
-import 'package:get/get.dart';
-import 'package:ventes/app/models/auth_model.dart';
-import 'package:ventes/app/models/schedule_model.dart';
-import 'package:ventes/app/models/type_model.dart';
-import 'package:ventes/app/models/user_detail_model.dart';
-import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
-import 'package:ventes/app/network/contracts/update_contract.dart';
-import 'package:ventes/app/network/presenters/schedule_fu_presenter.dart';
-import 'package:ventes/app/states/form_sources/schedule_fu_form_source.dart';
-import 'package:ventes/app/states/listeners/schedule_fu_listener.dart';
-import 'package:ventes/constants/strings/schedule_string.dart';
-import 'package:ventes/helpers/auth_helper.dart';
-import 'package:ventes/helpers/task_helper.dart';
+part of 'package:ventes/app/states/controllers/schedule_fu_state_controller.dart';
 
-class ScheduleFormUpdateDataSource implements FetchDataContract, UpdateContract {
-  ScheduleFormUpdateListener get _listener => Get.find<ScheduleFormUpdateListener>();
-  ScheduleFormUpdateFormSource get _formSource => Get.find<ScheduleFormUpdateFormSource>();
-
-  final ScheduleFormUpdatePresenter _presenter = ScheduleFormUpdatePresenter();
+class _DataSource extends RegularDataSource<ScheduleFormUpdatePresenter> implements ScheduleUpdateContract {
+  _Listener get _listener => Get.find<_Listener>(tag: ScheduleString.scheduleUpdateTag);
+  _FormSource get _formSource => Get.find<_FormSource>(tag: ScheduleString.scheduleUpdateTag);
 
   late int scheduleId;
 
@@ -34,36 +20,31 @@ class ScheduleFormUpdateDataSource implements FetchDataContract, UpdateContract 
   Schedule? get schedule => _schedule.value;
   set schedule(Schedule? value) => _schedule.value = value;
 
-  void init() {
-    _presenter.fetchDataContract = this;
-    _presenter.updateContract = this;
-  }
-
   void insertTypes(List<Map<String, dynamic>> types) {
     List<DBType> typeMap = types.map((type) => DBType.fromJson(type)).where((element) => element.typeid == schedule?.schetypeid).toList();
     this.types = typeMap.map((type) => {type.typename ?? "": type.typeid ?? 0}).toList();
   }
 
   void fetchData() {
-    _presenter.fetchData(scheduleId);
+    presenter.fetchData(scheduleId);
   }
 
   void updateSchedule(Map<String, dynamic> data) {
-    _presenter.updateSchedule(data);
+    presenter.updateSchedule(data);
   }
 
-  Future<UserDetail> get userActive async => (await _presenter.findActiveUser())!;
+  Future<UserDetail> get userActive async => (await presenter.findActiveUser())!;
 
   Future<List<UserDetail>> filterUser(String? search) async {
     AuthModel? authModel = await Get.find<AuthHelper>().get();
-    List<UserDetail> userDetails = await _presenter.fetchUsers(search);
+    List<UserDetail> userDetails = await presenter.fetchUsers(search);
 
     userDetails = userDetails.where((e) => e.userdtid != authModel?.accountActive).toList();
     return distinct(userDetails);
   }
 
   Future<List<UserDetail>> allUser(String? search) async {
-    List<UserDetail> userDetails = await _presenter.fetchUsers(search);
+    List<UserDetail> userDetails = await presenter.fetchUsers(search);
     return distinct(userDetails);
   }
 
@@ -76,6 +57,9 @@ class ScheduleFormUpdateDataSource implements FetchDataContract, UpdateContract 
     }).toList();
     return userDetails;
   }
+
+  @override
+  ScheduleFormUpdatePresenter presenterBuilder() => ScheduleFormUpdatePresenter();
 
   @override
   void onUpdateFailed(String message) => _listener.onUpdateDataFailed(message);
@@ -96,7 +80,7 @@ class ScheduleFormUpdateDataSource implements FetchDataContract, UpdateContract 
   onLoadSuccess(Map data) {
     schedule = Schedule.fromJson(data['schedule']);
     insertTypes(List<Map<String, dynamic>>.from(data['types']));
-    _formSource.prepareFormValue();
+    _formSource.prepareFormValues();
     Get.find<TaskHelper>().loaderPop(ScheduleString.updateScheduleTaskCode);
   }
 }

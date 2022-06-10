@@ -1,21 +1,8 @@
-import 'package:get/get.dart';
-import 'package:ventes/app/models/prospect_detail_model.dart';
-import 'package:ventes/app/models/prospect_model.dart';
-import 'package:ventes/app/models/type_model.dart';
-import 'package:ventes/app/network/contracts/update_contract.dart';
-import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
-import 'package:ventes/app/network/presenters/prospect_detail_fu_presenter.dart';
-import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
-import 'package:ventes/app/states/form_sources/prospect_detail_fu_form_source.dart';
-import 'package:ventes/app/states/listeners/prospect_detail_fu_listener.dart';
-import 'package:ventes/constants/strings/prospect_string.dart';
-import 'package:ventes/helpers/task_helper.dart';
+part of 'package:ventes/app/states/controllers/prospect_detail_fu_state_controller.dart';
 
-class ProspectDetailFormUpdateDataSource implements FetchDataContract, UpdateContract {
-  ProspectDetailFormUpdateListener get _listener => Get.find<ProspectDetailFormUpdateListener>();
-  ProspectDetailFormUpdateFormSource get _formSource => Get.find<ProspectDetailFormUpdateFormSource>();
-
-  final ProspectDetailFormUpdatePresenter _presenter = ProspectDetailFormUpdatePresenter();
+class _DataSource extends RegularDataSource<ProspectDetailFormUpdatePresenter> implements ProspectDetailUpdateContract {
+  _Listener get _listener => Get.find<_Listener>(tag: ProspectString.detailUpdateTag);
+  _FormSource get _formSource => Get.find<_FormSource>(tag: ProspectString.detailUpdateTag);
 
   final Rx<List<KeyableDropdownItem<int, DBType>>> _categoryItems = Rx<List<KeyableDropdownItem<int, DBType>>>([]);
   set categoryItems(List<KeyableDropdownItem<int, DBType>> value) => _categoryItems.value = value;
@@ -33,13 +20,11 @@ class ProspectDetailFormUpdateDataSource implements FetchDataContract, UpdateCon
   set prospectdetail(ProspectDetail? value) => _prospectdetail.value = value;
   ProspectDetail? get prospectdetail => _prospectdetail.value;
 
-  init() {
-    _presenter.fetchDataContract = this;
-    _presenter.updateContract = this;
-  }
+  void fetchData(int id) => presenter.fetchData(id);
+  void updateData(int id, Map<String, dynamic> data) => presenter.updateData(id, data);
 
-  void fetchData(int id) => _presenter.fetchData(id);
-  void updateData(int id, Map<String, dynamic> data) => _presenter.updateData(id, data);
+  @override
+  ProspectDetailFormUpdatePresenter presenterBuilder() => ProspectDetailFormUpdatePresenter();
 
   @override
   onLoadError(String message) => _listener.onLoadError(message);
@@ -61,7 +46,7 @@ class ProspectDetailFormUpdateDataSource implements FetchDataContract, UpdateCon
 
     if (data['prospectdetail'] != null) {
       prospectdetail = ProspectDetail.fromJson(data['prospectdetail']);
-      _formSource.prepareValue(prospectdetail!);
+      _formSource.prepareFormValues();
     }
     Get.find<TaskHelper>().loaderPop(ProspectString.formUpdateDetailTaskCode);
   }

@@ -1,23 +1,9 @@
-import 'package:get/get.dart';
-import 'package:ventes/app/models/schedule_guest_model.dart';
-import 'package:ventes/app/models/user_detail_model.dart';
-import 'package:ventes/app/resources/widgets/error_alert.dart';
-import 'package:ventes/app/resources/widgets/failed_alert.dart';
-import 'package:ventes/app/resources/widgets/loader.dart';
-import 'package:ventes/app/resources/widgets/success_alert.dart';
-import 'package:ventes/app/states/controllers/daily_schedule_state_controller.dart';
-import 'package:ventes/app/states/data_sources/schedule_fc_data_source.dart';
-import 'package:ventes/constants/strings/schedule_string.dart';
-import 'package:ventes/helpers/function_helpers.dart';
-import 'package:ventes/app/states/controllers/schedule_fc_state_controller.dart';
-import 'package:ventes/app/states/form_sources/schedule_fc_form_source.dart';
-import 'package:ventes/helpers/task_helper.dart';
-import 'package:ventes/routing/navigators/schedule_navigator.dart';
+part of 'package:ventes/app/states/controllers/schedule_fc_state_controller.dart';
 
-class ScheduleFormCreateListener {
-  ScheduleFormCreateProperties get _properties => Get.find<ScheduleFormCreateProperties>();
-  ScheduleFormCreateFormSource get _formSource => Get.find<ScheduleFormCreateFormSource>();
-  ScheduleFormCreateDataSource get _dataSource => Get.find<ScheduleFormCreateDataSource>();
+class _Listener extends RegularListener {
+  _Properties get _properties => Get.find<_Properties>(tag: ScheduleString.scheduleCreateTag);
+  _FormSource get _formSource => Get.find<_FormSource>(tag: ScheduleString.scheduleCreateTag);
+  _DataSource get _dataSource => Get.find<_DataSource>(tag: ScheduleString.scheduleCreateTag);
 
   void onLocationChanged() {
     _formSource.schelocquiet = _formSource.schelocTEC.text;
@@ -216,10 +202,6 @@ class ScheduleFormCreateListener {
     _formSource.scheloc = "https://maps.google.com?q=${position.target.latitude},${position.target.longitude}";
   }
 
-  Future onRefresh() async {
-    _properties.refresh();
-  }
-
   void onCreateDataFailed(String message) {
     Get.find<TaskHelper>().failedPush(ScheduleString.createScheduleTaskCode, ScheduleString.createFailed);
     Get.find<TaskHelper>().loaderPop(ScheduleString.createScheduleTaskCode);
@@ -251,5 +233,10 @@ class ScheduleFormCreateListener {
   onLoadDataFailed(String message) {
     Get.find<TaskHelper>().failedPush(ScheduleString.createScheduleTaskCode, ScheduleString.createFailed);
     Get.find<TaskHelper>().loaderPop(ScheduleString.createScheduleTaskCode);
+  }
+
+  @override
+  Future onRefresh() async {
+    _properties.refresh();
   }
 }

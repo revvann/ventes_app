@@ -1,26 +1,14 @@
-import 'package:contacts_service/contacts_service.dart';
-import 'package:get/get.dart';
-import 'package:ventes/app/states/controllers/contact_person_fc_state_controller.dart';
-import 'package:ventes/app/states/controllers/contact_person_state_controller.dart';
-import 'package:ventes/app/states/data_sources/contact_person_fc_data_source.dart';
-import 'package:ventes/app/states/form_sources/contact_person_fc_form_source.dart';
-import 'package:ventes/constants/strings/prospect_string.dart';
-import 'package:ventes/helpers/task_helper.dart';
-import 'package:ventes/routing/navigators/prospect_navigator.dart';
+part of 'package:ventes/app/states/controllers/contact_person_fc_state_controller.dart';
 
-class ContactPersonFormCreateListener {
-  ContactPersonFormCreateProperties get _properties => Get.find<ContactPersonFormCreateProperties>();
-  ContactPersonFormCreateFormSource get _formSource => Get.find<ContactPersonFormCreateFormSource>();
-  ContactPersonFormCreateDataSource get _dataSource => Get.find<ContactPersonFormCreateDataSource>();
+class _Listener extends RegularListener {
+  _Properties get _properties => Get.find<_Properties>(tag: ProspectString.contactCreateTag);
+  _FormSource get _formSource => Get.find<_FormSource>(tag: ProspectString.contactCreateTag);
+  _DataSource get _dataSource => Get.find<_DataSource>(tag: ProspectString.contactCreateTag);
 
   void goBack() {
     Get.back(
       id: ProspectNavigator.id,
     );
-  }
-
-  Future onRefresh() async {
-    _properties.refresh();
   }
 
   void onTypeSelected(type) {
@@ -75,5 +63,10 @@ class ContactPersonFormCreateListener {
   void onCreateDataError(String message) {
     Get.find<TaskHelper>().errorPush(ProspectString.formCreateContactTaskCode, message);
     Get.find<TaskHelper>().loaderPop(ProspectString.formCreateContactTaskCode);
+  }
+
+  @override
+  Future onRefresh() async {
+    _properties.refresh();
   }
 }

@@ -36,4 +36,8 @@ class NearbyString {
   static const taskCode = 'nearby';
   static const updateTaskCode = 'update';
   static const createTaskCode = 'create';
+
+  static const nearbyTag = "nearby";
+  static const customerCreateTag = "customercreate";
+  static const customerUpdateTag = "customerupdate";
 }

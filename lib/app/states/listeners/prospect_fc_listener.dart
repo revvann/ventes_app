@@ -1,21 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:ventes/app/models/bp_customer_model.dart';
-import 'package:ventes/app/models/type_model.dart';
-import 'package:ventes/app/models/user_detail_model.dart';
-import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
-import 'package:ventes/app/states/controllers/prospect_fc_state_controller.dart';
-import 'package:ventes/app/states/controllers/prospect_state_controller.dart';
-import 'package:ventes/app/states/data_sources/prospect_fc_data_source.dart';
-import 'package:ventes/app/states/form_sources/prospect_fc_form_source.dart';
-import 'package:ventes/constants/strings/prospect_string.dart';
-import 'package:ventes/helpers/task_helper.dart';
-import 'package:ventes/routing/navigators/prospect_navigator.dart';
+part of 'package:ventes/app/states/controllers/prospect_fc_state_controller.dart';
 
-class ProspectFormCreateListener {
-  ProspectFormCreateFormSource get _formSource => Get.find<ProspectFormCreateFormSource>();
-  ProspectFormCreateDataSource get _dataSource => Get.find<ProspectFormCreateDataSource>();
-  ProspectFormCreateProperties get _properties => Get.find<ProspectFormCreateProperties>();
+class _Listener extends RegularListener {
+  _FormSource get _formSource => Get.find<_FormSource>(tag: ProspectString.prospectCreateTag);
+  _DataSource get _dataSource => Get.find<_DataSource>(tag: ProspectString.prospectCreateTag);
+  _Properties get _properties => Get.find<_Properties>(tag: ProspectString.prospectCreateTag);
 
   void onDateStartSelected(DateTime? value) {
     if (value != null) {
@@ -70,10 +58,6 @@ class ProspectFormCreateListener {
 
   Future<List<BpCustomer>> onCustomerFilter(String? search) async {
     return await _dataSource.fetchCustomer(search);
-  }
-
-  Future onRefresh() async {
-    _properties.refresh();
   }
 
   void onSubmitButtonClicked() {
@@ -145,5 +129,10 @@ class ProspectFormCreateListener {
   void onCreateDataError(String message) {
     Get.find<TaskHelper>().errorPush(ProspectString.formCreateTaskCode, message);
     Get.find<TaskHelper>().loaderPop(ProspectString.formCreateTaskCode);
+  }
+
+  @override
+  Future onRefresh() async {
+    _properties.refresh();
   }
 }

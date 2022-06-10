@@ -1,8 +1,7 @@
-import 'package:ventes/app/states/form_sources/prospect_fu_form_source.dart';
+part of 'package:ventes/app/states/controllers/prospect_fu_state_controller.dart';
 
-class ProspectFormUpdateValidator {
-  ProspectFormUpdateFormSource _formSource;
-  ProspectFormUpdateValidator(this._formSource);
+class _Validator {
+  _FormSource get _formSource => Get.find<_FormSource>();
 
   String? prosname(String? value) {
     if (value == null || value.isEmpty) {

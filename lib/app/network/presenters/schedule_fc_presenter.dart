@@ -1,36 +1,30 @@
 import 'package:get/get.dart';
 import 'package:ventes/app/network/contracts/create_contract.dart';
 import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
+import 'package:ventes/app/network/presenters/regular_presenter.dart';
 import 'package:ventes/app/network/services/type_service.dart';
 import 'package:ventes/constants/strings/regular_string.dart';
-import 'package:ventes/constants/strings/request_code.dart';
 import 'package:ventes/helpers/auth_helper.dart';
 import 'package:ventes/app/models/auth_model.dart';
 import 'package:ventes/app/models/user_detail_model.dart';
 import 'package:ventes/app/network/services/schedule_service.dart';
 import 'package:ventes/app/network/services/user_service.dart';
 
-class ScheduleFormCreatePresenter {
+class ScheduleFormCreatePresenter extends RegularPresenter<ScheduleCreateContract> {
   final _userService = Get.find<UserService>();
   final _scheduleService = Get.find<ScheduleService>();
   final _typeService = Get.find<TypeService>();
-
-  late final CreateContract _createContract;
-  set createContract(CreateContract contract) => _createContract = contract;
-
-  late final FetchDataContract _fetchDataContract;
-  set fetchDataContract(FetchDataContract contract) => _fetchDataContract = contract;
 
   void createSchedule(Map<String, dynamic> data) async {
     try {
       Response response = await _scheduleService.store(data);
       if (response.statusCode == 200) {
-        _createContract.onCreateSuccess(response.body['message']);
+        contract.onCreateSuccess(response.body['message']);
       } else {
-        _createContract.onCreateFailed(response.body['message']);
+        contract.onCreateFailed(response.body['message']);
       }
     } catch (err) {
-      _createContract.onCreateFailed(err.toString());
+      contract.onCreateFailed(err.toString());
     }
   }
 
@@ -41,12 +35,12 @@ class ScheduleFormCreatePresenter {
       };
       Response response = await _typeService.byCode(params);
       if (response.statusCode == 200) {
-        _fetchDataContract.onLoadSuccess({'types': response.body});
+        contract.onLoadSuccess({'types': response.body});
       } else {
-        _fetchDataContract.onLoadFailed(response.body['message']);
+        contract.onLoadFailed(response.body['message']);
       }
     } catch (err) {
-      _fetchDataContract.onLoadError(err.toString());
+      contract.onLoadError(err.toString());
     }
   }
 
@@ -73,3 +67,5 @@ class ScheduleFormCreatePresenter {
     return null;
   }
 }
+
+abstract class ScheduleCreateContract implements FetchDataContract, CreateContract {}

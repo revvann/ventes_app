@@ -1,19 +1,9 @@
-import 'package:get/get.dart';
-import 'package:ventes/app/models/schedule_guest_model.dart';
-import 'package:ventes/app/models/user_detail_model.dart';
-import 'package:ventes/app/states/controllers/daily_schedule_state_controller.dart';
-import 'package:ventes/app/states/controllers/schedule_fu_state_controller.dart';
-import 'package:ventes/app/states/data_sources/schedule_fu_data_source.dart';
-import 'package:ventes/app/states/form_sources/schedule_fu_form_source.dart';
-import 'package:ventes/constants/strings/schedule_string.dart';
-import 'package:ventes/helpers/function_helpers.dart';
-import 'package:ventes/helpers/task_helper.dart';
-import 'package:ventes/routing/navigators/schedule_navigator.dart';
+part of 'package:ventes/app/states/controllers/schedule_fu_state_controller.dart';
 
-class ScheduleFormUpdateListener {
-  ScheduleFormUpdateProperties get _properties => Get.find<ScheduleFormUpdateProperties>();
-  ScheduleFormUpdateFormSource get _formSource => Get.find<ScheduleFormUpdateFormSource>();
-  ScheduleFormUpdateDataSource get _dataSource => Get.find<ScheduleFormUpdateDataSource>();
+class _Listener extends RegularListener {
+  _Properties get _properties => Get.find<_Properties>(tag: ScheduleString.scheduleUpdateTag);
+  _FormSource get _formSource => Get.find<_FormSource>(tag: ScheduleString.scheduleUpdateTag);
+  _DataSource get _dataSource => Get.find<_DataSource>(tag: ScheduleString.scheduleUpdateTag);
 
   void onLocationChanged() {
     _formSource.schelocquiet = _formSource.schelocTEC.text;
@@ -212,10 +202,6 @@ class ScheduleFormUpdateListener {
     _formSource.scheloc = "https://maps.google.com?q=${position.target.latitude},${position.target.longitude}";
   }
 
-  Future onRefresh() async {
-    _properties.refresh();
-  }
-
   void onUpdateDataFailed(String message) {
     Get.find<TaskHelper>().failedPush(ScheduleString.updateScheduleTaskCode, ScheduleString.updateFailed);
     Get.find<TaskHelper>().loaderPop(ScheduleString.updateScheduleTaskCode);
@@ -246,5 +232,10 @@ class ScheduleFormUpdateListener {
   onLoadDataFailed(String message) {
     Get.find<TaskHelper>().failedPush(ScheduleString.updateScheduleTaskCode, ScheduleString.fetchFailed);
     Get.find<TaskHelper>().loaderPop(ScheduleString.updateScheduleTaskCode);
+  }
+
+  @override
+  Future onRefresh() async {
+    _properties.refresh();
   }
 }

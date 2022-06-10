@@ -1,11 +1,8 @@
 part of 'package:ventes/app/states/controllers/nearby_state_controller.dart';
 
 class _DataSource extends RegularDataSource<NearbyPresenter> implements FetchDataContract {
-  _Properties get _properties => Get.find<_Properties>();
-  _Listener get _listener => Get.find<_Listener>();
-
-  final NearbyPresenter _presenter = NearbyPresenter();
-
+  _Properties get _properties => Get.find<_Properties>(tag: NearbyString.nearbyTag);
+  _Listener get _listener => Get.find<_Listener>(tag: NearbyString.nearbyTag);
   List<BpCustomer> bpCustomers = <BpCustomer>[];
 
   final _customers = <Customer>[].obs;
@@ -20,7 +17,7 @@ class _DataSource extends RegularDataSource<NearbyPresenter> implements FetchDat
     return bpCustomers.any((element) => element.sbccstmid == customer.cstmid);
   }
 
-  void fetchData(LatLng position) => _presenter.fetchData(position.latitude, position.longitude);
+  void fetchData(LatLng position) => presenter.fetchData(position.latitude, position.longitude);
   void _locationDetailLoaded(Map<String, dynamic> data) {
     mapsLoc = MapsLoc.fromJson(data);
   }
@@ -43,6 +40,9 @@ class _DataSource extends RegularDataSource<NearbyPresenter> implements FetchDat
   }
 
   bool _isCustomerOuttaRange(element) => element.radius != null ? element.radius! >= 100 : true;
+
+  @override
+  NearbyPresenter presenterBuilder() => NearbyPresenter();
 
   @override
   onLoadError(String message) => _listener.onLoadDataError(message);

@@ -1,14 +1,6 @@
-import 'package:contacts_service/contacts_service.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:ventes/app/models/type_model.dart';
-import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
-import 'package:ventes/app/resources/widgets/searchable_dropdown.dart';
-import 'package:ventes/app/states/form_sources/regular_form_source.dart';
-import 'package:ventes/app/states/form_validators/contact_person_fc_validator.dart';
-import 'package:ventes/constants/strings/prospect_string.dart';
+part of 'package:ventes/app/states/controllers/contact_person_fc_state_controller.dart';
 
-class ContactPersonFormCreateFormSource extends RegularFormSource {
+class _FormSource extends RegularFormSource {
   KeyableDropdownController<int, DBType> typeDropdownController = Get.put(
     KeyableDropdownController<int, DBType>(),
     tag: ProspectString.contactTypeCode,
@@ -23,7 +15,7 @@ class ContactPersonFormCreateFormSource extends RegularFormSource {
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
-  ContactPersonFormCreateValidator validator = ContactPersonFormCreateValidator();
+  _Validator validator = _Validator();
 
   bool get isValid => formKey.currentState?.validate() ?? false;
   bool get isPhone => contacttype?.typename == "Phone";

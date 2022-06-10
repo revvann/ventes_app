@@ -39,8 +39,23 @@ part 'package:ventes/app/states/form_validators/customer_fc_validator.dart';
 
 class CustomerFormCreateStateController extends FormStateController<_Properties, _Listener, _DataSource, _FormSource> {
   @override
-  void onReady() async {
-    super.onReady();
+  String get tag => NearbyString.customerCreateTag;
+
+  @override
+  _Properties propertiesBuilder() => _Properties();
+
+  @override
+  _Listener listenerBuilder() => _Listener();
+
+  @override
+  _DataSource dataSourceBuilder() => _DataSource();
+
+  @override
+  _FormSource formSourceBuilder() => _FormSource();
+
+  @override
+  void ready() async {
+    super.ready();
 
     if (properties.latitude != null && properties.longitude != null) {
       properties.refresh();
@@ -49,7 +64,7 @@ class CustomerFormCreateStateController extends FormStateController<_Properties,
 }
 
 class _Properties {
-  _DataSource get _dataSource => Get.find<_DataSource>();
+  _DataSource get _dataSource => Get.find<_DataSource>(tag: NearbyString.customerCreateTag);
 
   final double defaultZoom = 20;
   final Completer<GoogleMapController> mapsController = Completer();

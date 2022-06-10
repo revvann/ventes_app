@@ -46,4 +46,16 @@ class ProspectString {
   static String detailTypeDropdownTag = "detailtype";
   static String statusDropdownTag = "status";
   static String taxDropdownTag = "tax";
+
+  static String prospectTag = "prospect";
+  static String contactTag = "contact";
+  static String productTag = "product";
+  static String detailTag = "detail";
+  static String prospectCreateTag = "prospectcreate";
+  static String prospectUpdateTag = "prospectupdate";
+  static String contactCreateTag = "contactcreate";
+  static String contactUpdateTag = "contactupdate";
+  static String productUpdateTag = "productupdate";
+  static String detailCreateTag = "detailcreate";
+  static String detailUpdateTag = "detailupdate";
 }

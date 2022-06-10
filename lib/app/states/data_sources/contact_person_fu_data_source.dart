@@ -1,21 +1,8 @@
-import 'package:get/get.dart';
-import 'package:ventes/app/models/contact_person_model.dart';
-import 'package:ventes/app/models/customer_model.dart';
-import 'package:ventes/app/models/type_model.dart';
-import 'package:ventes/app/network/contracts/update_contract.dart';
-import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
-import 'package:ventes/app/network/presenters/contact_person_fu_presenter.dart';
-import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
-import 'package:ventes/app/states/form_sources/contact_person_fu_form_source.dart';
-import 'package:ventes/app/states/listeners/contact_person_fu_listener.dart';
-import 'package:ventes/constants/strings/prospect_string.dart';
-import 'package:ventes/helpers/task_helper.dart';
+part of 'package:ventes/app/states/controllers/contact_person_fu_state_controller.dart';
 
-class ContactPersonFormUpdateDataSource implements FetchDataContract, UpdateContract {
-  ContactPersonFormUpdateListener get _listener => Get.find<ContactPersonFormUpdateListener>();
-  ContactPersonFormUpdateFormSource get _formSource => Get.find<ContactPersonFormUpdateFormSource>();
-
-  final ContactPersonFormUpdatePresenter _presenter = ContactPersonFormUpdatePresenter();
+class _DataSource extends RegularDataSource<ContactPersonFormUpdatePresenter> implements ContactPersonUpdateContract {
+  _Listener get _listener => Get.find<_Listener>(tag: ProspectString.contactUpdateTag);
+  _FormSource get _formSource => Get.find<_FormSource>(tag: ProspectString.contactUpdateTag);
 
   final Rx<ContactPerson?> _contactPerson = Rx<ContactPerson?>(null);
   ContactPerson? get contactPerson => _contactPerson.value;
@@ -29,13 +16,11 @@ class ContactPersonFormUpdateDataSource implements FetchDataContract, UpdateCont
   List<KeyableDropdownItem<int, DBType>> get types => _types.value;
   set types(List<KeyableDropdownItem<int, DBType>> value) => _types.value = value;
 
-  init() {
-    _presenter.fetchDataContract = this;
-    _presenter.updateContract = this;
-  }
+  void fetchData(int id) => presenter.fetchData(id);
+  void updateData(Map<String, dynamic> data) => presenter.updateData(contactPerson!.contactpersonid!, data);
 
-  void fetchData(int id) => _presenter.fetchData(id);
-  void updateData(Map<String, dynamic> data) => _presenter.updateData(contactPerson!.contactpersonid!, data);
+  @override
+  ContactPersonFormUpdatePresenter presenterBuilder() => ContactPersonFormUpdatePresenter();
 
   @override
   onLoadError(String message) => _listener.onLoadError(message);

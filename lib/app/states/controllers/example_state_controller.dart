@@ -5,8 +5,7 @@ import 'package:ventes/app/states/controllers/regular_state_controller.dart';
 import 'package:ventes/app/states/data_sources/example_data_source.dart';
 // import 'package:ventes/app/states/listeners/nearby_listener.dart';
 
-class ExampleStateController extends RegularStateController {
-  ExampleProperties properties = Get.put(ExampleProperties());
+class ExampleStateController extends GetxController {
   // NearbyListener listener = Get.put(NearbyListener());
 
   @override

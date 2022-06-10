@@ -1,20 +1,10 @@
-import 'package:get/get.dart';
-import 'package:ventes/app/resources/views/contact_form/create/contact_person_fc.dart';
-import 'package:ventes/app/resources/views/contact_form/update/contact_person_fu.dart';
-import 'package:ventes/app/states/controllers/contact_person_state_controller.dart';
-import 'package:ventes/constants/strings/prospect_string.dart';
-import 'package:ventes/helpers/task_helper.dart';
-import 'package:ventes/routing/navigators/prospect_navigator.dart';
+part of 'package:ventes/app/states/controllers/contact_person_state_controller.dart';
 
-class ContactPersonListener {
-  ContactPersonProperties get _properties => Get.find<ContactPersonProperties>();
+class _Listener extends RegularListener {
+  _Properties get _properties => Get.find<_Properties>(tag: ProspectString.contactTag);
 
   void goBack() {
     Get.back(id: ProspectNavigator.id);
-  }
-
-  Future onRefresh() async {
-    _properties.refresh();
   }
 
   void onAddButtonClicked() {
@@ -45,5 +35,10 @@ class ContactPersonListener {
   void onLoadError(String message) {
     Get.find<TaskHelper>().errorPush(ProspectString.contactPersonTaskCode, message);
     Get.find<TaskHelper>().loaderPop(ProspectString.contactPersonTaskCode);
+  }
+
+  @override
+  Future onRefresh() async {
+    _properties.refresh();
   }
 }

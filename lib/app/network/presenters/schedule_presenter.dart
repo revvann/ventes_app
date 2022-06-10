@@ -1,18 +1,16 @@
 import 'package:get/get.dart';
 import 'package:ventes/app/models/auth_model.dart';
-import 'package:ventes/app/models/type_model.dart';
+import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
+import 'package:ventes/app/network/presenters/regular_presenter.dart';
 import 'package:ventes/app/network/services/type_service.dart';
 import 'package:ventes/constants/strings/regular_string.dart';
 import 'package:ventes/constants/strings/schedule_string.dart';
 import 'package:ventes/helpers/auth_helper.dart';
-import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
 import 'package:ventes/app/network/services/schedule_service.dart';
 
-class SchedulePresenter {
+class SchedulePresenter extends RegularPresenter<FetchDataContract> {
   final ScheduleService _scheduleService = Get.find<ScheduleService>();
   final TypeService _typeService = Get.find<TypeService>();
-  late final FetchDataContract _fetchContract;
-  set fetchContract(FetchDataContract value) => _fetchContract = value;
 
   Future<Response> _getSchedules([int? month]) async {
     AuthModel? authModel = await Get.find<AuthHelper>().get();
@@ -38,12 +36,12 @@ class SchedulePresenter {
       Response scheduleResponse = await _getSchedules(month);
       if (scheduleResponse.statusCode == 200) {
         data["schedules"] = scheduleResponse.body;
-        _fetchContract.onLoadSuccess(data);
+        contract.onLoadSuccess(data);
       } else {
-        _fetchContract.onLoadFailed(ScheduleString.fetchFailed);
+        contract.onLoadFailed(ScheduleString.fetchFailed);
       }
     } catch (e) {
-      _fetchContract.onLoadFailed(e.toString());
+      contract.onLoadFailed(e.toString());
     }
   }
 
@@ -55,12 +53,12 @@ class SchedulePresenter {
       if (scheduleResponse.statusCode == 200 && typesResponse.statusCode == 200) {
         data["schedules"] = scheduleResponse.body;
         data["types"] = typesResponse.body;
-        _fetchContract.onLoadSuccess(data);
+        contract.onLoadSuccess(data);
       } else {
-        _fetchContract.onLoadFailed("${scheduleResponse.statusCode} ${typesResponse.statusCode}");
+        contract.onLoadFailed("${scheduleResponse.statusCode} ${typesResponse.statusCode}");
       }
     } catch (e) {
-      _fetchContract.onLoadFailed(e.toString());
+      contract.onLoadFailed(e.toString());
     }
   }
 }

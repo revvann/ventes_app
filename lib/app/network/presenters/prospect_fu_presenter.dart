@@ -4,6 +4,7 @@ import 'package:ventes/app/models/bp_customer_model.dart';
 import 'package:ventes/app/models/user_detail_model.dart';
 import 'package:ventes/app/network/contracts/update_contract.dart';
 import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
+import 'package:ventes/app/network/presenters/regular_presenter.dart';
 import 'package:ventes/app/network/services/bp_customer_service.dart';
 import 'package:ventes/app/network/services/prospect_service.dart';
 import 'package:ventes/app/network/services/type_service.dart';
@@ -11,17 +12,11 @@ import 'package:ventes/app/network/services/user_service.dart';
 import 'package:ventes/constants/strings/prospect_string.dart';
 import 'package:ventes/helpers/auth_helper.dart';
 
-class ProspectFormUpdatePresenter {
+class ProspectFormUpdatePresenter extends RegularPresenter<ProspectUpdateContract> {
   final _userService = Get.find<UserService>();
   final _prospectService = Get.find<ProspectService>();
   final _typeService = Get.find<TypeService>();
   final _bpCustomerService = Get.find<BpCustomerService>();
-
-  late final FetchDataContract _fetchDataContract;
-  set fetchDataContract(FetchDataContract contract) => _fetchDataContract = contract;
-
-  late final UpdateContract _updateContract;
-  set updateContract(UpdateContract contract) => _updateContract = contract;
 
   Future<UserDetail?> findActiveUser() async {
     AuthModel? authModel = await Get.find<AuthHelper>().get();
@@ -109,12 +104,12 @@ class ProspectFormUpdatePresenter {
         data['status'] = statusResponse.body;
         data['stage'] = stageResponse.body;
         data['prospect'] = prospectResponse.body;
-        _fetchDataContract.onLoadSuccess(data);
+        contract.onLoadSuccess(data);
       } else {
-        _fetchDataContract.onLoadFailed(ProspectString.fetchUsersDataFailed);
+        contract.onLoadFailed(ProspectString.fetchUsersDataFailed);
       }
     } catch (err) {
-      _fetchDataContract.onLoadError(err.toString());
+      contract.onLoadError(err.toString());
     }
   }
 
@@ -122,12 +117,14 @@ class ProspectFormUpdatePresenter {
     try {
       Response response = await _updateProspect(prospectid, data);
       if (response.statusCode == 200) {
-        _updateContract.onUpdateSuccess(ProspectString.updateDataSuccess);
+        contract.onUpdateSuccess(ProspectString.updateDataSuccess);
       } else {
-        _updateContract.onUpdateFailed(ProspectString.updateDataFailed);
+        contract.onUpdateFailed(ProspectString.updateDataFailed);
       }
     } catch (err) {
-      _updateContract.onUpdateError(err.toString());
+      contract.onUpdateError(err.toString());
     }
   }
 }
+
+abstract class ProspectUpdateContract implements FetchDataContract, UpdateContract {}

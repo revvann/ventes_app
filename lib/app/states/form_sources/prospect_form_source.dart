@@ -1,10 +1,6 @@
-import 'package:get/get.dart';
-import 'package:ventes/app/models/type_model.dart';
-import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
-import 'package:ventes/constants/strings/prospect_string.dart';
-import 'package:ventes/helpers/function_helpers.dart';
+part of 'package:ventes/app/states/controllers/prospect_state_controller.dart';
 
-class ProspectFormSource {
+class _FormSource extends RegularFormSource {
   KeyableDropdownController<int, DBType> statusDropdownController = Get.put(KeyableDropdownController<int, DBType>(), tag: ProspectString.statusDropdownTag);
 
   final Rx<DateTime?> _prosstartdate = Rx<DateTime?>(null);
@@ -25,13 +21,16 @@ class ProspectFormSource {
   String? get prosstartdateString => prosstartdate == null ? null : formatDate(prosstartdate!);
   String? get prosenddateString => prosenddate == null ? null : formatDate(prosenddate!);
 
-  reset() {
+  @override
+  void close() {
+    super.close();
     _prosstartdate.value = null;
     _prosenddate.value = null;
     _prosstatus.value = null;
     prostype = null;
   }
 
+  @override
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
     if (prosstartdate != null) {

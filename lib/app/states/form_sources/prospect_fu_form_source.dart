@@ -1,20 +1,12 @@
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:ventes/app/models/bp_customer_model.dart';
-import 'package:ventes/app/models/user_detail_model.dart';
-import 'package:ventes/app/resources/widgets/searchable_dropdown.dart';
-import 'package:ventes/app/states/data_sources/prospect_fu_data_source.dart';
-import 'package:ventes/app/states/form_validators/prospect_fu_validator.dart';
-import 'package:ventes/constants/formatters/currency_formatter.dart';
-import 'package:ventes/helpers/function_helpers.dart';
+part of 'package:ventes/app/states/controllers/prospect_fu_state_controller.dart';
 
-class ProspectFormUpdateFormSource {
-  ProspectFormUpdateDataSource get _dataSource => Get.find<ProspectFormUpdateDataSource>();
+class _FormSource extends UpdateFormSource {
+  _DataSource get _dataSource => Get.find<_DataSource>(tag: ProspectString.prospectUpdateTag);
 
   SearchableDropdownController<UserDetail> ownerDropdownController = Get.put(SearchableDropdownController<UserDetail>());
   SearchableDropdownController<BpCustomer> customerDropdownController = Get.put(SearchableDropdownController<BpCustomer>());
 
-  late ProspectFormUpdateValidator validator;
+  _Validator validator = _Validator();
 
   final prosvaluemask = CurrencyInputFormatter();
 
@@ -63,19 +55,9 @@ class ProspectFormUpdateFormSource {
 
   bool get isValid => formKey.currentState?.validate() ?? false;
 
-  init() {
-    validator = ProspectFormUpdateValidator(this);
-  }
-
+  @override
   void close() {
-    prosnameTEC.dispose();
-    prosvalueTEC.dispose();
-    prosdescTEC.dispose();
-    Get.delete<SearchableDropdownController<UserDetail>>();
-    Get.delete<SearchableDropdownController<BpCustomer>>();
-  }
-
-  reset() {
+    super.close();
     prosnameTEC.text = '';
     prosvalueTEC.text = '';
     prosdescTEC.text = '';
@@ -89,9 +71,16 @@ class ProspectFormUpdateFormSource {
     prostype = null;
     customerDropdownController.reset();
     ownerDropdownController.reset();
+
+    prosnameTEC.dispose();
+    prosvalueTEC.dispose();
+    prosdescTEC.dispose();
+    Get.delete<SearchableDropdownController<UserDetail>>();
+    Get.delete<SearchableDropdownController<BpCustomer>>();
   }
 
-  prepareValue() {
+  @override
+  prepareFormValues() {
     prosnameTEC.text = _dataSource.prospect?.prospectname ?? "";
     prosvalueTEC.text = currencyFormat(_dataSource.prospect?.prospectvalue.toString() ?? "");
     prosdescTEC.text = _dataSource.prospect?.prospectdescription ?? "";
@@ -115,6 +104,7 @@ class ProspectFormUpdateFormSource {
     prosstage = _dataSource.prospect?.prospectstageid;
   }
 
+  @override
   Map<String, dynamic> toJson() {
     return {
       'prospectname': prosname,

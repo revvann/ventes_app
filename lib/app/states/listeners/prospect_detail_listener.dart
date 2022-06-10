@@ -1,17 +1,8 @@
-import 'package:get/get.dart';
-import 'package:ventes/app/resources/views/contact/contact.dart';
-import 'package:ventes/app/resources/views/product/product.dart';
-import 'package:ventes/app/resources/views/prospect_detail_form/create/prospect_detail_fc.dart';
-import 'package:ventes/app/resources/views/prospect_detail_form/update/prospect_detail_fu.dart';
-import 'package:ventes/app/states/controllers/prospect_detail_state_controller.dart';
-import 'package:ventes/app/states/data_sources/prospect_detail_data_source.dart';
-import 'package:ventes/constants/strings/prospect_string.dart';
-import 'package:ventes/helpers/task_helper.dart';
-import 'package:ventes/routing/navigators/prospect_navigator.dart';
+part of 'package:ventes/app/states/controllers/prospect_detail_state_controller.dart';
 
-class ProspectDetailListener {
-  ProspectDetailProperties get _properties => Get.find<ProspectDetailProperties>();
-  ProspectDetailDataSource get _dataSource => Get.find<ProspectDetailDataSource>();
+class _Listener extends RegularListener {
+  _Properties get _properties => Get.find<_Properties>(tag: ProspectString.detailCreateTag);
+  _DataSource get _dataSource => Get.find<_DataSource>(tag: ProspectString.detailCreateTag);
 
   void goBack() {
     Get.back(id: ProspectNavigator.id);
@@ -53,10 +44,6 @@ class ProspectDetailListener {
     );
   }
 
-  Future onRefresh() async {
-    _properties.refresh();
-  }
-
   void onLoadFailed(String message) {
     Get.find<TaskHelper>().failedPush(ProspectString.detailTaskCode, message);
     Get.find<TaskHelper>().loaderPop(ProspectString.detailTaskCode);
@@ -65,5 +52,10 @@ class ProspectDetailListener {
   void onLoadError(String message) {
     Get.find<TaskHelper>().errorPush(ProspectString.detailTaskCode, message);
     Get.find<TaskHelper>().loaderPop(ProspectString.detailTaskCode);
+  }
+
+  @override
+  Future onRefresh() async {
+    _properties.refresh();
   }
 }
