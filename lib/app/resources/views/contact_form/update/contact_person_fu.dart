@@ -21,13 +21,17 @@ part 'package:ventes/app/resources/views/contact_form/update/components/_contact
 
 class ContactPersonFormUpdateView extends View<ContactPersonFormUpdateStateController> {
   static const String route = "/contactperson/update";
+  int contact;
 
-  ContactPersonFormUpdateView(int contact) {
+  ContactPersonFormUpdateView(this.contact);
+
+  @override
+  void onBuild(state) {
     state.properties.contactid = contact;
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget buildWidget(BuildContext context, state) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: RegularColor.primary,
     ));
@@ -70,7 +74,7 @@ class ContactPersonFormUpdateView extends View<ContactPersonFormUpdateStateContr
       ).build(context),
       body: SafeArea(
         child: RefreshIndicator(
-          onRefresh: state.listener.onRefresh,
+          onRefresh: () async => state.refreshStates(),
           child: Obx(
             () {
               return Container(

@@ -21,7 +21,7 @@ class NearbyView extends View<NearbyStateController> {
   static const String route = "/nearby";
 
   @override
-  Widget build(BuildContext context) {
+  Widget buildWidget(BuildContext context, state) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: RegularColor.primary,
     ));
@@ -31,7 +31,7 @@ class NearbyView extends View<NearbyStateController> {
       extendBodyBehindAppBar: true,
       appBar: TopNavigation(
         title: NearbyString.appBarTitle,
-        onTitleTap: state.listener.onRefresh,
+        onTitleTap: () async => state.refreshStates(),
         height: 80,
         appBarKey: state.appBarKey,
         leading: GestureDetector(

@@ -52,7 +52,7 @@ class ScheduleFormCreateView extends View<ScheduleFormCreateStateController> {
   static const String route = "/schedule/create";
 
   @override
-  Widget build(BuildContext context) {
+  Widget buildWidget(BuildContext context, state) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: RegularColor.primary,
     ));
@@ -62,7 +62,7 @@ class ScheduleFormCreateView extends View<ScheduleFormCreateStateController> {
       extendBodyBehindAppBar: true,
       appBar: TopNavigation(
         title: ScheduleString.appBarTitle,
-        onTitleTap: state.listener.onRefresh,
+        onTitleTap: () async => state.refreshStates(),
         appBarKey: state.appBarKey,
         leading: GestureDetector(
           child: Container(

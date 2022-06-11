@@ -18,13 +18,17 @@ import 'package:ventes/core/view.dart';
 
 class ProductFormUpdateView extends View<ProductFormUpdateStateController> {
   static const String route = "/product/update";
+  int productid;
 
-  ProductFormUpdateView(int productid) {
+  ProductFormUpdateView(this.productid);
+
+  @override
+  void onBuild(state) {
     state.properties.productid = productid;
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget buildWidget(BuildContext context, state) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: RegularColor.primary,
     ));
@@ -67,7 +71,7 @@ class ProductFormUpdateView extends View<ProductFormUpdateStateController> {
       ).build(context),
       body: SafeArea(
         child: RefreshIndicator(
-          onRefresh: state.listener.onRefresh,
+          onRefresh: () async => state.refreshStates(),
           child: Obx(
             () {
               return Container(

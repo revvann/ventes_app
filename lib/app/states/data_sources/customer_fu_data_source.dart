@@ -5,8 +5,6 @@ class _DataSource extends RegularDataSource<CustomerFormUpdatePresenter> impleme
   _FormSource get _formSource => Get.find<_FormSource>(tag: NearbyString.customerUpdateTag);
   _Properties get _properties => Get.find<_Properties>(tag: NearbyString.customerUpdateTag);
 
-  final CustomerFormUpdatePresenter _presenter = CustomerFormUpdatePresenter();
-
   final _customers = <Customer>[].obs;
   set customers(List<Customer> value) => _customers.value = value;
   List<Customer> get customers => _customers.value;
@@ -60,13 +58,13 @@ class _DataSource extends RegularDataSource<CustomerFormUpdatePresenter> impleme
     this.statuses = statusesData;
   }
 
-  Future<List<Country>> fetchCountries([String? search]) async => await _presenter.fetchCountries(search);
-  Future<List<Province>> fetchProvinces(int countryId, [String? search]) async => await _presenter.fetchProvinces(countryId, search);
-  Future<List<City>> fetchCities(int provinceId, [String? search]) async => await _presenter.fetchCities(provinceId, search);
-  Future<List<Subdistrict>> fetchSubdistricts(int cityId, [String? search]) async => await _presenter.fetchSubdistricts(cityId, search);
+  Future<List<Country>> fetchCountries([String? search]) async => await presenter.fetchCountries(search);
+  Future<List<Province>> fetchProvinces(int countryId, [String? search]) async => await presenter.fetchProvinces(countryId, search);
+  Future<List<City>> fetchCities(int provinceId, [String? search]) async => await presenter.fetchCities(provinceId, search);
+  Future<List<Subdistrict>> fetchSubdistricts(int cityId, [String? search]) async => await presenter.fetchSubdistricts(cityId, search);
 
-  void fetchData(int id) => _presenter.fetchData(id);
-  void updateCustomer(int id, FormData data) => _presenter.updateCustomer(id, data);
+  void fetchData(int id) => presenter.fetchData(id);
+  void updateCustomer(int id, FormData data) => presenter.updateCustomer(id, data);
 
   @override
   CustomerFormUpdatePresenter presenterBuilder() => CustomerFormUpdatePresenter();

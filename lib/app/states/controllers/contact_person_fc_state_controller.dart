@@ -38,9 +38,10 @@ class ContactPersonFormCreateStateController extends FormStateController<_Proper
 }
 
 class _Properties {
+  late int customerid;
+
   _DataSource get _dataSource => Get.find<_DataSource>(tag: ProspectString.contactCreateTag);
 
-  late int customerid;
   void refresh() {
     _dataSource.fetchData(customerid);
     Get.find<TaskHelper>().loaderPush(ProspectString.formCreateContactTaskCode);

@@ -22,15 +22,6 @@ class _FormSource extends RegularFormSource {
   String? get prosenddateString => prosenddate == null ? null : formatDate(prosenddate!);
 
   @override
-  void close() {
-    super.close();
-    _prosstartdate.value = null;
-    _prosenddate.value = null;
-    _prosstatus.value = null;
-    prostype = null;
-  }
-
-  @override
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
     if (prosstartdate != null) {

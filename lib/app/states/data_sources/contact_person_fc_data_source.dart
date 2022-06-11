@@ -4,8 +4,6 @@ class _DataSource extends RegularDataSource<ContactPersonFormCreatePresenter> im
   _Listener get _listener => Get.find<_Listener>(tag: ProspectString.contactCreateTag);
   _FormSource get _formSource => Get.find<_FormSource>(tag: ProspectString.contactCreateTag);
 
-  final ContactPersonFormCreatePresenter _presenter = ContactPersonFormCreatePresenter();
-
   final Rx<Customer?> _customer = Rx<Customer?>(null);
   Customer? get customer => _customer.value;
   set customer(Customer? value) => _customer.value = value;
@@ -14,8 +12,8 @@ class _DataSource extends RegularDataSource<ContactPersonFormCreatePresenter> im
   List<KeyableDropdownItem<int, DBType>> get types => _types.value;
   set types(List<KeyableDropdownItem<int, DBType>> value) => _types.value = value;
 
-  void fetchData(int id) => _presenter.fetchData(id);
-  void createData(Map<String, dynamic> data) => _presenter.createData(data);
+  void fetchData(int id) => presenter.fetchData(id);
+  void createData(Map<String, dynamic> data) => presenter.createData(data);
 
   @override
   ContactPersonFormCreatePresenter presenterBuilder() => ContactPersonFormCreatePresenter();

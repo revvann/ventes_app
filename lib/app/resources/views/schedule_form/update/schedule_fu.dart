@@ -51,12 +51,17 @@ part 'package:ventes/app/resources/views/schedule_form/update/components/_twinti
 
 class ScheduleFormUpdateView extends View<ScheduleFormUpdateStateController> {
   static const String route = "/schedule/update";
-  ScheduleFormUpdateView({required int scheduleId}) {
+  int scheduleId;
+
+  ScheduleFormUpdateView({required this.scheduleId});
+
+  @override
+  void onBuild(state) {
     state.dataSource.scheduleId = scheduleId;
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget buildWidget(BuildContext context, state) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: RegularColor.primary,
     ));
@@ -65,7 +70,7 @@ class ScheduleFormUpdateView extends View<ScheduleFormUpdateStateController> {
       backgroundColor: RegularColor.primary,
       extendBodyBehindAppBar: true,
       appBar: TopNavigation(
-        onTitleTap: state.listener.onRefresh,
+        onTitleTap: () async => state.refreshStates(),
         title: ScheduleString.appBarTitle,
         appBarKey: state.appBarKey,
         leading: GestureDetector(

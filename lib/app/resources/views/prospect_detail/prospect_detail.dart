@@ -1,6 +1,6 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide MenuItem;
 import 'package:flutter/services.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:flutter_svg/svg.dart';
@@ -24,13 +24,16 @@ part 'package:ventes/app/resources/views/prospect_detail/components/_app_bar_men
 
 class ProspectDetailView extends View<ProspectDetailStateController> {
   static const String route = "/prospect/detail";
+  int prospectId;
 
-  ProspectDetailView(int prospectId) {
+  ProspectDetailView(this.prospectId);
+
+  void onBuild(state) {
     state.properties.prospectId = prospectId;
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget buildWidget(BuildContext context, state) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: RegularColor.primary,
     ));
@@ -79,7 +82,7 @@ class ProspectDetailView extends View<ProspectDetailStateController> {
       ).build(context),
       body: SafeArea(
         child: RefreshIndicator(
-          onRefresh: state.listener.onRefresh,
+          onRefresh: () async => state.refreshStates(),
           child: Obx(
             () {
               return Container(

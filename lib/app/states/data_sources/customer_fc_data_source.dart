@@ -5,8 +5,6 @@ class _DataSource extends RegularDataSource<CustomerFormCreatePresenter> impleme
   _FormSource get _formSource => Get.find<_FormSource>(tag: NearbyString.customerCreateTag);
   _Properties get _properties => Get.find<_Properties>(tag: NearbyString.customerCreateTag);
 
-  final CustomerFormCreatePresenter _presenter = CustomerFormCreatePresenter();
-
   final _customers = <BpCustomer>[].obs;
   set customers(List<BpCustomer> value) => _customers.value = value;
   List<BpCustomer> get customers => _customers.value;
@@ -100,14 +98,14 @@ class _DataSource extends RegularDataSource<CustomerFormCreatePresenter> impleme
     return null;
   }
 
-  Future<List<Country>> fetchCountries([String? search]) async => await _presenter.fetchCountries(search);
-  Future<List<Province>> fetchProvinces(int countryId, [String? search]) async => await _presenter.fetchProvinces(countryId, search);
-  Future<List<City>> fetchCities(int provinceId, [String? search]) async => await _presenter.fetchCities(provinceId, search);
-  Future<List<Subdistrict>> fetchSubdistricts(int cityId, [String? search]) async => await _presenter.fetchSubdistricts(cityId, search);
+  Future<List<Country>> fetchCountries([String? search]) async => await presenter.fetchCountries(search);
+  Future<List<Province>> fetchProvinces(int countryId, [String? search]) async => await presenter.fetchProvinces(countryId, search);
+  Future<List<City>> fetchCities(int provinceId, [String? search]) async => await presenter.fetchCities(provinceId, search);
+  Future<List<Subdistrict>> fetchSubdistricts(int cityId, [String? search]) async => await presenter.fetchSubdistricts(cityId, search);
 
-  void fetchData(double latitude, double longitude, int? cstmid) => _presenter.fetchData(latitude, longitude, cstmid);
-  void fetchPlacesIds(String subdistrict) => _presenter.fetchPlaces(subdistrict);
-  void createCustomer(FormData data) => _presenter.createCustomer(data);
+  void fetchData(double latitude, double longitude, int? cstmid) => presenter.fetchData(latitude, longitude, cstmid);
+  void fetchPlacesIds(String subdistrict) => presenter.fetchPlaces(subdistrict);
+  void createCustomer(FormData data) => presenter.createCustomer(data);
 
   @override
   CustomerFormCreatePresenter presenterBuilder() => CustomerFormCreatePresenter();

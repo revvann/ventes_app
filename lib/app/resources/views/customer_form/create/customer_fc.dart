@@ -21,15 +21,21 @@ part 'package:ventes/app/resources/views/customer_form/create/components/_place_
 
 class CustomerFormCreateView extends View<CustomerFormCreateStateController> {
   static const String route = "/customer/create";
+  double? latitude;
+  double? longitude;
+  int? cstmid;
 
-  CustomerFormCreateView({double? latitude, double? longitude, int? cstmid}) {
+  CustomerFormCreateView({this.latitude, this.longitude, this.cstmid});
+
+  @override
+  void onBuild(state) {
     state.properties.latitude = latitude;
     state.properties.longitude = longitude;
     state.properties.cstmid = cstmid;
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget buildWidget(BuildContext context, state) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: RegularColor.primary,
     ));
@@ -72,7 +78,7 @@ class CustomerFormCreateView extends View<CustomerFormCreateStateController> {
       ).build(context),
       body: SafeArea(
         child: RefreshIndicator(
-          onRefresh: state.listener.onRefresh,
+          onRefresh: () async => state.refreshStates(),
           child: Container(
             width: double.infinity,
             padding: EdgeInsets.only(

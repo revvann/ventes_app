@@ -23,13 +23,17 @@ part 'package:ventes/app/resources/views/prospect_detail_form/create/components/
 
 class ProspectDetailFormCreateView extends View<ProspectDetailFormCreateStateController> {
   static const String route = "/prospect/detail/create";
+  int prospectId;
 
-  ProspectDetailFormCreateView(int prospectId) {
+  ProspectDetailFormCreateView(this.prospectId);
+
+  @override
+  void onBuild(state) {
     state.properties.prospectId = prospectId;
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget buildWidget(BuildContext context, state) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: RegularColor.primary,
     ));
@@ -72,7 +76,7 @@ class ProspectDetailFormCreateView extends View<ProspectDetailFormCreateStateCon
       ).build(context),
       body: SafeArea(
         child: RefreshIndicator(
-          onRefresh: state.listener.onRefresh,
+          onRefresh: () async => state.refreshStates(),
           child: Obx(
             () {
               return Container(

@@ -28,7 +28,7 @@ class ProspectView extends View<ProspectStateController> {
   static const String route = "/history";
 
   @override
-  Widget build(BuildContext context) {
+  Widget buildWidget(BuildContext context, state) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: RegularColor.primary,
     ));
@@ -44,7 +44,7 @@ class ProspectView extends View<ProspectStateController> {
           ).build(context),
           body: SafeArea(
             child: RefreshIndicator(
-              onRefresh: () async => state.refreshStates,
+              onRefresh: () async => state.refreshStates(),
               child: SingleChildScrollView(
                 physics: AlwaysScrollableScrollPhysics(),
                 child: Obx(

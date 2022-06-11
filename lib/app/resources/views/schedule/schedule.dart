@@ -27,7 +27,7 @@ class ScheduleView extends View<ScheduleStateController> {
   static const String route = "/schedule";
 
   @override
-  Widget build(BuildContext context) {
+  Widget buildWidget(BuildContext context, state) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: RegularColor.primary,
     ));
@@ -119,7 +119,7 @@ class ScheduleView extends View<ScheduleStateController> {
       ).build(context),
       body: SafeArea(
         child: RefreshIndicator(
-          onRefresh: state.listener.onRefresh,
+          onRefresh: () async => state.refreshStates(),
           child: CustomScrollView(
             slivers: [
               SliverFillRemaining(

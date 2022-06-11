@@ -58,20 +58,6 @@ class _FormSource extends UpdateFormSource {
   @override
   void close() {
     super.close();
-    prosnameTEC.text = '';
-    prosvalueTEC.text = '';
-    prosdescTEC.text = '';
-    prosstartdate = null;
-    prosenddate = null;
-    prosexpenddate = null;
-    prosowner = null;
-    proscustomer = null;
-    prosstatus = null;
-    prosstage = null;
-    prostype = null;
-    customerDropdownController.reset();
-    ownerDropdownController.reset();
-
     prosnameTEC.dispose();
     prosvalueTEC.dispose();
     prosdescTEC.dispose();

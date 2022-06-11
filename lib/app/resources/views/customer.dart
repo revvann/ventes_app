@@ -14,12 +14,9 @@ import 'package:ventes/app/resources/widgets/top_navigation.dart';
 
 class CustomerView extends View<CustomerStateController> {
   static const String route = "/customer";
-  CustomerView() {
-    state = controller;
-  }
 
   @override
-  Widget build(BuildContext context) {
+  Widget buildWidget(BuildContext context, state) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: RegularColor.primary,
     ));

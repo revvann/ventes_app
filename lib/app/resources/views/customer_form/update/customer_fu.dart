@@ -24,13 +24,17 @@ part 'package:ventes/app/resources/views/customer_form/update/components/_bottom
 
 class CustomerFormUpdateView extends View<CustomerFormUpdateStateController> {
   static const String route = "/customer/update";
+  int customerid;
 
-  CustomerFormUpdateView(int customerid) {
+  CustomerFormUpdateView(this.customerid);
+
+  @override
+  void onBuild(state) {
     state.properties.customerid = customerid;
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget buildWidget(BuildContext context, state) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: RegularColor.primary,
     ));
@@ -42,7 +46,7 @@ class CustomerFormUpdateView extends View<CustomerFormUpdateStateController> {
       extendBodyBehindAppBar: true,
       appBar: TopNavigation(
         title: NearbyString.appBarTitle,
-        onTitleTap: state.listener.onRefresh,
+        onTitleTap: () async => state.refreshStates(),
         appBarKey: state.appBarKey,
         leading: GestureDetector(
           child: Container(

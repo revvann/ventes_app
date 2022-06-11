@@ -2,9 +2,8 @@
 
 import 'dart:math';
 
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide MenuItem;
 import 'package:flutter/services.dart';
-import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:ventes/app/models/prospect_product_model.dart';
@@ -24,13 +23,17 @@ part 'package:ventes/app/resources/views/product/components/_product_list.dart';
 
 class ProductView extends View<ProductStateController> {
   static const String route = "/product";
+  int prospectid;
 
-  ProductView(int prospectid) {
+  ProductView(this.prospectid);
+
+  @override
+  void onBuild(state) {
     state.properties.prospectid = prospectid;
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget buildWidget(BuildContext context, state) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: RegularColor.primary,
     ));
@@ -74,7 +77,7 @@ class ProductView extends View<ProductStateController> {
       ).build(context),
       body: SafeArea(
         child: RefreshIndicator(
-          onRefresh: state.listener.onRefresh,
+          onRefresh: () async => state.refreshStates(),
           child: Obx(
             () {
               return Container(

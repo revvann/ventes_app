@@ -2,7 +2,7 @@
 
 import 'dart:math';
 
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide MenuItem;
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -20,13 +20,17 @@ part 'package:ventes/app/resources/views/contact/components/_contact_list.dart';
 
 class ContactPersonView extends View<ContactPersonStateController> {
   static const String route = "/contactperson";
+  int customerid;
 
-  ContactPersonView(int customerid) {
+  ContactPersonView(this.customerid);
+
+  @override
+  void onBuild(state) {
     state.properties.customerid = customerid;
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget buildWidget(BuildContext context, state) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: RegularColor.primary,
     ));
@@ -70,7 +74,7 @@ class ContactPersonView extends View<ContactPersonStateController> {
       ).build(context),
       body: SafeArea(
         child: RefreshIndicator(
-          onRefresh: state.listener.onRefresh,
+          onRefresh: () async => state.refreshStates(),
           child: Obx(
             () {
               return Container(
