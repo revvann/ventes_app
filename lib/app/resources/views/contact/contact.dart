@@ -42,6 +42,7 @@ class ContactPersonView extends View<ContactPersonStateController> {
         title: ProspectString.appBarTitle,
         height: 80,
         appBarKey: state.appBarKey,
+        onTitleTap: () async => state.refreshStates(),
         leading: GestureDetector(
           child: Container(
             padding: EdgeInsets.all(RegularSize.xs),

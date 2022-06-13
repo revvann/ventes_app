@@ -9,7 +9,7 @@ class _FormSource extends UpdateFormSource {
 
   _DataSource get _dataSource => Get.find<_DataSource>(tag: ScheduleString.scheduleUpdateTag);
   _Listener get _listener => Get.find<_Listener>(tag: ScheduleString.scheduleUpdateTag);
-  late _Validator validator;
+  _Validator validator = _Validator();
 
   UserDetail? userDefault;
   final Rx<List<KeyableDropdownItem<String, String>>> _timezones = Rx<List<KeyableDropdownItem<String, String>>>([]);

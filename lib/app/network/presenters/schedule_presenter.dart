@@ -30,6 +30,13 @@ class SchedulePresenter extends RegularPresenter<FetchDataContract> {
     return await _typeService.byCode(params);
   }
 
+  Future<Response> _getPermissions() async {
+    Map<String, dynamic> params = {
+      "typecd": ScheduleString.permissionTypeCode,
+    };
+    return await _typeService.byCode(params);
+  }
+
   void fetchSchedules([int? month]) async {
     try {
       Map data = {};
@@ -50,9 +57,11 @@ class SchedulePresenter extends RegularPresenter<FetchDataContract> {
       Map data = {};
       Response scheduleResponse = await _getSchedules(scheduleMonth);
       Response typesResponse = await _getTypes();
-      if (scheduleResponse.statusCode == 200 && typesResponse.statusCode == 200) {
+      Response permissionsResponse = await _getPermissions();
+      if (scheduleResponse.statusCode == 200 && typesResponse.statusCode == 200 && permissionsResponse.statusCode == 200) {
         data["schedules"] = scheduleResponse.body;
         data["types"] = typesResponse.body;
+        data["permissions"] = permissionsResponse.body;
         contract.onLoadSuccess(data);
       } else {
         contract.onLoadFailed("${scheduleResponse.statusCode} ${typesResponse.statusCode}");

@@ -38,6 +38,7 @@ class ScheduleView extends View<ScheduleStateController> {
         title: ScheduleString.appBarTitle,
         appBarKey: state.appBarKey,
         height: 90,
+        onTitleTap: () => state.refreshStates(),
         leading: GestureDetector(
           child: Container(
             padding: EdgeInsets.all(RegularSize.xs),

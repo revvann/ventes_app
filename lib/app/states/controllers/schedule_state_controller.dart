@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:ventes/app/states/controllers/regular_state_controller.dart';
 import 'package:ventes/app/states/listeners/regular_listener.dart';
-import 'package:ventes/constants/strings/nearby_string.dart';
 import 'package:ventes/helpers/task_helper.dart';
 import 'package:ventes/app/models/schedule_model.dart';
 import 'package:ventes/app/models/type_model.dart';

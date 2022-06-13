@@ -1,7 +1,7 @@
 part of 'package:ventes/app/states/controllers/schedule_fu_state_controller.dart';
 
 class _Validator {
-  _FormSource get _formSource => Get.find<_FormSource>();
+  _FormSource get _formSource => Get.find<_FormSource>(tag: ScheduleString.scheduleUpdateTag);
 
   String? schenm(String? value) {
     if (value == null || value.isEmpty) {

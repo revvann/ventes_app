@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
 import 'package:ventes/app/states/data_sources/regular_data_source.dart';
 import 'package:ventes/app/states/listeners/regular_listener.dart';
@@ -7,6 +8,8 @@ abstract class RegularStateController<P, L extends RegularListener, D extends Re
   final GlobalKey appBarKey = GlobalKey();
   bool get isFixedBody => true;
   String get tag => "";
+
+  void Function(Duration)? onPostFrame;
 
   final _minHeight = 0.0.obs;
   double get minHeight => _minHeight.value;
@@ -85,14 +88,12 @@ abstract class RegularStateController<P, L extends RegularListener, D extends Re
     );
   }
 
-  @mustCallSuper
-  void reInit() {
-    init();
-    ready();
-  }
-
   void refreshStates() {
-    reInit();
+    onPostFrame ??= (_) {
+      ready();
+    };
+    SchedulerBinding.instance?.addPostFrameCallback(onPostFrame!);
+    init();
     update([tag]);
   }
 

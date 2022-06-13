@@ -46,6 +46,7 @@ class CustomerFormCreateView extends View<CustomerFormCreateStateController> {
       appBar: TopNavigation(
         title: NearbyString.appBarTitle,
         appBarKey: state.appBarKey,
+        onTitleTap: () async => state.refreshStates(),
         leading: GestureDetector(
           child: Container(
             padding: EdgeInsets.all(RegularSize.xs),

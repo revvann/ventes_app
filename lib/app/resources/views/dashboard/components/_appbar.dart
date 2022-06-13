@@ -50,7 +50,9 @@ class _AppBar extends StatelessWidget {
                           isActive: true,
                         );
                       }),
-                      MenuDivider(text: "Account"),
+                      Obx(() {
+                        return state.dataSource.accounts.isNotEmpty ? MenuDivider(text: "Account") : Container();
+                      }),
                       Obx(() {
                         return Container(
                           child: ListView.builder(

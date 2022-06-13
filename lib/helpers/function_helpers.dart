@@ -186,6 +186,7 @@ String getInitials(String name) {
     return names[0].substring(0, 1).toUpperCase();
   }
   var initials = '';
+  print(names);
   for (var name in names) {
     initials += name[0];
   }

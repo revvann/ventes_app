@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ventes/app/resources/widgets/border_input.dart';
 import 'package:ventes/app/resources/widgets/dropdown.dart';
+import 'package:ventes/app/resources/widgets/loader.dart';
 import 'package:ventes/app/states/controllers/keyboard_state_controller.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/constants/styles/behavior_style.dart';
@@ -86,7 +87,10 @@ class SearchableDropdownController<T> extends DropdownController<T, SearchableDr
                 behavior: BehaviorStyle(),
                 child: isLoading
                     ? Center(
-                        child: CircularProgressIndicator(),
+                        child: LoaderAnimation(
+                          strokeWidth: 9,
+                          width: 42,
+                        ),
                       )
                     : ListView.builder(
                         shrinkWrap: true,

@@ -27,6 +27,7 @@ class ProspectDetailFormUpdateView extends View<ProspectDetailFormUpdateStateCon
 
   ProspectDetailFormUpdateView(this.prospectDetailId);
 
+  @override
   void onBuild(state) {
     state.properties.prospectDetailId = prospectDetailId;
   }
@@ -43,6 +44,7 @@ class ProspectDetailFormUpdateView extends View<ProspectDetailFormUpdateStateCon
       appBar: TopNavigation(
         title: ProspectString.appBarTitle,
         appBarKey: state.appBarKey,
+        onTitleTap: () async => state.refreshStates(),
         leading: GestureDetector(
           child: Container(
             padding: EdgeInsets.all(RegularSize.xs),

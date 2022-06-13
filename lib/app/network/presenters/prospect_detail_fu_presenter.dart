@@ -1,13 +1,12 @@
 import 'package:get/get.dart';
 import 'package:ventes/app/network/contracts/update_contract.dart';
 import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
-import 'package:ventes/app/network/presenters/prospect_fu_presenter.dart';
 import 'package:ventes/app/network/presenters/regular_presenter.dart';
 import 'package:ventes/app/network/services/prospect_detail_service.dart';
 import 'package:ventes/app/network/services/type_service.dart';
 import 'package:ventes/constants/strings/prospect_string.dart';
 
-class ProspectDetailFormUpdatePresenter extends RegularPresenter<ProspectUpdateContract> {
+class ProspectDetailFormUpdatePresenter extends RegularPresenter<ProspectDetailUpdateContract> {
   final TypeService _typeService = Get.find<TypeService>();
   final ProspectDetailService _prospectDetailService = Get.find<ProspectDetailService>();
 

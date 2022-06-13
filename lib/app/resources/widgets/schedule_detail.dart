@@ -1,15 +1,18 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
+import 'package:ventes/app/models/schedule_guest_model.dart';
 import 'package:ventes/app/models/schedule_model.dart';
+import 'package:ventes/app/models/type_model.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/helpers/function_helpers.dart';
 
 class ScheduleDetail extends StatelessWidget {
   Schedule schedule;
+  List<DBType> types;
 
-  ScheduleDetail(this.schedule);
+  ScheduleDetail(this.schedule, [this.types = const []]);
 
   String? get startDate => schedule.schestartdate != null ? schedule.schestartdate! : null;
   String? get endDate => schedule.scheenddate != null ? schedule.scheenddate! : null;
@@ -157,6 +160,23 @@ class ScheduleDetail extends StatelessWidget {
             height: RegularSize.s,
           ),
         ],
+        if (schedule.scheguest?.isNotEmpty ?? false) ...[
+          Text(
+            "Guests",
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: RegularColor.dark,
+            ),
+          ),
+          SizedBox(
+            height: RegularSize.s,
+          ),
+          _GuestList(guests: schedule.scheguest ?? []),
+          SizedBox(
+            height: RegularSize.s,
+          ),
+        ],
         Text(
           "Tags",
           style: TextStyle(
@@ -275,6 +295,119 @@ class _DetailTag extends StatelessWidget {
       decoration: BoxDecoration(
         color: color.withOpacity(0.3),
         borderRadius: BorderRadius.circular(RegularSize.s),
+      ),
+    );
+  }
+}
+
+class _GuestList extends StatelessWidget {
+  _GuestList({
+    required this.guests,
+    this.permissions = const [],
+  });
+
+  List<ScheduleGuest> guests;
+  List<DBType> permissions;
+
+  DBType findPermission(int id) {
+    return permissions.firstWhere((p) => p.typeid == id, orElse: () => DBType());
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      itemCount: guests.length,
+      physics: NeverScrollableScrollPhysics(),
+      shrinkWrap: true,
+      itemBuilder: (context, index) {
+        ScheduleGuest item = guests[index];
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (index > 0)
+              SizedBox(
+                height: RegularSize.s,
+              ),
+            _GuestListItem(
+              guest: item,
+            ),
+            SizedBox(
+              height: RegularSize.s,
+            ),
+            Wrap(
+              spacing: RegularSize.s,
+              runSpacing: RegularSize.s,
+              children: [
+                for (int permissionid in item.schepermisid ?? []) ...[
+                  Builder(builder: (context) {
+                    DBType permission = findPermission(permissionid);
+                    return _DetailTag(
+                      text: permission.typename ?? "Unknown",
+                      color: RegularColor.green,
+                    );
+                  }),
+                ]
+              ],
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+class _GuestListItem extends StatelessWidget {
+  _GuestListItem({
+    this.guest,
+  });
+  ScheduleGuest? guest;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(
+        vertical: RegularSize.s,
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 40,
+            height: 40,
+            alignment: Alignment.center,
+            child: Text(
+              getInitials(guest?.scheuser?.userfullname?.substring(0, 2).toUpperCase() ?? ""),
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 14,
+              ),
+            ),
+            decoration: BoxDecoration(
+              color: RegularColor.primary,
+              shape: BoxShape.circle,
+            ),
+          ),
+          SizedBox(width: RegularSize.s),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                guest?.scheuser?.userfullname ?? "",
+                style: TextStyle(
+                  color: RegularColor.dark,
+                  fontSize: 16,
+                ),
+              ),
+              Text(
+                guest?.businesspartner?.bpname ?? "",
+                style: TextStyle(
+                  color: RegularColor.gray,
+                  fontSize: 14,
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

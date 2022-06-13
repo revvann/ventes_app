@@ -1,7 +1,7 @@
 part of 'package:ventes/app/states/controllers/prospect_detail_state_controller.dart';
 
 class _DataSource extends RegularDataSource<ProspectDetailPresenter> implements FetchDataContract {
-  _Listener get _listener => Get.find<_Listener>(tag: ProspectString.detailCreateTag);
+  _Listener get _listener => Get.find<_Listener>(tag: ProspectString.detailTag);
 
   final _prospect = Rx<Prospect?>(null);
   Prospect? get prospect => _prospect.value;
@@ -10,6 +10,10 @@ class _DataSource extends RegularDataSource<ProspectDetailPresenter> implements 
   final _prospectDetails = Rx<List<ProspectDetail>>([]);
   List<ProspectDetail> get prospectDetails => _prospectDetails.value;
   set prospectDetails(List<ProspectDetail> value) => _prospectDetails.value = value;
+
+  final _stages = Rx<List<DBType>>([]);
+  List<DBType> get stages => _stages.value;
+  set stages(List<DBType> value) => _stages.value = value;
 
   void fetchData(int prospectid) => presenter.fetchData(prospectid);
 
@@ -30,6 +34,10 @@ class _DataSource extends RegularDataSource<ProspectDetailPresenter> implements 
 
     if (data['prospectdetails'] != null) {
       prospectDetails = data['prospectdetails'].map<ProspectDetail>((json) => ProspectDetail.fromJson(json)).toList();
+    }
+
+    if (data['stages'] != null) {
+      stages = data['stages'].map<DBType>((json) => DBType.fromJson(json)).toList();
     }
 
     Get.find<TaskHelper>().loaderPop(ProspectString.detailTaskCode);

@@ -9,6 +9,10 @@ class _DataSource extends RegularDataSource<SchedulePresenter> implements FetchD
   Map<String, int> get types => _types.value;
   set types(Map<String, int> value) => _types.value = value;
 
+  final _permissions = <DBType>[].obs;
+  List<DBType> get permissions => _permissions.value;
+  set permissions(List<DBType> value) => _permissions.value = value;
+
   final _appointments = <Schedule>[].obs;
   List<Schedule> get appointments => _appointments.value;
   set appointments(List<Schedule> value) => _appointments.value = value;
@@ -41,11 +45,13 @@ class _DataSource extends RegularDataSource<SchedulePresenter> implements FetchD
   @override
   onLoadSuccess(Map data) {
     if (data['schedules'] != null) {
-      print(data['schedules']);
       listToAppointments(data['schedules']);
     }
     if (data['types'] != null) {
       listToTypes(data['types']);
+    }
+    if (data['permissions'] != null) {
+      permissions = List<DBType>.from(data['permissions'].map((e) => DBType.fromJson(e)));
     }
     Get.find<TaskHelper>().loaderPop(ScheduleString.taskCode);
   }

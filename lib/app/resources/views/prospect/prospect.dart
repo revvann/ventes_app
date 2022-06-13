@@ -32,98 +32,94 @@ class ProspectView extends View<ProspectStateController> {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: RegularColor.primary,
     ));
-    return GetBuilder<ProspectStateController>(
-      id: state.tag,
-      builder: (state) {
-        return Scaffold(
-          backgroundColor: RegularColor.primary,
-          extendBodyBehindAppBar: true,
-          appBar: TopNavigation(
-            title: ProspectString.appBarTitle,
-            appBarKey: state.appBarKey,
-          ).build(context),
-          body: SafeArea(
-            child: RefreshIndicator(
-              onRefresh: () async => state.refreshStates(),
-              child: SingleChildScrollView(
-                physics: AlwaysScrollableScrollPhysics(),
-                child: Obx(
-                  () {
-                    return Container(
-                      width: double.infinity,
-                      constraints: BoxConstraints(
-                        minHeight: state.minHeight,
+    return Scaffold(
+      backgroundColor: RegularColor.primary,
+      extendBodyBehindAppBar: true,
+      appBar: TopNavigation(
+        title: ProspectString.appBarTitle,
+        appBarKey: state.appBarKey,
+        onTitleTap: () async => state.refreshStates(),
+      ).build(context),
+      body: SafeArea(
+        child: RefreshIndicator(
+          onRefresh: () async => state.refreshStates(),
+          child: SingleChildScrollView(
+            physics: AlwaysScrollableScrollPhysics(),
+            child: Obx(
+              () {
+                return Container(
+                  width: double.infinity,
+                  constraints: BoxConstraints(
+                    minHeight: state.minHeight,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(RegularSize.xl),
+                      topRight: Radius.circular(RegularSize.xl),
+                    ),
+                  ),
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: RegularSize.l,
                       ),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(RegularSize.xl),
-                          topRight: Radius.circular(RegularSize.xl),
+                      _TwinDatePicker(),
+                      SizedBox(
+                        height: RegularSize.m,
+                      ),
+                      _StatusDropdown(),
+                      SizedBox(
+                        height: RegularSize.m,
+                      ),
+                      _FollowUpSelectBar(),
+                      SizedBox(
+                        height: RegularSize.m,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: RegularSize.m),
+                        child: IconInput(
+                          icon: "assets/svg/search.svg",
+                          hintText: "Search",
                         ),
                       ),
-                      child: Column(
-                        children: [
-                          SizedBox(
-                            height: RegularSize.l,
-                          ),
-                          _TwinDatePicker(),
-                          SizedBox(
-                            height: RegularSize.m,
-                          ),
-                          _StatusDropdown(),
-                          SizedBox(
-                            height: RegularSize.m,
-                          ),
-                          _FollowUpSelectBar(),
-                          SizedBox(
-                            height: RegularSize.m,
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: RegularSize.m),
-                            child: IconInput(
-                              icon: "assets/svg/search.svg",
-                              hintText: "Search",
-                            ),
-                          ),
-                          SizedBox(
-                            height: RegularSize.m,
-                          ),
-                          Container(
-                            padding: EdgeInsets.symmetric(horizontal: RegularSize.m),
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              "Prospect List",
-                              style: TextStyle(
-                                fontSize: 20,
-                                color: RegularColor.primary,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            height: RegularSize.m,
-                          ),
-                          _ProspectList(),
-                        ],
+                      SizedBox(
+                        height: RegularSize.m,
                       ),
-                    );
-                  },
-                ),
-              ),
+                      Container(
+                        padding: EdgeInsets.symmetric(horizontal: RegularSize.m),
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          "Prospect List",
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: RegularColor.primary,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: RegularSize.m,
+                      ),
+                      _ProspectList(),
+                    ],
+                  ),
+                );
+              },
             ),
           ),
-          floatingActionButton: FloatingActionButton(
-            onPressed: state.listener.onAddButtonClicked,
-            backgroundColor: RegularColor.primary,
-            child: SvgPicture.asset(
-              'assets/svg/plus.svg',
-              color: Colors.white,
-              width: RegularSize.l,
-            ),
-          ),
-          floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-        );
-      },
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: state.listener.onAddButtonClicked,
+        backgroundColor: RegularColor.primary,
+        child: SvgPicture.asset(
+          'assets/svg/plus.svg',
+          color: Colors.white,
+          width: RegularSize.l,
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 }

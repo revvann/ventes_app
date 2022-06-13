@@ -5,7 +5,7 @@ select table_name,
     column_default,
     is_nullable
 from INFORMATION_SCHEMA.COLUMNS
-where table_name in ('msuserdt')
+where table_name in ('trprospectassign')
 order by table_name,
     ordinal_position;
 -- select column_name,
@@ -147,3 +147,5 @@ from msuserdt;
 --         now(),
 --         true
 --     );
+select *
+from mstype;

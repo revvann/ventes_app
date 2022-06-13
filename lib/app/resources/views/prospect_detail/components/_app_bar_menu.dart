@@ -23,12 +23,12 @@ class _AppBarMenu extends StatelessWidget {
               MenuItem(
                 title: "Detail",
                 icon: "assets/svg/detail.svg",
-                onTap: () {},
+                onTap: showProspectDetail,
               ),
               MenuItem(
                 title: "Edit",
                 icon: "assets/svg/edit.svg",
-                onTap: () {},
+                onTap: state.listener.navigateToProspectUpdateForm,
               )
             ],
           ),
@@ -50,5 +50,20 @@ class _AppBarMenu extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void showProspectDetail() {
+    RegularDialog(
+      width: Get.width * 0.9,
+      alignment: Alignment.centerLeft,
+      padding: EdgeInsets.symmetric(
+        vertical: RegularSize.m,
+        horizontal: RegularSize.m,
+      ),
+      child: ProspectDetailDialog(
+        state.dataSource.prospect!,
+        stages: state.dataSource.stages,
+      ),
+    ).show();
   }
 }

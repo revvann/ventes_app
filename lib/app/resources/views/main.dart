@@ -3,8 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:get/get.dart';
-import 'package:ventes/core/view.dart';
-import 'package:ventes/app/resources/widgets/bottom_navigation.dart';
 import 'package:ventes/constants/views.dart';
 import 'package:ventes/routing/navigators/dashboard_navigator.dart';
 import 'package:ventes/routing/navigators/prospect_navigator.dart';
@@ -31,7 +29,6 @@ class MainView extends GetView<BottomNavigationStateController> {
         return isFirstRouteInCurrentTab;
       },
       child: Scaffold(
-        // resizeToAvoidBottomInset: false,
         backgroundColor: Colors.white,
         body: KeyboardDismissOnTap(
           child: Obx(

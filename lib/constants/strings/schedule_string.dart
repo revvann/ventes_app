@@ -49,4 +49,6 @@ class ScheduleString {
   static const dailyScheduleTag = "daily";
   static const scheduleCreateTag = "createschedule";
   static const scheduleUpdateTag = "updateschedule";
+
+  static const permissionTypeCode = "scp";
 }

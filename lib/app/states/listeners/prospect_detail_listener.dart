@@ -1,8 +1,8 @@
 part of 'package:ventes/app/states/controllers/prospect_detail_state_controller.dart';
 
 class _Listener extends RegularListener {
-  _Properties get _properties => Get.find<_Properties>(tag: ProspectString.detailCreateTag);
-  _DataSource get _dataSource => Get.find<_DataSource>(tag: ProspectString.detailCreateTag);
+  _Properties get _properties => Get.find<_Properties>(tag: ProspectString.detailTag);
+  _DataSource get _dataSource => Get.find<_DataSource>(tag: ProspectString.detailTag);
 
   void goBack() {
     Get.back(id: ProspectNavigator.id);
@@ -11,6 +11,16 @@ class _Listener extends RegularListener {
   void navigateToProspectDetailForm() {
     Get.toNamed(
       ProspectDetailFormCreateView.route,
+      id: ProspectNavigator.id,
+      arguments: {
+        'prospect': _properties.prospectId,
+      },
+    );
+  }
+
+  void navigateToProspectUpdateForm() {
+    Get.toNamed(
+      ProspectFormUpdateView.route,
       id: ProspectNavigator.id,
       arguments: {
         'prospect': _properties.prospectId,

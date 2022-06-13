@@ -44,6 +44,7 @@ class ProspectDetailFormCreateView extends View<ProspectDetailFormCreateStateCon
       appBar: TopNavigation(
         title: ProspectString.appBarTitle,
         appBarKey: state.appBarKey,
+        onTitleTap: () async => state.refreshStates(),
         leading: GestureDetector(
           child: Container(
             padding: EdgeInsets.all(RegularSize.xs),
@@ -132,20 +133,6 @@ class ProspectDetailFormCreateView extends View<ProspectDetailFormCreateStateCon
                           hintText: "Enter description",
                           validator: state.formSource.validator.prosdtdesc,
                           controller: state.formSource.prosdtdescTEC,
-                        ),
-                        SizedBox(
-                          height: RegularSize.m,
-                        ),
-                        Container(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            "Products",
-                            style: TextStyle(
-                              color: RegularColor.primary,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                            ),
-                          ),
                         ),
                         SizedBox(
                           height: RegularSize.m,

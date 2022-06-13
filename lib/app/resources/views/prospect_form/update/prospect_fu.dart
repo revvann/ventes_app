@@ -48,6 +48,7 @@ class ProspectFormUpdateView extends View<ProspectFormUpdateStateController> {
       appBar: TopNavigation(
         title: ProspectString.appBarTitle,
         appBarKey: state.appBarKey,
+        onTitleTap: () async => state.refreshStates(),
         leading: GestureDetector(
           child: Container(
             padding: EdgeInsets.all(RegularSize.xs),

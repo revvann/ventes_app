@@ -29,17 +29,17 @@ class _DataSource extends RegularDataSource<NearbyPresenter> implements FetchDat
   void _customersFromList(List data, LatLng currentPos) {
     customers = data.map((e) => Customer.fromJson(e)).toList();
     LatLng coords2 = LatLng(currentPos.latitude, currentPos.longitude);
-    customers = customers.map((element) => _filterBpCustomer(element, coords2)).where(_isCustomerOuttaRange).toList();
+    customers = customers.map((element) => _mappingBpCustomer(element, coords2)).where(_isCustomerInRange).toList();
   }
 
-  Customer _filterBpCustomer(Customer element, LatLng currentCoordinates) {
+  Customer _mappingBpCustomer(Customer element, LatLng currentCoordinates) {
     LatLng coords1 = LatLng(element.cstmlatitude ?? 0.0, element.cstmlongitude ?? 0.0);
     double radius = calculateDistance(coords1, currentCoordinates);
     element.radius = radius;
     return element;
   }
 
-  bool _isCustomerOuttaRange(element) => element.radius != null ? element.radius! >= 100 : true;
+  bool _isCustomerInRange(element) => element.radius != null ? element.radius! <= 100 : false;
 
   @override
   NearbyPresenter presenterBuilder() => NearbyPresenter();

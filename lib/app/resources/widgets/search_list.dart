@@ -4,6 +4,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
+import 'package:ventes/app/resources/widgets/loader.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/app/resources/widgets/icon_input.dart';
@@ -186,7 +187,7 @@ class SearchListWidget<T, V> extends StatelessWidget {
         Obx(() {
           return controller.isLoading
               ? Center(
-                  child: CircularProgressIndicator(),
+                  child: LoaderAnimation(strokeWidth: 9, width: 42),
                 )
               : Container();
         }),
