@@ -29,7 +29,12 @@ class _AppBarMenu extends StatelessWidget {
                 title: "Edit",
                 icon: "assets/svg/edit.svg",
                 onTap: state.listener.navigateToProspectUpdateForm,
-              )
+              ),
+              MenuItem(
+                title: "Add Detail",
+                icon: "assets/svg/plus.svg",
+                onTap: state.listener.navigateToProspectDetailForm,
+              ),
             ],
           ),
         ),

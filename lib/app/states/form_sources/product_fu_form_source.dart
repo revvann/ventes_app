@@ -46,6 +46,7 @@ class _FormSource extends UpdateFormSource {
     String priceString = priceTEC.text.replaceAll(RegExp(r'[.]'), '').replaceAll(RegExp(r'[,]'), '.');
     String qtyString = qtyTEC.text.replaceAll(RegExp(r'[.]'), '').replaceAll(RegExp(r'[,]'), '.');
     String taxString = taxTEC.text.replaceAll(RegExp(r'[.]'), '').replaceAll(RegExp(r'[,]'), '.');
+    String discString = discTEC.text.replaceAll(RegExp(r'[.]'), '').replaceAll(RegExp(r'[,]'), '.');
 
     double price = double.tryParse(priceString) ?? 0;
     double qty = double.tryParse(qtyString) ?? 0;
@@ -57,7 +58,7 @@ class _FormSource extends UpdateFormSource {
       'prosproductprice': priceString,
       'prosproductqty': qtyString,
       'prosproducttax': taxString,
-      'prosproductdiscount': prosproductdiscount,
+      'prosproductdiscount': discString,
       'prosproductamount': total.toString(),
       'prosproducttaxtypeid': prosproducttax?.typeid.toString(),
     };

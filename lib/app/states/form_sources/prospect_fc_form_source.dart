@@ -104,6 +104,7 @@ class _FormSource extends RegularFormSource {
       String priceString = prosproduct['priceTEC'].text.replaceAll(RegExp(r'[.]'), '').replaceAll(RegExp(r'[,]'), '.');
       String qtyString = prosproduct['qtyTEC'].text.replaceAll(RegExp(r'[.]'), '').replaceAll(RegExp(r'[,]'), '.');
       String taxString = prosproduct['taxTEC'].text.replaceAll(RegExp(r'[.]'), '').replaceAll(RegExp(r'[,]'), '.');
+      String discount = prosproduct['discTEC'].text.replaceAll(RegExp(r'[.]'), '').replaceAll(RegExp(r'[,]'), '.');
 
       double price = double.tryParse(priceString) ?? 0;
       double qty = double.tryParse(qtyString) ?? 0;
@@ -115,7 +116,7 @@ class _FormSource extends RegularFormSource {
         'prosproductprice': priceString,
         'prosproductqty': qtyString,
         'prosproducttax': taxString,
-        'prosproductdiscount': prosproduct['discTEC'].text,
+        'prosproductdiscount': discount,
         'prosproductamount': total.toString(),
         'prosproducttaxtypeid': prosproduct['taxType'].value.typeid.toString(),
       };
