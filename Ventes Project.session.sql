@@ -5,7 +5,7 @@ select table_name,
     column_default,
     is_nullable
 from INFORMATION_SCHEMA.COLUMNS
-where table_name in ('trprospectassign')
+where table_name in ('trprospectassign', 'trprospect')
 order by table_name,
     ordinal_position;
 -- select column_name,
@@ -148,4 +148,9 @@ from msuserdt;
 --         true
 --     );
 select *
-from mstype;
+from trprospect;
+select *
+from msuser;
+UPDATE trprospect
+SET prospectowner = 8
+WHERE prospectid = 1;

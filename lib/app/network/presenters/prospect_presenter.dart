@@ -35,7 +35,7 @@ class ProspectPresenter extends RegularPresenter<FetchDataContract> {
   Future<Response> _getProspects([Map<String, dynamic> additionParams = const {}]) async {
     UserDetail? userDetail = await findActiveUser();
     Map<String, dynamic> params = {
-      'prospectbpid': userDetail?.userdtbpid.toString(),
+      'prospectowner': userDetail?.userdtid?.toString(),
       ...additionParams,
     };
     return await _prospectService.select(params);

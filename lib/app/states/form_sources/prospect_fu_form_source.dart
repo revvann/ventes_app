@@ -88,6 +88,9 @@ class _FormSource extends UpdateFormSource {
     prostype = _dataSource.prospect?.prospecttypeid;
     prosstatus = _dataSource.prospect?.prospectstatusid;
     prosstage = _dataSource.prospect?.prospectstageid;
+
+    ownerDropdownController.selectedKeys = prosowner != null ? [prosowner!] : [];
+    customerDropdownController.selectedKeys = proscustomer != null ? [proscustomer!] : [];
   }
 
   @override
