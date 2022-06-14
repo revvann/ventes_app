@@ -65,7 +65,7 @@ class _AppBarMenu extends StatelessWidget {
         horizontal: RegularSize.m,
       ),
       child: SingleChildScrollView(
-        child: ScheduleDetail(state.properties.selectedAppointment!),
+        child: ScheduleDetail(state.properties.selectedAppointment!, state.dataSource.permissions),
       ),
     ).show();
   }

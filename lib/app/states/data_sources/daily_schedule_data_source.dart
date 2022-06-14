@@ -11,6 +11,8 @@ class _DataSource extends RegularDataSource<DailySchedulePresenter> implements F
   List<Schedule> get appointments => _appointments.value;
   set appointments(List<Schedule> value) => _appointments.value = value;
 
+  List<DBType> permissions = <DBType>[];
+
   void listToTypes(List types) {
     List<DBType> dbType = List<DBType>.from(types.map((e) => DBType.fromJson(e)).toList());
     this.types = dbType.asMap().map((i, e) => MapEntry(e.typename ?? "", e.typeid ?? 0));
@@ -39,6 +41,9 @@ class _DataSource extends RegularDataSource<DailySchedulePresenter> implements F
     }
     if (data['schedules'] != null) {
       listToAppointments(data['schedules']);
+    }
+    if (data['permissions'] != null) {
+      permissions = List<DBType>.from(data['permissions'].map((e) => DBType.fromJson(e)));
     }
     Get.find<TaskHelper>().loaderPop(ScheduleString.dailyScheduleTaskCode);
   }

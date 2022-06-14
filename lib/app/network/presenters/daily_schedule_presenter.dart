@@ -30,15 +30,24 @@ class DailySchedulePresenter extends RegularPresenter<FetchDataContract> {
     return await _typeService.byCode(params);
   }
 
+  Future<Response> getPermissions() async {
+    Map<String, dynamic> params = {
+      "typecd": ScheduleString.permissionTypeCode,
+    };
+    return await _typeService.byCode(params);
+  }
+
   void fetchData(String date) async {
     try {
       Map data = {};
       Response scheduleResponse = await getSchedules(date);
       Response typesResponse = await getTypes();
+      Response permissionsResponse = await getPermissions();
 
-      if (scheduleResponse.statusCode == 200 && typesResponse.statusCode == 200) {
+      if (scheduleResponse.statusCode == 200 && typesResponse.statusCode == 200 && permissionsResponse.statusCode == 200) {
         data["schedules"] = scheduleResponse.body;
         data["types"] = typesResponse.body;
+        data["permissions"] = permissionsResponse.body;
         contract.onLoadSuccess(data);
       } else {
         contract.onLoadFailed(ScheduleString.fetchFailed);

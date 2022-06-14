@@ -10,9 +10,9 @@ import 'package:ventes/helpers/function_helpers.dart';
 
 class ScheduleDetail extends StatelessWidget {
   Schedule schedule;
-  List<DBType> types;
+  List<DBType> permissions;
 
-  ScheduleDetail(this.schedule, [this.types = const []]);
+  ScheduleDetail(this.schedule, [this.permissions = const []]);
 
   String? get startDate => schedule.schestartdate != null ? schedule.schestartdate! : null;
   String? get endDate => schedule.scheenddate != null ? schedule.scheenddate! : null;
@@ -172,7 +172,10 @@ class ScheduleDetail extends StatelessWidget {
           SizedBox(
             height: RegularSize.s,
           ),
-          _GuestList(guests: schedule.scheguest ?? []),
+          _GuestList(
+            guests: schedule.scheguest ?? [],
+            permissions: permissions,
+          ),
           SizedBox(
             height: RegularSize.s,
           ),
@@ -323,6 +326,7 @@ class _GuestList extends StatelessWidget {
         ScheduleGuest item = guests[index];
         return Column(
           mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (index > 0)
               SizedBox(
@@ -375,7 +379,7 @@ class _GuestListItem extends StatelessWidget {
             height: 40,
             alignment: Alignment.center,
             child: Text(
-              getInitials(guest?.scheuser?.userfullname?.substring(0, 2).toUpperCase() ?? ""),
+              getInitials(guest?.scheuser?.userfullname ?? ""),
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
