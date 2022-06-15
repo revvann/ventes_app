@@ -18,6 +18,16 @@ class _Listener extends RegularListener {
     );
   }
 
+  void navigateToProspectAssign() {
+    Get.toNamed(
+      ProspectAssignView.route,
+      id: ProspectNavigator.id,
+      arguments: {
+        'prospect': _properties.prospectId,
+      },
+    );
+  }
+
   void navigateToProspectUpdateForm() {
     Get.toNamed(
       ProspectFormUpdateView.route,

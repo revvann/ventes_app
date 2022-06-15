@@ -4,37 +4,33 @@ import 'dart:math';
 
 import 'package:flutter/material.dart' hide MenuItem;
 import 'package:flutter/services.dart';
-import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:ventes/app/models/prospect_detail_model.dart';
+import 'package:ventes/app/models/prospect_assign_model.dart';
+import 'package:ventes/app/models/user_detail_model.dart';
 import 'package:ventes/app/resources/widgets/pop_up_item.dart';
 import 'package:ventes/app/resources/widgets/popup_button.dart';
-import 'package:ventes/app/resources/widgets/prospect_detail_dialog.dart';
 import 'package:ventes/app/resources/widgets/regular_dialog.dart';
-import 'package:ventes/app/resources/widgets/regular_outlined_button.dart';
 import 'package:ventes/app/resources/widgets/top_navigation.dart';
-import 'package:ventes/app/states/controllers/prospect_detail_state_controller.dart';
+import 'package:ventes/app/states/controllers/prospect_assign_state_controller.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/constants/strings/prospect_string.dart';
 import 'package:ventes/core/view.dart';
 import 'package:ventes/helpers/function_helpers.dart';
 
-part 'package:ventes/app/resources/views/prospect_detail/components/_floating_button.dart';
-part 'package:ventes/app/resources/views/prospect_detail/components/_detail_list.dart';
-part 'package:ventes/app/resources/views/prospect_detail/components/_app_bar_menu.dart';
-part 'package:ventes/app/resources/views/prospect_detail/components/_detail_dialog.dart';
+part 'package:ventes/app/resources/views/prospect_assign/components/_prospect_assign_list.dart';
+part 'package:ventes/app/resources/views/prospect_assign/components/_prospect_assign_detail.dart';
 
-class ProspectDetailView extends View<ProspectDetailStateController> {
-  static const String route = "/prospect/detail";
-  int prospectId;
+class ProspectAssignView extends View<ProspectAssignStateController> {
+  static const String route = "/prospectassign";
+  int prospectid;
 
-  ProspectDetailView(this.prospectId);
+  ProspectAssignView(this.prospectid);
 
   @override
   void onBuild(state) {
-    state.properties.prospectId = prospectId;
+    state.properties.prospectid = prospectid;
   }
 
   @override
@@ -62,12 +58,7 @@ class ProspectDetailView extends View<ProspectDetailStateController> {
           ),
           onTap: state.listener.goBack,
         ),
-        actions: [
-          _AppBarMenu(),
-          SizedBox(width: RegularSize.s),
-        ],
         below: GestureDetector(
-          onTap: showDetailDialog,
           child: Container(
             padding: EdgeInsets.symmetric(
               horizontal: RegularSize.xl,
@@ -115,7 +106,7 @@ class ProspectDetailView extends View<ProspectDetailStateController> {
                       Container(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          "Prospect Details",
+                          "Prospect Assign",
                           style: TextStyle(
                             color: RegularColor.primary,
                             fontWeight: FontWeight.bold,
@@ -126,7 +117,7 @@ class ProspectDetailView extends View<ProspectDetailStateController> {
                       SizedBox(
                         height: RegularSize.m,
                       ),
-                      _DetailList(),
+                      _ProspectAssignList(),
                     ],
                   ),
                 ),
@@ -135,37 +126,6 @@ class ProspectDetailView extends View<ProspectDetailStateController> {
           ),
         ),
       ),
-      floatingActionButton: _FloatingButton(),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
-  }
-
-  void showDetailDialog() {
-    RegularDialog(
-      width: Get.width * 0.9,
-      child: Column(
-        children: [
-          Text(
-            "Oops, There is nothing here",
-            style: TextStyle(
-              color: RegularColor.red,
-              fontSize: 14,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          SizedBox(
-            height: RegularSize.m,
-          ),
-          RegularOutlinedButton(
-            label: "Cancel",
-            primary: RegularColor.secondary,
-            height: RegularSize.xxl,
-            onPressed: () {
-              Get.close(1);
-            },
-          ),
-        ],
-      ),
-    ).show();
   }
 }

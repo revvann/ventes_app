@@ -26,6 +26,7 @@ class _FloatingButton extends StatelessWidget {
         _buildChild(
           'assets/svg/user.svg',
           "Assigned Users",
+          state.listener.navigateToProspectAssign,
         ),
       ],
     );

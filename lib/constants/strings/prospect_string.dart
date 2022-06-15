@@ -14,6 +14,7 @@ class ProspectString {
   static String formCreateContactTaskCode = 'contactcreate';
   static String formUpdateContactTaskCode = 'contactupdate';
   static String formUpdateProductTaskCode = 'productupdate';
+  static String prospectAssignTaskCode = 'prospectassign';
 
   static String statusTypeCode = 'prstatus';
   static String followUpTypeCode = 'prfoll';
@@ -58,4 +59,5 @@ class ProspectString {
   static String productUpdateTag = "productupdate";
   static String detailCreateTag = "detailcreate";
   static String detailUpdateTag = "detailupdate";
+  static String prospectAssignTag = 'prospectassign';
 }

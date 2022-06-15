@@ -66,7 +66,7 @@ class ProductView extends View<ProductStateController> {
             alignment: Alignment.center,
             child: Obx(() {
               return Text(
-                state.dataSource.prospect?.prospectcust?.sbccstmname ?? "",
+                state.dataSource.prospect?.prospectname ?? "",
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   color: Colors.white,

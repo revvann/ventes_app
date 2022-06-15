@@ -147,10 +147,5 @@ from msuserdt;
 --         now(),
 --         true
 --     );
-select *
-from trprospect;
-select *
-from msuser;
-UPDATE trprospect
-SET prospectowner = 8
-WHERE prospectid = 1;
+DELETE FROM trprospectassign
+WHERE prospectassignid = 2;
