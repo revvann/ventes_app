@@ -140,6 +140,7 @@ class SearchableDropdownController<T> extends DropdownController<T, SearchableDr
               );
             }),
           ),
+          SizedBox(height: RegularSize.xs),
         ],
       );
 }

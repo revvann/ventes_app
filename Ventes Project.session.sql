@@ -147,5 +147,20 @@ from msuserdt;
 --         now(),
 --         true
 --     );
-DELETE FROM trprospectassign
-WHERE prospectassignid = 2;
+select *
+from msuser;
+INSERT INTO msuserdt
+values (
+        default,
+        7,
+        2,
+        2,
+        null,
+        null,
+        null,
+        1,
+        now(),
+        1,
+        now(),
+        true
+    );

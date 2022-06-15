@@ -1,13 +1,9 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:ventes/app/resources/widgets/border_input.dart';
 import 'package:ventes/app/states/controllers/keyboard_state_controller.dart';
 import 'package:ventes/constants/regular_size.dart';
-import 'package:ventes/constants/styles/behavior_style.dart';
 
 abstract class DropdownController<K, V> extends GetxController with GetSingleTickerProviderStateMixin {
   double get maxHeight => 200;

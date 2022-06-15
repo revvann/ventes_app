@@ -42,7 +42,6 @@ class _AppBar extends StatelessWidget {
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
-                    mainAxisSize: MainAxisSize.min,
                     children: [
                       Obx(() {
                         return _UserMenuItem(
@@ -53,20 +52,23 @@ class _AppBar extends StatelessWidget {
                       Obx(() {
                         return state.dataSource.accounts.isNotEmpty ? MenuDivider(text: "Account") : Container();
                       }),
-                      Obx(() {
-                        return Container(
-                          child: ListView.builder(
-                            padding: EdgeInsets.zero,
-                            itemCount: state.dataSource.accounts.length,
-                            shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),
-                            itemBuilder: (_, index) {
-                              UserDetail user = state.dataSource.accounts[index];
-                              return _UserMenuItem(user: user, onTap: () => state.listener.switchAccount(user.userdtid!));
-                            },
-                          ),
-                        );
-                      }),
+                      Expanded(
+                        child: Obx(() {
+                          return Container(
+                            child: ScrollConfiguration(
+                              behavior: BehaviorStyle(),
+                              child: ListView.builder(
+                                padding: EdgeInsets.zero,
+                                itemCount: state.dataSource.accounts.length,
+                                itemBuilder: (_, index) {
+                                  UserDetail user = state.dataSource.accounts[index];
+                                  return _UserMenuItem(user: user, onTap: () => state.listener.switchAccount(user.userdtid!));
+                                },
+                              ),
+                            ),
+                          );
+                        }),
+                      ),
                       MenuDivider(),
                       MenuItem(
                         title: "Sign Out",

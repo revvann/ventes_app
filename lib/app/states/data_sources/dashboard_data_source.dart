@@ -71,6 +71,7 @@ class _DataSource extends RegularDataSource<DashboardPresenter> implements Dashb
     if (data['user'] != null) {
       AuthModel? authModel = await Get.find<AuthHelper>().get();
       if (authModel != null) {
+        print(authModel.accountActive);
         accounts = data['user'].map<UserDetail>((e) => UserDetail.fromJson(e)).toList();
         account = accounts.firstWhere((element) => element.userdtid == authModel.accountActive);
         accounts.removeWhere((element) => element.userdtid == authModel.accountActive);

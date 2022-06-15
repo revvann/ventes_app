@@ -1,6 +1,7 @@
 part of 'package:ventes/app/states/controllers/prospect_fc_state_controller.dart';
 
 class _FormSource extends RegularFormSource {
+  _DataSource get _dataSource => Get.find<_DataSource>(tag: ProspectString.prospectCreateTag);
   SearchableDropdownController<UserDetail> ownerDropdownController = Get.put(SearchableDropdownController<UserDetail>());
   SearchableDropdownController<BpCustomer> customerDropdownController = Get.put(SearchableDropdownController<BpCustomer>());
 
@@ -60,6 +61,15 @@ class _FormSource extends RegularFormSource {
   set removeprosproduct(Map<String, dynamic> value) => _prosproducts.update((rxprosproduct) => rxprosproduct?.remove(value));
 
   bool get isValid => formKey.currentState?.validate() ?? false;
+
+  @override
+  init() async {
+    super.init();
+    int accountId = Get.find<AuthHelper>().accountActive.val!;
+    List<UserDetail> userDetails = await _dataSource.fetchUser("");
+    prosowner = userDetails.firstWhereOrNull((element) => element.userdtid == accountId);
+    ownerDropdownController.selectedKeys = prosowner != null ? [prosowner!] : [];
+  }
 
   @override
   close() {

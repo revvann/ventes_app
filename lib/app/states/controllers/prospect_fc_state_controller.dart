@@ -1,8 +1,10 @@
 import 'package:get/get.dart';
+import 'package:ventes/app/models/auth_model.dart';
 import 'package:ventes/app/states/controllers/form_state_controller.dart';
 import 'package:ventes/app/states/data_sources/regular_data_source.dart';
 import 'package:ventes/app/states/form_sources/regular_form_source.dart';
 import 'package:ventes/constants/strings/prospect_string.dart';
+import 'package:ventes/helpers/auth_helper.dart';
 import 'package:ventes/helpers/task_helper.dart';
 import 'package:ventes/app/models/bp_customer_model.dart';
 import 'package:ventes/app/models/type_model.dart';
