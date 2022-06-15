@@ -23,6 +23,12 @@ class _Listener extends RegularListener {
     _formSource.prosdttype = type.value;
   }
 
+  void onMapControllerCreated(GoogleMapController? controller) {
+    if (!_properties.mapsController.isCompleted) {
+      _properties.mapsController.complete(controller);
+    }
+  }
+
   void onSubmitButtonClicked() {
     if (_formSource.isValid) {
       Map<String, dynamic> data = _formSource.toJson();

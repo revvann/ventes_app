@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ventes/app/models/type_model.dart';
 import 'package:ventes/app/resources/widgets/editor_input.dart';
 import 'package:ventes/app/resources/widgets/icon_input.dart';
@@ -20,6 +21,7 @@ import 'package:ventes/core/view.dart';
 part 'package:ventes/app/resources/views/prospect_detail_form/create/components/_category_dropdown.dart';
 part 'package:ventes/app/resources/views/prospect_detail_form/create/components/_type_dropdown.dart';
 part 'package:ventes/app/resources/views/prospect_detail_form/create/components/_date_picker.dart';
+part 'package:ventes/app/resources/views/prospect_detail_form/create/components/_map_preview.dart';
 
 class ProspectDetailFormCreateView extends View<ProspectDetailFormCreateStateController> {
   static const String route = "/prospect/detail/create";
@@ -134,6 +136,10 @@ class ProspectDetailFormCreateView extends View<ProspectDetailFormCreateStateCon
                           validator: state.formSource.validator.prosdtdesc,
                           controller: state.formSource.prosdtdescTEC,
                         ),
+                        SizedBox(
+                          height: RegularSize.m,
+                        ),
+                        _MapPreview(),
                         SizedBox(
                           height: RegularSize.m,
                         ),

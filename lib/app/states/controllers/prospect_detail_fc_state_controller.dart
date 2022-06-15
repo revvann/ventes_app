@@ -1,4 +1,8 @@
+import 'dart:async';
+
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ventes/app/states/controllers/form_state_controller.dart';
 import 'package:ventes/app/states/controllers/prospect_detail_state_controller.dart';
 import 'package:ventes/app/states/data_sources/regular_data_source.dart';
@@ -38,8 +42,14 @@ class ProspectDetailFormCreateStateController extends FormStateController<_Prope
 
 class _Properties {
   _DataSource get _dataSource => Get.find<_DataSource>(tag: ProspectString.detailCreateTag);
+  final Completer<GoogleMapController> mapsController = Completer();
+
+  final Rx<Set<Marker>> _marker = Rx<Set<Marker>>(<Marker>{});
+  Set<Marker> get marker => _marker.value;
+  set marker(Set<Marker> value) => _marker.value = value;
 
   late int prospectId;
+  double defaultZoom = 20;
 
   refresh() {
     _dataSource.fetchData(prospectId);
