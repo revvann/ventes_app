@@ -13,7 +13,7 @@ class _AppBarMenu extends StatelessWidget {
               controller: Get.put(PopupMenuController(), tag: "SchedulePopup"),
               dropdownSettings: DropdownSettings(
                 width: 150,
-                child: Padding(
+                builder: (controller) => Padding(
                   padding: const EdgeInsets.symmetric(
                     vertical: RegularSize.s,
                     horizontal: RegularSize.s,
@@ -31,6 +31,11 @@ class _AppBarMenu extends StatelessWidget {
                         title: "Edit",
                         icon: "assets/svg/edit.svg",
                         onTap: state.listener.onEditButtonClick,
+                      ),
+                      MenuItem(
+                        title: "Delete",
+                        icon: "assets/svg/delete.svg",
+                        onTap: state.listener.deleteSchedule,
                       )
                     ],
                   ),

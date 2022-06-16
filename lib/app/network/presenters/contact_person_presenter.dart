@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:ventes/app/models/auth_model.dart';
 import 'package:ventes/app/models/user_detail_model.dart';
+import 'package:ventes/app/network/contracts/delete_contract.dart';
 import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
 import 'package:ventes/app/network/presenters/regular_presenter.dart';
 import 'package:ventes/app/network/services/bp_customer_service.dart';
@@ -9,7 +10,7 @@ import 'package:ventes/app/network/services/user_service.dart';
 import 'package:ventes/constants/strings/prospect_string.dart';
 import 'package:ventes/helpers/auth_helper.dart';
 
-class ContactPersonPresenter extends RegularPresenter<FetchDataContract> {
+class ContactPersonPresenter extends RegularPresenter<ContactPersonContract> {
   final BpCustomerService _bpCustomerService = Get.find<BpCustomerService>();
   final UserService _userService = Get.find<UserService>();
   final ContactPersonService _contactPersonService = Get.find<ContactPersonService>();
@@ -56,4 +57,19 @@ class ContactPersonPresenter extends RegularPresenter<FetchDataContract> {
       contract.onLoadError(e.toString());
     }
   }
+
+  void deleteData(int contactid) async {
+    try {
+      Response response = await _contactPersonService.destroy(contactid);
+      if (response.statusCode == 200) {
+        contract.onDeleteSuccess(ProspectString.deleteContactSuccess);
+      } else {
+        contract.onDeleteFailed(ProspectString.deleteContactFailed);
+      }
+    } catch (e) {
+      contract.onDeleteError(e.toString());
+    }
+  }
 }
+
+abstract class ContactPersonContract implements FetchDataContract, DeleteContract {}

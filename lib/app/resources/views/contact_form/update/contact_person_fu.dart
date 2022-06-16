@@ -5,8 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:ventes/app/models/type_model.dart';
-import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
 import 'package:ventes/app/resources/widgets/regular_input.dart';
 import 'package:ventes/app/resources/widgets/searchable_dropdown.dart';
 import 'package:ventes/app/resources/widgets/top_navigation.dart';
@@ -15,8 +13,6 @@ import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/constants/strings/prospect_string.dart';
 import 'package:ventes/core/view.dart';
-
-part 'package:ventes/app/resources/views/contact_form/update/components/_type_dropdown.dart';
 part 'package:ventes/app/resources/views/contact_form/update/components/_contact_dropdown.dart';
 
 class ContactPersonFormUpdateView extends View<ContactPersonFormUpdateStateController> {
@@ -109,7 +105,13 @@ class ContactPersonFormUpdateView extends View<ContactPersonFormUpdateStateContr
                           );
                         }),
                         SizedBox(height: RegularSize.m),
-                        _TypeDropdown(),
+                        Obx(() {
+                          return RegularInput(
+                            label: "Contact Type",
+                            value: state.formSource.contacttype?.typename,
+                            enabled: false,
+                          );
+                        }),
                         Obx(() {
                           return Column(
                             mainAxisSize: MainAxisSize.min,

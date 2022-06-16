@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:ventes/app/network/contracts/delete_contract.dart';
 import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
 import 'package:ventes/app/network/presenters/regular_presenter.dart';
 import 'package:ventes/app/network/services/prospect_detail_service.dart';
@@ -6,7 +7,7 @@ import 'package:ventes/app/network/services/prospect_service.dart';
 import 'package:ventes/app/network/services/type_service.dart';
 import 'package:ventes/constants/strings/prospect_string.dart';
 
-class ProspectDetailPresenter extends RegularPresenter<FetchDataContract> {
+class ProspectDetailPresenter extends RegularPresenter<ProspectDetailContract> {
   final ProspectService _prospectService = Get.find<ProspectService>();
   final ProspectDetailService _prospectDetailService = Get.find<ProspectDetailService>();
   final TypeService _typeService = Get.find<TypeService>();
@@ -44,4 +45,19 @@ class ProspectDetailPresenter extends RegularPresenter<FetchDataContract> {
       contract.onLoadError(e.toString());
     }
   }
+
+  void deleteData(int detailid) async {
+    try {
+      Response response = await _prospectDetailService.destroy(detailid);
+      if (response.statusCode == 200) {
+        contract.onDeleteSuccess(ProspectString.deleteProspectDetailSuccess);
+      } else {
+        contract.onDeleteFailed(ProspectString.deleteProspectDetailFailed);
+      }
+    } catch (e) {
+      contract.onDeleteError(e.toString());
+    }
+  }
 }
+
+abstract class ProspectDetailContract implements FetchDataContract, DeleteContract {}

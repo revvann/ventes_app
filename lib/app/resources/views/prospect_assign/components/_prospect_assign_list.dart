@@ -48,7 +48,7 @@ class _ProspectAssignList extends StatelessWidget {
                         dropdownSettings: DropdownSettings(
                           width: 100,
                           offset: Offset(10, 5),
-                          child: Padding(
+                          builder: (controller) => Padding(
                             padding: const EdgeInsets.symmetric(
                               vertical: RegularSize.s,
                               horizontal: RegularSize.s,

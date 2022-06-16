@@ -35,13 +35,14 @@ class _AppBar extends StatelessWidget {
               dropdownSettings: DropdownSettings(
                 width: 200,
                 offset: Offset(10, 0),
-                child: Padding(
+                builder: (controller) => Padding(
                   padding: const EdgeInsets.symmetric(
                     vertical: RegularSize.s,
                     horizontal: RegularSize.s,
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       Obx(() {
                         return _UserMenuItem(
@@ -52,23 +53,25 @@ class _AppBar extends StatelessWidget {
                       Obx(() {
                         return state.dataSource.accounts.isNotEmpty ? MenuDivider(text: "Account") : Container();
                       }),
-                      Expanded(
-                        child: Obx(() {
-                          return Container(
-                            child: ScrollConfiguration(
-                              behavior: BehaviorStyle(),
-                              child: ListView.builder(
-                                padding: EdgeInsets.zero,
-                                itemCount: state.dataSource.accounts.length,
-                                itemBuilder: (_, index) {
-                                  UserDetail user = state.dataSource.accounts[index];
-                                  return _UserMenuItem(user: user, onTap: () => state.listener.switchAccount(user.userdtid!));
-                                },
-                              ),
-                            ),
-                          );
-                        }),
-                      ),
+                      Obx(() {
+                        return state.dataSource.accounts.isNotEmpty
+                            ? Expanded(
+                                child: Container(
+                                  child: ScrollConfiguration(
+                                    behavior: BehaviorStyle(),
+                                    child: ListView.builder(
+                                      padding: EdgeInsets.zero,
+                                      itemCount: state.dataSource.accounts.length,
+                                      itemBuilder: (_, index) {
+                                        UserDetail user = state.dataSource.accounts[index];
+                                        return _UserMenuItem(user: user, onTap: () => state.listener.switchAccount(user.userdtid!));
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              )
+                            : Container();
+                      }),
                       MenuDivider(),
                       MenuItem(
                         title: "Sign Out",

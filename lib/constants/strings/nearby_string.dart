@@ -14,6 +14,9 @@ class NearbyString {
   static const updateError = "Could not update customer";
   static const formInvalid = "Form is invalid, please fill all fields";
 
+  static const deleteSuccess = "Customer deleted successfully";
+  static const deleteFailed = "Failed to delete customer";
+
   static const customerOuttaRange = "Customer is out of range";
 
   static const defaultCustomerName = "Customer Name";

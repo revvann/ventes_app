@@ -1,10 +1,7 @@
 part of 'package:ventes/app/states/controllers/contact_person_fu_state_controller.dart';
 
-class _FormSource extends RegularFormSource {
-  KeyableDropdownController<int, DBType> typeDropdownController = Get.put(
-    KeyableDropdownController<int, DBType>(),
-    tag: ProspectString.contactTypeCode,
-  );
+class _FormSource extends UpdateFormSource {
+  _DataSource get _dataSource => Get.find<_DataSource>(tag: ProspectString.contactUpdateTag);
 
   SearchableDropdownController<Contact> contactDropdownController = Get.put(
     SearchableDropdownController<Contact>(),
@@ -31,20 +28,19 @@ class _FormSource extends RegularFormSource {
   @override
   close() {
     super.close();
-    Get.delete<KeyableDropdownController<int, DBType>>(tag: ProspectString.contactTypeCode);
+    Get.delete<SearchableDropdownController<Contact>>(tag: ProspectString.localContactCode);
     valueTEC.clear();
   }
 
-  void prepareFormValue(ContactPerson contact) {
-    valueTEC.text = contact.contactvalueid ?? "";
-    contacttype = contact.contacttype;
-    typeDropdownController.selectedKeys = contact.contacttype?.typeid != null ? [contact.contacttype!.typeid!] : [];
+  @override
+  void prepareFormValues() {
+    valueTEC.text = _dataSource.contactPerson?.contactvalueid ?? "";
+    contacttype = _dataSource.contactPerson?.contacttype;
   }
 
   @override
   Map<String, dynamic> toJson() {
     return {
-      'contacttypeid': contacttype?.typeid?.toString(),
       'contactvalueid': isPhone ? contact?.phones?.first.value : valueTEC.text,
     };
   }

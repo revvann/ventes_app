@@ -1,6 +1,6 @@
 part of 'package:ventes/app/states/controllers/nearby_state_controller.dart';
 
-class _DataSource extends RegularDataSource<NearbyPresenter> implements FetchDataContract {
+class _DataSource extends RegularDataSource<NearbyPresenter> implements NearbyContract {
   _Properties get _properties => Get.find<_Properties>(tag: NearbyString.nearbyTag);
   _Listener get _listener => Get.find<_Listener>(tag: NearbyString.nearbyTag);
   List<BpCustomer> bpCustomers = <BpCustomer>[];
@@ -17,6 +17,7 @@ class _DataSource extends RegularDataSource<NearbyPresenter> implements FetchDat
     return bpCustomers.any((element) => element.sbccstmid == customer.cstmid);
   }
 
+  void deleteData(int id) => presenter.deleteData(id);
   void fetchData(LatLng position) => presenter.fetchData(position.latitude, position.longitude);
   void _locationDetailLoaded(Map<String, dynamic> data) {
     mapsLoc = MapsLoc.fromJson(data);
@@ -69,4 +70,13 @@ class _DataSource extends RegularDataSource<NearbyPresenter> implements FetchDat
     }
     Get.find<TaskHelper>().loaderPop(NearbyString.taskCode);
   }
+
+  @override
+  void onDeleteError(String message) => _listener.onDeleteError(message);
+
+  @override
+  void onDeleteFailed(String message) => _listener.onDeleteFailed(message);
+
+  @override
+  void onDeleteSuccess(String message) => _listener.onDeleteSuccess(message);
 }

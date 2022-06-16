@@ -33,6 +33,41 @@ class _DetailDialog extends StatelessWidget {
         SizedBox(
           height: RegularSize.s,
         ),
+        if (detail.prospectdtloc != null) ...[
+          Text(
+            "Location Link",
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: RegularColor.dark,
+            ),
+          ),
+          SizedBox(
+            height: RegularSize.xs,
+          ),
+          RichText(
+            text: TextSpan(
+              text: detail.prospectdtloc ?? '-',
+              style: TextStyle(
+                fontSize: 14,
+                color: RegularColor.dark,
+              ),
+              // ignore: prefer_const_literals_to_create_immutables
+              children: [
+                TextSpan(
+                  text: " Copy",
+                  style: TextStyle(
+                    color: RegularColor.primary,
+                  ),
+                  recognizer: CopyGestureRecognizer(detail.prospectdtloc!),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(
+            height: RegularSize.s,
+          ),
+        ],
         Text(
           "Tags",
           style: TextStyle(

@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:ventes/app/models/auth_model.dart';
+import 'package:ventes/app/network/contracts/delete_contract.dart';
 import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
 import 'package:ventes/app/network/presenters/regular_presenter.dart';
 import 'package:ventes/app/network/services/type_service.dart';
@@ -8,7 +9,7 @@ import 'package:ventes/constants/strings/schedule_string.dart';
 import 'package:ventes/helpers/auth_helper.dart';
 import 'package:ventes/app/network/services/schedule_service.dart';
 
-class DailySchedulePresenter extends RegularPresenter<FetchDataContract> {
+class DailySchedulePresenter extends RegularPresenter<DailyScheduleContract> {
   final TypeService _typeService = Get.find<TypeService>();
   final _scheduleService = Get.find<ScheduleService>();
 
@@ -56,4 +57,19 @@ class DailySchedulePresenter extends RegularPresenter<FetchDataContract> {
       contract.onLoadFailed(e.toString());
     }
   }
+
+  void deleteData(int scheduleid) async {
+    try {
+      Response response = await _scheduleService.destroy(scheduleid);
+      if (response.statusCode == 200) {
+        contract.onDeleteSuccess(ScheduleString.deleteSuccess);
+      } else {
+        contract.onDeleteFailed(ScheduleString.deleteFailed);
+      }
+    } catch (e) {
+      contract.onDeleteFailed(e.toString());
+    }
+  }
 }
+
+abstract class DailyScheduleContract implements FetchDataContract, DeleteContract {}

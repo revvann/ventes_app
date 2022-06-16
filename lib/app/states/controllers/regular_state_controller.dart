@@ -93,6 +93,7 @@ abstract class RegularStateController<P, L extends RegularListener, D extends Re
       ready();
     };
     SchedulerBinding.instance?.addPostFrameCallback(onPostFrame!);
+    close();
     init();
     update([tag]);
   }

@@ -1,6 +1,6 @@
 part of 'package:ventes/app/states/controllers/prospect_detail_state_controller.dart';
 
-class _DataSource extends RegularDataSource<ProspectDetailPresenter> implements FetchDataContract {
+class _DataSource extends RegularDataSource<ProspectDetailPresenter> implements ProspectDetailContract {
   _Listener get _listener => Get.find<_Listener>(tag: ProspectString.detailTag);
 
   final _prospect = Rx<Prospect?>(null);
@@ -16,6 +16,7 @@ class _DataSource extends RegularDataSource<ProspectDetailPresenter> implements 
   set stages(List<DBType> value) => _stages.value = value;
 
   void fetchData(int prospectid) => presenter.fetchData(prospectid);
+  void deleteData(int detailid) => presenter.deleteData(detailid);
 
   @override
   ProspectDetailPresenter presenterBuilder() => ProspectDetailPresenter();
@@ -42,4 +43,13 @@ class _DataSource extends RegularDataSource<ProspectDetailPresenter> implements 
 
     Get.find<TaskHelper>().loaderPop(ProspectString.detailTaskCode);
   }
+
+  @override
+  void onDeleteError(String message) => _listener.onDeleteError(message);
+
+  @override
+  void onDeleteFailed(String message) => _listener.onDeleteFailed(message);
+
+  @override
+  void onDeleteSuccess(String message) => _listener.onDeleteSuccess(message);
 }

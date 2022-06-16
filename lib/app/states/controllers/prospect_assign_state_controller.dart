@@ -30,10 +30,10 @@ class ProspectAssignStateController extends RegularStateController<_Properties, 
 
   @override
   void close() {
+    super.close();
     for (var element in properties.popupControllers) {
       Get.delete<PopupMenuController>(tag: element);
     }
-    super.close();
   }
 }
 

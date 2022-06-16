@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:ventes/app/models/schedule_guest_model.dart';
 import 'package:ventes/app/models/schedule_model.dart';
 import 'package:ventes/app/models/type_model.dart';
+import 'package:ventes/constants/gestures/copy_gesture_recognizer.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/helpers/function_helpers.dart';
@@ -110,6 +111,7 @@ class ScheduleDetail extends StatelessWidget {
                   style: TextStyle(
                     color: RegularColor.primary,
                   ),
+                  recognizer: CopyGestureRecognizer(schedule.scheloc!),
                 ),
               ],
             ),
@@ -143,6 +145,7 @@ class ScheduleDetail extends StatelessWidget {
                   style: TextStyle(
                     color: RegularColor.primary,
                   ),
+                  recognizer: CopyGestureRecognizer(schedule.scheonlink!),
                 ),
               ],
             ),

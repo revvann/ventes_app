@@ -78,7 +78,7 @@ class _ProductList extends StatelessWidget {
                         dropdownSettings: DropdownSettings(
                           width: 100,
                           offset: Offset(10, 5),
-                          child: Padding(
+                          builder: (controller) => Padding(
                             padding: const EdgeInsets.symmetric(
                               vertical: RegularSize.s,
                               horizontal: RegularSize.s,
@@ -91,6 +91,11 @@ class _ProductList extends StatelessWidget {
                                   title: "Edit",
                                   icon: "assets/svg/edit.svg",
                                   onTap: () => state.listener.navigateToFormEdit(product.prosproductid!),
+                                ),
+                                MenuItem(
+                                  title: "Delete",
+                                  icon: "assets/svg/delete.svg",
+                                  onTap: () => state.listener.deleteProduct(product.prosproductid!),
                                 ),
                                 MenuItem(
                                   title: "Detail",

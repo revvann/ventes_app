@@ -64,12 +64,34 @@ class _Listener extends RegularListener {
     );
   }
 
+  void deleteDetail(int id) {
+    _dataSource.deleteData(id);
+    Get.find<TaskHelper>().loaderPush(ProspectString.detailTaskCode);
+  }
+
   void onLoadFailed(String message) {
     Get.find<TaskHelper>().failedPush(ProspectString.detailTaskCode, message);
     Get.find<TaskHelper>().loaderPop(ProspectString.detailTaskCode);
   }
 
   void onLoadError(String message) {
+    Get.find<TaskHelper>().errorPush(ProspectString.detailTaskCode, message);
+    Get.find<TaskHelper>().loaderPop(ProspectString.detailTaskCode);
+  }
+
+  void onDeleteFailed(String message) {
+    Get.find<TaskHelper>().failedPush(ProspectString.detailTaskCode, message);
+    Get.find<TaskHelper>().loaderPop(ProspectString.detailTaskCode);
+  }
+
+  void onDeleteSuccess(String message) {
+    Get.find<TaskHelper>().successPush(ProspectString.detailTaskCode, message, () {
+      Get.find<ProspectDetailStateController>().refreshStates();
+    });
+    Get.find<TaskHelper>().loaderPop(ProspectString.detailTaskCode);
+  }
+
+  void onDeleteError(String message) {
     Get.find<TaskHelper>().errorPush(ProspectString.detailTaskCode, message);
     Get.find<TaskHelper>().loaderPop(ProspectString.detailTaskCode);
   }

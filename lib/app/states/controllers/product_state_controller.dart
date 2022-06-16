@@ -41,11 +41,11 @@ class ProductStateController extends RegularStateController<_Properties, _Listen
 
   @override
   void close() {
+    super.close();
     properties.debounce?.cancel();
     for (var element in properties.popupControllers) {
       Get.delete<PopupMenuController>(tag: element);
     }
-    super.close();
   }
 }
 

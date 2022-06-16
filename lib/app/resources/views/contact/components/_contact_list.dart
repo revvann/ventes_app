@@ -73,7 +73,7 @@ class _ContactList extends StatelessWidget {
                     dropdownSettings: DropdownSettings(
                       width: 100,
                       offset: Offset(10, 5),
-                      child: Padding(
+                      builder: (controller) => Padding(
                         padding: const EdgeInsets.symmetric(
                           vertical: RegularSize.s,
                           horizontal: RegularSize.s,
@@ -86,7 +86,12 @@ class _ContactList extends StatelessWidget {
                               title: "Edit",
                               icon: "assets/svg/edit.svg",
                               onTap: () => state.listener.navigateToUpdateForm(_contact.contactpersonid!),
-                            )
+                            ),
+                            MenuItem(
+                              title: "Delete",
+                              icon: "assets/svg/delete.svg",
+                              onTap: () => state.listener.deleteData(_contact.contactpersonid!),
+                            ),
                           ],
                         ),
                       ),

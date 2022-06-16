@@ -42,8 +42,8 @@ class ScheduleStateController extends RegularStateController<_Properties, _Liste
 
   @override
   void close() {
-    properties.calendarController.dispose();
     super.close();
+    properties.calendarController.dispose();
   }
 }
 

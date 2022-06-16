@@ -1,6 +1,6 @@
 part of 'package:ventes/app/states/controllers/daily_schedule_state_controller.dart';
 
-class _DataSource extends RegularDataSource<DailySchedulePresenter> implements FetchDataContract {
+class _DataSource extends RegularDataSource<DailySchedulePresenter> implements DailyScheduleContract {
   _Listener get _listener => Get.find<_Listener>(tag: ScheduleString.dailyScheduleTag);
 
   final _types = <String, int>{}.obs;
@@ -28,6 +28,8 @@ class _DataSource extends RegularDataSource<DailySchedulePresenter> implements F
     presenter.fetchData(date);
   }
 
+  void deleteData(int scheduleid) => presenter.deleteData(scheduleid);
+
   @override
   DailySchedulePresenter presenterBuilder() => DailySchedulePresenter();
 
@@ -50,4 +52,13 @@ class _DataSource extends RegularDataSource<DailySchedulePresenter> implements F
 
   @override
   onLoadError(String message) => _listener.onLoadDataError(message);
+
+  @override
+  void onDeleteError(String message) => _listener.onDeleteError(message);
+
+  @override
+  void onDeleteFailed(String message) => _listener.onDeleteFailed(message);
+
+  @override
+  void onDeleteSuccess(String message) => _listener.onDeleteSuccess(message);
 }

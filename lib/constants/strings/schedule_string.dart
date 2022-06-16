@@ -40,6 +40,9 @@ class ScheduleString {
   static const fetchFailed = "Schedules cannot be loaded";
   static const fetchError = "An error occurred while loading schedules, please try again";
 
+  static const deleteSuccess = "Schedule deleted successfully";
+  static const deleteFailed = "Failed to delete schedule";
+
   static const taskCode = 'schedule';
   static const dailyScheduleTaskCode = 'daily';
   static const createScheduleTaskCode = 'create';

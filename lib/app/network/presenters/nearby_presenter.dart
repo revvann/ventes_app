@@ -3,6 +3,7 @@ import 'package:ventes/app/models/auth_model.dart';
 import 'package:ventes/app/models/maps_loc.dart';
 import 'package:ventes/app/models/subdistrict_model.dart';
 import 'package:ventes/app/models/user_detail_model.dart';
+import 'package:ventes/app/network/contracts/delete_contract.dart';
 import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
 import 'package:ventes/app/network/presenters/regular_presenter.dart';
 import 'package:ventes/app/network/services/bp_customer_service.dart';
@@ -13,7 +14,7 @@ import 'package:ventes/app/network/services/user_service.dart';
 import 'package:ventes/constants/strings/nearby_string.dart';
 import 'package:ventes/helpers/auth_helper.dart';
 
-class NearbyPresenter extends RegularPresenter<FetchDataContract> {
+class NearbyPresenter extends RegularPresenter<NearbyContract> {
   final GmapsService _gmapsService = Get.find();
   final BpCustomerService _bpCustomerService = Get.find();
   final PlaceService _placeService = Get.find();
@@ -81,4 +82,19 @@ class NearbyPresenter extends RegularPresenter<FetchDataContract> {
       contract.onLoadError(err.toString());
     }
   }
+
+  void deleteData(int id) async {
+    try {
+      Response response = await _bpCustomerService.destroy(id);
+      if (response.statusCode == 200) {
+        contract.onDeleteSuccess(NearbyString.deleteSuccess);
+      } else {
+        contract.onDeleteFailed(NearbyString.deleteFailed);
+      }
+    } catch (e) {
+      contract.onDeleteError(e.toString());
+    }
+  }
 }
+
+abstract class NearbyContract implements FetchDataContract, DeleteContract {}

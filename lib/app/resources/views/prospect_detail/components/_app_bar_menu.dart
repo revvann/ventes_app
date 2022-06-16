@@ -11,7 +11,7 @@ class _AppBarMenu extends StatelessWidget {
       controller: Get.put(PopupMenuController(), tag: "prospectPopup"),
       dropdownSettings: DropdownSettings(
         width: 150,
-        child: Padding(
+        builder: (controller) => Padding(
           padding: const EdgeInsets.symmetric(
             vertical: RegularSize.s,
             horizontal: RegularSize.s,

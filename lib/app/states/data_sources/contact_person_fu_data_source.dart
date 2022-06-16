@@ -12,10 +12,6 @@ class _DataSource extends RegularDataSource<ContactPersonFormUpdatePresenter> im
   String? get customerName => _customerName.value;
   set customerName(String? value) => _customerName.value = value;
 
-  final Rx<List<KeyableDropdownItem<int, DBType>>> _types = Rx<List<KeyableDropdownItem<int, DBType>>>([]);
-  List<KeyableDropdownItem<int, DBType>> get types => _types.value;
-  set types(List<KeyableDropdownItem<int, DBType>> value) => _types.value = value;
-
   void fetchData(int id) => presenter.fetchData(id);
   void updateData(Map<String, dynamic> data) => presenter.updateData(contactPerson!.contactpersonid!, data);
 
@@ -30,16 +26,10 @@ class _DataSource extends RegularDataSource<ContactPersonFormUpdatePresenter> im
 
   @override
   onLoadSuccess(Map data) {
-    if (data['types'] != null) {
-      List<DBType> types = data['types'].map<DBType>((type) => DBType.fromJson(type)).toList();
-      _formSource.contacttype = types.isNotEmpty ? types.first : null;
-      this.types = types.map<KeyableDropdownItem<int, DBType>>((type) => KeyableDropdownItem<int, DBType>(key: type.typeid!, value: type)).toList();
-    }
-
     if (data['contactperson'] != null) {
       contactPerson = ContactPerson.fromJson(data['contactperson']);
       customerName = contactPerson?.contactcustomer?.cstmname;
-      _formSource.prepareFormValue(contactPerson!);
+      _formSource.prepareFormValues();
     }
     Get.find<TaskHelper>().loaderPop(ProspectString.formUpdateContactTaskCode);
   }

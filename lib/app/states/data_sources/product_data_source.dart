@@ -1,6 +1,6 @@
 part of 'package:ventes/app/states/controllers/product_state_controller.dart';
 
-class _DataSource extends RegularDataSource<ProductPresenter> implements FetchDataContract {
+class _DataSource extends RegularDataSource<ProductPresenter> implements ProductContract {
   _Listener get _listener => Get.find<_Listener>(tag: ProspectString.productTag);
   _Properties get _properties => Get.find<_Properties>(tag: ProspectString.productTag);
 
@@ -14,6 +14,7 @@ class _DataSource extends RegularDataSource<ProductPresenter> implements FetchDa
 
   void fetchData(int prospectid) => presenter.fetchData(prospectid);
   void fetchProducts(int productid, String search) => presenter.fetchProducts(productid, search);
+  void deleteProduct(int productid) => presenter.deleteProduct(productid);
 
   @override
   ProductPresenter presenterBuilder() => ProductPresenter();
@@ -37,4 +38,13 @@ class _DataSource extends RegularDataSource<ProductPresenter> implements FetchDa
     Get.find<TaskHelper>().loaderPop(ProspectString.productTaskCode);
     _properties.isLoading.value = false;
   }
+
+  @override
+  void onDeleteError(String message) => _listener.onDeleteError(message);
+
+  @override
+  void onDeleteFailed(String message) => _listener.onDeleteFailed(message);
+
+  @override
+  void onDeleteSuccess(String message) => _listener.onDeleteSuccess(message);
 }

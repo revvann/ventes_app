@@ -8,11 +8,11 @@ import 'package:ventes/app/models/user_detail_model.dart';
 import 'package:ventes/app/resources/widgets/menu_divider.dart';
 import 'package:ventes/app/resources/widgets/pop_up_item.dart';
 import 'package:ventes/app/resources/widgets/popup_button.dart';
+import 'package:ventes/app/resources/widgets/failed_snackbar.dart';
 import 'package:ventes/constants/styles/behavior_style.dart';
 import 'package:ventes/core/view.dart';
 import 'package:ventes/app/resources/widgets/bottom_navigation.dart';
 import 'package:ventes/app/resources/widgets/customer_card.dart';
-import 'package:ventes/app/resources/widgets/loader.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/constants/views.dart';
@@ -84,7 +84,7 @@ class DashboardView extends View<DashboardStateController> {
                             icon: "assets/svg/attendance.svg",
                             text: "Attendance",
                             onTap: () {
-                              Loader().show();
+                              FailedSnackbar("I'm dopinder, the ruler of the universe").show();
                             },
                           ),
                         ],

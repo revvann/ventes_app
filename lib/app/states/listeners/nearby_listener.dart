@@ -84,6 +84,13 @@ class _Listener extends RegularListener {
     });
   }
 
+  void onDeleteDataClick() {
+    Customer customer = _properties.selectedCustomer.first;
+    BpCustomer bpcustomer = _dataSource.bpCustomers.firstWhere((element) => element.sbccstmid == customer.cstmid);
+    _dataSource.deleteData(bpcustomer.sbcid!);
+    Get.find<TaskHelper>().loaderPush(NearbyString.taskCode);
+  }
+
   void onLoadDataError(String message) {
     Get.find<TaskHelper>().errorPush(NearbyString.taskCode, message);
     Get.find<TaskHelper>().loaderPop(NearbyString.taskCode);
@@ -91,6 +98,23 @@ class _Listener extends RegularListener {
 
   void onLoadDataFailed(String message) {
     Get.find<TaskHelper>().failedPush(NearbyString.taskCode, message);
+    Get.find<TaskHelper>().loaderPop(NearbyString.taskCode);
+  }
+
+  void onDeleteFailed(String message) {
+    Get.find<TaskHelper>().failedPush(NearbyString.taskCode, message);
+    Get.find<TaskHelper>().loaderPop(NearbyString.taskCode);
+  }
+
+  void onDeleteSuccess(String message) {
+    Get.find<TaskHelper>().successPush(NearbyString.taskCode, message, () {
+      Get.find<NearbyStateController>().refreshStates();
+    });
+    Get.find<TaskHelper>().loaderPop(NearbyString.taskCode);
+  }
+
+  void onDeleteError(String message) {
+    Get.find<TaskHelper>().errorPush(NearbyString.taskCode, message);
     Get.find<TaskHelper>().loaderPop(NearbyString.taskCode);
   }
 

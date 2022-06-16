@@ -43,6 +43,13 @@ class ProspectString {
   static String updateProductFailed = "Failed to update product";
   static String updateProductSuccess = "Product updated successfully";
 
+  static String deleteContactSuccess = "Contact deleted successfully";
+  static String deleteContactFailed = "Failed to delete contact";
+  static String deleteProductSuccess = "Product deleted successfully";
+  static String deleteProductFailed = "Failed to delete product";
+  static String deleteProspectDetailSuccess = "ProspectDetail deleted successfully";
+  static String deleteProspectDetailFailed = "Failed to delete prospect detail";
+
   static String categoryDropdownTag = "category";
   static String detailTypeDropdownTag = "detailtype";
   static String statusDropdownTag = "status";

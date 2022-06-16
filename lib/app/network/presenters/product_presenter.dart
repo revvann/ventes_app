@@ -1,11 +1,12 @@
 import 'package:get/get.dart';
+import 'package:ventes/app/network/contracts/delete_contract.dart';
 import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
 import 'package:ventes/app/network/presenters/regular_presenter.dart';
 import 'package:ventes/app/network/services/prospect_product_service.dart';
 import 'package:ventes/app/network/services/prospect_service.dart';
 import 'package:ventes/constants/strings/prospect_string.dart';
 
-class ProductPresenter extends RegularPresenter<FetchDataContract> {
+class ProductPresenter extends RegularPresenter<ProductContract> {
   final _prospectService = Get.find<ProspectService>();
   final _prospectProductService = Get.find<ProspectProductService>();
 
@@ -56,4 +57,19 @@ class ProductPresenter extends RegularPresenter<FetchDataContract> {
       contract.onLoadError(e.toString());
     }
   }
+
+  void deleteProduct(int productid) async {
+    try {
+      Response response = await _prospectProductService.destroy(productid);
+      if (response.statusCode == 200) {
+        contract.onDeleteSuccess(ProspectString.deleteProductSuccess);
+      } else {
+        contract.onDeleteFailed(ProspectString.deleteProductFailed);
+      }
+    } catch (e) {
+      contract.onDeleteError(e.toString());
+    }
+  }
 }
+
+abstract class ProductContract implements FetchDataContract, DeleteContract {}

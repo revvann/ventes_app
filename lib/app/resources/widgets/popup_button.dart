@@ -30,12 +30,16 @@ class PopupMenuController extends GetxController with GetSingleTickerProviderSta
   }
 
   @override
-  void dispose() {
+  void onClose() async {
+    if (isOpen) {
+      await toggleDropdown(close: true);
+    }
+
     animationController.dispose();
-    super.dispose();
+    super.onClose();
   }
 
-  void toggleDropdown({bool close = false}) async {
+  Future toggleDropdown({bool close = false}) async {
     OverlayState? overlay = Overlay.of(context);
     if (isOpen || close) {
       await animationController.reverse();
@@ -54,6 +58,8 @@ class PopupMenuController extends GetxController with GetSingleTickerProviderSta
       builder: (context) {
         return GestureDetector(
           onTap: () => toggleDropdown(close: true),
+          onVerticalDragStart: (details) => toggleDropdown(close: true),
+          onHorizontalDragStart: (details) => toggleDropdown(close: true),
           behavior: HitTestBehavior.translucent,
           child: SizedBox(
             height: Get.height,
@@ -92,7 +98,7 @@ class PopupMenuController extends GetxController with GetSingleTickerProviderSta
                               maxHeight: dropdownSettings.maxHeight ?? double.infinity,
                               maxWidth: dropdownSettings.maxWidth ?? double.infinity,
                             ),
-                            child: dropdownSettings.child,
+                            child: dropdownSettings.builder?.call(this) ?? Container(),
                           ),
                         ),
                       ),
@@ -149,7 +155,7 @@ class DropdownSettings {
   final double? maxHeight;
   final double? maxWidth;
   final Offset? offset;
-  final Widget? child;
+  final Widget Function(PopupMenuController)? builder;
 
   const DropdownSettings({
     this.width = 200,
@@ -157,6 +163,6 @@ class DropdownSettings {
     this.maxHeight = 200,
     this.maxWidth,
     this.offset = const Offset(0, 5),
-    this.child,
+    this.builder,
   });
 }
