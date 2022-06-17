@@ -192,7 +192,7 @@ class _Listener extends RegularListener {
   void onFormSubmit() {
     if (_formSource.isValid()) {
       Map<String, dynamic> data = _formSource.toJson();
-      Get.find<TaskHelper>().loaderPush(ScheduleString.createScheduleTaskCode);
+      Get.find<TaskHelper>().loaderPush(_properties.task);
       _dataSource.createSchedule(data);
     }
   }
@@ -203,36 +203,35 @@ class _Listener extends RegularListener {
   }
 
   void onCreateDataFailed(String message) {
-    Get.find<TaskHelper>().failedPush(ScheduleString.createScheduleTaskCode, ScheduleString.createFailed);
-    Get.find<TaskHelper>().loaderPop(ScheduleString.createScheduleTaskCode);
+    Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: ScheduleString.createFailed));
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 
   void onCreateDataSuccess(String message) {
-    Get.find<TaskHelper>().successPush(
-      ScheduleString.createScheduleTaskCode,
-      ScheduleString.createSuccess,
-      () async {
-        await _properties.scheduleNotification();
-        Get.find<DailyScheduleStateController>().properties.refresh();
-        Get.back(id: ScheduleNavigator.id);
-      },
-    );
-    Get.find<TaskHelper>().loaderPop(ScheduleString.createScheduleTaskCode);
+    Get.find<TaskHelper>().successPush(_properties.task.copyWith(
+        snackbar: true,
+        message: ScheduleString.createSuccess,
+        onFinished: () async {
+          await _properties.scheduleNotification();
+          Get.find<DailyScheduleStateController>().properties.refresh();
+          Get.back(id: ScheduleNavigator.id);
+        }));
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 
   void onCreateDataError(String message) {
-    Get.find<TaskHelper>().errorPush(ScheduleString.createScheduleTaskCode, ScheduleString.createError);
-    Get.find<TaskHelper>().loaderPop(ScheduleString.createScheduleTaskCode);
+    Get.find<TaskHelper>().errorPush(_properties.task.copyWith(message: ScheduleString.createError));
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 
   onLoadDataError(String message) {
-    Get.find<TaskHelper>().errorPush(ScheduleString.createScheduleTaskCode, ScheduleString.createError);
-    Get.find<TaskHelper>().loaderPop(ScheduleString.createScheduleTaskCode);
+    Get.find<TaskHelper>().errorPush(_properties.task.copyWith(message: ScheduleString.createError));
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 
   onLoadDataFailed(String message) {
-    Get.find<TaskHelper>().failedPush(ScheduleString.createScheduleTaskCode, ScheduleString.createFailed);
-    Get.find<TaskHelper>().loaderPop(ScheduleString.createScheduleTaskCode);
+    Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: ScheduleString.createFailed));
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 
   @override

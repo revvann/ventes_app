@@ -2,6 +2,7 @@ part of 'package:ventes/app/states/controllers/contact_person_state_controller.d
 
 class _DataSource extends RegularDataSource<ContactPersonPresenter> implements ContactPersonContract {
   _Listener get _listener => Get.find<_Listener>(tag: ProspectString.contactTag);
+  _Properties get _properties => Get.find<_Properties>(tag: ProspectString.contactTag);
 
   final Rx<BpCustomer?> _bpcustomer = Rx<BpCustomer?>(null);
   final Rx<List<ContactPerson>> _contactPersons = Rx<List<ContactPerson>>([]);
@@ -34,7 +35,7 @@ class _DataSource extends RegularDataSource<ContactPersonPresenter> implements C
       contactPersons = data['contacts'].map<ContactPerson>((e) => ContactPerson.fromJson(e)).toList();
     }
 
-    Get.find<TaskHelper>().loaderPop(ProspectString.contactPersonTaskCode);
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 
   @override

@@ -41,8 +41,10 @@ class _Properties {
 
   Prospect? selectedProspect;
 
+  Task task = Task(ProspectString.taskCode);
+
   void refresh() {
     _dataSource.fetchData();
-    Get.find<TaskHelper>().loaderPush(ProspectString.taskCode);
+    Get.find<TaskHelper>().loaderPush(task);
   }
 }

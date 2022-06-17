@@ -70,6 +70,8 @@ class _Properties {
 
   final Rx<Set<Marker>> _markers = Rx<Set<Marker>>({});
 
+  Task task = Task(ScheduleString.updateScheduleTaskCode);
+
   Set<Marker> get markers => _markers.value;
   set markers(Set<Marker> value) => _markers.value = value;
   set markerLatLng(LatLng latlng) {
@@ -92,7 +94,7 @@ class _Properties {
 
   void refresh() async {
     _dataSource.fetchData();
-    Get.find<TaskHelper>().loaderPush(ScheduleString.updateScheduleTaskCode);
+    Get.find<TaskHelper>().loaderPush(task);
   }
 
   void showMapBottomSheet() {

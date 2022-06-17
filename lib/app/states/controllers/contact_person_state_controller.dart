@@ -43,9 +43,11 @@ class _Properties {
 
   late int customerid;
 
+  Task task = Task(ProspectString.contactPersonTaskCode);
+
   void refresh() {
     _dataSource.fetchData(customerid);
-    Get.find<TaskHelper>().loaderPush(ProspectString.contactPersonTaskCode);
+    Get.find<TaskHelper>().loaderPush(task);
   }
 
   PopupMenuController createPopupController([int id = 0]) {

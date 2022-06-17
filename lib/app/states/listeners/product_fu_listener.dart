@@ -15,9 +15,9 @@ class _Listener extends RegularListener {
     if (_formSource.isValid) {
       Map<String, dynamic> data = _formSource.toJson();
       _dataSource.updateData(_properties.productid, data);
-      Get.find<TaskHelper>().loaderPush(ProspectString.formUpdateProductTaskCode);
+      Get.find<TaskHelper>().loaderPush(_properties.task);
     } else {
-      Get.find<TaskHelper>().failedPush(ProspectString.formUpdateProductTaskCode, "Please fill all required fields");
+      Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: "Please fill all required fields"));
     }
   }
 
@@ -26,31 +26,34 @@ class _Listener extends RegularListener {
   }
 
   void onLoadFailed(String message) {
-    Get.find<TaskHelper>().failedPush(ProspectString.formUpdateProductTaskCode, message);
-    Get.find<TaskHelper>().loaderPop(ProspectString.formUpdateProductTaskCode);
+    Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: message, snackbar: true));
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 
   void onLoadError(String message) {
-    Get.find<TaskHelper>().errorPush(ProspectString.formUpdateProductTaskCode, message);
-    Get.find<TaskHelper>().loaderPop(ProspectString.formUpdateProductTaskCode);
+    Get.find<TaskHelper>().errorPush(_properties.task.copyWith(message: message));
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 
   void onUpdateDataSuccess(String message) {
-    Get.find<TaskHelper>().successPush(ProspectString.formUpdateProductTaskCode, message, () {
-      Get.find<ProductStateController>().properties.refresh();
-      Get.back(id: ProspectNavigator.id);
-    });
-    Get.find<TaskHelper>().loaderPop(ProspectString.formUpdateProductTaskCode);
+    Get.find<TaskHelper>().successPush(_properties.task.copyWith(
+        snackbar: true,
+        message: message,
+        onFinished: () {
+          Get.find<ProductStateController>().properties.refresh();
+          Get.back(id: ProspectNavigator.id);
+        }));
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 
   void onUpdateDataFailed(String message) {
-    Get.find<TaskHelper>().failedPush(ProspectString.formUpdateProductTaskCode, message);
-    Get.find<TaskHelper>().loaderPop(ProspectString.formUpdateProductTaskCode);
+    Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: message, snackbar: true));
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 
   void onUpdateDataError(String message) {
-    Get.find<TaskHelper>().errorPush(ProspectString.formUpdateProductTaskCode, message);
-    Get.find<TaskHelper>().loaderPop(ProspectString.formUpdateProductTaskCode);
+    Get.find<TaskHelper>().errorPush(_properties.task.copyWith(message: message));
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 
   @override

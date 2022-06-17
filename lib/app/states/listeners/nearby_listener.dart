@@ -35,9 +35,9 @@ class _Listener extends RegularListener {
   }
 
   void onAddDataClick() async {
-    Get.find<TaskHelper>().loaderPush(NearbyString.taskCode);
+    Get.find<TaskHelper>().loaderPush(_properties.task);
     getCurrentPosition().then((position) {
-      Get.find<TaskHelper>().loaderPop(NearbyString.taskCode);
+      Get.find<TaskHelper>().loaderPop(_properties.task.name);
       double radius = calculateDistance(_properties.markers.first.position, LatLng(position.latitude, position.longitude));
 
       int? cstmid;
@@ -56,15 +56,15 @@ class _Listener extends RegularListener {
           },
         );
       } else {
-        Get.find<TaskHelper>().failedPush(NearbyString.taskCode, NearbyString.customerOuttaRange);
+        Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: NearbyString.customerOuttaRange));
       }
     });
   }
 
   void onEditDataClick() async {
-    Get.find<TaskHelper>().loaderPush(NearbyString.taskCode);
+    Get.find<TaskHelper>().loaderPush(_properties.task);
     getCurrentPosition().then((position) async {
-      Get.find<TaskHelper>().loaderPop(NearbyString.taskCode);
+      Get.find<TaskHelper>().loaderPop(_properties.task.name);
 
       Customer customer = _properties.selectedCustomer.first;
       BpCustomer bpcustomer = _dataSource.bpCustomers.firstWhere((element) => element.sbccstmid == customer.cstmid);
@@ -79,7 +79,7 @@ class _Listener extends RegularListener {
           },
         );
       } else {
-        await Get.find<TaskHelper>().failedPush(NearbyString.taskCode, NearbyString.customerOuttaRange);
+        await Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: NearbyString.customerOuttaRange));
       }
     });
   }
@@ -88,34 +88,37 @@ class _Listener extends RegularListener {
     Customer customer = _properties.selectedCustomer.first;
     BpCustomer bpcustomer = _dataSource.bpCustomers.firstWhere((element) => element.sbccstmid == customer.cstmid);
     _dataSource.deleteData(bpcustomer.sbcid!);
-    Get.find<TaskHelper>().loaderPush(NearbyString.taskCode);
+    Get.find<TaskHelper>().loaderPush(_properties.task);
   }
 
   void onLoadDataError(String message) {
-    Get.find<TaskHelper>().errorPush(NearbyString.taskCode, message);
-    Get.find<TaskHelper>().loaderPop(NearbyString.taskCode);
+    Get.find<TaskHelper>().errorPush(_properties.task.copyWith(message: message));
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 
   void onLoadDataFailed(String message) {
-    Get.find<TaskHelper>().failedPush(NearbyString.taskCode, message);
-    Get.find<TaskHelper>().loaderPop(NearbyString.taskCode);
+    Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: message, snackbar: true));
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 
   void onDeleteFailed(String message) {
-    Get.find<TaskHelper>().failedPush(NearbyString.taskCode, message);
-    Get.find<TaskHelper>().loaderPop(NearbyString.taskCode);
+    Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: message, snackbar: true));
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 
   void onDeleteSuccess(String message) {
-    Get.find<TaskHelper>().successPush(NearbyString.taskCode, message, () {
-      Get.find<NearbyStateController>().refreshStates();
-    });
-    Get.find<TaskHelper>().loaderPop(NearbyString.taskCode);
+    Get.find<TaskHelper>().successPush(_properties.task.copyWith(
+        snackbar: true,
+        message: message,
+        onFinished: () {
+          Get.find<NearbyStateController>().refreshStates();
+        }));
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 
   void onDeleteError(String message) {
-    Get.find<TaskHelper>().errorPush(NearbyString.taskCode, message);
-    Get.find<TaskHelper>().loaderPop(NearbyString.taskCode);
+    Get.find<TaskHelper>().errorPush(_properties.task.copyWith(message: message));
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 
   @override

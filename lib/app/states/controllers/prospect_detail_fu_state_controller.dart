@@ -41,8 +41,10 @@ class _Properties {
 
   late int prospectDetailId;
 
+  Task task = Task(ProspectString.formUpdateDetailTaskCode);
+
   refresh() {
     _dataSource.fetchData(prospectDetailId);
-    Get.find<TaskHelper>().loaderPush(ProspectString.formUpdateDetailTaskCode);
+    Get.find<TaskHelper>().loaderPush(task);
   }
 }

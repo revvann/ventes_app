@@ -42,8 +42,10 @@ class _Properties {
   _DataSource get _dataSource => Get.find<_DataSource>(tag: ProspectString.productUpdateTag);
   late int productid;
 
+  Task task = Task(ProspectString.formUpdateProductTaskCode);
+
   void refresh() {
     _dataSource.fetchData(productid);
-    Get.find<TaskHelper>().loaderPush(ProspectString.formUpdateProductTaskCode);
+    Get.find<TaskHelper>().loaderPush(task);
   }
 }

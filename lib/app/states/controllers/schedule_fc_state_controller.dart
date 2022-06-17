@@ -67,6 +67,8 @@ class _Properties {
 
   final Rx<Set<Marker>> _markers = Rx<Set<Marker>>({});
 
+  Task task = Task(ScheduleString.createScheduleTaskCode);
+
   Set<Marker> get markers => _markers.value;
   set markers(Set<Marker> value) => _markers.value = value;
   set markerLatLng(LatLng latlng) {
@@ -79,7 +81,7 @@ class _Properties {
   }
 
   void refresh() async {
-    Get.find<TaskHelper>().loaderPush(ScheduleString.createScheduleTaskCode);
+    Get.find<TaskHelper>().loaderPush(task);
     Position pos = await getCurrentPosition();
     mapsController.future.then((controller) {
       controller.animateCamera(

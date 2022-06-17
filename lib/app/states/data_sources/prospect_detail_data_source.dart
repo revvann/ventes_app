@@ -2,6 +2,7 @@ part of 'package:ventes/app/states/controllers/prospect_detail_state_controller.
 
 class _DataSource extends RegularDataSource<ProspectDetailPresenter> implements ProspectDetailContract {
   _Listener get _listener => Get.find<_Listener>(tag: ProspectString.detailTag);
+  _Properties get _properties => Get.find<_Properties>(tag: ProspectString.detailTag);
 
   final _prospect = Rx<Prospect?>(null);
   Prospect? get prospect => _prospect.value;
@@ -41,7 +42,7 @@ class _DataSource extends RegularDataSource<ProspectDetailPresenter> implements 
       stages = data['stages'].map<DBType>((json) => DBType.fromJson(json)).toList();
     }
 
-    Get.find<TaskHelper>().loaderPop(ProspectString.detailTaskCode);
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 
   @override

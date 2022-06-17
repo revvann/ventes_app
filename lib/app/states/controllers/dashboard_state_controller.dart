@@ -45,11 +45,13 @@ class _Properties {
   _DataSource get _dataSource => Get.find<_DataSource>(tag: DashboardString.dashboardTag);
   Position? position;
 
+  Task task = Task(DashboardString.taskCode);
+
   String? get shortName => getInitials(_dataSource.account?.user?.userfullname ?? "");
 
   void logout() {
     _dataSource.logout();
-    Get.find<TaskHelper>().loaderPush(DashboardString.taskCode);
+    Get.find<TaskHelper>().loaderPush(task);
   }
 }
 

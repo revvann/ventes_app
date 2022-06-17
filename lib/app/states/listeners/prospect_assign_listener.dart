@@ -8,13 +8,13 @@ class _Listener extends RegularListener {
   }
 
   void onLoadFailed(String message) {
-    Get.find<TaskHelper>().failedPush(ProspectString.prospectAssignTaskCode, message);
-    Get.find<TaskHelper>().loaderPop(ProspectString.prospectAssignTaskCode);
+    Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: message, snackbar: true));
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 
   void onLoadError(String message) {
-    Get.find<TaskHelper>().errorPush(ProspectString.prospectAssignTaskCode, message);
-    Get.find<TaskHelper>().loaderPop(ProspectString.prospectAssignTaskCode);
+    Get.find<TaskHelper>().errorPush(_properties.task.copyWith(message: message));
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 
   @override

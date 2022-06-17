@@ -2,6 +2,7 @@ part of 'package:ventes/app/states/controllers/contact_person_fc_state_controlle
 
 class _DataSource extends RegularDataSource<ContactPersonFormCreatePresenter> implements ContactPersonCreateContract {
   _Listener get _listener => Get.find<_Listener>(tag: ProspectString.contactCreateTag);
+  _Properties get _properties => Get.find<_Properties>(tag: ProspectString.contactCreateTag);
   _FormSource get _formSource => Get.find<_FormSource>(tag: ProspectString.contactCreateTag);
 
   final Rx<Customer?> _customer = Rx<Customer?>(null);
@@ -36,7 +37,7 @@ class _DataSource extends RegularDataSource<ContactPersonFormCreatePresenter> im
       _formSource.contacttype = types.isNotEmpty ? types.first : null;
       this.types = types.map<KeyableDropdownItem<int, DBType>>((type) => KeyableDropdownItem<int, DBType>(key: type.typeid!, value: type)).toList();
     }
-    Get.find<TaskHelper>().loaderPop(ProspectString.formCreateContactTaskCode);
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 
   @override

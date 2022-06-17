@@ -39,6 +39,8 @@ class DailyScheduleStateController extends RegularStateController<_Properties, _
 class _Properties {
   _DataSource get _dataSource => Get.find<_DataSource>(tag: ScheduleString.dailyScheduleTag);
 
+  Task task = Task(ScheduleString.dailyScheduleTaskCode);
+
   final Rx<DateTime> _date = Rx<DateTime>(DateTime.now());
   DateTime get date => _date.value;
   set date(DateTime value) => _date.value = value;
@@ -49,7 +51,7 @@ class _Properties {
 
   void refresh() {
     _dataSource.fetchData(dbFormatDate(date));
-    Get.find<TaskHelper>().loaderPush(ScheduleString.dailyScheduleTaskCode);
+    Get.find<TaskHelper>().loaderPush(task);
   }
 
   Color getAppointmentColor(Schedule appointment) {

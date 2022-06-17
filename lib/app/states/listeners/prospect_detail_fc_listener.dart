@@ -33,38 +33,41 @@ class _Listener extends RegularListener {
     if (_formSource.isValid) {
       Map<String, dynamic> data = _formSource.toJson();
       _dataSource.createData(data);
-      Get.find<TaskHelper>().loaderPush(ProspectString.formCreateDetailTaskCode);
+      Get.find<TaskHelper>().loaderPush(_properties.task);
     } else {
-      Get.find<TaskHelper>().failedPush(ProspectString.formCreateDetailTaskCode, "Form invalid, Make sure all fields are filled");
+      Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: "Form invalid, Make sure all fields are filled"));
     }
   }
 
   void onLoadFailed(String message) {
-    Get.find<TaskHelper>().failedPush(ProspectString.formCreateDetailTaskCode, message);
-    Get.find<TaskHelper>().loaderPop(ProspectString.formCreateDetailTaskCode);
+    Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: message, snackbar: true));
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 
   void onLoadError(String message) {
-    Get.find<TaskHelper>().errorPush(ProspectString.formCreateDetailTaskCode, message);
-    Get.find<TaskHelper>().loaderPop(ProspectString.formCreateDetailTaskCode);
+    Get.find<TaskHelper>().errorPush(_properties.task.copyWith(message: message));
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 
   void onCreateDataSuccess(String message) {
-    Get.find<TaskHelper>().successPush(ProspectString.formCreateDetailTaskCode, message, () {
-      Get.find<ProspectDetailStateController>().properties.refresh();
-      Get.back(id: ProspectNavigator.id);
-    });
-    Get.find<TaskHelper>().loaderPop(ProspectString.formCreateDetailTaskCode);
+    Get.find<TaskHelper>().successPush(_properties.task.copyWith(
+        snackbar: true,
+        message: message,
+        onFinished: () {
+          Get.find<ProspectDetailStateController>().properties.refresh();
+          Get.back(id: ProspectNavigator.id);
+        }));
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 
   void onCreateDataFailed(String message) {
-    Get.find<TaskHelper>().failedPush(ProspectString.formCreateDetailTaskCode, message);
-    Get.find<TaskHelper>().loaderPop(ProspectString.formCreateDetailTaskCode);
+    Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: message, snackbar: true));
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 
   void onCreateDataError(String message) {
-    Get.find<TaskHelper>().errorPush(ProspectString.formCreateDetailTaskCode, message);
-    Get.find<TaskHelper>().loaderPop(ProspectString.formCreateDetailTaskCode);
+    Get.find<TaskHelper>().errorPush(_properties.task.copyWith(message: message));
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 
   @override

@@ -2,6 +2,7 @@ part of 'package:ventes/app/states/controllers/daily_schedule_state_controller.d
 
 class _DataSource extends RegularDataSource<DailySchedulePresenter> implements DailyScheduleContract {
   _Listener get _listener => Get.find<_Listener>(tag: ScheduleString.dailyScheduleTag);
+  _Properties get _properties => Get.find<_Properties>(tag: ScheduleString.dailyScheduleTag);
 
   final _types = <String, int>{}.obs;
   Map<String, int> get types => _types.value;
@@ -47,7 +48,7 @@ class _DataSource extends RegularDataSource<DailySchedulePresenter> implements D
     if (data['permissions'] != null) {
       permissions = List<DBType>.from(data['permissions'].map((e) => DBType.fromJson(e)));
     }
-    Get.find<TaskHelper>().loaderPop(ScheduleString.dailyScheduleTaskCode);
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 
   @override

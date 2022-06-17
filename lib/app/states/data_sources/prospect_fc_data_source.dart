@@ -3,6 +3,7 @@ part of 'package:ventes/app/states/controllers/prospect_fc_state_controller.dart
 class _DataSource extends RegularDataSource<ProspectFormCreatePresenter> implements ProspectCreateContract {
   _Listener get _listener => Get.find<_Listener>(tag: ProspectString.prospectCreateTag);
   _FormSource get _formSource => Get.find<_FormSource>(tag: ProspectString.prospectCreateTag);
+  _Properties get _properties => Get.find<_Properties>(tag: ProspectString.prospectCreateTag);
 
   final Rx<Map<int, String>> _followUpItems = Rx<Map<int, String>>({});
   set followUpItems(Map<int, String> value) => _followUpItems.value = value;
@@ -50,7 +51,7 @@ class _DataSource extends RegularDataSource<ProspectFormCreatePresenter> impleme
       _formSource.prosstage = stageList.isEmpty ? null : stageList.first.typeid!;
     }
 
-    Get.find<TaskHelper>().loaderPop(ProspectString.formCreateTaskCode);
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 
   @override

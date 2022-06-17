@@ -2,6 +2,7 @@ part of 'package:ventes/app/states/controllers/prospect_assign_state_controller.
 
 class _DataSource extends RegularDataSource<ProspectAssignPresenter> implements FetchDataContract {
   _Listener get _listener => Get.find<_Listener>(tag: ProspectString.prospectAssignTag);
+  _Properties get _properties => Get.find<_Properties>(tag: ProspectString.prospectAssignTag);
 
   final Rx<List<ProspectAssign>> _prospectAssigns = Rx<List<ProspectAssign>>([]);
 
@@ -33,6 +34,6 @@ class _DataSource extends RegularDataSource<ProspectAssignPresenter> implements 
       prospectAssigns = data['prospectassigns'].map<ProspectAssign>((e) => ProspectAssign.fromJson(e)).toList();
     }
 
-    Get.find<TaskHelper>().loaderPop(ProspectString.prospectAssignTaskCode);
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 }

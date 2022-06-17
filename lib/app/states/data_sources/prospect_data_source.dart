@@ -2,6 +2,7 @@ part of 'package:ventes/app/states/controllers/prospect_state_controller.dart';
 
 class _DataSource extends RegularDataSource<ProspectPresenter> implements FetchDataContract {
   _Listener get _listener => Get.find<_Listener>(tag: ProspectString.prospectTag);
+  _Properties get _properties => Get.find<_Properties>(tag: ProspectString.prospectTag);
 
   final Rx<List<KeyableDropdownItem<int, DBType>>> _statusItems = Rx<List<KeyableDropdownItem<int, DBType>>>([]);
   set statusItems(List<KeyableDropdownItem<int, DBType>> value) => _statusItems.value = value;
@@ -49,6 +50,6 @@ class _DataSource extends RegularDataSource<ProspectPresenter> implements FetchD
       prospects = data['prospects'].map<Prospect>((e) => Prospect.fromJson(e)).toList();
     }
 
-    Get.find<TaskHelper>().loaderPop(ProspectString.taskCode);
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 }

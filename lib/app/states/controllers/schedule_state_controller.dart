@@ -53,6 +53,8 @@ class _Properties {
 
   final CalendarController calendarController = CalendarController();
 
+  Task task = Task(ScheduleString.taskCode);
+
   final _dateShown = DateTime.now().obs;
   DateTime get dateShown => _dateShown.value;
   set dateShown(DateTime value) => _dateShown.value = value;
@@ -76,6 +78,6 @@ class _Properties {
 
   void refresh() {
     _dataSource.fetchData(dateShown.month);
-    Get.find<TaskHelper>().loaderPush(ScheduleString.taskCode);
+    Get.find<TaskHelper>().loaderPush(task);
   }
 }

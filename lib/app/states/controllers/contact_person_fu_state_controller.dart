@@ -39,9 +39,11 @@ class ContactPersonFormUpdateStateController extends FormStateController<_Proper
 class _Properties {
   _DataSource get _dataSource => Get.find<_DataSource>(tag: ProspectString.contactUpdateTag);
 
+  Task task = Task(ProspectString.formUpdateContactTaskCode);
+
   late int contactid;
   void refresh() {
     _dataSource.fetchData(contactid);
-    Get.find<TaskHelper>().loaderPush(ProspectString.formUpdateContactTaskCode);
+    Get.find<TaskHelper>().loaderPush(task);
   }
 }

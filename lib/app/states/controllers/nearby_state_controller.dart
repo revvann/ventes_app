@@ -9,7 +9,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ventes/app/models/bp_customer_model.dart';
 import 'package:ventes/app/models/customer_model.dart';
 import 'package:ventes/app/models/maps_loc.dart';
-import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
 import 'package:ventes/app/network/presenters/nearby_presenter.dart';
 import 'package:ventes/app/resources/views/customer_form/create/customer_fc.dart';
 import 'package:ventes/app/resources/views/customer_form/update/customer_fu.dart';
@@ -50,6 +49,8 @@ class NearbyStateController extends RegularStateController<_Properties, _Listene
 
 class _Properties {
   _DataSource get _dataSource => Get.find<_DataSource>(tag: NearbyString.nearbyTag);
+
+  Task task = Task(NearbyString.taskCode);
 
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   GlobalKey bottomSheetKey = GlobalKey();
@@ -115,7 +116,7 @@ class _Properties {
       CameraUpdate.newLatLng(LatLng(position.latitude, position.longitude)),
     );
     _dataSource.fetchData(LatLng(position.latitude, position.longitude));
-    Get.find<TaskHelper>().loaderPush(NearbyString.taskCode);
+    Get.find<TaskHelper>().loaderPush(task);
   }
 }
 

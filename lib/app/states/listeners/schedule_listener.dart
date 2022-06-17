@@ -10,7 +10,7 @@ class _Listener extends RegularListener {
         _properties.dateShown = _properties.calendarController.displayDate!;
       }
       _dataSource.fetchSchedules(_properties.dateShown.month);
-      Get.find<TaskHelper>().loaderPush(ScheduleString.taskCode);
+      Get.find<TaskHelper>().loaderPush(_properties.task);
     }
   }
 
@@ -54,12 +54,12 @@ class _Listener extends RegularListener {
   }
 
   onLoadDataFailed(String message) {
-    Get.find<TaskHelper>().failedPush(ScheduleString.taskCode, message);
-    Get.find<TaskHelper>().loaderPop(ScheduleString.taskCode);
+    Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: message, snackbar: true));
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 
   onLoadDataError(String message) {
-    Get.find<TaskHelper>().failedPush(ScheduleString.taskCode, message);
-    Get.find<TaskHelper>().loaderPop(ScheduleString.taskCode);
+    Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: message, snackbar: true));
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 }

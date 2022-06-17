@@ -64,42 +64,41 @@ class _Listener extends RegularListener {
 
       FormData formData = FormData(data);
       _dataSource.createCustomer(formData);
-      Get.find<TaskHelper>().loaderPush(NearbyString.createTaskCode);
+      Get.find<TaskHelper>().loaderPush(_properties.task);
     } else {
-      Get.find<TaskHelper>().failedPush(NearbyString.createTaskCode, NearbyString.formInvalid);
+      Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: NearbyString.formInvalid));
     }
   }
 
   void onLoadDataError(String message) {
-    Get.find<TaskHelper>().errorPush(NearbyString.createTaskCode, message);
-    Get.find<TaskHelper>().loaderPop(NearbyString.createTaskCode);
+    Get.find<TaskHelper>().errorPush(_properties.task.copyWith(message: message));
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 
   void onLoadDataFailed(String message) {
-    Get.find<TaskHelper>().failedPush(NearbyString.createTaskCode, message);
-    Get.find<TaskHelper>().loaderPop(NearbyString.createTaskCode);
+    Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: message, snackbar: true));
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 
   void onCreateDataError(String message) {
-    Get.find<TaskHelper>().errorPush(NearbyString.createTaskCode, message);
-    Get.find<TaskHelper>().loaderPop(NearbyString.createTaskCode);
+    Get.find<TaskHelper>().errorPush(_properties.task.copyWith(message: message));
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 
   void onCreateDataFailed(String message) {
-    Get.find<TaskHelper>().failedPush(NearbyString.createTaskCode, message);
-    Get.find<TaskHelper>().loaderPop(NearbyString.createTaskCode);
+    Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: message, snackbar: true));
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 
   void onCreateDataSuccess(String message) async {
-    Get.find<TaskHelper>().loaderPop(NearbyString.createTaskCode);
-    Get.find<TaskHelper>().successPush(
-      NearbyString.createTaskCode,
-      message,
-      () {
-        Get.find<NearbyStateController>().properties.refresh();
-        Get.back(id: NearbyNavigator.id);
-      },
-    );
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+    Get.find<TaskHelper>().successPush(_properties.task.copyWith(
+        snackbar: true,
+        message: message,
+        onFinished: () {
+          Get.find<NearbyStateController>().properties.refresh();
+          Get.back(id: NearbyNavigator.id);
+        }));
   }
 
   @override

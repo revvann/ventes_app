@@ -35,7 +35,7 @@ class _DataSource extends RegularDataSource<ProductPresenter> implements Product
       products = data['prospectproducts'].map<ProspectProduct>((e) => ProspectProduct.fromJson(e)).toList();
     }
 
-    Get.find<TaskHelper>().loaderPop(ProspectString.productTaskCode);
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
     _properties.isLoading.value = false;
   }
 

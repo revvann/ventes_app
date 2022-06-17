@@ -16,32 +16,28 @@ class _Listener extends RegularListener {
   }
 
   void onLoadDataError(String message) {
-    Get.find<TaskHelper>().errorPush(DashboardString.taskCode, message);
-    Get.find<TaskHelper>().loaderPop(DashboardString.taskCode);
+    Get.find<TaskHelper>().errorPush(_properties.task.copyWith(message: message));
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 
   void onLoadDataFailed(String message) {
-    Get.find<TaskHelper>().failedPush(DashboardString.taskCode, message);
-    Get.find<TaskHelper>().loaderPop(DashboardString.taskCode);
+    Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: message, snackbar: true));
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 
   void onLogoutError(String message) {
-    Get.find<TaskHelper>().errorPush(DashboardString.taskCode, message);
-    Get.find<TaskHelper>().loaderPop(DashboardString.taskCode);
+    Get.find<TaskHelper>().errorPush(_properties.task.copyWith(message: message));
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 
   void onLogoutFailed(String message) {
-    Get.find<TaskHelper>().failedPush(DashboardString.taskCode, message);
-    Get.find<TaskHelper>().loaderPop(DashboardString.taskCode);
+    Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: message, snackbar: true));
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 
   void onLogoutSuccess(String message) {
-    Get.find<TaskHelper>().loaderPop(DashboardString.taskCode);
-    Get.find<TaskHelper>().successPush(
-      DashboardString.taskCode,
-      message,
-      _logout,
-    );
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+    Get.find<TaskHelper>().successPush(_properties.task.copyWith(snackbar: true, message: message, onFinished: _logout));
   }
 
   @override
@@ -49,6 +45,6 @@ class _Listener extends RegularListener {
     _properties.position = await getCurrentPosition();
     _dataSource.fetchData(LatLng(_properties.position!.latitude, _properties.position!.longitude));
 
-    Get.find<TaskHelper>().loaderPush(DashboardString.taskCode);
+    Get.find<TaskHelper>().loaderPush(_properties.task);
   }
 }

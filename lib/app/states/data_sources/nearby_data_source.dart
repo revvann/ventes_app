@@ -68,7 +68,7 @@ class _DataSource extends RegularDataSource<NearbyPresenter> implements NearbyCo
       );
       _properties.deployCustomers(customers);
     }
-    Get.find<TaskHelper>().loaderPop(NearbyString.taskCode);
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 
   @override

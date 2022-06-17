@@ -45,7 +45,7 @@ class _Listener extends RegularListener {
   Future onFilterChanged() async {
     Map<String, dynamic> filter = _formSource.toJson();
     _dataSource.fetchProspect(params: filter);
-    Get.find<TaskHelper>().loaderPush(ProspectString.taskCode);
+    Get.find<TaskHelper>().loaderPush(_properties.task);
   }
 
   void onProspectClicked() {
@@ -59,13 +59,13 @@ class _Listener extends RegularListener {
   }
 
   void onLoadFailed(String message) {
-    Get.find<TaskHelper>().failedPush(ProspectString.taskCode, message);
-    Get.find<TaskHelper>().loaderPop(ProspectString.taskCode);
+    Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: message, snackbar: true));
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 
   void onLoadError(String message) {
-    Get.find<TaskHelper>().errorPush(ProspectString.taskCode, message);
-    Get.find<TaskHelper>().loaderPop(ProspectString.taskCode);
+    Get.find<TaskHelper>().errorPush(_properties.task.copyWith(message: message));
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 
   @override

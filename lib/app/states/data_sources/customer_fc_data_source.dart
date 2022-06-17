@@ -159,7 +159,7 @@ class _DataSource extends RegularDataSource<CustomerFormCreatePresenter> impleme
       _formSource.prepareFormValues();
     }
 
-    Get.find<TaskHelper>().loaderPop(NearbyString.createTaskCode);
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 
   @override

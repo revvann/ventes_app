@@ -51,8 +51,10 @@ class _Properties {
   late int prospectId;
   double defaultZoom = 20;
 
+  Task task = Task(ProspectString.formCreateDetailTaskCode);
+
   refresh() {
     _dataSource.fetchData(prospectId);
-    Get.find<TaskHelper>().loaderPush(ProspectString.formCreateDetailTaskCode);
+    Get.find<TaskHelper>().loaderPush(task);
   }
 }

@@ -4,6 +4,7 @@ part of 'package:ventes/app/states/controllers/schedule_state_controller.dart';
 
 class _DataSource extends RegularDataSource<SchedulePresenter> implements FetchDataContract {
   _Listener get _listener => Get.find<_Listener>(tag: ScheduleString.scheduleTag);
+  _Properties get _properties => Get.find<_Properties>(tag: ScheduleString.scheduleTag);
 
   final _types = <String, int>{}.obs;
   Map<String, int> get types => _types.value;
@@ -53,7 +54,7 @@ class _DataSource extends RegularDataSource<SchedulePresenter> implements FetchD
     if (data['permissions'] != null) {
       permissions = List<DBType>.from(data['permissions'].map((e) => DBType.fromJson(e)));
     }
-    Get.find<TaskHelper>().loaderPop(ScheduleString.taskCode);
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 
   @override

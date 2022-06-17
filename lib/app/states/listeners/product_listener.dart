@@ -20,36 +20,39 @@ class _Listener extends RegularListener {
 
   void deleteProduct(int productid) {
     _dataSource.deleteProduct(productid);
-    Get.find<TaskHelper>().loaderPush(ProspectString.productTaskCode);
+    Get.find<TaskHelper>().loaderPush(_properties.task);
   }
 
   void onLoadFailed(String message) {
-    Get.find<TaskHelper>().failedPush(ProspectString.productTaskCode, message);
-    Get.find<TaskHelper>().loaderPop(ProspectString.productTaskCode);
+    Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: message, snackbar: true));
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
     _properties.isLoading.value = false;
   }
 
   void onLoadError(String message) {
-    Get.find<TaskHelper>().errorPush(ProspectString.productTaskCode, message);
-    Get.find<TaskHelper>().loaderPop(ProspectString.productTaskCode);
+    Get.find<TaskHelper>().errorPush(_properties.task.copyWith(message: message));
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
     _properties.isLoading.value = false;
   }
 
   void onDeleteFailed(String message) {
-    Get.find<TaskHelper>().failedPush(ProspectString.productTaskCode, message);
-    Get.find<TaskHelper>().loaderPop(ProspectString.productTaskCode);
+    Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: message, snackbar: true));
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 
   void onDeleteSuccess(String message) {
-    Get.find<TaskHelper>().successPush(ProspectString.productTaskCode, message, () {
-      Get.find<ProductStateController>().refreshStates();
-    });
-    Get.find<TaskHelper>().loaderPop(ProspectString.productTaskCode);
+    Get.find<TaskHelper>().successPush(_properties.task.copyWith(
+        snackbar: true,
+        message: message,
+        onFinished: () {
+          Get.find<ProductStateController>().refreshStates();
+        }));
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 
   void onDeleteError(String message) {
-    Get.find<TaskHelper>().errorPush(ProspectString.productTaskCode, message);
-    Get.find<TaskHelper>().loaderPop(ProspectString.productTaskCode);
+    Get.find<TaskHelper>().errorPush(_properties.task.copyWith(message: message));
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 
   @override

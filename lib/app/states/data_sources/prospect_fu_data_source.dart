@@ -3,6 +3,7 @@ part of 'package:ventes/app/states/controllers/prospect_fu_state_controller.dart
 class _DataSource extends RegularDataSource<ProspectFormUpdatePresenter> implements ProspectUpdateContract {
   _Listener get _listener => Get.find<_Listener>(tag: ProspectString.prospectUpdateTag);
   _FormSource get _formSource => Get.find<_FormSource>(tag: ProspectString.prospectUpdateTag);
+  _Properties get _properties => Get.find<_Properties>(tag: ProspectString.prospectUpdateTag);
 
   final Rx<Map<int, String>> _followUpItems = Rx<Map<int, String>>({});
   set followUpItems(Map<int, String> value) => _followUpItems.value = value;
@@ -47,7 +48,7 @@ class _DataSource extends RegularDataSource<ProspectFormUpdatePresenter> impleme
       _formSource.prepareFormValues();
     }
 
-    Get.find<TaskHelper>().loaderPop(ProspectString.formUpdateTaskCode);
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 
   @override

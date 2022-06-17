@@ -61,6 +61,8 @@ class _Properties {
   _FormSource get _formSource => Get.find<_FormSource>(tag: NearbyString.customerUpdateTag);
   _DataSource get _dataSource => Get.find<_DataSource>(tag: NearbyString.customerUpdateTag);
 
+  Task task = Task(NearbyString.updateTaskCode);
+
   final double defaultZoom = 20;
   final Completer<GoogleMapController> mapsController = Completer();
 
@@ -128,6 +130,6 @@ class _Properties {
 
   void refresh() {
     _dataSource.fetchData(customerid ?? 0);
-    Get.find<TaskHelper>().loaderPush(NearbyString.updateTaskCode);
+    Get.find<TaskHelper>().loaderPush(task);
   }
 }

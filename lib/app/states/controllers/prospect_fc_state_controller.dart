@@ -45,8 +45,10 @@ class _Properties {
   _DataSource get dataSource => Get.find<_DataSource>(tag: ProspectString.prospectCreateTag);
   _FormSource get formSource => Get.find<_FormSource>(tag: ProspectString.prospectCreateTag);
 
+  Task task = Task(ProspectString.formCreateTaskCode);
+
   void refresh() {
     dataSource.fetchData();
-    Get.find<TaskHelper>().loaderPush(ProspectString.formCreateTaskCode);
+    Get.find<TaskHelper>().loaderPush(task);
   }
 }

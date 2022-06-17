@@ -2,6 +2,7 @@ part of 'package:ventes/app/states/controllers/contact_person_fu_state_controlle
 
 class _DataSource extends RegularDataSource<ContactPersonFormUpdatePresenter> implements ContactPersonUpdateContract {
   _Listener get _listener => Get.find<_Listener>(tag: ProspectString.contactUpdateTag);
+  _Properties get _properties => Get.find<_Properties>(tag: ProspectString.contactUpdateTag);
   _FormSource get _formSource => Get.find<_FormSource>(tag: ProspectString.contactUpdateTag);
 
   final Rx<ContactPerson?> _contactPerson = Rx<ContactPerson?>(null);
@@ -31,7 +32,7 @@ class _DataSource extends RegularDataSource<ContactPersonFormUpdatePresenter> im
       customerName = contactPerson?.contactcustomer?.cstmname;
       _formSource.prepareFormValues();
     }
-    Get.find<TaskHelper>().loaderPop(ProspectString.formUpdateContactTaskCode);
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 
   @override

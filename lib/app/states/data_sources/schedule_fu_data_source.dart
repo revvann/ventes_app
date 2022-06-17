@@ -3,6 +3,7 @@ part of 'package:ventes/app/states/controllers/schedule_fu_state_controller.dart
 class _DataSource extends RegularDataSource<ScheduleFormUpdatePresenter> implements ScheduleUpdateContract {
   _Listener get _listener => Get.find<_Listener>(tag: ScheduleString.scheduleUpdateTag);
   _FormSource get _formSource => Get.find<_FormSource>(tag: ScheduleString.scheduleUpdateTag);
+  _Properties get _properties => Get.find<_Properties>(tag: ScheduleString.scheduleUpdateTag);
 
   late int scheduleId;
 
@@ -81,6 +82,6 @@ class _DataSource extends RegularDataSource<ScheduleFormUpdatePresenter> impleme
     schedule = Schedule.fromJson(data['schedule']);
     insertTypes(List<Map<String, dynamic>>.from(data['types']));
     _formSource.prepareFormValues();
-    Get.find<TaskHelper>().loaderPop(ScheduleString.updateScheduleTaskCode);
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 }

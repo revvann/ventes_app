@@ -52,6 +52,8 @@ class ProductStateController extends RegularStateController<_Properties, _Listen
 class _Properties {
   _DataSource get _dataSource => Get.find<_DataSource>(tag: ProspectString.productTag);
 
+  Task task = Task(ProspectString.productTaskCode);
+
   Set<String> popupControllers = {};
 
   TextEditingController searchTEC = TextEditingController();
@@ -63,7 +65,7 @@ class _Properties {
 
   void refresh() {
     _dataSource.fetchData(prospectid);
-    Get.find<TaskHelper>().loaderPush(ProspectString.productTaskCode);
+    Get.find<TaskHelper>().loaderPush(task);
   }
 
   void searchProducts() {

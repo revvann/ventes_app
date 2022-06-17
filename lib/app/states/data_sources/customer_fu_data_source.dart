@@ -103,7 +103,7 @@ class _DataSource extends RegularDataSource<CustomerFormUpdatePresenter> impleme
       statusesFromList(data['statuses']);
     }
 
-    Get.find<TaskHelper>().loaderPop(NearbyString.updateTaskCode);
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 
   @override

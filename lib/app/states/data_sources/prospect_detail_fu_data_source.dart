@@ -3,6 +3,7 @@ part of 'package:ventes/app/states/controllers/prospect_detail_fu_state_controll
 class _DataSource extends RegularDataSource<ProspectDetailFormUpdatePresenter> implements ProspectDetailUpdateContract {
   _Listener get _listener => Get.find<_Listener>(tag: ProspectString.detailUpdateTag);
   _FormSource get _formSource => Get.find<_FormSource>(tag: ProspectString.detailUpdateTag);
+  _Properties get _properties => Get.find<_Properties>(tag: ProspectString.detailUpdateTag);
 
   final Rx<List<KeyableDropdownItem<int, DBType>>> _categoryItems = Rx<List<KeyableDropdownItem<int, DBType>>>([]);
   set categoryItems(List<KeyableDropdownItem<int, DBType>> value) => _categoryItems.value = value;
@@ -48,7 +49,7 @@ class _DataSource extends RegularDataSource<ProspectDetailFormUpdatePresenter> i
       prospectdetail = ProspectDetail.fromJson(data['prospectdetail']);
       _formSource.prepareFormValues();
     }
-    Get.find<TaskHelper>().loaderPop(ProspectString.formUpdateDetailTaskCode);
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 
   @override

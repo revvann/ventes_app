@@ -36,37 +36,40 @@ class _Listener extends RegularListener {
     if (_formSource.isValid) {
       Map<String, dynamic> data = _formSource.toJson();
       _dataSource.updateData(data);
-      Get.find<TaskHelper>().loaderPush(ProspectString.formUpdateContactTaskCode);
+      Get.find<TaskHelper>().loaderPush(_properties.task);
     } else {
-      Get.find<TaskHelper>().failedPush(ProspectString.formUpdateContactTaskCode, "Form is not valid");
+      Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: "Form is not valid"));
     }
   }
 
   void onLoadFailed(String message) {
-    Get.find<TaskHelper>().failedPush(ProspectString.formUpdateContactTaskCode, message);
-    Get.find<TaskHelper>().loaderPop(ProspectString.formUpdateContactTaskCode);
+    Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: message, snackbar: true));
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 
   void onLoadError(String message) {
-    Get.find<TaskHelper>().errorPush(ProspectString.formUpdateContactTaskCode, message);
-    Get.find<TaskHelper>().loaderPop(ProspectString.formUpdateContactTaskCode);
+    Get.find<TaskHelper>().errorPush(_properties.task.copyWith(message: message));
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 
   void onUpdateDataSuccess(String message) {
-    Get.find<TaskHelper>().successPush(ProspectString.formUpdateContactTaskCode, message, () {
-      Get.find<ContactPersonStateController>().properties.refresh();
-      Get.back(id: ProspectNavigator.id);
-    });
-    Get.find<TaskHelper>().loaderPop(ProspectString.formUpdateContactTaskCode);
+    Get.find<TaskHelper>().successPush(_properties.task.copyWith(
+        snackbar: true,
+        message: message,
+        onFinished: () {
+          Get.find<ContactPersonStateController>().properties.refresh();
+          Get.back(id: ProspectNavigator.id);
+        }));
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 
   void onUpdateDataFailed(String message) {
-    Get.find<TaskHelper>().failedPush(ProspectString.formUpdateContactTaskCode, message);
-    Get.find<TaskHelper>().loaderPop(ProspectString.formUpdateContactTaskCode);
+    Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: message, snackbar: true));
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 
   void onUpdateDataError(String message) {
-    Get.find<TaskHelper>().errorPush(ProspectString.formUpdateContactTaskCode, message);
-    Get.find<TaskHelper>().loaderPop(ProspectString.formUpdateContactTaskCode);
+    Get.find<TaskHelper>().errorPush(_properties.task.copyWith(message: message));
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 }

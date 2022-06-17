@@ -66,6 +66,8 @@ class CustomerFormCreateStateController extends FormStateController<_Properties,
 class _Properties {
   _DataSource get _dataSource => Get.find<_DataSource>(tag: NearbyString.customerCreateTag);
 
+  Task task = Task(NearbyString.createTaskCode);
+
   final double defaultZoom = 20;
   final Completer<GoogleMapController> mapsController = Completer();
 
@@ -114,7 +116,7 @@ class _Properties {
 
   void fetchPlacesIds() {
     _dataSource.fetchPlacesIds(_dataSource.getSubdistrictName()!);
-    Get.find<TaskHelper>().loaderPush(NearbyString.createTaskCode);
+    Get.find<TaskHelper>().loaderPush(task);
   }
 
   void refresh() async {
@@ -126,6 +128,6 @@ class _Properties {
       CameraUpdate.newLatLng(pos),
     );
     markerLatLng = pos;
-    Get.find<TaskHelper>().loaderPush(NearbyString.createTaskCode);
+    Get.find<TaskHelper>().loaderPush(task);
   }
 }

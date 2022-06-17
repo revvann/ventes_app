@@ -5,6 +5,7 @@ part of 'package:ventes/app/states/controllers/product_fu_state_controller.dart'
 class _DataSource extends RegularDataSource<ProductFormUpdatePresenter> implements ProductUpdateContract {
   _Listener get _listener => Get.find<_Listener>(tag: ProspectString.productUpdateTag);
   _FormSource get _formSource => Get.find<_FormSource>(tag: ProspectString.productUpdateTag);
+  _Properties get _properties => Get.find<_Properties>(tag: ProspectString.productUpdateTag);
 
   final _product = Rx<ProspectProduct?>(null);
   set product(ProspectProduct? value) => _product.value = value;
@@ -38,7 +39,7 @@ class _DataSource extends RegularDataSource<ProductFormUpdatePresenter> implemen
       taxItems = taxes.map<KeyableDropdownItem<int, DBType>>((tax) => KeyableDropdownItem<int, DBType>(key: tax.typeid!, value: tax)).toList();
     }
 
-    Get.find<TaskHelper>().loaderPop(ProspectString.formUpdateProductTaskCode);
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 
   @override
