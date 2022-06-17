@@ -1,8 +1,8 @@
 part of 'package:ventes/app/states/controllers/prospect_detail_state_controller.dart';
 
-class _DataSource extends RegularDataSource<ProspectDetailPresenter> implements ProspectDetailContract {
-  _Listener get _listener => Get.find<_Listener>(tag: ProspectString.detailTag);
-  _Properties get _properties => Get.find<_Properties>(tag: ProspectString.detailTag);
+class ProspectDetailDataSource extends StateDataSource<ProspectDetailPresenter> implements ProspectDetailContract {
+  ProspectDetailListener get _listener => Get.find<ProspectDetailListener>(tag: ProspectString.detailTag);
+  ProspectDetailProperty get _properties => Get.find<ProspectDetailProperty>(tag: ProspectString.detailTag);
 
   final _prospect = Rx<Prospect?>(null);
   Prospect? get prospect => _prospect.value;

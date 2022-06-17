@@ -7,22 +7,24 @@ import 'package:ventes/app/models/auth_model.dart';
 import 'package:ventes/app/models/bp_customer_model.dart';
 import 'package:ventes/app/models/maps_loc.dart';
 import 'package:ventes/app/models/user_detail_model.dart';
-import 'package:ventes/app/network/presenters/dashboard_presenter.dart';
+import 'package:ventes/app/api/presenters/dashboard_presenter.dart';
 import 'package:ventes/app/resources/views/splash_screen.dart';
 import 'package:ventes/app/resources/views/started_page.dart';
 import 'package:ventes/app/states/controllers/bottom_navigation_state_controller.dart';
-import 'package:ventes/app/states/controllers/regular_state_controller.dart';
-import 'package:ventes/app/states/data_sources/regular_data_source.dart';
-import 'package:ventes/app/states/listeners/regular_listener.dart';
+import 'package:ventes/core/states/state_controller.dart';
+import 'package:ventes/core/states/state_data_source.dart';
+import 'package:ventes/core/states/state_listener.dart';
 import 'package:ventes/constants/strings/dashboard_string.dart';
 import 'package:ventes/helpers/auth_helper.dart';
 import 'package:ventes/helpers/function_helpers.dart';
 import 'package:ventes/helpers/task_helper.dart';
+import 'package:ventes/core/states/state_property.dart';
 
 part 'package:ventes/app/states/listeners/dashboard_listener.dart';
 part 'package:ventes/app/states/data_sources/dashboard_data_source.dart';
+part 'package:ventes/app/states/properties/dashboard_property.dart';
 
-class DashboardStateController extends RegularStateController<_Properties, _Listener, _DataSource> {
+class DashboardStateController extends RegularStateController<DashboardProperty, DashboardListener, DashboardDataSource> {
   BottomNavigationStateController bottomNavigation = Get.put(BottomNavigationStateController());
 
   @override
@@ -32,36 +34,11 @@ class DashboardStateController extends RegularStateController<_Properties, _List
   bool get isFixedBody => false;
 
   @override
-  _Properties propertiesBuilder() => _Properties();
+  DashboardProperty propertiesBuilder() => DashboardProperty();
 
   @override
-  _Listener listenerBuilder() => _Listener();
+  DashboardListener listenerBuilder() => DashboardListener();
 
   @override
-  _DataSource dataSourceBuilder() => _DataSource();
+  DashboardDataSource dataSourceBuilder() => DashboardDataSource();
 }
-
-class _Properties {
-  _DataSource get _dataSource => Get.find<_DataSource>(tag: DashboardString.dashboardTag);
-  Position? position;
-
-  Task task = Task(DashboardString.taskCode);
-
-  String? get shortName => getInitials(_dataSource.account?.user?.userfullname ?? "");
-
-  void logout() {
-    Get.find<TaskHelper>().confirmPush(
-      task.copyWith<bool>(
-        message: DashboardString.confirmLogout,
-        onFinished: (res) {
-          if (res) {
-            _dataSource.logout();
-            Get.find<TaskHelper>().loaderPush(task);
-          }
-        },
-      ),
-    );
-  }
-}
-
-enum CameraMoveType { dragged, controller }

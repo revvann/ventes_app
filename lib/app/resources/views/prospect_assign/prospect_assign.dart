@@ -16,7 +16,7 @@ import 'package:ventes/app/states/controllers/prospect_assign_state_controller.d
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/constants/strings/prospect_string.dart';
-import 'package:ventes/core/view.dart';
+import 'package:ventes/core/view/view.dart';
 import 'package:ventes/helpers/function_helpers.dart';
 
 part 'package:ventes/app/resources/views/prospect_assign/components/_prospect_assign_list.dart';

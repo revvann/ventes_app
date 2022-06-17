@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/constants/strings/signin_string.dart';
-import 'package:ventes/app/network/contracts/auth_contract.dart';
+import 'package:ventes/app/api/contracts/auth_contract.dart';
 import 'package:ventes/app/states/controllers/signin_state_controller.dart';
 import 'package:ventes/app/resources/views/dashboard/dashboard.dart';
 import 'package:ventes/app/resources/widgets/regular_bottom_sheet.dart';

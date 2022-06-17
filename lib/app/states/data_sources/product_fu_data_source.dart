@@ -2,10 +2,10 @@
 
 part of 'package:ventes/app/states/controllers/product_fu_state_controller.dart';
 
-class _DataSource extends RegularDataSource<ProductFormUpdatePresenter> implements ProductUpdateContract {
-  _Listener get _listener => Get.find<_Listener>(tag: ProspectString.productUpdateTag);
-  _FormSource get _formSource => Get.find<_FormSource>(tag: ProspectString.productUpdateTag);
-  _Properties get _properties => Get.find<_Properties>(tag: ProspectString.productUpdateTag);
+class ProductFormUpdateDataSource extends StateDataSource<ProductFormUpdatePresenter> implements ProductUpdateContract {
+  ProductFormUpdateListener get _listener => Get.find<ProductFormUpdateListener>(tag: ProspectString.productUpdateTag);
+  ProductFormUpdateFormSource get _formSource => Get.find<ProductFormUpdateFormSource>(tag: ProspectString.productUpdateTag);
+  ProductFormUpdateProperty get _properties => Get.find<ProductFormUpdateProperty>(tag: ProspectString.productUpdateTag);
 
   final _product = Rx<ProspectProduct?>(null);
   set product(ProspectProduct? value) => _product.value = value;

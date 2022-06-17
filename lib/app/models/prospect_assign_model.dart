@@ -1,6 +1,6 @@
 import 'package:ventes/app/models/prospect_model.dart';
 import 'package:ventes/app/models/user_detail_model.dart';
-import 'package:ventes/core/model.dart';
+import 'package:ventes/core/api/model.dart';
 
 class ProspectAssign extends Model {
   int? prospectassignid;

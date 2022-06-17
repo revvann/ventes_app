@@ -1,9 +1,9 @@
 // ignore_for_file: prefer_const_constructors
 part of 'package:ventes/app/states/controllers/nearby_state_controller.dart';
 
-class _Listener extends RegularListener {
-  _Properties get _properties => Get.find<_Properties>(tag: NearbyString.nearbyTag);
-  _DataSource get _dataSource => Get.find<_DataSource>(tag: NearbyString.nearbyTag);
+class NearbyListener extends StateListener {
+  NearbyProperty get _properties => Get.find<NearbyProperty>(tag: NearbyString.nearbyTag);
+  NearbyDataSource get _dataSource => Get.find<NearbyDataSource>(tag: NearbyString.nearbyTag);
 
   void onMapControllerCreated(GoogleMapController controller) {
     if (!_properties.mapsController.isCompleted) {

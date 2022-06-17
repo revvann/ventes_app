@@ -1,8 +1,8 @@
 part of 'package:ventes/app/states/controllers/schedule_fc_state_controller.dart';
 
-class _DataSource extends RegularDataSource<ScheduleFormCreatePresenter> implements ScheduleCreateContract {
-  _Listener get _listener => Get.find<_Listener>(tag: ScheduleString.scheduleCreateTag);
-  _Properties get _properties => Get.find<_Properties>(tag: ScheduleString.scheduleCreateTag);
+class ScheduleFormCreateDataSource extends StateDataSource<ScheduleFormCreatePresenter> implements ScheduleCreateContract {
+  ScheduleFormCreateListener get _listener => Get.find<ScheduleFormCreateListener>(tag: ScheduleString.scheduleCreateTag);
+  ScheduleFormCreateProperty get _properties => Get.find<ScheduleFormCreateProperty>(tag: ScheduleString.scheduleCreateTag);
 
   final Rx<List<Map<String, int>>?> _types = Rx<List<Map<String, int>>?>(null);
   List<Map<String, int>>? get types => _types.value;

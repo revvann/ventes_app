@@ -1,9 +1,9 @@
 part of 'package:ventes/app/states/controllers/schedule_fu_state_controller.dart';
 
-class _Listener extends RegularListener {
-  _Properties get _properties => Get.find<_Properties>(tag: ScheduleString.scheduleUpdateTag);
-  _FormSource get _formSource => Get.find<_FormSource>(tag: ScheduleString.scheduleUpdateTag);
-  _DataSource get _dataSource => Get.find<_DataSource>(tag: ScheduleString.scheduleUpdateTag);
+class ScheduleFormUpdateListener extends StateListener {
+  ScheduleFormUpdateProperty get _properties => Get.find<ScheduleFormUpdateProperty>(tag: ScheduleString.scheduleUpdateTag);
+  ScheduleFormUpdateFormSource get _formSource => Get.find<ScheduleFormUpdateFormSource>(tag: ScheduleString.scheduleUpdateTag);
+  ScheduleFormUpdateDataSource get _dataSource => Get.find<ScheduleFormUpdateDataSource>(tag: ScheduleString.scheduleUpdateTag);
 
   void onLocationChanged() {
     _formSource.schelocquiet = _formSource.schelocTEC.text;

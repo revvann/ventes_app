@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ventes/app/resources/views/schedule_form/update/schedule_fu.dart';
-import 'package:ventes/core/page_route.dart';
+import 'package:ventes/core/routing/page_route.dart';
 import 'package:ventes/app/states/controllers/daily_schedule_state_controller.dart';
 import 'package:ventes/app/states/controllers/schedule_fc_state_controller.dart';
 import 'package:ventes/app/states/controllers/schedule_fu_state_controller.dart';
@@ -11,7 +11,7 @@ import 'package:ventes/app/states/controllers/schedule_state_controller.dart';
 import 'package:ventes/app/resources/views/daily_schedule/daily_schedule.dart';
 import 'package:ventes/app/resources/views/schedule/schedule.dart';
 import 'package:ventes/app/resources/views/schedule_form/create/schedule_fc.dart';
-import 'package:ventes/core/view_navigator.dart';
+import 'package:ventes/core/view/view_navigator.dart';
 
 class ScheduleNavigator extends ViewNavigator {
   static const id = 3;

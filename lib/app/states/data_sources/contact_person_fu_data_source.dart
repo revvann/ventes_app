@@ -1,9 +1,9 @@
 part of 'package:ventes/app/states/controllers/contact_person_fu_state_controller.dart';
 
-class _DataSource extends RegularDataSource<ContactPersonFormUpdatePresenter> implements ContactPersonUpdateContract {
-  _Listener get _listener => Get.find<_Listener>(tag: ProspectString.contactUpdateTag);
-  _Properties get _properties => Get.find<_Properties>(tag: ProspectString.contactUpdateTag);
-  _FormSource get _formSource => Get.find<_FormSource>(tag: ProspectString.contactUpdateTag);
+class ContactPersonFormUpdateDataSource extends StateDataSource<ContactPersonFormUpdatePresenter> implements ContactPersonUpdateContract {
+  ContactPersonFormUpdateListener get _listener => Get.find<ContactPersonFormUpdateListener>(tag: ProspectString.contactUpdateTag);
+  ContactPersonFormUpdateProperty get _properties => Get.find<ContactPersonFormUpdateProperty>(tag: ProspectString.contactUpdateTag);
+  ContactPersonFormUpdateFormSource get _formSource => Get.find<ContactPersonFormUpdateFormSource>(tag: ProspectString.contactUpdateTag);
 
   final Rx<ContactPerson?> _contactPerson = Rx<ContactPerson?>(null);
   ContactPerson? get contactPerson => _contactPerson.value;

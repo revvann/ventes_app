@@ -1,8 +1,8 @@
 part of 'package:ventes/app/states/controllers/contact_person_state_controller.dart';
 
-class _Listener extends RegularListener {
-  _Properties get _properties => Get.find<_Properties>(tag: ProspectString.contactTag);
-  _DataSource get _dataSource => Get.find<_DataSource>(tag: ProspectString.contactTag);
+class ContactPersonListener extends StateListener {
+  ContactPersonProperty get _properties => Get.find<ContactPersonProperty>(tag: ProspectString.contactTag);
+  ContactPersonDataSource get _dataSource => Get.find<ContactPersonDataSource>(tag: ProspectString.contactTag);
 
   void goBack() {
     Get.back(id: ProspectNavigator.id);

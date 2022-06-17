@@ -1,9 +1,9 @@
 part of 'package:ventes/app/states/controllers/customer_fu_state_controller.dart';
 
-class _Listener extends RegularListener {
-  _Properties get _properties => Get.find<_Properties>(tag: NearbyString.customerUpdateTag);
-  _FormSource get _formSource => Get.find<_FormSource>(tag: NearbyString.customerUpdateTag);
-  _DataSource get _dataSource => Get.find<_DataSource>(tag: NearbyString.customerUpdateTag);
+class CustomerFormUpdateListener extends StateListener {
+  CustomerFormUpdateProperty get _properties => Get.find<CustomerFormUpdateProperty>(tag: NearbyString.customerUpdateTag);
+  CustomerFormUpdateFormSource get _formSource => Get.find<CustomerFormUpdateFormSource>(tag: NearbyString.customerUpdateTag);
+  CustomerFormUpdateDataSource get _dataSource => Get.find<CustomerFormUpdateDataSource>(tag: NearbyString.customerUpdateTag);
 
   void goBack() {
     Get.back(id: NearbyNavigator.id);

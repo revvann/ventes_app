@@ -1,8 +1,8 @@
 part of 'package:ventes/app/states/controllers/daily_schedule_state_controller.dart';
 
-class _Listener extends RegularListener {
-  _Properties get _properties => Get.find<_Properties>(tag: ScheduleString.dailyScheduleTag);
-  _DataSource get _dataSource => Get.find<_DataSource>(tag: ScheduleString.dailyScheduleTag);
+class DailyScheduleListener extends StateListener {
+  DailyScheduleProperty get _properties => Get.find<DailyScheduleProperty>(tag: ScheduleString.dailyScheduleTag);
+  DailyScheduleDataSource get _dataSource => Get.find<DailyScheduleDataSource>(tag: ScheduleString.dailyScheduleTag);
 
   void onArrowBackClick() {
     Get.back(id: ScheduleNavigator.id);

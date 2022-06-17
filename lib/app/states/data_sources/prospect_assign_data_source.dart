@@ -1,8 +1,8 @@
 part of 'package:ventes/app/states/controllers/prospect_assign_state_controller.dart';
 
-class _DataSource extends RegularDataSource<ProspectAssignPresenter> implements FetchDataContract {
-  _Listener get _listener => Get.find<_Listener>(tag: ProspectString.prospectAssignTag);
-  _Properties get _properties => Get.find<_Properties>(tag: ProspectString.prospectAssignTag);
+class ProspectAssignDataSource extends StateDataSource<ProspectAssignPresenter> implements FetchDataContract {
+  ProspectAssignListener get _listener => Get.find<ProspectAssignListener>(tag: ProspectString.prospectAssignTag);
+  ProspectAssignProperty get _properties => Get.find<ProspectAssignProperty>(tag: ProspectString.prospectAssignTag);
 
   final Rx<List<ProspectAssign>> _prospectAssigns = Rx<List<ProspectAssign>>([]);
 

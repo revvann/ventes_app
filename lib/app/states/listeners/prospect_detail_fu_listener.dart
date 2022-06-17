@@ -1,9 +1,9 @@
 part of 'package:ventes/app/states/controllers/prospect_detail_fu_state_controller.dart';
 
-class _Listener extends RegularListener {
-  _Properties get _properties => Get.find<_Properties>(tag: ProspectString.detailUpdateTag);
-  _FormSource get _formSource => Get.find<_FormSource>(tag: ProspectString.detailUpdateTag);
-  _DataSource get _dataSource => Get.find<_DataSource>(tag: ProspectString.detailUpdateTag);
+class ProspectDetailFormUpdateListener extends StateListener {
+  ProspectDetailFormUpdateProperty get _properties => Get.find<ProspectDetailFormUpdateProperty>(tag: ProspectString.detailUpdateTag);
+  ProspectDetailFormUpdateFormSource get _formSource => Get.find<ProspectDetailFormUpdateFormSource>(tag: ProspectString.detailUpdateTag);
+  ProspectDetailFormUpdateDataSource get _dataSource => Get.find<ProspectDetailFormUpdateDataSource>(tag: ProspectString.detailUpdateTag);
 
   void goBack() {
     Get.back(

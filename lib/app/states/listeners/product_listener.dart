@@ -1,8 +1,8 @@
 part of 'package:ventes/app/states/controllers/product_state_controller.dart';
 
-class _Listener extends RegularListener {
-  _Properties get _properties => Get.find<_Properties>(tag: ProspectString.productTag);
-  _DataSource get _dataSource => Get.find<_DataSource>(tag: ProspectString.productTag);
+class ProductListener extends StateListener {
+  ProductProperty get _properties => Get.find<ProductProperty>(tag: ProspectString.productTag);
+  ProductDataSource get _dataSource => Get.find<ProductDataSource>(tag: ProspectString.productTag);
 
   void goBack() {
     Get.back(id: ProspectNavigator.id);

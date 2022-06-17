@@ -1,8 +1,8 @@
 part of 'package:ventes/app/states/controllers/prospect_state_controller.dart';
 
-class _DataSource extends RegularDataSource<ProspectPresenter> implements FetchDataContract {
-  _Listener get _listener => Get.find<_Listener>(tag: ProspectString.prospectTag);
-  _Properties get _properties => Get.find<_Properties>(tag: ProspectString.prospectTag);
+class ProspectDataSource extends StateDataSource<ProspectPresenter> implements FetchDataContract {
+  ProspectListener get _listener => Get.find<ProspectListener>(tag: ProspectString.prospectTag);
+  ProspectProperty get _properties => Get.find<ProspectProperty>(tag: ProspectString.prospectTag);
 
   final Rx<List<KeyableDropdownItem<int, DBType>>> _statusItems = Rx<List<KeyableDropdownItem<int, DBType>>>([]);
   set statusItems(List<KeyableDropdownItem<int, DBType>> value) => _statusItems.value = value;

@@ -5,11 +5,11 @@ import 'package:get/get.dart';
 import 'package:ventes/app/resources/views/customer_form/create/customer_fc.dart';
 import 'package:ventes/app/resources/views/customer_form/update/customer_fu.dart';
 import 'package:ventes/app/states/controllers/customer_fu_state_controller.dart';
-import 'package:ventes/core/page_route.dart';
+import 'package:ventes/core/routing/page_route.dart';
 import 'package:ventes/app/states/controllers/customer_fc_state_controller.dart';
 import 'package:ventes/app/states/controllers/nearby_state_controller.dart';
 import 'package:ventes/app/resources/views/nearby/nearby.dart';
-import 'package:ventes/core/view_navigator.dart';
+import 'package:ventes/core/view/view_navigator.dart';
 
 class NearbyNavigator extends ViewNavigator {
   static const id = 2;

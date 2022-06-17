@@ -1,5 +1,5 @@
 import 'package:ventes/app/models/city_model.dart';
-import 'package:ventes/core/model.dart';
+import 'package:ventes/core/api/model.dart';
 
 class Subdistrict extends Model {
   int? subdistrictid;

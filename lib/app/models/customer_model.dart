@@ -2,7 +2,7 @@ import 'package:ventes/app/models/city_model.dart';
 import 'package:ventes/app/models/country_model.dart';
 import 'package:ventes/app/models/province_model.dart';
 import 'package:ventes/app/models/subdistrict_model.dart';
-import 'package:ventes/core/model.dart';
+import 'package:ventes/core/api/model.dart';
 import 'package:ventes/app/models/type_model.dart';
 
 class Customer extends Model {

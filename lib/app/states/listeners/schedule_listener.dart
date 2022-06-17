@@ -1,8 +1,8 @@
 part of 'package:ventes/app/states/controllers/schedule_state_controller.dart';
 
-class _Listener extends RegularListener {
-  _Properties get _properties => Get.find<_Properties>(tag: ScheduleString.scheduleTag);
-  _DataSource get _dataSource => Get.find<_DataSource>(tag: ScheduleString.scheduleTag);
+class ScheduleListener extends StateListener {
+  ScheduleProperty get _properties => Get.find<ScheduleProperty>(tag: ScheduleString.scheduleTag);
+  ScheduleDataSource get _dataSource => Get.find<ScheduleDataSource>(tag: ScheduleString.scheduleTag);
 
   void onDateShownChanged(String data) {
     if (data == 'displayDate') {

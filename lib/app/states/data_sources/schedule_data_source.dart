@@ -2,9 +2,9 @@
 
 part of 'package:ventes/app/states/controllers/schedule_state_controller.dart';
 
-class _DataSource extends RegularDataSource<SchedulePresenter> implements FetchDataContract {
-  _Listener get _listener => Get.find<_Listener>(tag: ScheduleString.scheduleTag);
-  _Properties get _properties => Get.find<_Properties>(tag: ScheduleString.scheduleTag);
+class ScheduleDataSource extends StateDataSource<SchedulePresenter> implements FetchDataContract {
+  ScheduleListener get _listener => Get.find<ScheduleListener>(tag: ScheduleString.scheduleTag);
+  ScheduleProperty get _properties => Get.find<ScheduleProperty>(tag: ScheduleString.scheduleTag);
 
   final _types = <String, int>{}.obs;
   Map<String, int> get types => _types.value;

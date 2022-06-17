@@ -1,9 +1,9 @@
 part of 'package:ventes/app/states/controllers/customer_fc_state_controller.dart';
 
-class _DataSource extends RegularDataSource<CustomerFormCreatePresenter> implements CustomerCreateContract {
-  _Listener get _listener => Get.find<_Listener>(tag: NearbyString.customerCreateTag);
-  _FormSource get _formSource => Get.find<_FormSource>(tag: NearbyString.customerCreateTag);
-  _Properties get _properties => Get.find<_Properties>(tag: NearbyString.customerCreateTag);
+class CustomerFormCreateDataSource extends StateDataSource<CustomerFormCreatePresenter> implements CustomerCreateContract {
+  CustomerFormCreateListener get _listener => Get.find<CustomerFormCreateListener>(tag: NearbyString.customerCreateTag);
+  CustomerFormCreateFormSource get _formSource => Get.find<CustomerFormCreateFormSource>(tag: NearbyString.customerCreateTag);
+  CustomerFormCreateProperty get _properties => Get.find<CustomerFormCreateProperty>(tag: NearbyString.customerCreateTag);
 
   final _customers = <BpCustomer>[].obs;
   set customers(List<BpCustomer> value) => _customers.value = value;

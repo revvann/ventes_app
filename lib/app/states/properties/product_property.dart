@@ -1,0 +1,67 @@
+part of 'package:ventes/app/states/controllers/product_state_controller.dart';
+
+class ProductProperty extends StateProperty {
+  ProductDataSource get _dataSource => Get.find<ProductDataSource>(tag: ProspectString.productTag);
+
+  Task task = Task(ProspectString.productTaskCode);
+
+  Set<String> popupControllers = {};
+
+  TextEditingController searchTEC = TextEditingController();
+  String lastSearch = "";
+  Timer? debounce;
+  final isLoading = false.obs;
+
+  late int prospectid;
+
+  void refresh() {
+    _dataSource.fetchData(prospectid);
+    Get.find<TaskHelper>().loaderPush(task);
+  }
+
+  void searchProducts() {
+    isLoading.value = true;
+    _dataSource.fetchProducts(prospectid, lastSearch);
+  }
+
+  void onSearchChanged() {
+    if (lastSearch != searchTEC.text) {
+      lastSearch = searchTEC.text;
+      if (debounce?.isActive ?? false) debounce?.cancel();
+      debounce = Timer(const Duration(milliseconds: 500), searchProducts);
+    }
+  }
+
+  PopupMenuController createPopupController([int id = 0]) {
+    String tag = "popup_$id";
+    popupControllers.add(tag);
+    return Get.put(PopupMenuController(), tag: tag);
+  }
+
+  String priceShort(double price) {
+    if (price < 1e3) {
+      return price.toStringAsFixed(0);
+    } else if (price < 1e6) {
+      return "${(price ~/ 1e3)} K";
+    } else if (price < 1e9) {
+      return "${(price ~/ 1e6)} M";
+    } else {
+      return "${(price ~/ 1e9)} B";
+    }
+  }
+
+  @override
+  void init() {
+    super.init();
+    searchTEC.addListener(onSearchChanged);
+  }
+
+  @override
+  void close() {
+    super.close();
+    debounce?.cancel();
+    for (var element in popupControllers) {
+      Get.delete<PopupMenuController>(tag: element);
+    }
+  }
+}

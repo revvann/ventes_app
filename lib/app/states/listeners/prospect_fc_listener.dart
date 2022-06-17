@@ -1,9 +1,9 @@
 part of 'package:ventes/app/states/controllers/prospect_fc_state_controller.dart';
 
-class _Listener extends RegularListener {
-  _FormSource get _formSource => Get.find<_FormSource>(tag: ProspectString.prospectCreateTag);
-  _DataSource get _dataSource => Get.find<_DataSource>(tag: ProspectString.prospectCreateTag);
-  _Properties get _properties => Get.find<_Properties>(tag: ProspectString.prospectCreateTag);
+class ProspectFormCreateListener extends StateListener {
+  ProspectFormCreateFormSource get _formSource => Get.find<ProspectFormCreateFormSource>(tag: ProspectString.prospectCreateTag);
+  ProspectFormCreateDataSource get _dataSource => Get.find<ProspectFormCreateDataSource>(tag: ProspectString.prospectCreateTag);
+  ProspectFormCreateProperty get _properties => Get.find<ProspectFormCreateProperty>(tag: ProspectString.prospectCreateTag);
 
   void onDateStartSelected(DateTime? value) {
     if (value != null) {

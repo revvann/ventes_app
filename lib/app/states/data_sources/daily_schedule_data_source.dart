@@ -1,8 +1,8 @@
 part of 'package:ventes/app/states/controllers/daily_schedule_state_controller.dart';
 
-class _DataSource extends RegularDataSource<DailySchedulePresenter> implements DailyScheduleContract {
-  _Listener get _listener => Get.find<_Listener>(tag: ScheduleString.dailyScheduleTag);
-  _Properties get _properties => Get.find<_Properties>(tag: ScheduleString.dailyScheduleTag);
+class DailyScheduleDataSource extends StateDataSource<DailySchedulePresenter> implements DailyScheduleContract {
+  DailyScheduleListener get _listener => Get.find<DailyScheduleListener>(tag: ScheduleString.dailyScheduleTag);
+  DailyScheduleProperty get _properties => Get.find<DailyScheduleProperty>(tag: ScheduleString.dailyScheduleTag);
 
   final _types = <String, int>{}.obs;
   Map<String, int> get types => _types.value;

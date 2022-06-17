@@ -1,9 +1,9 @@
 part of 'package:ventes/app/states/controllers/prospect_detail_fc_state_controller.dart';
 
-class _DataSource extends RegularDataSource<ProspectDetailFormCreatePresenter> implements ProspectDetailCreateContract {
-  _Listener get _listener => Get.find<_Listener>(tag: ProspectString.detailCreateTag);
-  _FormSource get _formSource => Get.find<_FormSource>(tag: ProspectString.detailCreateTag);
-  _Properties get _properties => Get.find<_Properties>(tag: ProspectString.detailCreateTag);
+class ProspectDetailFormCreateDataSource extends StateDataSource<ProspectDetailFormCreatePresenter> implements ProspectDetailCreateContract {
+  ProspectDetailFormCreateListener get _listener => Get.find<ProspectDetailFormCreateListener>(tag: ProspectString.detailCreateTag);
+  ProspectDetailFormCreateFormSource get _formSource => Get.find<ProspectDetailFormCreateFormSource>(tag: ProspectString.detailCreateTag);
+  ProspectDetailFormCreateProperty get _properties => Get.find<ProspectDetailFormCreateProperty>(tag: ProspectString.detailCreateTag);
 
   final Rx<List<KeyableDropdownItem<int, DBType>>> _categoryItems = Rx<List<KeyableDropdownItem<int, DBType>>>([]);
   set categoryItems(List<KeyableDropdownItem<int, DBType>> value) => _categoryItems.value = value;

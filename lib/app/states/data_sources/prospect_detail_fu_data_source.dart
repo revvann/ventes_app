@@ -1,9 +1,9 @@
 part of 'package:ventes/app/states/controllers/prospect_detail_fu_state_controller.dart';
 
-class _DataSource extends RegularDataSource<ProspectDetailFormUpdatePresenter> implements ProspectDetailUpdateContract {
-  _Listener get _listener => Get.find<_Listener>(tag: ProspectString.detailUpdateTag);
-  _FormSource get _formSource => Get.find<_FormSource>(tag: ProspectString.detailUpdateTag);
-  _Properties get _properties => Get.find<_Properties>(tag: ProspectString.detailUpdateTag);
+class ProspectDetailFormUpdateDataSource extends StateDataSource<ProspectDetailFormUpdatePresenter> implements ProspectDetailUpdateContract {
+  ProspectDetailFormUpdateListener get _listener => Get.find<ProspectDetailFormUpdateListener>(tag: ProspectString.detailUpdateTag);
+  ProspectDetailFormUpdateFormSource get _formSource => Get.find<ProspectDetailFormUpdateFormSource>(tag: ProspectString.detailUpdateTag);
+  ProspectDetailFormUpdateProperty get _properties => Get.find<ProspectDetailFormUpdateProperty>(tag: ProspectString.detailUpdateTag);
 
   final Rx<List<KeyableDropdownItem<int, DBType>>> _categoryItems = Rx<List<KeyableDropdownItem<int, DBType>>>([]);
   set categoryItems(List<KeyableDropdownItem<int, DBType>> value) => _categoryItems.value = value;

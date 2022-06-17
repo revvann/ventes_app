@@ -1,8 +1,8 @@
 part of 'package:ventes/app/states/controllers/nearby_state_controller.dart';
 
-class _DataSource extends RegularDataSource<NearbyPresenter> implements NearbyContract {
-  _Properties get _properties => Get.find<_Properties>(tag: NearbyString.nearbyTag);
-  _Listener get _listener => Get.find<_Listener>(tag: NearbyString.nearbyTag);
+class NearbyDataSource extends StateDataSource<NearbyPresenter> implements NearbyContract {
+  NearbyProperty get _properties => Get.find<NearbyProperty>(tag: NearbyString.nearbyTag);
+  NearbyListener get _listener => Get.find<NearbyListener>(tag: NearbyString.nearbyTag);
   List<BpCustomer> bpCustomers = <BpCustomer>[];
 
   final _customers = <Customer>[].obs;

@@ -1,9 +1,9 @@
 part of 'package:ventes/app/states/controllers/prospect_fc_state_controller.dart';
 
-class _DataSource extends RegularDataSource<ProspectFormCreatePresenter> implements ProspectCreateContract {
-  _Listener get _listener => Get.find<_Listener>(tag: ProspectString.prospectCreateTag);
-  _FormSource get _formSource => Get.find<_FormSource>(tag: ProspectString.prospectCreateTag);
-  _Properties get _properties => Get.find<_Properties>(tag: ProspectString.prospectCreateTag);
+class ProspectFormCreateDataSource extends StateDataSource<ProspectFormCreatePresenter> implements ProspectCreateContract {
+  ProspectFormCreateListener get _listener => Get.find<ProspectFormCreateListener>(tag: ProspectString.prospectCreateTag);
+  ProspectFormCreateFormSource get _formSource => Get.find<ProspectFormCreateFormSource>(tag: ProspectString.prospectCreateTag);
+  ProspectFormCreateProperty get _properties => Get.find<ProspectFormCreateProperty>(tag: ProspectString.prospectCreateTag);
 
   final Rx<Map<int, String>> _followUpItems = Rx<Map<int, String>>({});
   set followUpItems(Map<int, String> value) => _followUpItems.value = value;

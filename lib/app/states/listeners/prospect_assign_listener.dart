@@ -1,7 +1,7 @@
 part of 'package:ventes/app/states/controllers/prospect_assign_state_controller.dart';
 
-class _Listener extends RegularListener {
-  _Properties get _properties => Get.find<_Properties>(tag: ProspectString.prospectAssignTag);
+class ProspectAssignListener extends StateListener {
+  ProspectAssignProperty get _properties => Get.find<ProspectAssignProperty>(tag: ProspectString.prospectAssignTag);
 
   void goBack() {
     Get.back(id: ProspectNavigator.id);

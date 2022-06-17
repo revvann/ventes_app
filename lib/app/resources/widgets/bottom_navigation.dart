@@ -7,7 +7,7 @@ import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/constants/views.dart';
 import 'package:ventes/app/states/controllers/bottom_navigation_state_controller.dart';
-import 'package:ventes/core/view.dart';
+import 'package:ventes/core/view/view.dart';
 
 class BottomNavigation extends GetView<BottomNavigationStateController> {
   @override

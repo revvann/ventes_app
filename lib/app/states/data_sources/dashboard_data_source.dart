@@ -1,8 +1,8 @@
 part of 'package:ventes/app/states/controllers/dashboard_state_controller.dart';
 
-class _DataSource extends RegularDataSource<DashboardPresenter> implements DashboardContract {
-  _Properties get _properties => Get.find<_Properties>(tag: DashboardString.dashboardTag);
-  _Listener get _listener => Get.find<_Listener>(tag: DashboardString.dashboardTag);
+class DashboardDataSource extends StateDataSource<DashboardPresenter> implements DashboardContract {
+  DashboardProperty get _properties => Get.find<DashboardProperty>(tag: DashboardString.dashboardTag);
+  DashboardListener get _listener => Get.find<DashboardListener>(tag: DashboardString.dashboardTag);
 
   final _customers = <BpCustomer>[].obs;
   set customers(List<BpCustomer> value) => _customers.value = value;

@@ -1,9 +1,9 @@
 // ignore_for_file: prefer_const_constructors
 part of 'package:ventes/app/states/controllers/dashboard_state_controller.dart';
 
-class _Listener extends RegularListener {
-  _Properties get _properties => Get.find<_Properties>(tag: DashboardString.dashboardTag);
-  _DataSource get _dataSource => Get.find<_DataSource>(tag: DashboardString.dashboardTag);
+class DashboardListener extends StateListener {
+  DashboardProperty get _properties => Get.find<DashboardProperty>(tag: DashboardString.dashboardTag);
+  DashboardDataSource get _dataSource => Get.find<DashboardDataSource>(tag: DashboardString.dashboardTag);
 
   void switchAccount(int userdtid) async {
     Get.find<AuthHelper>().accountActive.val = userdtid;

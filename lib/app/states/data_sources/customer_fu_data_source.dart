@@ -1,9 +1,9 @@
 part of 'package:ventes/app/states/controllers/customer_fu_state_controller.dart';
 
-class _DataSource extends RegularDataSource<CustomerFormUpdatePresenter> implements CustomerUpdateContract {
-  _Listener get _listener => Get.find<_Listener>(tag: NearbyString.customerUpdateTag);
-  _FormSource get _formSource => Get.find<_FormSource>(tag: NearbyString.customerUpdateTag);
-  _Properties get _properties => Get.find<_Properties>(tag: NearbyString.customerUpdateTag);
+class CustomerFormUpdateDataSource extends StateDataSource<CustomerFormUpdatePresenter> implements CustomerUpdateContract {
+  CustomerFormUpdateListener get _listener => Get.find<CustomerFormUpdateListener>(tag: NearbyString.customerUpdateTag);
+  CustomerFormUpdateFormSource get _formSource => Get.find<CustomerFormUpdateFormSource>(tag: NearbyString.customerUpdateTag);
+  CustomerFormUpdateProperty get _properties => Get.find<CustomerFormUpdateProperty>(tag: NearbyString.customerUpdateTag);
 
   final _customers = <Customer>[].obs;
   set customers(List<Customer> value) => _customers.value = value;

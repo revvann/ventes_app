@@ -1,9 +1,9 @@
 part of 'package:ventes/app/states/controllers/contact_person_fc_state_controller.dart';
 
-class _DataSource extends RegularDataSource<ContactPersonFormCreatePresenter> implements ContactPersonCreateContract {
-  _Listener get _listener => Get.find<_Listener>(tag: ProspectString.contactCreateTag);
-  _Properties get _properties => Get.find<_Properties>(tag: ProspectString.contactCreateTag);
-  _FormSource get _formSource => Get.find<_FormSource>(tag: ProspectString.contactCreateTag);
+class ContactPersonFormCreateDataSource extends StateDataSource<ContactPersonFormCreatePresenter> implements ContactPersonCreateContract {
+  ContactPersonFormCreateListener get _listener => Get.find<ContactPersonFormCreateListener>(tag: ProspectString.contactCreateTag);
+  ContactPersonFormCreateProperty get _properties => Get.find<ContactPersonFormCreateProperty>(tag: ProspectString.contactCreateTag);
+  ContactPersonFormCreateFormSource get _formSource => Get.find<ContactPersonFormCreateFormSource>(tag: ProspectString.contactCreateTag);
 
   final Rx<Customer?> _customer = Rx<Customer?>(null);
   Customer? get customer => _customer.value;

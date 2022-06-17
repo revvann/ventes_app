@@ -1,9 +1,9 @@
 part of 'package:ventes/app/states/controllers/product_fu_state_controller.dart';
 
-class _Listener extends RegularListener {
-  _FormSource get _formSource => Get.find<_FormSource>(tag: ProspectString.productUpdateTag);
-  _Properties get _properties => Get.find<_Properties>(tag: ProspectString.productUpdateTag);
-  _DataSource get _dataSource => Get.find<_DataSource>(tag: ProspectString.productUpdateTag);
+class ProductFormUpdateListener extends StateListener {
+  ProductFormUpdateFormSource get _formSource => Get.find<ProductFormUpdateFormSource>(tag: ProspectString.productUpdateTag);
+  ProductFormUpdateProperty get _properties => Get.find<ProductFormUpdateProperty>(tag: ProspectString.productUpdateTag);
+  ProductFormUpdateDataSource get _dataSource => Get.find<ProductFormUpdateDataSource>(tag: ProspectString.productUpdateTag);
 
   void goBack() {
     Get.back(

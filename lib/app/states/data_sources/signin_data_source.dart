@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
-import 'package:ventes/app/network/contracts/auth_contract.dart';
-import 'package:ventes/app/network/presenters/auth_presenter.dart';
+import 'package:ventes/app/api/contracts/auth_contract.dart';
+import 'package:ventes/app/api/presenters/auth_presenter.dart';
 
 class SigninDataSource {
   AuthPresenter presenter = AuthPresenter();
