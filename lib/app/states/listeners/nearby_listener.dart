@@ -85,10 +85,19 @@ class _Listener extends RegularListener {
   }
 
   void onDeleteDataClick() {
-    Customer customer = _properties.selectedCustomer.first;
-    BpCustomer bpcustomer = _dataSource.bpCustomers.firstWhere((element) => element.sbccstmid == customer.cstmid);
-    _dataSource.deleteData(bpcustomer.sbcid!);
-    Get.find<TaskHelper>().loaderPush(_properties.task);
+    Get.find<TaskHelper>().confirmPush(
+      _properties.task.copyWith(
+        message: NearbyString.deleteCustomerConfirm,
+        onFinished: (res) {
+          if (res) {
+            Customer customer = _properties.selectedCustomer.first;
+            BpCustomer bpcustomer = _dataSource.bpCustomers.firstWhere((element) => element.sbccstmid == customer.cstmid);
+            _dataSource.deleteData(bpcustomer.sbcid!);
+            Get.find<TaskHelper>().loaderPush(_properties.task);
+          }
+        },
+      ),
+    );
   }
 
   void onLoadDataError(String message) {
@@ -109,7 +118,7 @@ class _Listener extends RegularListener {
   void onDeleteSuccess(String message) {
     Get.find<TaskHelper>().successPush(_properties.task.copyWith(
         message: message,
-        onFinished: () {
+        onFinished: (res) {
           Get.find<NearbyStateController>().refreshStates();
         }));
     Get.find<TaskHelper>().loaderPop(_properties.task.name);

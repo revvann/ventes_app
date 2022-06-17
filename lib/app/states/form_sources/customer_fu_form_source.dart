@@ -109,4 +109,30 @@ class _FormSource extends UpdateFormSource {
       'cstmlongitude': cstmlongitude,
     };
   }
+
+  @override
+  void onSubmit() {
+    double newLat = double.tryParse(cstmlatitude) ?? 0.0;
+    double newLng = double.tryParse(cstmlongitude) ?? 0.0;
+    LatLng newPos = LatLng(newLat, newLng);
+
+    double radius = calculateDistance(_properties.markers.first.position, newPos);
+    bool inRange = radius <= 100;
+
+    if (isValid && inRange) {
+      Map<String, dynamic> data = toJson();
+      data['_method'] = 'PUT';
+
+      if (data['sbccstmpic'] != null) {
+        String filename = path.basename(data['sbccstmpic']);
+        data['sbccstmpic'] = MultipartFile(File(data['sbccstmpic']), filename: filename);
+      }
+
+      FormData formData = FormData(data);
+      _dataSource.updateCustomer(sbcid!, formData);
+      Get.find<TaskHelper>().loaderPush(_properties.task);
+    } else {
+      Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: NearbyString.formInvalid));
+    }
+  }
 }

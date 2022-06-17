@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:get/get.dart';
+import 'package:ventes/app/resources/widgets/confirm_alert.dart';
 import 'package:ventes/app/resources/widgets/error_alert.dart';
 import 'package:ventes/app/resources/widgets/error_snackbar.dart';
 import 'package:ventes/app/resources/widgets/failed_alert.dart';
@@ -14,11 +15,13 @@ class TaskHelper {
   List<Task> faileds = [];
   List<Task> errors = [];
   List<Task> success = [];
+  List<Task<bool>> confirms = [];
 
   bool taskExists(String taskName) => tasks.firstWhereOrNull((task) => task.name == taskName) != null;
   bool failedExists(String taskName) => faileds.firstWhereOrNull((task) => task.name == taskName) != null;
   bool errorExists(String taskName) => errors.firstWhereOrNull((task) => task.name == taskName) != null;
   bool successExists(String taskName) => success.firstWhereOrNull((task) => task.name == taskName) != null;
+  bool confirmExists(String taskName) => confirms.firstWhereOrNull((task) => task.name == taskName) != null;
 
   loaderPush(Task task) {
     if (tasks.isEmpty) {
@@ -55,10 +58,11 @@ class TaskHelper {
       Task task = faileds.first;
 
       if (task.snackbar) {
-        await FailedSnackbar(task.message!).show();
+        task.result = await FailedSnackbar(task.message!).show();
       } else {
-        await FailedAlert(task.message!).show();
+        task.result = await FailedAlert(task.message!).show();
       }
+
       failedPop(task.name);
       task.finish();
       return failedShow();
@@ -84,9 +88,9 @@ class TaskHelper {
       Task task = errors.first;
 
       if (task.snackbar) {
-        await ErrorSnackbar(task.message!).show();
+        task.result = await ErrorSnackbar(task.message!).show();
       } else {
-        await ErrorAlert(task.message!).show();
+        task.result = await ErrorAlert(task.message!).show();
       }
 
       errorPop(task.name);
@@ -114,9 +118,9 @@ class TaskHelper {
       Task task = success.first;
 
       if (task.snackbar) {
-        await SuccessSnackbar(task.message!).show();
+        task.result = await SuccessSnackbar(task.message!).show();
       } else {
-        await SuccessAlert(task.message!).show();
+        task.result = await SuccessAlert(task.message!).show();
       }
 
       successPop(task.name);
@@ -125,21 +129,47 @@ class TaskHelper {
     }
     return;
   }
+
+  Future confirmPush(Task<bool> task) async {
+    confirms.add(task);
+    if (tasks.isEmpty) {
+      await confirmShow();
+    }
+  }
+
+  confirmPop(String taskName) {
+    if (confirmExists(taskName)) {
+      confirms.removeWhere((item) => item.name == taskName);
+    }
+  }
+
+  Future confirmShow() async {
+    if (confirms.isNotEmpty) {
+      Task<bool> task = confirms.first;
+      task.result = await ConfirmAlert(task.message!).show();
+
+      confirmPop(task.name);
+      task.finish();
+      return confirmShow();
+    }
+    return;
+  }
 }
 
-class Task {
+class Task<T> {
   String name;
   String? message;
-  Function()? onFinished;
+  Function(T result)? onFinished;
   bool snackbar;
+  late T result;
 
   Task(this.name, {this.message, this.onFinished, this.snackbar = false});
 
   void finish() {
-    onFinished?.call();
+    onFinished?.call(result);
   }
 
-  Task copyWith({String? message, Function()? onFinished, bool snackbar = false}) {
-    return Task(name, message: message, onFinished: onFinished, snackbar: snackbar);
+  Task<S> copyWith<S>({String? message, Function(S result)? onFinished, bool snackbar = false}) {
+    return Task<S>(name, message: message, onFinished: onFinished, snackbar: snackbar);
   }
 }

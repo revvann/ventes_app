@@ -190,11 +190,16 @@ class _Listener extends RegularListener {
   }
 
   void onFormSubmit() {
-    if (_formSource.isValid()) {
-      Map<String, dynamic> data = _formSource.toJson();
-      Get.find<TaskHelper>().loaderPush(_properties.task);
-      _dataSource.updateSchedule(data);
-    }
+    Get.find<TaskHelper>().confirmPush(
+      _properties.task.copyWith<bool>(
+        message: ScheduleString.updateScheduleConfirm,
+        onFinished: (res) {
+          if (res) {
+            _formSource.onSubmit();
+          }
+        },
+      ),
+    );
   }
 
   void onCameraMove(position) {
@@ -211,7 +216,7 @@ class _Listener extends RegularListener {
     Get.find<TaskHelper>().successPush(
       _properties.task.copyWith(
           message: ScheduleString.updateSuccess,
-          onFinished: () {
+          onFinished: (res) {
             Get.find<DailyScheduleStateController>().properties.refresh();
             Get.back(id: ScheduleNavigator.id);
           }),

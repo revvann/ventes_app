@@ -102,4 +102,19 @@ class _FormSource extends UpdateFormSource {
 
     return formData;
   }
+
+  @override
+  void onSubmit() {
+    if (isValid) {
+      Map<String, dynamic> data = toJson();
+      String filename = path.basename(data['sbccstmpic']);
+      data['sbccstmpic'] = MultipartFile(File(data['sbccstmpic']), filename: filename);
+
+      FormData formData = FormData(data);
+      _dataSource.createCustomer(formData);
+      Get.find<TaskHelper>().loaderPush(_properties.task);
+    } else {
+      Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: NearbyString.formInvalid));
+    }
+  }
 }

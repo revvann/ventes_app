@@ -4,6 +4,7 @@ class _FormSource extends RegularFormSource {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   _Properties get _properties => Get.find<_Properties>(tag: ProspectString.detailCreateTag);
+  _DataSource get _dataSource => Get.find<_DataSource>(tag: ProspectString.detailCreateTag);
 
   _Validator validator = _Validator();
 
@@ -94,5 +95,16 @@ class _FormSource extends RegularFormSource {
       'prospectdtlatitude': prosdtlat.toString(),
       'prospectdtlongitude': prosdtlong.toString(),
     };
+  }
+
+  @override
+  void onSubmit() {
+    if (isValid) {
+      Map<String, dynamic> data = toJson();
+      _dataSource.createData(data);
+      Get.find<TaskHelper>().loaderPush(_properties.task);
+    } else {
+      Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: "Form invalid, Make sure all fields are filled"));
+    }
   }
 }

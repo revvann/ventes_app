@@ -2,6 +2,7 @@ part of 'package:ventes/app/states/controllers/contact_person_fu_state_controlle
 
 class _FormSource extends UpdateFormSource {
   _DataSource get _dataSource => Get.find<_DataSource>(tag: ProspectString.contactUpdateTag);
+  _Properties get _properties => Get.find<_Properties>(tag: ProspectString.contactUpdateTag);
 
   SearchableDropdownController<Contact> contactDropdownController = Get.put(
     SearchableDropdownController<Contact>(),
@@ -43,5 +44,16 @@ class _FormSource extends UpdateFormSource {
     return {
       'contactvalueid': isPhone ? contact?.phones?.first.value : valueTEC.text,
     };
+  }
+
+  @override
+  void onSubmit() {
+    if (isValid) {
+      Map<String, dynamic> data = toJson();
+      _dataSource.updateData(data);
+      Get.find<TaskHelper>().loaderPush(_properties.task);
+    } else {
+      Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: "Form is not valid"));
+    }
   }
 }

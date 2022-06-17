@@ -2,6 +2,7 @@ part of 'package:ventes/app/states/controllers/prospect_fu_state_controller.dart
 
 class _FormSource extends UpdateFormSource {
   _DataSource get _dataSource => Get.find<_DataSource>(tag: ProspectString.prospectUpdateTag);
+  _Properties get _properties => Get.find<_Properties>(tag: ProspectString.prospectUpdateTag);
 
   SearchableDropdownController<UserDetail> ownerDropdownController = Get.put(SearchableDropdownController<UserDetail>());
   SearchableDropdownController<BpCustomer> customerDropdownController = Get.put(SearchableDropdownController<BpCustomer>());
@@ -109,5 +110,16 @@ class _FormSource extends UpdateFormSource {
       'prospectdescription': prosdesc,
       'prospectcustid': proscustomer?.sbcid,
     };
+  }
+
+  @override
+  void onSubmit() {
+    if (isValid) {
+      Map<String, dynamic> data = toJson();
+      _dataSource.updateProspect(_properties.prospectId, data);
+      Get.find<TaskHelper>().loaderPush(_properties.task);
+    } else {
+      Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: "Form is not valid"));
+    }
   }
 }

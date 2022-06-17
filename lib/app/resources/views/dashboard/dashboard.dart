@@ -5,6 +5,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:ventes/app/models/bp_customer_model.dart';
 import 'package:ventes/app/models/user_detail_model.dart';
+import 'package:ventes/app/resources/widgets/confirm_alert.dart';
+import 'package:ventes/app/resources/widgets/loader.dart';
+import 'package:ventes/app/resources/widgets/loading_container.dart';
 import 'package:ventes/app/resources/widgets/menu_divider.dart';
 import 'package:ventes/app/resources/widgets/pop_up_item.dart';
 import 'package:ventes/app/resources/widgets/popup_button.dart';
@@ -18,6 +21,7 @@ import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/constants/views.dart';
 import 'package:ventes/app/states/controllers/dashboard_state_controller.dart';
 import 'package:ventes/helpers/function_helpers.dart';
+import 'package:ventes/helpers/task_helper.dart';
 
 part 'package:ventes/app/resources/views/dashboard/components/_menu_item.dart';
 part 'package:ventes/app/resources/views/dashboard/components/_appbar.dart';
@@ -83,8 +87,13 @@ class DashboardView extends View<DashboardStateController> {
                             color: RegularColor.cyan,
                             icon: "assets/svg/attendance.svg",
                             text: "Attendance",
-                            onTap: () {
-                              FailedSnackbar("I'm dopinder, the ruler of the universe").show();
+                            onTap: () async {
+                              Get.find<TaskHelper>().confirmPush(state.properties.task.copyWith<bool>(
+                                message: "Are you sure you want to go to attendance?",
+                                onFinished: (result) {
+                                  print(result);
+                                },
+                              ));
                             },
                           ),
                         ],

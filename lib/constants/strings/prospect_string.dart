@@ -50,6 +50,19 @@ class ProspectString {
   static String deleteProspectDetailSuccess = "ProspectDetail deleted successfully";
   static String deleteProspectDetailFailed = "Failed to delete prospect detail";
 
+  static String updateContactConfirm = "Are you sure you want to update this contact?";
+  static String createContactConfirm = "Are you sure you want to create this contact?";
+  static String updateProductConfirm = "Are you sure you want to update this product?";
+  static String createProductConfirm = "Are you sure you want to create this product?";
+  static String createDetailConfirm = "Are you sure you want to create this detail?";
+  static String updateDetailConfirm = "Are you sure you want to update this detail?";
+  static String createProspectConfirm = "Are you sure you want to create this prospect?";
+  static String updateProspectConfirm = "Are you sure you want to update this prospect?";
+
+  static String deleteContactConfirm = "Are you sure you want to delete this contact?";
+  static String deleteProductConfirm = "Are you sure you want to delete this product?";
+  static String deleteDetailConfirm = "Are you sure you want to delete this detail?";
+
   static String categoryDropdownTag = "category";
   static String detailTypeDropdownTag = "detailtype";
   static String statusDropdownTag = "status";

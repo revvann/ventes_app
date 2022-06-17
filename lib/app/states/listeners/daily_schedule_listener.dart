@@ -35,8 +35,17 @@ class _Listener extends RegularListener {
   }
 
   void deleteSchedule() {
-    _dataSource.deleteData(_properties.selectedAppointment!.scheid!);
-    Get.find<TaskHelper>().loaderPush(_properties.task);
+    Get.find<TaskHelper>().confirmPush(
+      _properties.task.copyWith<bool>(
+        message: ScheduleString.deleteScheduleConfirm,
+        onFinished: (res) {
+          if (res) {
+            _dataSource.deleteData(_properties.selectedAppointment!.scheid!);
+            Get.find<TaskHelper>().loaderPush(_properties.task);
+          }
+        },
+      ),
+    );
   }
 
   onLoadDataFailed(String message) {
@@ -57,7 +66,7 @@ class _Listener extends RegularListener {
   void onDeleteSuccess(String message) {
     Get.find<TaskHelper>().successPush(_properties.task.copyWith(
         message: message,
-        onFinished: () {
+        onFinished: (res) {
           Get.find<DailyScheduleStateController>().refreshStates();
         }));
     Get.find<TaskHelper>().loaderPop(_properties.task.name);

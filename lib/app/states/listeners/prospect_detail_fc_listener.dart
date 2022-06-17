@@ -30,13 +30,16 @@ class _Listener extends RegularListener {
   }
 
   void onSubmitButtonClicked() {
-    if (_formSource.isValid) {
-      Map<String, dynamic> data = _formSource.toJson();
-      _dataSource.createData(data);
-      Get.find<TaskHelper>().loaderPush(_properties.task);
-    } else {
-      Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: "Form invalid, Make sure all fields are filled"));
-    }
+    Get.find<TaskHelper>().confirmPush(
+      _properties.task.copyWith<bool>(
+        message: ProspectString.createDetailConfirm,
+        onFinished: (res) {
+          if (res) {
+            _formSource.onSubmit();
+          }
+        },
+      ),
+    );
   }
 
   void onLoadFailed(String message) {
@@ -52,7 +55,7 @@ class _Listener extends RegularListener {
   void onCreateDataSuccess(String message) {
     Get.find<TaskHelper>().successPush(_properties.task.copyWith(
         message: message,
-        onFinished: () {
+        onFinished: (res) {
           Get.find<ProspectDetailStateController>().properties.refresh();
           Get.back(id: ProspectNavigator.id);
         }));

@@ -57,17 +57,16 @@ class _Listener extends RegularListener {
   }
 
   void onSubmitButtonClicked() async {
-    if (_formSource.isValid) {
-      Map<String, dynamic> data = _formSource.toJson();
-      String filename = path.basename(data['sbccstmpic']);
-      data['sbccstmpic'] = MultipartFile(File(data['sbccstmpic']), filename: filename);
-
-      FormData formData = FormData(data);
-      _dataSource.createCustomer(formData);
-      Get.find<TaskHelper>().loaderPush(_properties.task);
-    } else {
-      Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: NearbyString.formInvalid));
-    }
+    Get.find<TaskHelper>().confirmPush(
+      _properties.task.copyWith<bool>(
+        message: NearbyString.createCustomerConfirm,
+        onFinished: (res) {
+          if (res) {
+            _formSource.onSubmit();
+          }
+        },
+      ),
+    );
   }
 
   void onLoadDataError(String message) {
@@ -94,7 +93,7 @@ class _Listener extends RegularListener {
     Get.find<TaskHelper>().loaderPop(_properties.task.name);
     Get.find<TaskHelper>().successPush(_properties.task.copyWith(
         message: message,
-        onFinished: () {
+        onFinished: (res) {
           Get.find<NearbyStateController>().properties.refresh();
           Get.back(id: NearbyNavigator.id);
         }));

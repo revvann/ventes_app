@@ -10,7 +10,7 @@ class _Listener extends RegularListener {
     Get.offAllNamed(SplashScreenView.route);
   }
 
-  void _logout() async {
+  void _logout(res) async {
     await Get.find<AuthHelper>().destroy();
     Get.offAllNamed(StartedPageView.route);
   }

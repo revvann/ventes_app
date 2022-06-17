@@ -19,8 +19,17 @@ class _Listener extends RegularListener {
   }
 
   void deleteProduct(int productid) {
-    _dataSource.deleteProduct(productid);
-    Get.find<TaskHelper>().loaderPush(_properties.task);
+    Get.find<TaskHelper>().confirmPush(
+      _properties.task.copyWith<bool>(
+        message: ProspectString.deleteProductConfirm,
+        onFinished: (res) {
+          if (res) {
+            _dataSource.deleteProduct(productid);
+            Get.find<TaskHelper>().loaderPush(_properties.task);
+          }
+        },
+      ),
+    );
   }
 
   void onLoadFailed(String message) {
@@ -43,7 +52,7 @@ class _Listener extends RegularListener {
   void onDeleteSuccess(String message) {
     Get.find<TaskHelper>().successPush(_properties.task.copyWith(
         message: message,
-        onFinished: () {
+        onFinished: (res) {
           Get.find<ProductStateController>().refreshStates();
         }));
     Get.find<TaskHelper>().loaderPop(_properties.task.name);

@@ -2,6 +2,7 @@ part of 'package:ventes/app/states/controllers/prospect_detail_fu_state_controll
 
 class _FormSource extends UpdateFormSource {
   _DataSource get _dataSource => Get.find<_DataSource>(tag: ProspectString.detailUpdateTag);
+  _Properties get _properties => Get.find<_Properties>(tag: ProspectString.detailUpdateTag);
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   _Validator validator = _Validator();
@@ -72,5 +73,16 @@ class _FormSource extends UpdateFormSource {
       'prospectdtcatid': prosdtcategory?.typeid.toString(),
       'prospectdttypeid': prosdttype?.typeid.toString(),
     };
+  }
+
+  @override
+  void onSubmit() {
+    if (isValid) {
+      Map<String, dynamic> data = toJson();
+      _dataSource.updateData(_properties.prospectDetailId, data);
+      Get.find<TaskHelper>().loaderPush(_properties.task);
+    } else {
+      Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: "Form invalid, Make sure all fields are filled"));
+    }
   }
 }

@@ -43,6 +43,10 @@ class ScheduleString {
   static const deleteSuccess = "Schedule deleted successfully";
   static const deleteFailed = "Failed to delete schedule";
 
+  static const updateScheduleConfirm = "Are you sure you want to update this schedule?";
+  static const createScheduleConfirm = "Are you sure you want to create this schedule?";
+  static const deleteScheduleConfirm = "Are you sure you want to delete this schedule?";
+
   static const taskCode = 'schedule';
   static const dailyScheduleTaskCode = 'daily';
   static const createScheduleTaskCode = 'create';

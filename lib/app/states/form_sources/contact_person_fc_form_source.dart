@@ -1,6 +1,9 @@
 part of 'package:ventes/app/states/controllers/contact_person_fc_state_controller.dart';
 
 class _FormSource extends RegularFormSource {
+  _Properties get _properties => Get.find<_Properties>(tag: ProspectString.contactCreateTag);
+  _DataSource get _dataSource => Get.find<_DataSource>(tag: ProspectString.contactCreateTag);
+
   KeyableDropdownController<int, DBType> typeDropdownController = Get.put(
     KeyableDropdownController<int, DBType>(),
     tag: ProspectString.contactTypeCode,
@@ -45,5 +48,16 @@ class _FormSource extends RegularFormSource {
       'contactvalueid': isPhone ? contact?.phones?.first.value : valueTEC.text,
       'contactcustomerid': customerid?.toString(),
     };
+  }
+
+  @override
+  void onSubmit() {
+    if (isValid) {
+      Map<String, dynamic> data = toJson();
+      _dataSource.createData(data);
+      Get.find<TaskHelper>().loaderPush(_properties.task);
+    } else {
+      Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: "Form is not valid"));
+    }
   }
 }

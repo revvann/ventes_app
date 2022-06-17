@@ -61,13 +61,16 @@ class _Listener extends RegularListener {
   }
 
   void onSubmitButtonClicked() {
-    if (_formSource.isValid) {
-      Map<String, dynamic> data = _formSource.toJson();
-      _dataSource.createProspect(data);
-      Get.find<TaskHelper>().loaderPush(_properties.task);
-    } else {
-      Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: "Form is not valid"));
-    }
+    Get.find<TaskHelper>().confirmPush(
+      _properties.task.copyWith<bool>(
+        message: ProspectString.createProspectConfirm,
+        onFinished: (res) {
+          if (res) {
+            _formSource.onSubmit();
+          }
+        },
+      ),
+    );
   }
 
   void onAddProduct() {
@@ -116,7 +119,7 @@ class _Listener extends RegularListener {
   void onCreateDataSuccess(String message) {
     Get.find<TaskHelper>().successPush(_properties.task.copyWith(
         message: message,
-        onFinished: () {
+        onFinished: (res) {
           Get.find<ProspectStateController>().properties.refresh();
           Get.back(id: ProspectNavigator.id);
         }));

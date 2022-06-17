@@ -50,8 +50,17 @@ class _Properties {
   String? get shortName => getInitials(_dataSource.account?.user?.userfullname ?? "");
 
   void logout() {
-    _dataSource.logout();
-    Get.find<TaskHelper>().loaderPush(task);
+    Get.find<TaskHelper>().confirmPush(
+      task.copyWith<bool>(
+        message: DashboardString.confirmLogout,
+        onFinished: (res) {
+          if (res) {
+            _dataSource.logout();
+            Get.find<TaskHelper>().loaderPush(task);
+          }
+        },
+      ),
+    );
   }
 }
 

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ventes/constants/regular_size.dart';
 
-class RegularDialog {
+class RegularDialog<T> {
   RegularDialog({
     required this.width,
     this.height,
@@ -25,7 +25,7 @@ class RegularDialog {
   Future<bool> Function()? onWillPop;
 
   Future show() {
-    return Get.dialog(
+    return Get.dialog<T>(
       WillPopScope(
         onWillPop: onWillPop ?? () => Future.value(true),
         child: Dialog(

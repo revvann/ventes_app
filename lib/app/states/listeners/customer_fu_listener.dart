@@ -46,28 +46,16 @@ class _Listener extends RegularListener {
   }
 
   void onSubmitButtonClicked() async {
-    double newLat = double.tryParse(_formSource.cstmlatitude) ?? 0.0;
-    double newLng = double.tryParse(_formSource.cstmlongitude) ?? 0.0;
-    LatLng newPos = LatLng(newLat, newLng);
-
-    double radius = calculateDistance(_properties.markers.first.position, newPos);
-    bool inRange = radius <= 100;
-
-    if (_formSource.isValid && inRange) {
-      Map<String, dynamic> data = _formSource.toJson();
-      data['_method'] = 'PUT';
-
-      if (data['sbccstmpic'] != null) {
-        String filename = path.basename(data['sbccstmpic']);
-        data['sbccstmpic'] = MultipartFile(File(data['sbccstmpic']), filename: filename);
-      }
-
-      FormData formData = FormData(data);
-      _dataSource.updateCustomer(_formSource.sbcid!, formData);
-      Get.find<TaskHelper>().loaderPush(_properties.task);
-    } else {
-      Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: NearbyString.formInvalid));
-    }
+    Get.find<TaskHelper>().confirmPush(
+      _properties.task.copyWith<bool>(
+        message: NearbyString.updateCustomerConfirm,
+        onFinished: (res) {
+          if (res) {
+            _formSource.onSubmit();
+          }
+        },
+      ),
+    );
   }
 
   @override
@@ -98,7 +86,7 @@ class _Listener extends RegularListener {
   void onUpdateDataSuccess(String message) async {
     Get.find<TaskHelper>().successPush(_properties.task.copyWith(
         message: message,
-        onFinished: () {
+        onFinished: (res) {
           Get.find<NearbyStateController>().properties.refresh();
           Get.back(id: NearbyNavigator.id);
         }));

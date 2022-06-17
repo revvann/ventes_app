@@ -9,6 +9,7 @@ class _FormSource extends UpdateFormSource {
 
   _DataSource get _dataSource => Get.find<_DataSource>(tag: ScheduleString.scheduleUpdateTag);
   _Listener get _listener => Get.find<_Listener>(tag: ScheduleString.scheduleUpdateTag);
+  _Properties get _properties => Get.find<_Properties>(tag: ScheduleString.scheduleUpdateTag);
   _Validator validator = _Validator();
 
   UserDetail? userDefault;
@@ -368,5 +369,14 @@ class _FormSource extends UpdateFormSource {
       "schebpid": isEvent ? schebpid : userDefault?.userdtbpid,
       "members": isEvent ? jsonEncode(guests.map((g) => g.toJson()).toList()) : null,
     };
+  }
+
+  @override
+  void onSubmit() {
+    if (isValid()) {
+      Map<String, dynamic> data = toJson();
+      Get.find<TaskHelper>().loaderPush(_properties.task);
+      _dataSource.updateSchedule(data);
+    }
   }
 }

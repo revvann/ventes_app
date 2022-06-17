@@ -41,4 +41,7 @@ class _FormSource extends RegularFormSource {
     }
     return json;
   }
+
+  @override
+  void onSubmit() {}
 }

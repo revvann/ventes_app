@@ -9,6 +9,7 @@ class _FormSource extends RegularFormSource {
 
   _DataSource get _dataSource => Get.find<_DataSource>(tag: ScheduleString.scheduleCreateTag);
   _Listener get _listener => Get.find<_Listener>(tag: ScheduleString.scheduleCreateTag);
+  _Properties get _properties => Get.find<_Properties>(tag: ScheduleString.scheduleCreateTag);
   _Validator validator = _Validator();
 
   UserDetail? userDefault;
@@ -319,6 +320,15 @@ class _FormSource extends RegularFormSource {
       "schebpid": isEvent ? schebpid : userDefault?.userdtbpid,
       "members": isEvent ? jsonEncode(guests.map((g) => g.toJson()).toList()) : null,
     };
+  }
+
+  @override
+  void onSubmit() {
+    if (isValid()) {
+      Map<String, dynamic> data = toJson();
+      Get.find<TaskHelper>().loaderPush(_properties.task);
+      _dataSource.createSchedule(data);
+    }
   }
 }
 

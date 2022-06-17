@@ -2,6 +2,7 @@ part of 'package:ventes/app/states/controllers/prospect_fc_state_controller.dart
 
 class _FormSource extends RegularFormSource {
   _DataSource get _dataSource => Get.find<_DataSource>(tag: ProspectString.prospectCreateTag);
+  _Properties get _properties => Get.find<_Properties>(tag: ProspectString.prospectCreateTag);
   SearchableDropdownController<UserDetail> ownerDropdownController = Get.put(SearchableDropdownController<UserDetail>());
   SearchableDropdownController<BpCustomer> customerDropdownController = Get.put(SearchableDropdownController<BpCustomer>());
 
@@ -131,5 +132,16 @@ class _FormSource extends RegularFormSource {
         'prosproducttaxtypeid': prosproduct['taxType'].value.typeid.toString(),
       };
     }).toList();
+  }
+
+  @override
+  void onSubmit() {
+    if (isValid) {
+      Map<String, dynamic> data = toJson();
+      _dataSource.createProspect(data);
+      Get.find<TaskHelper>().loaderPush(_properties.task);
+    } else {
+      Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: "Form is not valid"));
+    }
   }
 }

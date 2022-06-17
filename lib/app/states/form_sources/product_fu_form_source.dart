@@ -2,6 +2,7 @@ part of 'package:ventes/app/states/controllers/product_fu_state_controller.dart'
 
 class _FormSource extends UpdateFormSource {
   _DataSource get _dataSource => Get.find<_DataSource>(tag: ProspectString.productUpdateTag);
+  _Properties get _properties => Get.find<_Properties>(tag: ProspectString.productUpdateTag);
 
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
@@ -62,5 +63,16 @@ class _FormSource extends UpdateFormSource {
       'prosproductamount': total.toString(),
       'prosproducttaxtypeid': prosproducttax?.typeid.toString(),
     };
+  }
+
+  @override
+  void onSubmit() {
+    if (isValid) {
+      Map<String, dynamic> data = toJson();
+      _dataSource.updateData(_properties.productid, data);
+      Get.find<TaskHelper>().loaderPush(_properties.task);
+    } else {
+      Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: "Please fill all required fields"));
+    }
   }
 }
