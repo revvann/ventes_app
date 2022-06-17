@@ -97,7 +97,6 @@ class _Listener extends RegularListener {
 
   void onUpdateDataSuccess(String message) async {
     Get.find<TaskHelper>().successPush(_properties.task.copyWith(
-        snackbar: true,
         message: message,
         onFinished: () {
           Get.find<NearbyStateController>().properties.refresh();

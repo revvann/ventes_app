@@ -49,7 +49,6 @@ class _Listener extends RegularListener {
 
   void onCreateDataSuccess(String message) {
     Get.find<TaskHelper>().successPush(_properties.task.copyWith(
-        snackbar: true,
         message: message,
         onFinished: () {
           Get.find<ContactPersonStateController>().properties.refresh();

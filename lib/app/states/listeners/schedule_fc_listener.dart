@@ -209,7 +209,6 @@ class _Listener extends RegularListener {
 
   void onCreateDataSuccess(String message) {
     Get.find<TaskHelper>().successPush(_properties.task.copyWith(
-        snackbar: true,
         message: ScheduleString.createSuccess,
         onFinished: () async {
           await _properties.scheduleNotification();

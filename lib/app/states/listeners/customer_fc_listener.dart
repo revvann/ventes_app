@@ -93,7 +93,6 @@ class _Listener extends RegularListener {
   void onCreateDataSuccess(String message) async {
     Get.find<TaskHelper>().loaderPop(_properties.task.name);
     Get.find<TaskHelper>().successPush(_properties.task.copyWith(
-        snackbar: true,
         message: message,
         onFinished: () {
           Get.find<NearbyStateController>().properties.refresh();
