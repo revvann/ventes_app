@@ -2,10 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
 import 'package:ventes/core/states/state_data_source.dart';
+import 'package:ventes/core/states/state_form_source.dart';
 import 'package:ventes/core/states/state_listener.dart';
 import 'package:ventes/core/states/state_property.dart';
 
-abstract class RegularStateController<P extends StateProperty, L extends StateListener, D extends StateDataSource> extends GetxController {
+///
+/// State controller has 4 components
+/// each component is optional
+/// if you dont wanna use it, just set it to null (add ? after the type)
+///
+abstract class StateController<P extends StateProperty?, L extends StateListener?, D extends StateDataSource?, F extends StateFormSource?> extends GetxController {
   final GlobalKey appBarKey = GlobalKey();
   bool get isFixedBody => true;
   String get tag => "";
@@ -20,67 +26,60 @@ abstract class RegularStateController<P extends StateProperty, L extends StateLi
   bool get loading => _loading.value;
   set loading(bool value) => _loading.value = value;
 
-  late P properties;
+  late P property;
   late L listener;
   late D dataSource;
+  late F formSource;
 
-  P propertiesBuilder() {
-    throw UnimplementedError();
-  }
+  ///
+  /// if property is optional, set it to null
+  ///
+  P propertyBuilder();
 
-  L listenerBuilder() {
-    throw UnimplementedError();
-  }
+  ///
+  /// if listener is optional, set it to null
+  ///
+  L listenerBuilder();
 
-  D dataSourceBuilder() {
-    throw UnimplementedError();
-  }
+  ///
+  /// if dataSource is optional, set it to null
+  ///
+  D dataSourceBuilder();
+
+  ///
+  /// if formSource is optional, set it to null
+  ///
+  F formSourceBuilder();
 
   @mustCallSuper
   void init() {
-    try {
-      listener = listenerBuilder();
-      Get.replace<L>(
-        listener,
-        tag: tag,
-      );
-    } catch (e) {
-      debugPrint(e.toString());
-    }
+    listener = listenerBuilder();
+    property = propertyBuilder();
+    dataSource = dataSourceBuilder();
+    formSource = formSourceBuilder();
 
-    try {
-      properties = propertiesBuilder();
-      Get.replace<P>(
-        properties,
-        tag: tag,
-      );
-    } catch (e) {
-      debugPrint(e.toString());
-    }
+    Get.replace<L>(listener, tag: tag);
+    Get.replace<P>(property, tag: tag);
+    Get.replace<D>(dataSource, tag: tag);
+    Get.replace<F>(formSource, tag: tag);
 
-    try {
-      dataSource = dataSourceBuilder();
-      Get.replace<D>(
-        dataSource,
-        tag: tag,
-      );
-    } catch (e) {
-      debugPrint(e.toString());
-    }
-    dataSource.init();
-    properties.init();
+    dataSource?.init();
+    property?.init();
+    formSource?.init();
   }
 
   @mustCallSuper
   void ready() {
+    // this code is executed for calculate app bar and body height
     if (isFixedBody) {
       RenderBox renderBox = appBarKey.currentContext?.findRenderObject() as RenderBox;
       double distraction = renderBox.size.height;
       _minHeight.value = Get.height - distraction;
     }
-    properties.ready();
-    dataSource.ready();
-    listener.onRefresh();
+    property?.ready();
+    dataSource?.ready();
+    listener?.onReady();
+    formSource?.ready();
   }
 
   @mustCallSuper
@@ -95,8 +94,9 @@ abstract class RegularStateController<P extends StateProperty, L extends StateLi
     Get.delete<D>(
       tag: tag,
     );
-    dataSource.close();
-    properties.close();
+    dataSource?.close();
+    property?.close();
+    formSource?.close();
   }
 
   void refreshStates() {

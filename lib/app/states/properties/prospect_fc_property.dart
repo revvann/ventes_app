@@ -1,8 +1,12 @@
-part of 'package:ventes/app/states/controllers/prospect_fc_state_controller.dart';
+import 'package:get/get.dart';
+import 'package:ventes/constants/strings/prospect_string.dart';
+import 'package:ventes/app/states/typedefs/prospect_fc_typedef.dart';
+import 'package:ventes/core/states/state_property.dart';
+import 'package:ventes/helpers/task_helper.dart';
 
 class ProspectFormCreateProperty extends StateProperty {
-  ProspectFormCreateDataSource get dataSource => Get.find<ProspectFormCreateDataSource>(tag: ProspectString.prospectCreateTag);
-  ProspectFormCreateFormSource get formSource => Get.find<ProspectFormCreateFormSource>(tag: ProspectString.prospectCreateTag);
+  DataSource get dataSource => Get.find<DataSource>(tag: ProspectString.prospectCreateTag);
+  FormSource get formSource => Get.find<FormSource>(tag: ProspectString.prospectCreateTag);
 
   Task task = Task(ProspectString.formCreateTaskCode);
 

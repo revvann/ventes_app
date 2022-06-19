@@ -1,12 +1,17 @@
-part of 'package:ventes/app/states/controllers/dashboard_state_controller.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:get/get.dart';
+import 'package:ventes/constants/strings/dashboard_string.dart';
+import 'package:ventes/core/states/state_property.dart';
+import 'package:ventes/helpers/function_helpers.dart';
+import 'package:ventes/helpers/task_helper.dart';
+import 'package:ventes/app/states/typedefs/dashboard_typedef.dart';
 
-class DashboardProperty extends StateProperty {
-  DashboardDataSource get _dataSource => Get.find<DashboardDataSource>(tag: DashboardString.dashboardTag);
+class DashboardProperty extends StateProperty with StatePropertyMixin<Controller, Listener, DataSource, FormSource> {
   Position? position;
 
   Task task = Task(DashboardString.taskCode);
 
-  String? get shortName => getInitials(_dataSource.account?.user?.userfullname ?? "");
+  String? get shortName => getInitials(dataSource.account?.user?.userfullname ?? "");
 
   void logout() {
     Get.find<TaskHelper>().confirmPush(
@@ -14,7 +19,7 @@ class DashboardProperty extends StateProperty {
         message: DashboardString.confirmLogout,
         onFinished: (res) {
           if (res) {
-            _dataSource.logout();
+            dataSource.logout();
             Get.find<TaskHelper>().loaderPush(task);
           }
         },

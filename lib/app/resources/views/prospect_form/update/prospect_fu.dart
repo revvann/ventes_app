@@ -33,7 +33,7 @@ class ProspectFormUpdateView extends View<ProspectFormUpdateStateController> {
 
   @override
   void onBuild(state) {
-    state.properties.prospectId = prospectId;
+    state.property.prospectId = prospectId;
   }
 
   @override

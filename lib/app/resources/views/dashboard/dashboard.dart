@@ -1,17 +1,13 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_unnecessary_containers
 
-import 'package:flutter/material.dart' hide MenuItem;
+import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:ventes/app/models/bp_customer_model.dart';
 import 'package:ventes/app/models/user_detail_model.dart';
-import 'package:ventes/app/resources/widgets/confirm_alert.dart';
-import 'package:ventes/app/resources/widgets/loader.dart';
-import 'package:ventes/app/resources/widgets/loading_container.dart';
 import 'package:ventes/app/resources/widgets/menu_divider.dart';
 import 'package:ventes/app/resources/widgets/pop_up_item.dart';
 import 'package:ventes/app/resources/widgets/popup_button.dart';
-import 'package:ventes/app/resources/widgets/failed_snackbar.dart';
 import 'package:ventes/constants/styles/behavior_style.dart';
 import 'package:ventes/core/view/view.dart';
 import 'package:ventes/app/resources/widgets/bottom_navigation.dart';
@@ -88,7 +84,7 @@ class DashboardView extends View<DashboardStateController> {
                             icon: "assets/svg/attendance.svg",
                             text: "Attendance",
                             onTap: () async {
-                              Get.find<TaskHelper>().confirmPush(state.properties.task.copyWith<bool>(
+                              Get.find<TaskHelper>().confirmPush(state.property.task.copyWith<bool>(
                                 message: "Are you sure you want to go to attendance?",
                                 onFinished: (result) {
                                   print(result);

@@ -1,9 +1,20 @@
 // ignore_for_file: prefer_const_constructors
-part of 'package:ventes/app/states/controllers/customer_fu_state_controller.dart';
+import 'dart:async';
+
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:ventes/app/models/customer_model.dart';
+import 'package:ventes/app/states/typedefs/customer_fu_typedef.dart';
+import 'package:ventes/app/states/properties/nearby_property.dart';
+import 'package:ventes/constants/regular_size.dart';
+import 'package:ventes/constants/strings/nearby_string.dart';
+import 'package:ventes/core/states/state_property.dart';
+import 'package:ventes/helpers/task_helper.dart';
 
 class CustomerFormUpdateProperty extends StateProperty {
-  CustomerFormUpdateFormSource get _formSource => Get.find<CustomerFormUpdateFormSource>(tag: NearbyString.customerUpdateTag);
-  CustomerFormUpdateDataSource get _dataSource => Get.find<CustomerFormUpdateDataSource>(tag: NearbyString.customerUpdateTag);
+  FormSource get _formSource => Get.find<FormSource>(tag: NearbyString.customerUpdateTag);
+  DataSource get _dataSource => Get.find<DataSource>(tag: NearbyString.customerUpdateTag);
 
   Task task = Task(NearbyString.updateTaskCode);
 

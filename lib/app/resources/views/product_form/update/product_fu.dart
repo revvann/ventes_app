@@ -24,7 +24,7 @@ class ProductFormUpdateView extends View<ProductFormUpdateStateController> {
 
   @override
   void onBuild(state) {
-    state.properties.productid = productid;
+    state.property.productid = productid;
   }
 
   @override

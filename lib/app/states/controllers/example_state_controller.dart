@@ -10,12 +10,12 @@ class ExampleStateController extends GetxController {
 
   @override
   void onClose() {
-    Get.delete<ExampleProperties>();
+    Get.delete<Exampleproperty>();
     // Get.delete<NearbyListener>();
     super.onClose();
   }
 }
 
-class ExampleProperties {
+class Exampleproperty {
   ExampleDataSource dataSource = ExampleDataSource();
 }

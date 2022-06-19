@@ -1,4 +1,6 @@
-part of 'package:ventes/app/states/controllers/prospect_detail_fu_state_controller.dart';
+import 'package:get/get.dart';
+import 'package:ventes/app/states/form/sources/prospect_detail_fu_form_source.dart';
+import 'package:ventes/constants/strings/prospect_string.dart';
 
 class ProspectDetailFormUpdateValidator {
   ProspectDetailFormUpdateFormSource get _formSource => Get.find<ProspectDetailFormUpdateFormSource>(tag: ProspectString.detailUpdateTag);

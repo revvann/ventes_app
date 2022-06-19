@@ -1,7 +1,12 @@
-part of 'package:ventes/app/states/controllers/prospect_state_controller.dart';
+import 'package:get/get.dart';
+import 'package:ventes/app/models/prospect_model.dart';
+import 'package:ventes/constants/strings/prospect_string.dart';
+import 'package:ventes/app/states/typedefs/prospect_typedef.dart';
+import 'package:ventes/core/states/state_property.dart';
+import 'package:ventes/helpers/task_helper.dart';
 
 class ProspectProperty extends StateProperty {
-  ProspectDataSource get _dataSource => Get.find<ProspectDataSource>(tag: ProspectString.prospectTag);
+  DataSource get _dataSource => Get.find<DataSource>(tag: ProspectString.prospectTag);
 
   Prospect? selectedProspect;
 

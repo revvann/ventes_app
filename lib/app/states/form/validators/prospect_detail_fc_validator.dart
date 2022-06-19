@@ -1,7 +1,9 @@
-part of 'package:ventes/app/states/controllers/prospect_detail_fc_state_controller.dart';
+import 'package:get/get.dart';
+import 'package:ventes/app/states/typedefs/prospect_detail_fc_typedef.dart';
+import 'package:ventes/constants/strings/prospect_string.dart';
 
 class ProspectDetailFormCreateValidator {
-  ProspectDetailFormCreateFormSource get _formSource => Get.find<ProspectDetailFormCreateFormSource>(tag: ProspectString.detailCreateTag);
+  FormSource get _formSource => Get.find<FormSource>(tag: ProspectString.detailCreateTag);
 
   String? prosdtdesc(String? value) {
     if (value == null) {

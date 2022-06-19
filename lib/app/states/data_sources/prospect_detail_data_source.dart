@@ -1,8 +1,16 @@
-part of 'package:ventes/app/states/controllers/prospect_detail_state_controller.dart';
+import 'package:get/get.dart';
+import 'package:ventes/app/api/presenters/prospect_detail_presenter.dart';
+import 'package:ventes/app/models/prospect_detail_model.dart';
+import 'package:ventes/app/models/prospect_model.dart';
+import 'package:ventes/app/models/type_model.dart';
+import 'package:ventes/constants/strings/prospect_string.dart';
+import 'package:ventes/app/states/typedefs/prospect_detail_typedef.dart';
+import 'package:ventes/core/states/state_data_source.dart';
+import 'package:ventes/helpers/task_helper.dart';
 
 class ProspectDetailDataSource extends StateDataSource<ProspectDetailPresenter> implements ProspectDetailContract {
-  ProspectDetailListener get _listener => Get.find<ProspectDetailListener>(tag: ProspectString.detailTag);
-  ProspectDetailProperty get _properties => Get.find<ProspectDetailProperty>(tag: ProspectString.detailTag);
+  Listener get _listener => Get.find<Listener>(tag: ProspectString.detailTag);
+  Property get _property => Get.find<Property>(tag: ProspectString.detailTag);
 
   final _prospect = Rx<Prospect?>(null);
   Prospect? get prospect => _prospect.value;
@@ -42,7 +50,7 @@ class ProspectDetailDataSource extends StateDataSource<ProspectDetailPresenter> 
       stages = data['stages'].map<DBType>((json) => DBType.fromJson(json)).toList();
     }
 
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+    Get.find<TaskHelper>().loaderPop(_property.task.name);
   }
 
   @override

@@ -1,8 +1,19 @@
-part of 'package:ventes/app/states/controllers/prospect_fu_state_controller.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:ventes/app/models/bp_customer_model.dart';
+import 'package:ventes/app/models/user_detail_model.dart';
+import 'package:ventes/app/resources/widgets/searchable_dropdown.dart';
+import 'package:ventes/app/states/form/validators/prospect_fu_validator.dart';
+import 'package:ventes/constants/formatters/currency_formatter.dart';
+import 'package:ventes/constants/strings/prospect_string.dart';
+import 'package:ventes/app/states/typedefs/prospect_fu_typedef.dart';
+import 'package:ventes/core/states/update_form_source.dart';
+import 'package:ventes/helpers/function_helpers.dart';
+import 'package:ventes/helpers/task_helper.dart';
 
 class ProspectFormUpdateFormSource extends UpdateFormSource {
-  ProspectFormUpdateDataSource get _dataSource => Get.find<ProspectFormUpdateDataSource>(tag: ProspectString.prospectUpdateTag);
-  ProspectFormUpdateProperty get _properties => Get.find<ProspectFormUpdateProperty>(tag: ProspectString.prospectUpdateTag);
+  DataSource get _dataSource => Get.find<DataSource>(tag: ProspectString.prospectUpdateTag);
+  Property get _property => Get.find<Property>(tag: ProspectString.prospectUpdateTag);
 
   SearchableDropdownController<UserDetail> ownerDropdownController = Get.put(SearchableDropdownController<UserDetail>());
   SearchableDropdownController<BpCustomer> customerDropdownController = Get.put(SearchableDropdownController<BpCustomer>());
@@ -116,10 +127,10 @@ class ProspectFormUpdateFormSource extends UpdateFormSource {
   void onSubmit() {
     if (isValid) {
       Map<String, dynamic> data = toJson();
-      _dataSource.updateProspect(_properties.prospectId, data);
-      Get.find<TaskHelper>().loaderPush(_properties.task);
+      _dataSource.updateProspect(_property.prospectId, data);
+      Get.find<TaskHelper>().loaderPush(_property.task);
     } else {
-      Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: "Form is not valid"));
+      Get.find<TaskHelper>().failedPush(_property.task.copyWith(message: "Form is not valid"));
     }
   }
 }

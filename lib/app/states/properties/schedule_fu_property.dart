@@ -1,8 +1,21 @@
-part of 'package:ventes/app/states/controllers/schedule_fu_state_controller.dart';
+import 'dart:async';
+
+import 'package:flutter/material.dart' hide Listener;
+import 'package:geolocator/geolocator.dart';
+import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:ventes/app/resources/widgets/regular_bottom_sheet.dart';
+import 'package:ventes/constants/regular_color.dart';
+import 'package:ventes/constants/regular_size.dart';
+import 'package:ventes/constants/strings/schedule_string.dart';
+import 'package:ventes/app/states/typedefs/schedule_fu_typedef.dart';
+import 'package:ventes/core/states/state_property.dart';
+import 'package:ventes/helpers/function_helpers.dart';
+import 'package:ventes/helpers/task_helper.dart';
 
 class ScheduleFormUpdateProperty extends StateProperty {
-  ScheduleFormUpdateListener get listener => Get.find<ScheduleFormUpdateListener>(tag: ScheduleString.scheduleUpdateTag);
-  ScheduleFormUpdateDataSource get _dataSource => Get.find<ScheduleFormUpdateDataSource>(tag: ScheduleString.scheduleUpdateTag);
+  Listener get listener => Get.find<Listener>(tag: ScheduleString.scheduleUpdateTag);
+  DataSource get _dataSource => Get.find<DataSource>(tag: ScheduleString.scheduleUpdateTag);
 
   final Completer<GoogleMapController> mapsController = Completer();
   CameraPosition currentPos = CameraPosition(target: LatLng(0, 0), zoom: 14.4764);

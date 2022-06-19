@@ -1,9 +1,18 @@
-part of 'package:ventes/app/states/controllers/prospect_fc_state_controller.dart';
+import 'package:get/get.dart';
+import 'package:ventes/app/api/presenters/prospect_fc_presenter.dart';
+import 'package:ventes/app/models/bp_customer_model.dart';
+import 'package:ventes/app/models/type_model.dart';
+import 'package:ventes/app/models/user_detail_model.dart';
+import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
+import 'package:ventes/constants/strings/prospect_string.dart';
+import 'package:ventes/app/states/typedefs/prospect_fc_typedef.dart';
+import 'package:ventes/core/states/state_data_source.dart';
+import 'package:ventes/helpers/task_helper.dart';
 
 class ProspectFormCreateDataSource extends StateDataSource<ProspectFormCreatePresenter> implements ProspectCreateContract {
-  ProspectFormCreateListener get _listener => Get.find<ProspectFormCreateListener>(tag: ProspectString.prospectCreateTag);
-  ProspectFormCreateFormSource get _formSource => Get.find<ProspectFormCreateFormSource>(tag: ProspectString.prospectCreateTag);
-  ProspectFormCreateProperty get _properties => Get.find<ProspectFormCreateProperty>(tag: ProspectString.prospectCreateTag);
+  Listener get _listener => Get.find<Listener>(tag: ProspectString.prospectCreateTag);
+  FormSource get _formSource => Get.find<FormSource>(tag: ProspectString.prospectCreateTag);
+  Property get _property => Get.find<Property>(tag: ProspectString.prospectCreateTag);
 
   final Rx<Map<int, String>> _followUpItems = Rx<Map<int, String>>({});
   set followUpItems(Map<int, String> value) => _followUpItems.value = value;
@@ -51,7 +60,7 @@ class ProspectFormCreateDataSource extends StateDataSource<ProspectFormCreatePre
       _formSource.prosstage = stageList.isEmpty ? null : stageList.first.typeid!;
     }
 
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+    Get.find<TaskHelper>().loaderPop(_property.task.name);
   }
 
   @override

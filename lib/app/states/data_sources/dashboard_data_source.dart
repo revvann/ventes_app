@@ -1,8 +1,20 @@
-part of 'package:ventes/app/states/controllers/dashboard_state_controller.dart';
+import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:ventes/app/api/presenters/dashboard_presenter.dart';
+import 'package:ventes/app/models/auth_model.dart';
+import 'package:ventes/app/models/bp_customer_model.dart';
+import 'package:ventes/app/models/maps_loc.dart';
+import 'package:ventes/app/models/user_detail_model.dart';
+import 'package:ventes/constants/strings/dashboard_string.dart';
+import 'package:ventes/core/states/state_data_source.dart';
+import 'package:ventes/helpers/auth_helper.dart';
+import 'package:ventes/helpers/function_helpers.dart';
+import 'package:ventes/helpers/task_helper.dart';
+import 'package:ventes/app/states/typedefs/dashboard_typedef.dart';
 
 class DashboardDataSource extends StateDataSource<DashboardPresenter> implements DashboardContract {
-  DashboardProperty get _properties => Get.find<DashboardProperty>(tag: DashboardString.dashboardTag);
-  DashboardListener get _listener => Get.find<DashboardListener>(tag: DashboardString.dashboardTag);
+  Property get _property => Get.find<Property>(tag: DashboardString.dashboardTag);
+  Listener get _listener => Get.find<Listener>(tag: DashboardString.dashboardTag);
 
   final _customers = <BpCustomer>[].obs;
   set customers(List<BpCustomer> value) => _customers.value = value;
@@ -56,7 +68,7 @@ class DashboardDataSource extends StateDataSource<DashboardPresenter> implements
     if (data['customers'] != null) {
       _customersFromList(
         data['customers'],
-        LatLng(_properties.position!.latitude, _properties.position!.longitude),
+        LatLng(_property.position!.latitude, _property.position!.longitude),
       );
     }
 
@@ -77,7 +89,7 @@ class DashboardDataSource extends StateDataSource<DashboardPresenter> implements
       }
     }
 
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+    Get.find<TaskHelper>().loaderPop(_property.task.name);
   }
 
   @override

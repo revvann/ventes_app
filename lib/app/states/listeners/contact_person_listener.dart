@@ -1,8 +1,16 @@
-part of 'package:ventes/app/states/controllers/contact_person_state_controller.dart';
+import 'package:get/get.dart';
+import 'package:ventes/app/resources/views/contact_form/create/contact_person_fc.dart';
+import 'package:ventes/app/resources/views/contact_form/update/contact_person_fu.dart';
+import 'package:ventes/constants/strings/prospect_string.dart';
+import 'package:ventes/core/states/state_listener.dart';
+import 'package:ventes/helpers/task_helper.dart';
+import 'package:ventes/routing/navigators/prospect_navigator.dart';
+import 'package:ventes/app/states/controllers/contact_person_state_controller.dart';
+import 'package:ventes/app/states/typedefs/contact_person_typedef.dart';
 
 class ContactPersonListener extends StateListener {
-  ContactPersonProperty get _properties => Get.find<ContactPersonProperty>(tag: ProspectString.contactTag);
-  ContactPersonDataSource get _dataSource => Get.find<ContactPersonDataSource>(tag: ProspectString.contactTag);
+  Property get _property => Get.find<Property>(tag: ProspectString.contactTag);
+  DataSource get _dataSource => Get.find<DataSource>(tag: ProspectString.contactTag);
 
   void goBack() {
     Get.back(id: ProspectNavigator.id);
@@ -13,7 +21,7 @@ class ContactPersonListener extends StateListener {
       ContactPersonFormCreateView.route,
       id: ProspectNavigator.id,
       arguments: {
-        'customer': _properties.customerid,
+        'customer': _property.customerid,
       },
     );
   }
@@ -30,12 +38,12 @@ class ContactPersonListener extends StateListener {
 
   void deleteData(int id) {
     Get.find<TaskHelper>().confirmPush(
-      _properties.task.copyWith<bool>(
+      _property.task.copyWith<bool>(
         message: ProspectString.deleteContactConfirm,
         onFinished: (res) {
           if (res) {
             _dataSource.deleteData(id);
-            Get.find<TaskHelper>().loaderPush(_properties.task);
+            Get.find<TaskHelper>().loaderPush(_property.task);
           }
         },
       ),
@@ -43,36 +51,36 @@ class ContactPersonListener extends StateListener {
   }
 
   void onLoadFailed(String message) {
-    Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: message, snackbar: true));
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+    Get.find<TaskHelper>().failedPush(_property.task.copyWith(message: message, snackbar: true));
+    Get.find<TaskHelper>().loaderPop(_property.task.name);
   }
 
   void onLoadError(String message) {
-    Get.find<TaskHelper>().errorPush(_properties.task.copyWith(message: message));
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+    Get.find<TaskHelper>().errorPush(_property.task.copyWith(message: message));
+    Get.find<TaskHelper>().loaderPop(_property.task.name);
   }
 
   void onDeleteFailed(String message) {
-    Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: message, snackbar: true));
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+    Get.find<TaskHelper>().failedPush(_property.task.copyWith(message: message, snackbar: true));
+    Get.find<TaskHelper>().loaderPop(_property.task.name);
   }
 
   void onDeleteSuccess(String message) {
-    Get.find<TaskHelper>().successPush(_properties.task.copyWith(
+    Get.find<TaskHelper>().successPush(_property.task.copyWith(
         message: message,
         onFinished: (res) async {
           Get.find<ContactPersonStateController>().refreshStates();
         }));
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+    Get.find<TaskHelper>().loaderPop(_property.task.name);
   }
 
   void onDeleteError(String message) {
-    Get.find<TaskHelper>().errorPush(_properties.task.copyWith(message: message));
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+    Get.find<TaskHelper>().errorPush(_property.task.copyWith(message: message));
+    Get.find<TaskHelper>().loaderPop(_property.task.name);
   }
 
   @override
-  Future onRefresh() async {
-    _properties.refresh();
+  Future onReady() async {
+    _property.refresh();
   }
 }

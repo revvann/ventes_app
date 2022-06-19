@@ -14,7 +14,7 @@ class _ProductList extends StatelessWidget {
         itemCount: state.dataSource.products.length,
         itemBuilder: (_, index) {
           ProspectProduct product = state.dataSource.products[index];
-          String amount = state.properties.priceShort(product.prosproductamount ?? 0);
+          String amount = state.property.priceShort(product.prosproductamount ?? 0);
           String price = currencyFormat(product.prosproductprice?.toString().replaceAll(RegExp(r'[.]'), ',') ?? "0");
           return GestureDetector(
             onTap: () {},
@@ -74,7 +74,7 @@ class _ProductList extends StatelessWidget {
                       ),
                       SizedBox(width: RegularSize.s),
                       PopupMenu(
-                        controller: state.properties.createPopupController(index),
+                        controller: state.property.createPopupController(index),
                         dropdownSettings: DropdownSettings(
                           width: 100,
                           offset: Offset(10, 5),

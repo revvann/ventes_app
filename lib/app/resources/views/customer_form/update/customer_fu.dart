@@ -30,7 +30,7 @@ class CustomerFormUpdateView extends View<CustomerFormUpdateStateController> {
 
   @override
   void onBuild(state) {
-    state.properties.customerid = customerid;
+    state.property.customerid = customerid;
   }
 
   @override
@@ -41,7 +41,7 @@ class CustomerFormUpdateView extends View<CustomerFormUpdateStateController> {
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      key: state.properties.scaffoldKey,
+      key: state.property.scaffoldKey,
       backgroundColor: RegularColor.primary,
       extendBodyBehindAppBar: true,
       appBar: TopNavigation(
@@ -80,19 +80,19 @@ class CustomerFormUpdateView extends View<CustomerFormUpdateStateController> {
       ).build(context),
       body: SafeArea(
         child: Stack(
-          key: state.properties.stackKey,
+          key: state.property.stackKey,
           children: [
             Obx(() {
               return Container(
                 width: double.infinity,
-                height: state.properties.mapsHeight.value,
+                height: state.property.mapsHeight.value,
                 decoration: BoxDecoration(
                   color: Colors.white,
                 ),
                 child: GoogleMap(
                   mapType: MapType.terrain,
-                  initialCameraPosition: CameraPosition(target: LatLng(0, 0), zoom: state.properties.defaultZoom),
-                  markers: state.properties.markers,
+                  initialCameraPosition: CameraPosition(target: LatLng(0, 0), zoom: state.property.defaultZoom),
+                  markers: state.property.markers,
                   myLocationEnabled: true,
                   onMapCreated: state.listener.onMapControllerUpdated,
                   onCameraMove: state.listener.onCameraMoved,

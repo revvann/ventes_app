@@ -1,8 +1,15 @@
-part of 'package:ventes/app/states/controllers/daily_schedule_state_controller.dart';
+import 'package:get/get.dart';
+import 'package:ventes/app/api/presenters/daily_schedule_presenter.dart';
+import 'package:ventes/app/models/schedule_model.dart';
+import 'package:ventes/app/models/type_model.dart';
+import 'package:ventes/app/states/typedefs/daily_schedule_typedef.dart';
+import 'package:ventes/constants/strings/schedule_string.dart';
+import 'package:ventes/core/states/state_data_source.dart';
+import 'package:ventes/helpers/task_helper.dart';
 
 class DailyScheduleDataSource extends StateDataSource<DailySchedulePresenter> implements DailyScheduleContract {
-  DailyScheduleListener get _listener => Get.find<DailyScheduleListener>(tag: ScheduleString.dailyScheduleTag);
-  DailyScheduleProperty get _properties => Get.find<DailyScheduleProperty>(tag: ScheduleString.dailyScheduleTag);
+  Listener get _listener => Get.find<Listener>(tag: ScheduleString.dailyScheduleTag);
+  Property get _property => Get.find<Property>(tag: ScheduleString.dailyScheduleTag);
 
   final _types = <String, int>{}.obs;
   Map<String, int> get types => _types.value;
@@ -48,7 +55,7 @@ class DailyScheduleDataSource extends StateDataSource<DailySchedulePresenter> im
     if (data['permissions'] != null) {
       permissions = List<DBType>.from(data['permissions'].map((e) => DBType.fromJson(e)));
     }
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+    Get.find<TaskHelper>().loaderPop(_property.task.name);
   }
 
   @override

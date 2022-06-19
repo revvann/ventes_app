@@ -8,7 +8,7 @@ class _AppBarMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      return state.properties.selectedAppointment != null
+      return state.property.selectedAppointment != null
           ? PopupMenu(
               controller: Get.put(PopupMenuController(), tag: "SchedulePopup"),
               dropdownSettings: DropdownSettings(
@@ -70,7 +70,7 @@ class _AppBarMenu extends StatelessWidget {
         horizontal: RegularSize.m,
       ),
       child: SingleChildScrollView(
-        child: ScheduleDetail(state.properties.selectedAppointment!, state.dataSource.permissions),
+        child: ScheduleDetail(state.property.selectedAppointment!, state.dataSource.permissions),
       ),
     ).show();
   }

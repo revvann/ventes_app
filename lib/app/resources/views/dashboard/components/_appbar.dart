@@ -76,7 +76,7 @@ class _AppBar extends StatelessWidget {
                       MenuItem(
                         title: "Sign Out",
                         icon: "assets/svg/signout.svg",
-                        onTap: state.properties.logout,
+                        onTap: state.property.logout,
                         color: RegularColor.red,
                       ),
                     ],
@@ -90,7 +90,7 @@ class _AppBar extends StatelessWidget {
                   alignment: Alignment.center,
                   child: Obx(() {
                     return Text(
-                      state.properties.shortName ?? "AA",
+                      state.property.shortName ?? "AA",
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 16,

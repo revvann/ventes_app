@@ -1,9 +1,20 @@
-part of 'package:ventes/app/states/controllers/schedule_fu_state_controller.dart';
+import 'dart:async';
+
+import 'package:get/get.dart';
+import 'package:ventes/app/models/schedule_guest_model.dart';
+import 'package:ventes/app/models/user_detail_model.dart';
+import 'package:ventes/app/states/controllers/daily_schedule_state_controller.dart';
+import 'package:ventes/constants/strings/schedule_string.dart';
+import 'package:ventes/app/states/typedefs/schedule_fu_typedef.dart';
+import 'package:ventes/core/states/state_listener.dart';
+import 'package:ventes/helpers/function_helpers.dart';
+import 'package:ventes/helpers/task_helper.dart';
+import 'package:ventes/routing/navigators/schedule_navigator.dart';
 
 class ScheduleFormUpdateListener extends StateListener {
-  ScheduleFormUpdateProperty get _properties => Get.find<ScheduleFormUpdateProperty>(tag: ScheduleString.scheduleUpdateTag);
-  ScheduleFormUpdateFormSource get _formSource => Get.find<ScheduleFormUpdateFormSource>(tag: ScheduleString.scheduleUpdateTag);
-  ScheduleFormUpdateDataSource get _dataSource => Get.find<ScheduleFormUpdateDataSource>(tag: ScheduleString.scheduleUpdateTag);
+  Property get _property => Get.find<Property>(tag: ScheduleString.scheduleUpdateTag);
+  FormSource get _formSource => Get.find<FormSource>(tag: ScheduleString.scheduleUpdateTag);
+  DataSource get _dataSource => Get.find<DataSource>(tag: ScheduleString.scheduleUpdateTag);
 
   void onLocationChanged() {
     _formSource.schelocquiet = _formSource.schelocTEC.text;
@@ -191,7 +202,7 @@ class ScheduleFormUpdateListener extends StateListener {
 
   void onFormSubmit() {
     Get.find<TaskHelper>().confirmPush(
-      _properties.task.copyWith<bool>(
+      _property.task.copyWith<bool>(
         message: ScheduleString.updateScheduleConfirm,
         onFinished: (res) {
           if (res) {
@@ -203,44 +214,44 @@ class ScheduleFormUpdateListener extends StateListener {
   }
 
   void onCameraMove(position) {
-    _properties.markerLatLng = position.target;
+    _property.markerLatLng = position.target;
     _formSource.scheloc = "https://maps.google.com?q=${position.target.latitude},${position.target.longitude}";
   }
 
   void onUpdateDataFailed(String message) {
-    Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: ScheduleString.updateFailed));
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+    Get.find<TaskHelper>().failedPush(_property.task.copyWith(message: ScheduleString.updateFailed));
+    Get.find<TaskHelper>().loaderPop(_property.task.name);
   }
 
   void onUpdateDataSuccess(String message) {
     Get.find<TaskHelper>().successPush(
-      _properties.task.copyWith(
+      _property.task.copyWith(
           message: ScheduleString.updateSuccess,
           onFinished: (res) {
-            Get.find<DailyScheduleStateController>().properties.refresh();
+            Get.find<DailyScheduleStateController>().property.refresh();
             Get.back(id: ScheduleNavigator.id);
           }),
     );
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+    Get.find<TaskHelper>().loaderPop(_property.task.name);
   }
 
   void onUpdateDataError(String message) {
-    Get.find<TaskHelper>().errorPush(_properties.task.copyWith(message: ScheduleString.updateError));
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+    Get.find<TaskHelper>().errorPush(_property.task.copyWith(message: ScheduleString.updateError));
+    Get.find<TaskHelper>().loaderPop(_property.task.name);
   }
 
   onLoadDataError(String message) {
-    Get.find<TaskHelper>().errorPush(_properties.task.copyWith(message: ScheduleString.fetchError));
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+    Get.find<TaskHelper>().errorPush(_property.task.copyWith(message: ScheduleString.fetchError));
+    Get.find<TaskHelper>().loaderPop(_property.task.name);
   }
 
   onLoadDataFailed(String message) {
-    Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: ScheduleString.fetchFailed));
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+    Get.find<TaskHelper>().failedPush(_property.task.copyWith(message: ScheduleString.fetchFailed));
+    Get.find<TaskHelper>().loaderPop(_property.task.name);
   }
 
   @override
-  Future onRefresh() async {
-    _properties.refresh();
+  Future onReady() async {
+    _property.refresh();
   }
 }

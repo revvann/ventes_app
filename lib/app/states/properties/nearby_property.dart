@@ -1,7 +1,19 @@
-part of 'package:ventes/app/states/controllers/nearby_state_controller.dart';
+import 'dart:async';
+
+import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:ventes/app/models/customer_model.dart';
+import 'package:ventes/app/states/typedefs/nearby_typedef.dart';
+import 'package:ventes/constants/regular_size.dart';
+import 'package:ventes/constants/strings/nearby_string.dart';
+import 'package:ventes/core/states/state_property.dart';
+import 'package:ventes/helpers/function_helpers.dart';
+import 'package:ventes/helpers/task_helper.dart';
 
 class NearbyProperty extends StateProperty {
-  NearbyDataSource get _dataSource => Get.find<NearbyDataSource>(tag: NearbyString.nearbyTag);
+  DataSource get _dataSource => Get.find<DataSource>(tag: NearbyString.nearbyTag);
 
   Task task = Task(NearbyString.taskCode);
 

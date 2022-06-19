@@ -1,8 +1,15 @@
-part of 'package:ventes/app/states/controllers/product_state_controller.dart';
+import 'package:get/get.dart';
+import 'package:ventes/app/api/presenters/product_presenter.dart';
+import 'package:ventes/app/models/prospect_model.dart';
+import 'package:ventes/app/models/prospect_product_model.dart';
+import 'package:ventes/constants/strings/prospect_string.dart';
+import 'package:ventes/app/states/typedefs/product_typedef.dart';
+import 'package:ventes/core/states/state_data_source.dart';
+import 'package:ventes/helpers/task_helper.dart';
 
 class ProductDataSource extends StateDataSource<ProductPresenter> implements ProductContract {
-  ProductListener get _listener => Get.find<ProductListener>(tag: ProspectString.productTag);
-  ProductProperty get _properties => Get.find<ProductProperty>(tag: ProspectString.productTag);
+  Listener get _listener => Get.find<Listener>(tag: ProspectString.productTag);
+  Property get _property => Get.find<Property>(tag: ProspectString.productTag);
 
   final _prospect = Rx<Prospect?>(null);
   Prospect? get prospect => _prospect.value;
@@ -35,8 +42,8 @@ class ProductDataSource extends StateDataSource<ProductPresenter> implements Pro
       products = data['prospectproducts'].map<ProspectProduct>((e) => ProspectProduct.fromJson(e)).toList();
     }
 
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
-    _properties.isLoading.value = false;
+    Get.find<TaskHelper>().loaderPop(_property.task.name);
+    _property.isLoading.value = false;
   }
 
   @override

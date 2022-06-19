@@ -37,7 +37,7 @@ class _BottomSheetContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      key: state.properties.bottomSheetKey,
+      key: state.property.bottomSheetKey,
       padding: EdgeInsets.only(
         top: RegularSize.l,
       ),

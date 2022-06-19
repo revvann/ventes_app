@@ -1,8 +1,18 @@
-part of 'package:ventes/app/states/controllers/nearby_state_controller.dart';
+import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:ventes/app/api/presenters/nearby_presenter.dart';
+import 'package:ventes/app/models/bp_customer_model.dart';
+import 'package:ventes/app/models/customer_model.dart';
+import 'package:ventes/app/models/maps_loc.dart';
+import 'package:ventes/app/states/typedefs/nearby_typedef.dart';
+import 'package:ventes/constants/strings/nearby_string.dart';
+import 'package:ventes/core/states/state_data_source.dart';
+import 'package:ventes/helpers/function_helpers.dart';
+import 'package:ventes/helpers/task_helper.dart';
 
 class NearbyDataSource extends StateDataSource<NearbyPresenter> implements NearbyContract {
-  NearbyProperty get _properties => Get.find<NearbyProperty>(tag: NearbyString.nearbyTag);
-  NearbyListener get _listener => Get.find<NearbyListener>(tag: NearbyString.nearbyTag);
+  Property get _property => Get.find<Property>(tag: NearbyString.nearbyTag);
+  Listener get _listener => Get.find<Listener>(tag: NearbyString.nearbyTag);
   List<BpCustomer> bpCustomers = <BpCustomer>[];
 
   final _customers = <Customer>[].obs;
@@ -64,11 +74,11 @@ class NearbyDataSource extends StateDataSource<NearbyPresenter> implements Nearb
     if (data['customers'] != null) {
       _customersFromList(
         data['customers'],
-        LatLng(_properties.markers.first.position.latitude, _properties.markers.first.position.longitude),
+        LatLng(_property.markers.first.position.latitude, _property.markers.first.position.longitude),
       );
-      _properties.deployCustomers(customers);
+      _property.deployCustomers(customers);
     }
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+    Get.find<TaskHelper>().loaderPop(_property.task.name);
   }
 
   @override

@@ -1,12 +1,23 @@
-part of 'package:ventes/app/states/controllers/prospect_detail_fc_state_controller.dart';
+import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:ventes/app/models/prospect_model.dart';
+import 'package:ventes/app/models/type_model.dart';
+import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
+import 'package:ventes/constants/strings/prospect_string.dart';
+import 'package:ventes/app/states/typedefs/prospect_detail_fc_typedef.dart';
+import 'package:ventes/core/states/state_form_source.dart';
+import 'package:ventes/helpers/function_helpers.dart';
+import 'package:ventes/helpers/task_helper.dart';
 
 class ProspectDetailFormCreateFormSource extends StateFormSource {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
-  ProspectDetailFormCreateProperty get _properties => Get.find<ProspectDetailFormCreateProperty>(tag: ProspectString.detailCreateTag);
-  ProspectDetailFormCreateDataSource get _dataSource => Get.find<ProspectDetailFormCreateDataSource>(tag: ProspectString.detailCreateTag);
+  Property get _property => Get.find<Property>(tag: ProspectString.detailCreateTag);
+  DataSource get _dataSource => Get.find<DataSource>(tag: ProspectString.detailCreateTag);
 
-  ProspectDetailFormCreateValidator validator = ProspectDetailFormCreateValidator();
+  Validator validator = Validator();
 
   KeyableDropdownController<int, DBType> categoryDropdownController = Get.put(
     KeyableDropdownController<int, DBType>(),
@@ -62,9 +73,9 @@ class ProspectDetailFormCreateFormSource extends StateFormSource {
         title: "Current position",
       ),
     );
-    _properties.marker = {marker};
+    _property.marker = {marker};
 
-    _properties.mapsController.future.then((controller) {
+    _property.mapsController.future.then((controller) {
       controller.animateCamera(
         CameraUpdate.newLatLng(LatLng(prosdtlat ?? 0, prosdtlong ?? 0)),
       );
@@ -102,9 +113,9 @@ class ProspectDetailFormCreateFormSource extends StateFormSource {
     if (isValid) {
       Map<String, dynamic> data = toJson();
       _dataSource.createData(data);
-      Get.find<TaskHelper>().loaderPush(_properties.task);
+      Get.find<TaskHelper>().loaderPush(_property.task);
     } else {
-      Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: "Form invalid, Make sure all fields are filled"));
+      Get.find<TaskHelper>().failedPush(_property.task.copyWith(message: "Form invalid, Make sure all fields are filled"));
     }
   }
 }

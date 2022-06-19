@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ventes/core/states/state_controller.dart';
 
-abstract class View<T extends RegularStateController> extends StatelessWidget {
+abstract class View<T extends StateController> extends StatelessWidget {
   ///
   /// This method is called everytime widget rebuilds.
   ///

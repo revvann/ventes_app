@@ -1,11 +1,19 @@
 // ignore_for_file: prefer_final_fields
 
-part of 'package:ventes/app/states/controllers/product_fu_state_controller.dart';
+import 'package:get/get.dart';
+import 'package:ventes/app/api/presenters/product_fu_presenter.dart';
+import 'package:ventes/app/models/prospect_product_model.dart';
+import 'package:ventes/app/models/type_model.dart';
+import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
+import 'package:ventes/constants/strings/prospect_string.dart';
+import 'package:ventes/app/states/typedefs/product_fu_typedef.dart';
+import 'package:ventes/core/states/state_data_source.dart';
+import 'package:ventes/helpers/task_helper.dart';
 
 class ProductFormUpdateDataSource extends StateDataSource<ProductFormUpdatePresenter> implements ProductUpdateContract {
-  ProductFormUpdateListener get _listener => Get.find<ProductFormUpdateListener>(tag: ProspectString.productUpdateTag);
-  ProductFormUpdateFormSource get _formSource => Get.find<ProductFormUpdateFormSource>(tag: ProspectString.productUpdateTag);
-  ProductFormUpdateProperty get _properties => Get.find<ProductFormUpdateProperty>(tag: ProspectString.productUpdateTag);
+  Listener get _listener => Get.find<Listener>(tag: ProspectString.productUpdateTag);
+  FormSource get _formSource => Get.find<FormSource>(tag: ProspectString.productUpdateTag);
+  Property get _property => Get.find<Property>(tag: ProspectString.productUpdateTag);
 
   final _product = Rx<ProspectProduct?>(null);
   set product(ProspectProduct? value) => _product.value = value;
@@ -39,7 +47,7 @@ class ProductFormUpdateDataSource extends StateDataSource<ProductFormUpdatePrese
       taxItems = taxes.map<KeyableDropdownItem<int, DBType>>((tax) => KeyableDropdownItem<int, DBType>(key: tax.typeid!, value: tax)).toList();
     }
 
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+    Get.find<TaskHelper>().loaderPop(_property.task.name);
   }
 
   @override

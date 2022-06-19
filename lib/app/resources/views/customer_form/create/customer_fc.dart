@@ -29,9 +29,9 @@ class CustomerFormCreateView extends View<CustomerFormCreateStateController> {
 
   @override
   void onBuild(state) {
-    state.properties.latitude = latitude;
-    state.properties.longitude = longitude;
-    state.properties.cstmid = cstmid;
+    state.property.latitude = latitude;
+    state.property.longitude = longitude;
+    state.property.cstmid = cstmid;
   }
 
   @override

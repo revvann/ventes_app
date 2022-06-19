@@ -1,7 +1,15 @@
-part of 'package:ventes/app/states/controllers/customer_fc_state_controller.dart';
+import 'dart:async';
+
+import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:ventes/app/models/bp_customer_model.dart';
+import 'package:ventes/constants/strings/nearby_string.dart';
+import 'package:ventes/core/states/state_property.dart';
+import 'package:ventes/helpers/task_helper.dart';
+import 'package:ventes/app/states/typedefs/customer_fc_typedef.dart';
 
 class CustomerFormCreateProperty extends StateProperty {
-  CustomerFormCreateDataSource get _dataSource => Get.find<CustomerFormCreateDataSource>(tag: NearbyString.customerCreateTag);
+  DataSource get _dataSource => Get.find<DataSource>(tag: NearbyString.customerCreateTag);
 
   Task task = Task(NearbyString.createTaskCode);
 

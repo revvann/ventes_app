@@ -48,7 +48,7 @@ class _Calendar extends StatelessWidget {
   Widget appointmentBuilder(context, details) {
     Color primary = onFindColor(details.appointments.first);
     return Obx(() {
-      bool isActive = state.properties.selectedAppointment?.scheid == details.appointments.first.scheid;
+      bool isActive = state.property.selectedAppointment?.scheid == details.appointments.first.scheid;
       return RegularAppointmentCard(
         schedule: details.appointments.first,
         primary: primary,

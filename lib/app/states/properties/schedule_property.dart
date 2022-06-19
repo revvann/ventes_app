@@ -1,8 +1,13 @@
-part of 'package:ventes/app/states/controllers/schedule_state_controller.dart';
+import 'package:get/get.dart';
+import 'package:syncfusion_flutter_calendar/calendar.dart';
+import 'package:ventes/constants/strings/schedule_string.dart';
+import 'package:ventes/app/states/typedefs/schedule_typedef.dart';
+import 'package:ventes/core/states/state_property.dart';
+import 'package:ventes/helpers/task_helper.dart';
 
 class ScheduleProperty extends StateProperty {
-  ScheduleListener get _listener => Get.find<ScheduleListener>(tag: ScheduleString.scheduleTag);
-  ScheduleDataSource get _dataSource => Get.find<ScheduleDataSource>(tag: ScheduleString.scheduleTag);
+  Listener get _listener => Get.find<Listener>(tag: ScheduleString.scheduleTag);
+  DataSource get _dataSource => Get.find<DataSource>(tag: ScheduleString.scheduleTag);
 
   final CalendarController calendarController = CalendarController();
 

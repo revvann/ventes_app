@@ -1,9 +1,21 @@
-part of 'package:ventes/app/states/controllers/schedule_fu_state_controller.dart';
+import 'dart:async';
+
+import 'package:get/get.dart';
+import 'package:ventes/app/api/presenters/schedule_fu_presenter.dart';
+import 'package:ventes/app/models/auth_model.dart';
+import 'package:ventes/app/models/schedule_model.dart';
+import 'package:ventes/app/models/type_model.dart';
+import 'package:ventes/app/models/user_detail_model.dart';
+import 'package:ventes/constants/strings/schedule_string.dart';
+import 'package:ventes/app/states/typedefs/schedule_fu_typedef.dart';
+import 'package:ventes/core/states/state_data_source.dart';
+import 'package:ventes/helpers/auth_helper.dart';
+import 'package:ventes/helpers/task_helper.dart';
 
 class ScheduleFormUpdateDataSource extends StateDataSource<ScheduleFormUpdatePresenter> implements ScheduleUpdateContract {
-  ScheduleFormUpdateListener get _listener => Get.find<ScheduleFormUpdateListener>(tag: ScheduleString.scheduleUpdateTag);
-  ScheduleFormUpdateFormSource get _formSource => Get.find<ScheduleFormUpdateFormSource>(tag: ScheduleString.scheduleUpdateTag);
-  ScheduleFormUpdateProperty get _properties => Get.find<ScheduleFormUpdateProperty>(tag: ScheduleString.scheduleUpdateTag);
+  Listener get _listener => Get.find<Listener>(tag: ScheduleString.scheduleUpdateTag);
+  FormSource get _formSource => Get.find<FormSource>(tag: ScheduleString.scheduleUpdateTag);
+  Property get _property => Get.find<Property>(tag: ScheduleString.scheduleUpdateTag);
 
   late int scheduleId;
 
@@ -82,6 +94,6 @@ class ScheduleFormUpdateDataSource extends StateDataSource<ScheduleFormUpdatePre
     schedule = Schedule.fromJson(data['schedule']);
     insertTypes(List<Map<String, dynamic>>.from(data['types']));
     _formSource.prepareFormValues();
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+    Get.find<TaskHelper>().loaderPop(_property.task.name);
   }
 }

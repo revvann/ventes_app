@@ -2,7 +2,7 @@
 
 import 'dart:math';
 
-import 'package:flutter/material.dart' hide MenuItem;
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -30,7 +30,7 @@ class ProductView extends View<ProductStateController> {
 
   @override
   void onBuild(state) {
-    state.properties.prospectid = prospectid;
+    state.property.prospectid = prospectid;
   }
 
   @override
@@ -120,13 +120,13 @@ class ProductView extends View<ProductStateController> {
                       IconInput(
                         icon: "assets/svg/search.svg",
                         hintText: "Search",
-                        controller: state.properties.searchTEC,
+                        controller: state.property.searchTEC,
                       ),
                       SizedBox(
                         height: RegularSize.m,
                       ),
                       Obx(
-                        () => state.properties.isLoading.value
+                        () => state.property.isLoading.value
                             ? LoaderAnimation(
                                 strokeWidth: 9,
                                 width: 42,

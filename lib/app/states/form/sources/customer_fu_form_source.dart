@@ -1,9 +1,25 @@
-part of 'package:ventes/app/states/controllers/customer_fu_state_controller.dart';
+import 'dart:io';
+
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:path/path.dart' as path;
+import 'package:ventes/app/models/city_model.dart';
+import 'package:ventes/app/models/country_model.dart';
+import 'package:ventes/app/models/province_model.dart';
+import 'package:ventes/app/models/subdistrict_model.dart';
+import 'package:ventes/app/resources/widgets/search_list.dart';
+import 'package:ventes/app/states/typedefs/customer_fu_typedef.dart';
+import 'package:ventes/app/states/form/validators/customer_fu_validator.dart';
+import 'package:ventes/constants/strings/nearby_string.dart';
+import 'package:ventes/core/states/update_form_source.dart';
+import 'package:ventes/helpers/function_helpers.dart';
+import 'package:ventes/helpers/task_helper.dart';
 
 class CustomerFormUpdateFormSource extends UpdateFormSource {
   CustomerFormUpdateValidator validator = CustomerFormUpdateValidator();
-  final CustomerFormUpdateProperty _properties = Get.find<CustomerFormUpdateProperty>(tag: NearbyString.customerUpdateTag);
-  final CustomerFormUpdateDataSource _dataSource = Get.find<CustomerFormUpdateDataSource>(tag: NearbyString.customerUpdateTag);
+  Property get _property => Get.find<Property>(tag: NearbyString.customerUpdateTag);
+  DataSource get _dataSource => Get.find<DataSource>(tag: NearbyString.customerUpdateTag);
 
   SearchListController<Country, Country> countrySearchListController = Get.put(SearchListController<Country, Country>());
   SearchListController<Province, Province> provinceSearchListController = Get.put(SearchListController<Province, Province>());
@@ -65,7 +81,7 @@ class CustomerFormUpdateFormSource extends UpdateFormSource {
 
       cstmlatitude = _dataSource.bpCustomer!.sbccstm!.cstmlatitude!.toString();
       cstmlongitude = _dataSource.bpCustomer!.sbccstm!.cstmlongitude!.toString();
-      _properties.markerLatLng = LatLng(double.parse(cstmlatitude), double.parse(cstmlongitude));
+      _property.markerLatLng = LatLng(double.parse(cstmlatitude), double.parse(cstmlongitude));
 
       nameTEC.text = _dataSource.bpCustomer!.sbccstm!.cstmname ?? "";
       addressTEC.text = _dataSource.bpCustomer!.sbccstm!.cstmaddress ?? "";
@@ -116,7 +132,7 @@ class CustomerFormUpdateFormSource extends UpdateFormSource {
     double newLng = double.tryParse(cstmlongitude) ?? 0.0;
     LatLng newPos = LatLng(newLat, newLng);
 
-    double radius = calculateDistance(_properties.markers.first.position, newPos);
+    double radius = calculateDistance(_property.markers.first.position, newPos);
     bool inRange = radius <= 100;
 
     if (isValid && inRange) {
@@ -130,9 +146,9 @@ class CustomerFormUpdateFormSource extends UpdateFormSource {
 
       FormData formData = FormData(data);
       _dataSource.updateCustomer(sbcid!, formData);
-      Get.find<TaskHelper>().loaderPush(_properties.task);
+      Get.find<TaskHelper>().loaderPush(_property.task);
     } else {
-      Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: NearbyString.formInvalid));
+      Get.find<TaskHelper>().failedPush(_property.task.copyWith(message: NearbyString.formInvalid));
     }
   }
 }

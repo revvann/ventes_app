@@ -1,9 +1,18 @@
-part of 'package:ventes/app/states/controllers/prospect_fu_state_controller.dart';
+import 'package:get/get.dart';
+import 'package:ventes/app/api/presenters/prospect_fu_presenter.dart';
+import 'package:ventes/app/models/bp_customer_model.dart';
+import 'package:ventes/app/models/prospect_model.dart';
+import 'package:ventes/app/models/type_model.dart';
+import 'package:ventes/app/models/user_detail_model.dart';
+import 'package:ventes/constants/strings/prospect_string.dart';
+import 'package:ventes/app/states/typedefs/prospect_fu_typedef.dart';
+import 'package:ventes/core/states/state_data_source.dart';
+import 'package:ventes/helpers/task_helper.dart';
 
 class ProspectFormUpdateDataSource extends StateDataSource<ProspectFormUpdatePresenter> implements ProspectUpdateContract {
-  ProspectFormUpdateListener get _listener => Get.find<ProspectFormUpdateListener>(tag: ProspectString.prospectUpdateTag);
-  ProspectFormUpdateFormSource get _formSource => Get.find<ProspectFormUpdateFormSource>(tag: ProspectString.prospectUpdateTag);
-  ProspectFormUpdateProperty get _properties => Get.find<ProspectFormUpdateProperty>(tag: ProspectString.prospectUpdateTag);
+  Listener get _listener => Get.find<Listener>(tag: ProspectString.prospectUpdateTag);
+  FormSource get _formSource => Get.find<FormSource>(tag: ProspectString.prospectUpdateTag);
+  Property get _property => Get.find<Property>(tag: ProspectString.prospectUpdateTag);
 
   final Rx<Map<int, String>> _followUpItems = Rx<Map<int, String>>({});
   set followUpItems(Map<int, String> value) => _followUpItems.value = value;
@@ -48,7 +57,7 @@ class ProspectFormUpdateDataSource extends StateDataSource<ProspectFormUpdatePre
       _formSource.prepareFormValues();
     }
 
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+    Get.find<TaskHelper>().loaderPop(_property.task.name);
   }
 
   @override

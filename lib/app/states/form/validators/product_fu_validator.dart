@@ -1,5 +1,3 @@
-part of 'package:ventes/app/states/controllers/product_fu_state_controller.dart';
-
 class ProductFormUpdateValidator {
   String? prosproductname(String? value) {
     if (value == null || value.isEmpty) {

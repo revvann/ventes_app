@@ -1,9 +1,26 @@
-part of 'package:ventes/app/states/controllers/customer_fc_state_controller.dart';
+import 'dart:async';
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show rootBundle;
+import 'package:get/get.dart';
+import 'package:path/path.dart' as path;
+import 'package:path_provider/path_provider.dart';
+import 'package:ventes/app/models/city_model.dart';
+import 'package:ventes/app/models/country_model.dart';
+import 'package:ventes/app/models/province_model.dart';
+import 'package:ventes/app/models/subdistrict_model.dart';
+import 'package:ventes/app/resources/widgets/search_list.dart';
+import 'package:ventes/constants/strings/nearby_string.dart';
+import 'package:ventes/core/states/update_form_source.dart';
+import 'package:ventes/helpers/task_helper.dart';
+import 'package:ventes/app/states/typedefs/customer_fc_typedef.dart';
 
 class CustomerFormCreateFormSource extends UpdateFormSource {
-  CustomerFormCreateValidator validator = CustomerFormCreateValidator();
-  CustomerFormCreateProperty get _properties => Get.find<CustomerFormCreateProperty>(tag: NearbyString.customerCreateTag);
-  CustomerFormCreateDataSource get _dataSource => Get.find<CustomerFormCreateDataSource>(tag: NearbyString.customerCreateTag);
+  Validator validator = Validator();
+  Property get _property => Get.find<Property>(tag: NearbyString.customerCreateTag);
+  DataSource get _dataSource => Get.find<DataSource>(tag: NearbyString.customerCreateTag);
 
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final defaultPicture = Image.asset('assets/' + NearbyString.defaultImage).obs;
@@ -41,8 +58,8 @@ class CustomerFormCreateFormSource extends UpdateFormSource {
     super.init();
     picture = await _getImageFileFromAssets(NearbyString.defaultImage);
 
-    latitudeTEC.text = _properties.latitude!.toString();
-    longitudeTEC.text = _properties.longitude!.toString();
+    latitudeTEC.text = _property.latitude!.toString();
+    longitudeTEC.text = _property.longitude!.toString();
   }
 
   @override
@@ -112,9 +129,9 @@ class CustomerFormCreateFormSource extends UpdateFormSource {
 
       FormData formData = FormData(data);
       _dataSource.createCustomer(formData);
-      Get.find<TaskHelper>().loaderPush(_properties.task);
+      Get.find<TaskHelper>().loaderPush(_property.task);
     } else {
-      Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: NearbyString.formInvalid));
+      Get.find<TaskHelper>().failedPush(_property.task.copyWith(message: NearbyString.formInvalid));
     }
   }
 }

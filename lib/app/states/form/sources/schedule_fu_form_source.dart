@@ -1,15 +1,30 @@
 // ignore_for_file: unnecessary_getters_setters, prefer_const_constructors
 
-part of 'package:ventes/app/states/controllers/schedule_fu_state_controller.dart';
+import 'dart:convert';
+
+import 'package:flutter/material.dart' hide Listener;
+import 'package:get/get.dart';
+import 'package:ventes/app/models/schedule_guest_model.dart';
+import 'package:ventes/app/models/schedule_model.dart';
+import 'package:ventes/app/models/user_detail_model.dart';
+import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
+import 'package:ventes/app/resources/widgets/regular_dropdown.dart';
+import 'package:ventes/app/resources/widgets/searchable_dropdown.dart';
+import 'package:ventes/app/states/form/validators/schedule_fu_validator.dart';
+import 'package:ventes/constants/strings/schedule_string.dart';
+import 'package:ventes/app/states/typedefs/schedule_fu_typedef.dart';
+import 'package:ventes/core/states/update_form_source.dart';
+import 'package:ventes/helpers/function_helpers.dart';
+import 'package:ventes/helpers/task_helper.dart';
 
 class ScheduleFormUpdateFormSource extends UpdateFormSource {
   int readOnlyId = 14;
   int addMemberId = 15;
   int shareLinkId = 16;
 
-  ScheduleFormUpdateDataSource get _dataSource => Get.find<ScheduleFormUpdateDataSource>(tag: ScheduleString.scheduleUpdateTag);
-  ScheduleFormUpdateListener get _listener => Get.find<ScheduleFormUpdateListener>(tag: ScheduleString.scheduleUpdateTag);
-  ScheduleFormUpdateProperty get _properties => Get.find<ScheduleFormUpdateProperty>(tag: ScheduleString.scheduleUpdateTag);
+  DataSource get _dataSource => Get.find<DataSource>(tag: ScheduleString.scheduleUpdateTag);
+  Listener get _listener => Get.find<Listener>(tag: ScheduleString.scheduleUpdateTag);
+  Property get _property => Get.find<Property>(tag: ScheduleString.scheduleUpdateTag);
   ScheduleFormUpdateValidator validator = ScheduleFormUpdateValidator();
 
   UserDetail? userDefault;
@@ -375,8 +390,14 @@ class ScheduleFormUpdateFormSource extends UpdateFormSource {
   void onSubmit() {
     if (isValid()) {
       Map<String, dynamic> data = toJson();
-      Get.find<TaskHelper>().loaderPush(_properties.task);
+      Get.find<TaskHelper>().loaderPush(_property.task);
       _dataSource.updateSchedule(data);
     }
   }
+}
+
+enum SchedulePermission {
+  readOnly,
+  shareLink,
+  addMember,
 }

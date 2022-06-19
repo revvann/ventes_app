@@ -2,7 +2,7 @@
 
 import 'dart:math';
 
-import 'package:flutter/material.dart' hide MenuItem;
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:flutter_svg/svg.dart';
@@ -35,7 +35,7 @@ class ProspectDetailView extends View<ProspectDetailStateController> {
 
   @override
   void onBuild(state) {
-    state.properties.prospectId = prospectId;
+    state.property.prospectId = prospectId;
   }
 
   @override

@@ -1,9 +1,13 @@
-part of 'package:ventes/app/states/controllers/contact_person_fc_state_controller.dart';
+import 'package:get/get.dart';
+import 'package:ventes/constants/strings/prospect_string.dart';
+import 'package:ventes/core/states/state_property.dart';
+import 'package:ventes/helpers/task_helper.dart';
+import 'package:ventes/app/states/typedefs/contact_person_fc_typedef.dart';
 
 class ContactPersonFormCreateProperty extends StateProperty {
   late int customerid;
 
-  ContactPersonFormCreateDataSource get _dataSource => Get.find<ContactPersonFormCreateDataSource>(tag: ProspectString.contactCreateTag);
+  DataSource get _dataSource => Get.find<DataSource>(tag: ProspectString.contactCreateTag);
 
   Task task = Task(ProspectString.formCreateContactTaskCode);
 

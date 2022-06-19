@@ -1,7 +1,11 @@
-part of 'package:ventes/app/states/controllers/contact_person_fu_state_controller.dart';
+import 'package:get/get.dart';
+import 'package:ventes/constants/strings/prospect_string.dart';
+import 'package:ventes/core/states/state_property.dart';
+import 'package:ventes/helpers/task_helper.dart';
+import 'package:ventes/app/states/typedefs/contact_person_fu_typedef.dart';
 
 class ContactPersonFormUpdateProperty extends StateProperty {
-  ContactPersonFormUpdateDataSource get _dataSource => Get.find<ContactPersonFormUpdateDataSource>(tag: ProspectString.contactUpdateTag);
+  DataSource get _dataSource => Get.find<DataSource>(tag: ProspectString.contactUpdateTag);
 
   Task task = Task(ProspectString.formUpdateContactTaskCode);
 

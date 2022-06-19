@@ -1,7 +1,12 @@
-part of 'package:ventes/app/states/controllers/contact_person_state_controller.dart';
+import 'package:get/get.dart';
+import 'package:ventes/app/resources/widgets/popup_button.dart';
+import 'package:ventes/constants/strings/prospect_string.dart';
+import 'package:ventes/core/states/state_property.dart';
+import 'package:ventes/helpers/task_helper.dart';
+import 'package:ventes/app/states/typedefs/contact_person_typedef.dart';
 
 class ContactPersonProperty extends StateProperty {
-  ContactPersonDataSource get _dataSource => Get.find<ContactPersonDataSource>(tag: ProspectString.contactTag);
+  DataSource get _dataSource => Get.find<DataSource>(tag: ProspectString.contactTag);
   Set<String> popupControllers = {};
 
   late int customerid;

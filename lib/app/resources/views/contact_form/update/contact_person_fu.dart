@@ -23,7 +23,7 @@ class ContactPersonFormUpdateView extends View<ContactPersonFormUpdateStateContr
 
   @override
   void onBuild(state) {
-    state.properties.contactid = contact;
+    state.property.contactid = contact;
   }
 
   @override

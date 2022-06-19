@@ -1,8 +1,17 @@
-part of 'package:ventes/app/states/controllers/product_state_controller.dart';
+import 'dart:async';
+
+import 'package:get/get.dart';
+import 'package:ventes/app/resources/views/product_form/update/product_fu.dart';
+import 'package:ventes/app/states/controllers/product_state_controller.dart';
+import 'package:ventes/constants/strings/prospect_string.dart';
+import 'package:ventes/app/states/typedefs/product_typedef.dart';
+import 'package:ventes/core/states/state_listener.dart';
+import 'package:ventes/helpers/task_helper.dart';
+import 'package:ventes/routing/navigators/prospect_navigator.dart';
 
 class ProductListener extends StateListener {
-  ProductProperty get _properties => Get.find<ProductProperty>(tag: ProspectString.productTag);
-  ProductDataSource get _dataSource => Get.find<ProductDataSource>(tag: ProspectString.productTag);
+  Property get _property => Get.find<Property>(tag: ProspectString.productTag);
+  DataSource get _dataSource => Get.find<DataSource>(tag: ProspectString.productTag);
 
   void goBack() {
     Get.back(id: ProspectNavigator.id);
@@ -20,12 +29,12 @@ class ProductListener extends StateListener {
 
   void deleteProduct(int productid) {
     Get.find<TaskHelper>().confirmPush(
-      _properties.task.copyWith<bool>(
+      _property.task.copyWith<bool>(
         message: ProspectString.deleteProductConfirm,
         onFinished: (res) {
           if (res) {
             _dataSource.deleteProduct(productid);
-            Get.find<TaskHelper>().loaderPush(_properties.task);
+            Get.find<TaskHelper>().loaderPush(_property.task);
           }
         },
       ),
@@ -33,38 +42,38 @@ class ProductListener extends StateListener {
   }
 
   void onLoadFailed(String message) {
-    Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: message, snackbar: true));
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
-    _properties.isLoading.value = false;
+    Get.find<TaskHelper>().failedPush(_property.task.copyWith(message: message, snackbar: true));
+    Get.find<TaskHelper>().loaderPop(_property.task.name);
+    _property.isLoading.value = false;
   }
 
   void onLoadError(String message) {
-    Get.find<TaskHelper>().errorPush(_properties.task.copyWith(message: message));
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
-    _properties.isLoading.value = false;
+    Get.find<TaskHelper>().errorPush(_property.task.copyWith(message: message));
+    Get.find<TaskHelper>().loaderPop(_property.task.name);
+    _property.isLoading.value = false;
   }
 
   void onDeleteFailed(String message) {
-    Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: message, snackbar: true));
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+    Get.find<TaskHelper>().failedPush(_property.task.copyWith(message: message, snackbar: true));
+    Get.find<TaskHelper>().loaderPop(_property.task.name);
   }
 
   void onDeleteSuccess(String message) {
-    Get.find<TaskHelper>().successPush(_properties.task.copyWith(
+    Get.find<TaskHelper>().successPush(_property.task.copyWith(
         message: message,
         onFinished: (res) {
           Get.find<ProductStateController>().refreshStates();
         }));
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+    Get.find<TaskHelper>().loaderPop(_property.task.name);
   }
 
   void onDeleteError(String message) {
-    Get.find<TaskHelper>().errorPush(_properties.task.copyWith(message: message));
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+    Get.find<TaskHelper>().errorPush(_property.task.copyWith(message: message));
+    Get.find<TaskHelper>().loaderPop(_property.task.name);
   }
 
   @override
-  Future onRefresh() async {
-    _properties.refresh();
+  Future onReady() async {
+    _property.refresh();
   }
 }

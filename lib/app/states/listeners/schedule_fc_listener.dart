@@ -1,9 +1,20 @@
-part of 'package:ventes/app/states/controllers/schedule_fc_state_controller.dart';
+import 'dart:async';
+
+import 'package:get/get.dart';
+import 'package:ventes/app/models/schedule_guest_model.dart';
+import 'package:ventes/app/models/user_detail_model.dart';
+import 'package:ventes/app/states/controllers/daily_schedule_state_controller.dart';
+import 'package:ventes/constants/strings/schedule_string.dart';
+import 'package:ventes/app/states/typedefs/schedule_fc_typedef.dart';
+import 'package:ventes/core/states/state_listener.dart';
+import 'package:ventes/helpers/function_helpers.dart';
+import 'package:ventes/helpers/task_helper.dart';
+import 'package:ventes/routing/navigators/schedule_navigator.dart';
 
 class ScheduleFormCreateListener extends StateListener {
-  ScheduleFormCreateProperty get _properties => Get.find<ScheduleFormCreateProperty>(tag: ScheduleString.scheduleCreateTag);
-  ScheduleFormCreateFormSource get _formSource => Get.find<ScheduleFormCreateFormSource>(tag: ScheduleString.scheduleCreateTag);
-  ScheduleFormCreateDataSource get _dataSource => Get.find<ScheduleFormCreateDataSource>(tag: ScheduleString.scheduleCreateTag);
+  Property get _property => Get.find<Property>(tag: ScheduleString.scheduleCreateTag);
+  FormSource get _formSource => Get.find<FormSource>(tag: ScheduleString.scheduleCreateTag);
+  DataSource get _dataSource => Get.find<DataSource>(tag: ScheduleString.scheduleCreateTag);
 
   void onLocationChanged() {
     _formSource.schelocquiet = _formSource.schelocTEC.text;
@@ -191,7 +202,7 @@ class ScheduleFormCreateListener extends StateListener {
 
   void onFormSubmit() {
     Get.find<TaskHelper>().confirmPush(
-      _properties.task.copyWith<bool>(
+      _property.task.copyWith<bool>(
         message: ScheduleString.createScheduleConfirm,
         onFinished: (res) {
           if (res) {
@@ -203,43 +214,43 @@ class ScheduleFormCreateListener extends StateListener {
   }
 
   void onCameraMove(position) {
-    _properties.markerLatLng = position.target;
+    _property.markerLatLng = position.target;
     _formSource.scheloc = "https://maps.google.com?q=${position.target.latitude},${position.target.longitude}";
   }
 
   void onCreateDataFailed(String message) {
-    Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: ScheduleString.createFailed));
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+    Get.find<TaskHelper>().failedPush(_property.task.copyWith(message: ScheduleString.createFailed));
+    Get.find<TaskHelper>().loaderPop(_property.task.name);
   }
 
   void onCreateDataSuccess(String message) {
-    Get.find<TaskHelper>().successPush(_properties.task.copyWith(
+    Get.find<TaskHelper>().successPush(_property.task.copyWith(
         message: ScheduleString.createSuccess,
         onFinished: (res) async {
-          await _properties.scheduleNotification();
-          Get.find<DailyScheduleStateController>().properties.refresh();
+          await _property.scheduleNotification();
+          Get.find<DailyScheduleStateController>().property.refresh();
           Get.back(id: ScheduleNavigator.id);
         }));
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+    Get.find<TaskHelper>().loaderPop(_property.task.name);
   }
 
   void onCreateDataError(String message) {
-    Get.find<TaskHelper>().errorPush(_properties.task.copyWith(message: ScheduleString.createError));
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+    Get.find<TaskHelper>().errorPush(_property.task.copyWith(message: ScheduleString.createError));
+    Get.find<TaskHelper>().loaderPop(_property.task.name);
   }
 
   onLoadDataError(String message) {
-    Get.find<TaskHelper>().errorPush(_properties.task.copyWith(message: ScheduleString.createError));
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+    Get.find<TaskHelper>().errorPush(_property.task.copyWith(message: ScheduleString.createError));
+    Get.find<TaskHelper>().loaderPop(_property.task.name);
   }
 
   onLoadDataFailed(String message) {
-    Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: ScheduleString.createFailed));
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+    Get.find<TaskHelper>().failedPush(_property.task.copyWith(message: ScheduleString.createFailed));
+    Get.find<TaskHelper>().loaderPop(_property.task.name);
   }
 
   @override
-  Future onRefresh() async {
-    _properties.refresh();
+  Future onReady() async {
+    _property.refresh();
   }
 }

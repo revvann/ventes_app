@@ -1,7 +1,15 @@
-part of 'package:ventes/app/states/controllers/product_state_controller.dart';
+import 'dart:async';
+
+import 'package:flutter/cupertino.dart';
+import 'package:get/get.dart';
+import 'package:ventes/app/resources/widgets/popup_button.dart';
+import 'package:ventes/constants/strings/prospect_string.dart';
+import 'package:ventes/app/states/typedefs/product_typedef.dart';
+import 'package:ventes/core/states/state_property.dart';
+import 'package:ventes/helpers/task_helper.dart';
 
 class ProductProperty extends StateProperty {
-  ProductDataSource get _dataSource => Get.find<ProductDataSource>(tag: ProspectString.productTag);
+  DataSource get _dataSource => Get.find<DataSource>(tag: ProspectString.productTag);
 
   Task task = Task(ProspectString.productTaskCode);
 

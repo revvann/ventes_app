@@ -1,9 +1,18 @@
-part of 'package:ventes/app/states/controllers/prospect_state_controller.dart';
+import 'package:get/get.dart';
+import 'package:ventes/app/models/type_model.dart';
+import 'package:ventes/app/resources/views/prospect_detail/prospect_detail.dart';
+import 'package:ventes/app/resources/views/prospect_form/create/prospect_fc.dart';
+import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
+import 'package:ventes/constants/strings/prospect_string.dart';
+import 'package:ventes/app/states/typedefs/prospect_typedef.dart';
+import 'package:ventes/core/states/state_listener.dart';
+import 'package:ventes/helpers/task_helper.dart';
+import 'package:ventes/routing/navigators/prospect_navigator.dart';
 
 class ProspectListener extends StateListener {
-  ProspectProperty get _properties => Get.find<ProspectProperty>(tag: ProspectString.prospectTag);
-  ProspectFormSource get _formSource => Get.find<ProspectFormSource>(tag: ProspectString.prospectTag);
-  ProspectDataSource get _dataSource => Get.find<ProspectDataSource>(tag: ProspectString.prospectTag);
+  Property get _property => Get.find<Property>(tag: ProspectString.prospectTag);
+  FormSource get _formSource => Get.find<FormSource>(tag: ProspectString.prospectTag);
+  DataSource get _dataSource => Get.find<DataSource>(tag: ProspectString.prospectTag);
 
   void onDateStartSelected(DateTime? value) {
     if (value != null) {
@@ -45,7 +54,7 @@ class ProspectListener extends StateListener {
   Future onFilterChanged() async {
     Map<String, dynamic> filter = _formSource.toJson();
     _dataSource.fetchProspect(params: filter);
-    Get.find<TaskHelper>().loaderPush(_properties.task);
+    Get.find<TaskHelper>().loaderPush(_property.task);
   }
 
   void onProspectClicked() {
@@ -53,23 +62,23 @@ class ProspectListener extends StateListener {
       ProspectDetailView.route,
       id: ProspectNavigator.id,
       arguments: {
-        'prospect': _properties.selectedProspect?.prospectid,
+        'prospect': _property.selectedProspect?.prospectid,
       },
     );
   }
 
   void onLoadFailed(String message) {
-    Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: message, snackbar: true));
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+    Get.find<TaskHelper>().failedPush(_property.task.copyWith(message: message, snackbar: true));
+    Get.find<TaskHelper>().loaderPop(_property.task.name);
   }
 
   void onLoadError(String message) {
-    Get.find<TaskHelper>().errorPush(_properties.task.copyWith(message: message));
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+    Get.find<TaskHelper>().errorPush(_property.task.copyWith(message: message));
+    Get.find<TaskHelper>().loaderPop(_property.task.name);
   }
 
   @override
-  Future onRefresh() async {
-    _properties.refresh();
+  Future onReady() async {
+    _property.refresh();
   }
 }

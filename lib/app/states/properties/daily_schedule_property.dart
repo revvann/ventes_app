@@ -1,7 +1,15 @@
-part of 'package:ventes/app/states/controllers/daily_schedule_state_controller.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:ventes/app/models/schedule_model.dart';
+import 'package:ventes/constants/regular_color.dart';
+import 'package:ventes/constants/strings/schedule_string.dart';
+import 'package:ventes/core/states/state_property.dart';
+import 'package:ventes/helpers/function_helpers.dart';
+import 'package:ventes/helpers/task_helper.dart';
+import 'package:ventes/app/states/typedefs/daily_schedule_typedef.dart';
 
 class DailyScheduleProperty extends StateProperty {
-  DailyScheduleDataSource get _dataSource => Get.find<DailyScheduleDataSource>(tag: ScheduleString.dailyScheduleTag);
+  DataSource get _dataSource => Get.find<DataSource>(tag: ScheduleString.dailyScheduleTag);
 
   Task task = Task(ScheduleString.dailyScheduleTaskCode);
 

@@ -1,9 +1,17 @@
-part of 'package:ventes/app/states/controllers/prospect_detail_fc_state_controller.dart';
+import 'package:get/get.dart';
+import 'package:ventes/app/api/presenters/prospect_detail_fc_presenter.dart';
+import 'package:ventes/app/models/prospect_model.dart';
+import 'package:ventes/app/models/type_model.dart';
+import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
+import 'package:ventes/constants/strings/prospect_string.dart';
+import 'package:ventes/app/states/typedefs/prospect_detail_fc_typedef.dart';
+import 'package:ventes/core/states/state_data_source.dart';
+import 'package:ventes/helpers/task_helper.dart';
 
 class ProspectDetailFormCreateDataSource extends StateDataSource<ProspectDetailFormCreatePresenter> implements ProspectDetailCreateContract {
-  ProspectDetailFormCreateListener get _listener => Get.find<ProspectDetailFormCreateListener>(tag: ProspectString.detailCreateTag);
-  ProspectDetailFormCreateFormSource get _formSource => Get.find<ProspectDetailFormCreateFormSource>(tag: ProspectString.detailCreateTag);
-  ProspectDetailFormCreateProperty get _properties => Get.find<ProspectDetailFormCreateProperty>(tag: ProspectString.detailCreateTag);
+  Listener get _listener => Get.find<Listener>(tag: ProspectString.detailCreateTag);
+  FormSource get _formSource => Get.find<FormSource>(tag: ProspectString.detailCreateTag);
+  Property get _property => Get.find<Property>(tag: ProspectString.detailCreateTag);
 
   final Rx<List<KeyableDropdownItem<int, DBType>>> _categoryItems = Rx<List<KeyableDropdownItem<int, DBType>>>([]);
   set categoryItems(List<KeyableDropdownItem<int, DBType>> value) => _categoryItems.value = value;
@@ -47,7 +55,7 @@ class ProspectDetailFormCreateDataSource extends StateDataSource<ProspectDetailF
       prospect = Prospect.fromJson(data['prospect']);
       _formSource.prospect = prospect;
     }
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+    Get.find<TaskHelper>().loaderPop(_property.task.name);
   }
 
   @override

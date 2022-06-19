@@ -1,7 +1,14 @@
-part of 'package:ventes/app/states/controllers/prospect_detail_fc_state_controller.dart';
+import 'dart:async';
+
+import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:ventes/constants/strings/prospect_string.dart';
+import 'package:ventes/app/states/typedefs/prospect_detail_fc_typedef.dart';
+import 'package:ventes/core/states/state_property.dart';
+import 'package:ventes/helpers/task_helper.dart';
 
 class ProspectDetailFormCreateProperty extends StateProperty {
-  ProspectDetailFormCreateDataSource get _dataSource => Get.find<ProspectDetailFormCreateDataSource>(tag: ProspectString.detailCreateTag);
+  DataSource get _dataSource => Get.find<DataSource>(tag: ProspectString.detailCreateTag);
   final Completer<GoogleMapController> mapsController = Completer();
 
   final Rx<Set<Marker>> _marker = Rx<Set<Marker>>(<Marker>{});

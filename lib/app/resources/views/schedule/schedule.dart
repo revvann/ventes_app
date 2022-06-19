@@ -86,7 +86,7 @@ class ScheduleView extends View<ScheduleStateController> {
                 width: RegularSize.s,
               ),
               Obx(() {
-                String date = DateFormat("MMMM, yyyy").format(state.properties.dateShown);
+                String date = DateFormat("MMMM, yyyy").format(state.property.dateShown);
                 return Container(
                   width: Get.width * 0.5,
                   alignment: Alignment.center,
@@ -148,8 +148,8 @@ class ScheduleView extends View<ScheduleStateController> {
                             ),
                             monthCellBuilder: (_, details) {
                               return Obx(() {
-                                bool selected = details.date == state.properties.selectedDate;
-                                bool thisMonth = details.date.month == state.properties.dateShown.month;
+                                bool selected = details.date == state.property.selectedDate;
+                                bool thisMonth = details.date.month == state.property.dateShown.month;
                                 int appointmentsCount = details.appointments.length;
 
                                 Color textColor = RegularColor.gray;
@@ -173,9 +173,9 @@ class ScheduleView extends View<ScheduleStateController> {
                               });
                             },
                             dataSource: RegularCalendarDataSource(state.dataSource.appointments),
-                            calendarController: state.properties.calendarController,
+                            calendarController: state.property.calendarController,
                             onSelectionChanged: state.listener.onDateSelectionChanged,
-                            initialDate: state.properties.initialDate,
+                            initialDate: state.property.initialDate,
                           );
                         }),
                       ),

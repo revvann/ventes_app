@@ -1,0 +1,31 @@
+total 116
+drwxrwxr-x 2 revan revan 4096 Jun 19 13:58 ./
+drwxrwxr-x 7 revan revan 4096 Jun 18 22:54 ../
+-rw-rw-r-- 1 revan revan 1255 Jun 10 20:17 bottom_navigation_state_controller.dart
+-rw-rw-r-- 1 revan revan  945 Jun 19 13:38 contact_person_fc_state_controller.dart
+-rw-rw-r-- 1 revan revan  945 Jun 19 13:38 contact_person_fu_state_controller.dart
+-rw-rw-r-- 1 revan revan  897 Jun 19 13:38 contact_person_state_controller.dart
+-rw-rw-r-- 1 revan revan 1102 Jun 19 13:38 customer_fc_state_controller.dart
+-rw-rw-r-- 1 revan revan 1102 Jun 19 13:38 customer_fu_state_controller.dart
+-rw-rw-r-- 1 revan revan  995 Jun 19 13:38 daily_schedule_state_controller.dart * here
+-rw-rw-r-- 1 revan revan 1202 Jun 19 13:38 dashboard_state_controller.dart
+-rw-rw-r-- 1 revan revan  606 Jun 18 23:21 example_state_controller.dart
+-rw-rw-r-- 1 revan revan  970 Mei 26 12:15 keyboard_state_controller.dart
+-rw-rw-r-- 1 revan revan    0 Jun 19 13:58 list
+-rw-rw-r-- 1 revan revan  937 Jun 19 13:38 nearby_state_controller.dart
+-rw-rw-r-- 1 revan revan 1088 Jun 19 13:38 product_fu_state_controller.dart
+-rw-rw-r-- 1 revan revan  909 Jun 19 13:38 product_state_controller.dart
+-rw-rw-r-- 1 revan revan  963 Jun 19 13:38 prospect_assign_state_controller.dart
+-rw-rw-r-- 1 revan revan 1167 Jun 19 13:38 prospect_detail_fc_state_controller.dart
+-rw-rw-r-- 1 revan revan 1167 Jun 19 13:38 prospect_detail_fu_state_controller.dart
+-rw-rw-r-- 1 revan revan  955 Jun 19 13:38 prospect_detail_state_controller.dart
+-rw-rw-r-- 1 revan revan 1059 Jun 19 13:38 prospect_fc_state_controller.dart
+-rw-rw-r-- 1 revan revan 1059 Jun 19 13:38 prospect_fu_state_controller.dart
+-rw-rw-r-- 1 revan revan  911 Jun 19 13:38 prospect_state_controller.dart
+-rw-rw-r-- 1 revan revan 1152 Jun 19 13:38 schedule_fc_state_controller.dart
+-rw-rw-r-- 1 revan revan 1106 Jun 19 13:38 schedule_fu_state_controller.dart
+-rw-rw-r-- 1 revan revan  968 Jun 19 13:38 schedule_state_controller.dart
+-rw-rw-r-- 1 revan revan  147 Jun 17 22:30 settings_state_controller.dart
+-rw-rw-r-- 1 revan revan  653 Jun 17 22:30 signin_state_controller.dart
+-rw-rw-r-- 1 revan revan 1631 Jun 10 20:17 splash_screen_state_controller.dart
+-rw-rw-r-- 1 revan revan 3336 Jun 12 00:38 started_page_state_controller.dart

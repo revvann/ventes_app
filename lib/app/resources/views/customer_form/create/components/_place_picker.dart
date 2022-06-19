@@ -19,8 +19,8 @@ class _PlacePicker extends StatelessWidget {
           child: Obx(() {
             return GoogleMap(
               mapType: MapType.terrain,
-              initialCameraPosition: CameraPosition(target: LatLng(0, 0), zoom: state.properties.defaultZoom),
-              markers: state.properties.markers,
+              initialCameraPosition: CameraPosition(target: LatLng(0, 0), zoom: state.property.defaultZoom),
+              markers: state.property.markers,
               myLocationEnabled: true,
               onMapCreated: state.listener.onMapControllerCreated,
             );

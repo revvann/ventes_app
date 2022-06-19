@@ -1,8 +1,12 @@
-part of 'package:ventes/app/states/controllers/prospect_fu_state_controller.dart';
+import 'package:get/get.dart';
+import 'package:ventes/constants/strings/prospect_string.dart';
+import 'package:ventes/app/states/typedefs/prospect_fu_typedef.dart';
+import 'package:ventes/core/states/state_property.dart';
+import 'package:ventes/helpers/task_helper.dart';
 
 class ProspectFormUpdateProperty extends StateProperty {
-  ProspectFormUpdateDataSource get dataSource => Get.find<ProspectFormUpdateDataSource>(tag: ProspectString.prospectUpdateTag);
-  ProspectFormUpdateFormSource get formSource => Get.find<ProspectFormUpdateFormSource>(tag: ProspectString.prospectUpdateTag);
+  DataSource get dataSource => Get.find<DataSource>(tag: ProspectString.prospectUpdateTag);
+  FormSource get formSource => Get.find<FormSource>(tag: ProspectString.prospectUpdateTag);
 
   late int prospectId;
 

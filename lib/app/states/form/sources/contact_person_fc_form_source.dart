@@ -1,8 +1,17 @@
-part of 'package:ventes/app/states/controllers/contact_person_fc_state_controller.dart';
+import 'package:contacts_service/contacts_service.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:ventes/app/models/type_model.dart';
+import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
+import 'package:ventes/app/resources/widgets/searchable_dropdown.dart';
+import 'package:ventes/constants/strings/prospect_string.dart';
+import 'package:ventes/app/states/typedefs/contact_person_fc_typedef.dart';
+import 'package:ventes/core/states/state_form_source.dart';
+import 'package:ventes/helpers/task_helper.dart';
 
 class ContactPersonFormCreateFormSource extends StateFormSource {
-  ContactPersonFormCreateProperty get _properties => Get.find<ContactPersonFormCreateProperty>(tag: ProspectString.contactCreateTag);
-  ContactPersonFormCreateDataSource get _dataSource => Get.find<ContactPersonFormCreateDataSource>(tag: ProspectString.contactCreateTag);
+  Property get _property => Get.find<Property>(tag: ProspectString.contactCreateTag);
+  DataSource get _dataSource => Get.find<DataSource>(tag: ProspectString.contactCreateTag);
 
   KeyableDropdownController<int, DBType> typeDropdownController = Get.put(
     KeyableDropdownController<int, DBType>(),
@@ -18,7 +27,7 @@ class ContactPersonFormCreateFormSource extends StateFormSource {
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
-  ContactPersonFormCreateValidator validator = ContactPersonFormCreateValidator();
+  Validator validator = Validator();
 
   bool get isValid => formKey.currentState?.validate() ?? false;
   bool get isPhone => contacttype?.typename == "Phone";
@@ -55,9 +64,9 @@ class ContactPersonFormCreateFormSource extends StateFormSource {
     if (isValid) {
       Map<String, dynamic> data = toJson();
       _dataSource.createData(data);
-      Get.find<TaskHelper>().loaderPush(_properties.task);
+      Get.find<TaskHelper>().loaderPush(_property.task);
     } else {
-      Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: "Form is not valid"));
+      Get.find<TaskHelper>().failedPush(_property.task.copyWith(message: "Form is not valid"));
     }
   }
 }

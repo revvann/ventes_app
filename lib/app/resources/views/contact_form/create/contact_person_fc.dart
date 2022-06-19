@@ -27,7 +27,7 @@ class ContactPersonFormCreateView extends View<ContactPersonFormCreateStateContr
 
   @override
   void onBuild(state) {
-    state.properties.customerid = customerid;
+    state.property.customerid = customerid;
   }
 
   @override

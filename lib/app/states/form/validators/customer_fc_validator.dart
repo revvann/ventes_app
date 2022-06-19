@@ -1,5 +1,3 @@
-part of 'package:ventes/app/states/controllers/customer_fc_state_controller.dart';
-
 class CustomerFormCreateValidator {
   String? cstmname(String? value) {
     if (value == null || value.isEmpty) {

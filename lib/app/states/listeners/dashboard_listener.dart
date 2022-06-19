@@ -1,9 +1,19 @@
 // ignore_for_file: prefer_const_constructors
-part of 'package:ventes/app/states/controllers/dashboard_state_controller.dart';
+
+import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:ventes/app/resources/views/splash_screen.dart';
+import 'package:ventes/app/resources/views/started_page.dart';
+import 'package:ventes/constants/strings/dashboard_string.dart';
+import 'package:ventes/core/states/state_listener.dart';
+import 'package:ventes/helpers/auth_helper.dart';
+import 'package:ventes/helpers/function_helpers.dart';
+import 'package:ventes/helpers/task_helper.dart';
+import 'package:ventes/app/states/typedefs/dashboard_typedef.dart';
 
 class DashboardListener extends StateListener {
-  DashboardProperty get _properties => Get.find<DashboardProperty>(tag: DashboardString.dashboardTag);
-  DashboardDataSource get _dataSource => Get.find<DashboardDataSource>(tag: DashboardString.dashboardTag);
+  Property get _property => Get.find<Property>(tag: DashboardString.dashboardTag);
+  DataSource get _dataSource => Get.find<DataSource>(tag: DashboardString.dashboardTag);
 
   void switchAccount(int userdtid) async {
     Get.find<AuthHelper>().accountActive.val = userdtid;
@@ -16,35 +26,35 @@ class DashboardListener extends StateListener {
   }
 
   void onLoadDataError(String message) {
-    Get.find<TaskHelper>().errorPush(_properties.task.copyWith(message: message));
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+    Get.find<TaskHelper>().errorPush(_property.task.copyWith(message: message));
+    Get.find<TaskHelper>().loaderPop(_property.task.name);
   }
 
   void onLoadDataFailed(String message) {
-    Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: message, snackbar: true));
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+    Get.find<TaskHelper>().failedPush(_property.task.copyWith(message: message, snackbar: true));
+    Get.find<TaskHelper>().loaderPop(_property.task.name);
   }
 
   void onLogoutError(String message) {
-    Get.find<TaskHelper>().errorPush(_properties.task.copyWith(message: message));
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+    Get.find<TaskHelper>().errorPush(_property.task.copyWith(message: message));
+    Get.find<TaskHelper>().loaderPop(_property.task.name);
   }
 
   void onLogoutFailed(String message) {
-    Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: message, snackbar: true));
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+    Get.find<TaskHelper>().failedPush(_property.task.copyWith(message: message, snackbar: true));
+    Get.find<TaskHelper>().loaderPop(_property.task.name);
   }
 
   void onLogoutSuccess(String message) {
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
-    Get.find<TaskHelper>().successPush(_properties.task.copyWith(snackbar: true, message: message, onFinished: _logout));
+    Get.find<TaskHelper>().loaderPop(_property.task.name);
+    Get.find<TaskHelper>().successPush(_property.task.copyWith(snackbar: true, message: message, onFinished: _logout));
   }
 
   @override
-  Future onRefresh() async {
-    _properties.position = await getCurrentPosition();
-    _dataSource.fetchData(LatLng(_properties.position!.latitude, _properties.position!.longitude));
+  Future onReady() async {
+    _property.position = await getCurrentPosition();
+    _dataSource.fetchData(LatLng(_property.position!.latitude, _property.position!.longitude));
 
-    Get.find<TaskHelper>().loaderPush(_properties.task);
+    Get.find<TaskHelper>().loaderPush(_property.task);
   }
 }

@@ -19,7 +19,7 @@ class _ProspectList extends StatelessWidget {
               Prospect prospect = state.dataSource.prospects[index];
               return GestureDetector(
                 onTap: () {
-                  state.properties.selectedProspect = prospect;
+                  state.property.selectedProspect = prospect;
                   state.listener.onProspectClicked();
                 },
                 child: ProspectCard(

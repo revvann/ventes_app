@@ -1,29 +1,38 @@
-part of 'package:ventes/app/states/controllers/schedule_state_controller.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:ventes/app/models/schedule_model.dart';
+import 'package:ventes/app/resources/views/daily_schedule/daily_schedule.dart';
+import 'package:ventes/constants/regular_color.dart';
+import 'package:ventes/constants/strings/schedule_string.dart';
+import 'package:ventes/app/states/typedefs/schedule_typedef.dart';
+import 'package:ventes/core/states/state_listener.dart';
+import 'package:ventes/helpers/task_helper.dart';
+import 'package:ventes/routing/navigators/schedule_navigator.dart';
 
 class ScheduleListener extends StateListener {
-  ScheduleProperty get _properties => Get.find<ScheduleProperty>(tag: ScheduleString.scheduleTag);
-  ScheduleDataSource get _dataSource => Get.find<ScheduleDataSource>(tag: ScheduleString.scheduleTag);
+  Property get _property => Get.find<Property>(tag: ScheduleString.scheduleTag);
+  DataSource get _dataSource => Get.find<DataSource>(tag: ScheduleString.scheduleTag);
 
   void onDateShownChanged(String data) {
     if (data == 'displayDate') {
-      if (_properties.calendarController.displayDate != null) {
-        _properties.dateShown = _properties.calendarController.displayDate!;
+      if (_property.calendarController.displayDate != null) {
+        _property.dateShown = _property.calendarController.displayDate!;
       }
-      _dataSource.fetchSchedules(_properties.dateShown.month);
-      Get.find<TaskHelper>().loaderPush(_properties.task);
+      _dataSource.fetchSchedules(_property.dateShown.month);
+      Get.find<TaskHelper>().loaderPush(_property.task);
     }
   }
 
   void onCalendarBackwardClick() {
-    _properties.calendarController.backward?.call();
+    _property.calendarController.backward?.call();
   }
 
   void onCalendarForwardClick() {
-    _properties.calendarController.forward?.call();
+    _property.calendarController.forward?.call();
   }
 
   void onDateSelectionChanged(details) {
-    _properties.selectedDate = details.date!;
+    _property.selectedDate = details.date!;
   }
 
   void onDetailClick() {
@@ -31,7 +40,7 @@ class ScheduleListener extends StateListener {
       DailyScheduleView.route,
       id: ScheduleNavigator.id,
       arguments: {
-        "date": _properties.selectedDate,
+        "date": _property.selectedDate,
       },
     );
   }
@@ -49,17 +58,17 @@ class ScheduleListener extends StateListener {
   }
 
   @override
-  Future onRefresh() async {
-    _properties.refresh();
+  Future onReady() async {
+    _property.refresh();
   }
 
   onLoadDataFailed(String message) {
-    Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: message, snackbar: true));
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+    Get.find<TaskHelper>().failedPush(_property.task.copyWith(message: message, snackbar: true));
+    Get.find<TaskHelper>().loaderPop(_property.task.name);
   }
 
   onLoadDataError(String message) {
-    Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: message, snackbar: true));
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+    Get.find<TaskHelper>().failedPush(_property.task.copyWith(message: message, snackbar: true));
+    Get.find<TaskHelper>().loaderPop(_property.task.name);
   }
 }

@@ -1,9 +1,17 @@
-part of 'package:ventes/app/states/controllers/prospect_detail_fu_state_controller.dart';
+import 'package:get/get.dart';
+import 'package:ventes/app/api/presenters/prospect_detail_fu_presenter.dart';
+import 'package:ventes/app/models/prospect_detail_model.dart';
+import 'package:ventes/app/models/type_model.dart';
+import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
+import 'package:ventes/constants/strings/prospect_string.dart';
+import 'package:ventes/app/states/typedefs/prospect_detail_fu_typedef.dart';
+import 'package:ventes/core/states/state_data_source.dart';
+import 'package:ventes/helpers/task_helper.dart';
 
 class ProspectDetailFormUpdateDataSource extends StateDataSource<ProspectDetailFormUpdatePresenter> implements ProspectDetailUpdateContract {
-  ProspectDetailFormUpdateListener get _listener => Get.find<ProspectDetailFormUpdateListener>(tag: ProspectString.detailUpdateTag);
-  ProspectDetailFormUpdateFormSource get _formSource => Get.find<ProspectDetailFormUpdateFormSource>(tag: ProspectString.detailUpdateTag);
-  ProspectDetailFormUpdateProperty get _properties => Get.find<ProspectDetailFormUpdateProperty>(tag: ProspectString.detailUpdateTag);
+  Listener get _listener => Get.find<Listener>(tag: ProspectString.detailUpdateTag);
+  FormSource get _formSource => Get.find<FormSource>(tag: ProspectString.detailUpdateTag);
+  Property get _property => Get.find<Property>(tag: ProspectString.detailUpdateTag);
 
   final Rx<List<KeyableDropdownItem<int, DBType>>> _categoryItems = Rx<List<KeyableDropdownItem<int, DBType>>>([]);
   set categoryItems(List<KeyableDropdownItem<int, DBType>> value) => _categoryItems.value = value;
@@ -49,7 +57,7 @@ class ProspectDetailFormUpdateDataSource extends StateDataSource<ProspectDetailF
       prospectdetail = ProspectDetail.fromJson(data['prospectdetail']);
       _formSource.prepareFormValues();
     }
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+    Get.find<TaskHelper>().loaderPop(_property.task.name);
   }
 
   @override

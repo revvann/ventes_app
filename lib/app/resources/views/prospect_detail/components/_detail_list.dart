@@ -68,7 +68,7 @@ class _DetailList extends StatelessWidget {
                       ),
                     ),
                     PopupMenu(
-                      controller: state.properties.createPopupController(index),
+                      controller: state.property.createPopupController(index),
                       dropdownSettings: DropdownSettings(
                         width: 100,
                         offset: Offset(10, 5),

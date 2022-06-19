@@ -1,9 +1,17 @@
-part of 'package:ventes/app/states/controllers/contact_person_fc_state_controller.dart';
+import 'package:get/get.dart';
+import 'package:ventes/app/api/presenters/contact_person_fc_presenter.dart';
+import 'package:ventes/app/models/customer_model.dart';
+import 'package:ventes/app/models/type_model.dart';
+import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
+import 'package:ventes/constants/strings/prospect_string.dart';
+import 'package:ventes/core/states/state_data_source.dart';
+import 'package:ventes/helpers/task_helper.dart';
+import 'package:ventes/app/states/typedefs/contact_person_fc_typedef.dart';
 
 class ContactPersonFormCreateDataSource extends StateDataSource<ContactPersonFormCreatePresenter> implements ContactPersonCreateContract {
-  ContactPersonFormCreateListener get _listener => Get.find<ContactPersonFormCreateListener>(tag: ProspectString.contactCreateTag);
-  ContactPersonFormCreateProperty get _properties => Get.find<ContactPersonFormCreateProperty>(tag: ProspectString.contactCreateTag);
-  ContactPersonFormCreateFormSource get _formSource => Get.find<ContactPersonFormCreateFormSource>(tag: ProspectString.contactCreateTag);
+  Listener get _listener => Get.find<Listener>(tag: ProspectString.contactCreateTag);
+  Property get _property => Get.find<Property>(tag: ProspectString.contactCreateTag);
+  FormSource get _formSource => Get.find<FormSource>(tag: ProspectString.contactCreateTag);
 
   final Rx<Customer?> _customer = Rx<Customer?>(null);
   Customer? get customer => _customer.value;
@@ -37,7 +45,7 @@ class ContactPersonFormCreateDataSource extends StateDataSource<ContactPersonFor
       _formSource.contacttype = types.isNotEmpty ? types.first : null;
       this.types = types.map<KeyableDropdownItem<int, DBType>>((type) => KeyableDropdownItem<int, DBType>(key: type.typeid!, value: type)).toList();
     }
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+    Get.find<TaskHelper>().loaderPop(_property.task.name);
   }
 
   @override

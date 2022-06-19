@@ -2,7 +2,7 @@
 
 import 'dart:math';
 
-import 'package:flutter/material.dart' hide MenuItem;
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -30,7 +30,7 @@ class ProspectAssignView extends View<ProspectAssignStateController> {
 
   @override
   void onBuild(state) {
-    state.properties.prospectid = prospectid;
+    state.property.prospectid = prospectid;
   }
 
   @override

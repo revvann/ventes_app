@@ -1,9 +1,25 @@
-part of 'package:ventes/app/states/controllers/customer_fu_state_controller.dart';
+import 'dart:async';
+
+import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:ventes/app/api/presenters/customer_fu_presenter.dart';
+import 'package:ventes/app/models/bp_customer_model.dart';
+import 'package:ventes/app/models/city_model.dart';
+import 'package:ventes/app/models/country_model.dart';
+import 'package:ventes/app/models/customer_model.dart';
+import 'package:ventes/app/models/province_model.dart';
+import 'package:ventes/app/models/subdistrict_model.dart';
+import 'package:ventes/app/models/type_model.dart';
+import 'package:ventes/app/states/typedefs/customer_fu_typedef.dart';
+import 'package:ventes/constants/strings/nearby_string.dart';
+import 'package:ventes/core/states/state_data_source.dart';
+import 'package:ventes/helpers/function_helpers.dart';
+import 'package:ventes/helpers/task_helper.dart';
 
 class CustomerFormUpdateDataSource extends StateDataSource<CustomerFormUpdatePresenter> implements CustomerUpdateContract {
-  CustomerFormUpdateListener get _listener => Get.find<CustomerFormUpdateListener>(tag: NearbyString.customerUpdateTag);
-  CustomerFormUpdateFormSource get _formSource => Get.find<CustomerFormUpdateFormSource>(tag: NearbyString.customerUpdateTag);
-  CustomerFormUpdateProperty get _properties => Get.find<CustomerFormUpdateProperty>(tag: NearbyString.customerUpdateTag);
+  Listener get _listener => Get.find<Listener>(tag: NearbyString.customerUpdateTag);
+  FormSource get _formSource => Get.find<FormSource>(tag: NearbyString.customerUpdateTag);
+  Property get _property => Get.find<Property>(tag: NearbyString.customerUpdateTag);
 
   final _customers = <Customer>[].obs;
   set customers(List<Customer> value) => _customers.value = value;
@@ -79,16 +95,16 @@ class CustomerFormUpdateDataSource extends StateDataSource<CustomerFormUpdatePre
   onLoadSuccess(Map data) async {
     if (data['bpcustomer'] != null) {
       bpCustomer = BpCustomer.fromJson(data['bpcustomer']);
-      await _properties.moveCamera();
+      await _property.moveCamera();
       _formSource.prepareFormValues();
     }
 
     if (data['customers'] != null) {
       customersFromList(
         data['customers'],
-        LatLng(_properties.markers.first.position.latitude, _properties.markers.first.position.longitude),
+        LatLng(_property.markers.first.position.latitude, _property.markers.first.position.longitude),
       );
-      _properties.deployCustomers(customers);
+      _property.deployCustomers(customers);
     }
 
     if (data['bpcustomers'] != null) {
@@ -103,7 +119,7 @@ class CustomerFormUpdateDataSource extends StateDataSource<CustomerFormUpdatePre
       statusesFromList(data['statuses']);
     }
 
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+    Get.find<TaskHelper>().loaderPop(_property.task.name);
   }
 
   @override

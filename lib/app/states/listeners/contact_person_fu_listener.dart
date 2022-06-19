@@ -1,9 +1,15 @@
-part of 'package:ventes/app/states/controllers/contact_person_fu_state_controller.dart';
+import 'package:contacts_service/contacts_service.dart';
+import 'package:get/get.dart';
+import 'package:ventes/app/states/controllers/contact_person_state_controller.dart';
+import 'package:ventes/constants/strings/prospect_string.dart';
+import 'package:ventes/core/states/state_listener.dart';
+import 'package:ventes/helpers/task_helper.dart';
+import 'package:ventes/routing/navigators/prospect_navigator.dart';
+import 'package:ventes/app/states/typedefs/contact_person_fu_typedef.dart';
 
 class ContactPersonFormUpdateListener extends StateListener {
-  ContactPersonFormUpdateProperty get _properties => Get.find<ContactPersonFormUpdateProperty>(tag: ProspectString.contactUpdateTag);
-  ContactPersonFormUpdateFormSource get _formSource => Get.find<ContactPersonFormUpdateFormSource>(tag: ProspectString.contactUpdateTag);
-  ContactPersonFormUpdateDataSource get _dataSource => Get.find<ContactPersonFormUpdateDataSource>(tag: ProspectString.contactUpdateTag);
+  Property get _property => Get.find<Property>(tag: ProspectString.contactUpdateTag);
+  FormSource get _formSource => Get.find<FormSource>(tag: ProspectString.contactUpdateTag);
 
   void goBack() {
     Get.back(
@@ -12,8 +18,8 @@ class ContactPersonFormUpdateListener extends StateListener {
   }
 
   @override
-  Future onRefresh() async {
-    _properties.refresh();
+  Future onReady() async {
+    _property.refresh();
   }
 
   void onTypeSelected(type) {
@@ -34,7 +40,7 @@ class ContactPersonFormUpdateListener extends StateListener {
 
   void onSubmitButtonClicked() {
     Get.find<TaskHelper>().confirmPush(
-      _properties.task.copyWith<bool>(
+      _property.task.copyWith<bool>(
         message: ProspectString.updateContactConfirm,
         onFinished: (res) {
           if (res) {
@@ -46,32 +52,32 @@ class ContactPersonFormUpdateListener extends StateListener {
   }
 
   void onLoadFailed(String message) {
-    Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: message, snackbar: true));
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+    Get.find<TaskHelper>().failedPush(_property.task.copyWith(message: message, snackbar: true));
+    Get.find<TaskHelper>().loaderPop(_property.task.name);
   }
 
   void onLoadError(String message) {
-    Get.find<TaskHelper>().errorPush(_properties.task.copyWith(message: message));
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+    Get.find<TaskHelper>().errorPush(_property.task.copyWith(message: message));
+    Get.find<TaskHelper>().loaderPop(_property.task.name);
   }
 
   void onUpdateDataSuccess(String message) {
-    Get.find<TaskHelper>().successPush(_properties.task.copyWith(
+    Get.find<TaskHelper>().successPush(_property.task.copyWith(
         message: message,
         onFinished: (res) {
-          Get.find<ContactPersonStateController>().properties.refresh();
+          Get.find<ContactPersonStateController>().property.refresh();
           Get.back(id: ProspectNavigator.id);
         }));
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+    Get.find<TaskHelper>().loaderPop(_property.task.name);
   }
 
   void onUpdateDataFailed(String message) {
-    Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: message, snackbar: true));
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+    Get.find<TaskHelper>().failedPush(_property.task.copyWith(message: message, snackbar: true));
+    Get.find<TaskHelper>().loaderPop(_property.task.name);
   }
 
   void onUpdateDataError(String message) {
-    Get.find<TaskHelper>().errorPush(_properties.task.copyWith(message: message));
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+    Get.find<TaskHelper>().errorPush(_property.task.copyWith(message: message));
+    Get.find<TaskHelper>().loaderPop(_property.task.name);
   }
 }

@@ -1,8 +1,17 @@
-part of 'package:ventes/app/states/controllers/prospect_detail_fu_state_controller.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:ventes/app/models/type_model.dart';
+import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
+import 'package:ventes/app/states/form/validators/prospect_detail_fu_validator.dart';
+import 'package:ventes/constants/strings/prospect_string.dart';
+import 'package:ventes/app/states/typedefs/prospect_detail_fu_typedef.dart';
+import 'package:ventes/core/states/update_form_source.dart';
+import 'package:ventes/helpers/function_helpers.dart';
+import 'package:ventes/helpers/task_helper.dart';
 
 class ProspectDetailFormUpdateFormSource extends UpdateFormSource {
-  ProspectDetailFormUpdateDataSource get _dataSource => Get.find<ProspectDetailFormUpdateDataSource>(tag: ProspectString.detailUpdateTag);
-  ProspectDetailFormUpdateProperty get _properties => Get.find<ProspectDetailFormUpdateProperty>(tag: ProspectString.detailUpdateTag);
+  DataSource get _dataSource => Get.find<DataSource>(tag: ProspectString.detailUpdateTag);
+  Property get _property => Get.find<Property>(tag: ProspectString.detailUpdateTag);
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   ProspectDetailFormUpdateValidator validator = ProspectDetailFormUpdateValidator();
@@ -79,10 +88,10 @@ class ProspectDetailFormUpdateFormSource extends UpdateFormSource {
   void onSubmit() {
     if (isValid) {
       Map<String, dynamic> data = toJson();
-      _dataSource.updateData(_properties.prospectDetailId, data);
-      Get.find<TaskHelper>().loaderPush(_properties.task);
+      _dataSource.updateData(_property.prospectDetailId, data);
+      Get.find<TaskHelper>().loaderPush(_property.task);
     } else {
-      Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: "Form invalid, Make sure all fields are filled"));
+      Get.find<TaskHelper>().failedPush(_property.task.copyWith(message: "Form invalid, Make sure all fields are filled"));
     }
   }
 }

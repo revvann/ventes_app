@@ -8,10 +8,10 @@ class _AppBarMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      bool isCustomerSelected = state.properties.selectedCustomer.isNotEmpty;
+      bool isCustomerSelected = state.property.selectedCustomer.isNotEmpty;
       bool isBpHasCustomer = false;
-      if (state.dataSource.bpCustomers.isNotEmpty && state.properties.selectedCustomer.isNotEmpty) {
-        isBpHasCustomer = state.dataSource.bpCustomersHas(state.properties.selectedCustomer.first);
+      if (state.dataSource.bpCustomers.isNotEmpty && state.property.selectedCustomer.isNotEmpty) {
+        isBpHasCustomer = state.dataSource.bpCustomersHas(state.property.selectedCustomer.first);
       }
       return PopupMenu(
         controller: Get.put(PopupMenuController(), tag: "NearbyPopup"),

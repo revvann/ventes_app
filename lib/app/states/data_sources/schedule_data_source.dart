@@ -1,10 +1,17 @@
 // ignore_for_file: prefer_const_constructors
-
-part of 'package:ventes/app/states/controllers/schedule_state_controller.dart';
+import 'package:get/get.dart';
+import 'package:ventes/app/api/contracts/fetch_data_contract.dart';
+import 'package:ventes/app/api/presenters/schedule_presenter.dart';
+import 'package:ventes/app/models/schedule_model.dart';
+import 'package:ventes/app/models/type_model.dart';
+import 'package:ventes/constants/strings/schedule_string.dart';
+import 'package:ventes/app/states/typedefs/schedule_typedef.dart';
+import 'package:ventes/core/states/state_data_source.dart';
+import 'package:ventes/helpers/task_helper.dart';
 
 class ScheduleDataSource extends StateDataSource<SchedulePresenter> implements FetchDataContract {
-  ScheduleListener get _listener => Get.find<ScheduleListener>(tag: ScheduleString.scheduleTag);
-  ScheduleProperty get _properties => Get.find<ScheduleProperty>(tag: ScheduleString.scheduleTag);
+  Listener get _listener => Get.find<Listener>(tag: ScheduleString.scheduleTag);
+  Property get _property => Get.find<Property>(tag: ScheduleString.scheduleTag);
 
   final _types = <String, int>{}.obs;
   Map<String, int> get types => _types.value;
@@ -54,7 +61,7 @@ class ScheduleDataSource extends StateDataSource<SchedulePresenter> implements F
     if (data['permissions'] != null) {
       permissions = List<DBType>.from(data['permissions'].map((e) => DBType.fromJson(e)));
     }
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+    Get.find<TaskHelper>().loaderPop(_property.task.name);
   }
 
   @override

@@ -57,7 +57,7 @@ class _EventForm extends StatelessWidget {
         GestureDetector(
           onTap: () {
             if (!state.formSource.scheonline) {
-              state.properties.showMapBottomSheet();
+              state.property.showMapBottomSheet();
             }
           },
           child: _LocationInput(

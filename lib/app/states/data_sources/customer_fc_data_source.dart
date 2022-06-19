@@ -1,9 +1,27 @@
-part of 'package:ventes/app/states/controllers/customer_fc_state_controller.dart';
+import 'dart:async';
+
+import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:ventes/app/api/presenters/customer_fc_presenter.dart';
+import 'package:ventes/app/models/bp_customer_model.dart';
+import 'package:ventes/app/models/city_model.dart';
+import 'package:ventes/app/models/country_model.dart';
+import 'package:ventes/app/models/customer_model.dart';
+import 'package:ventes/app/models/maps_loc.dart';
+import 'package:ventes/app/models/province_model.dart';
+import 'package:ventes/app/models/subdistrict_model.dart';
+import 'package:ventes/app/models/type_model.dart';
+import 'package:ventes/app/models/user_detail_model.dart';
+import 'package:ventes/constants/strings/nearby_string.dart';
+import 'package:ventes/core/states/state_data_source.dart';
+import 'package:ventes/helpers/function_helpers.dart';
+import 'package:ventes/helpers/task_helper.dart';
+import 'package:ventes/app/states/typedefs/customer_fc_typedef.dart';
 
 class CustomerFormCreateDataSource extends StateDataSource<CustomerFormCreatePresenter> implements CustomerCreateContract {
-  CustomerFormCreateListener get _listener => Get.find<CustomerFormCreateListener>(tag: NearbyString.customerCreateTag);
-  CustomerFormCreateFormSource get _formSource => Get.find<CustomerFormCreateFormSource>(tag: NearbyString.customerCreateTag);
-  CustomerFormCreateProperty get _properties => Get.find<CustomerFormCreateProperty>(tag: NearbyString.customerCreateTag);
+  Listener get _listener => Get.find<Listener>(tag: NearbyString.customerCreateTag);
+  FormSource get _formSource => Get.find<FormSource>(tag: NearbyString.customerCreateTag);
+  Property get _property => Get.find<Property>(tag: NearbyString.customerCreateTag);
 
   final _customers = <BpCustomer>[].obs;
   set customers(List<BpCustomer> value) => _customers.value = value;
@@ -121,9 +139,9 @@ class CustomerFormCreateDataSource extends StateDataSource<CustomerFormCreatePre
     if (data['customers'] != null) {
       customersFromList(
         data['customers'],
-        LatLng(_properties.markers.first.position.latitude, _properties.markers.first.position.longitude),
+        LatLng(_property.markers.first.position.latitude, _property.markers.first.position.longitude),
       );
-      _properties.deployCustomers(customers);
+      _property.deployCustomers(customers);
     }
 
     if (data['types'] != null) {
@@ -140,7 +158,7 @@ class CustomerFormCreateDataSource extends StateDataSource<CustomerFormCreatePre
 
     if (data['location'] != null) {
       mapsLoc = MapsLoc.fromJson(data['location']);
-      _properties.fetchPlacesIds();
+      _property.fetchPlacesIds();
     }
 
     if (data['places'] != null) {
@@ -159,7 +177,7 @@ class CustomerFormCreateDataSource extends StateDataSource<CustomerFormCreatePre
       _formSource.prepareFormValues();
     }
 
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+    Get.find<TaskHelper>().loaderPop(_property.task.name);
   }
 
   @override

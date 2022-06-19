@@ -1,7 +1,9 @@
-part of 'package:ventes/app/states/controllers/schedule_fc_state_controller.dart';
+import 'package:get/get.dart';
+import 'package:ventes/constants/strings/schedule_string.dart';
+import 'package:ventes/app/states/typedefs/schedule_fc_typedef.dart';
 
 class ScheduleFormCreateValidator {
-  ScheduleFormCreateFormSource get _formSource => Get.find<ScheduleFormCreateFormSource>(tag: ScheduleString.scheduleCreateTag);
+  FormSource get _formSource => Get.find<FormSource>(tag: ScheduleString.scheduleCreateTag);
   String? schenm(String? value) {
     if (value == null || value.isEmpty) {
       return ScheduleString.schenmInvalid;

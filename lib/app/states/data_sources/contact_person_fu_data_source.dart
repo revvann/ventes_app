@@ -1,9 +1,15 @@
-part of 'package:ventes/app/states/controllers/contact_person_fu_state_controller.dart';
+import 'package:get/get.dart';
+import 'package:ventes/app/api/presenters/contact_person_fu_presenter.dart';
+import 'package:ventes/app/models/contact_person_model.dart';
+import 'package:ventes/constants/strings/prospect_string.dart';
+import 'package:ventes/core/states/state_data_source.dart';
+import 'package:ventes/helpers/task_helper.dart';
+import 'package:ventes/app/states/typedefs/contact_person_fu_typedef.dart';
 
 class ContactPersonFormUpdateDataSource extends StateDataSource<ContactPersonFormUpdatePresenter> implements ContactPersonUpdateContract {
-  ContactPersonFormUpdateListener get _listener => Get.find<ContactPersonFormUpdateListener>(tag: ProspectString.contactUpdateTag);
-  ContactPersonFormUpdateProperty get _properties => Get.find<ContactPersonFormUpdateProperty>(tag: ProspectString.contactUpdateTag);
-  ContactPersonFormUpdateFormSource get _formSource => Get.find<ContactPersonFormUpdateFormSource>(tag: ProspectString.contactUpdateTag);
+  Listener get _listener => Get.find<Listener>(tag: ProspectString.contactUpdateTag);
+  Property get _property => Get.find<Property>(tag: ProspectString.contactUpdateTag);
+  FormSource get _formSource => Get.find<FormSource>(tag: ProspectString.contactUpdateTag);
 
   final Rx<ContactPerson?> _contactPerson = Rx<ContactPerson?>(null);
   ContactPerson? get contactPerson => _contactPerson.value;
@@ -32,7 +38,7 @@ class ContactPersonFormUpdateDataSource extends StateDataSource<ContactPersonFor
       customerName = contactPerson?.contactcustomer?.cstmname;
       _formSource.prepareFormValues();
     }
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+    Get.find<TaskHelper>().loaderPop(_property.task.name);
   }
 
   @override

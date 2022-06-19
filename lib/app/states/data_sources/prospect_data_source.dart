@@ -1,8 +1,17 @@
-part of 'package:ventes/app/states/controllers/prospect_state_controller.dart';
+import 'package:get/get.dart';
+import 'package:ventes/app/api/contracts/fetch_data_contract.dart';
+import 'package:ventes/app/api/presenters/prospect_presenter.dart';
+import 'package:ventes/app/models/prospect_model.dart';
+import 'package:ventes/app/models/type_model.dart';
+import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
+import 'package:ventes/constants/strings/prospect_string.dart';
+import 'package:ventes/app/states/typedefs/prospect_typedef.dart';
+import 'package:ventes/core/states/state_data_source.dart';
+import 'package:ventes/helpers/task_helper.dart';
 
 class ProspectDataSource extends StateDataSource<ProspectPresenter> implements FetchDataContract {
-  ProspectListener get _listener => Get.find<ProspectListener>(tag: ProspectString.prospectTag);
-  ProspectProperty get _properties => Get.find<ProspectProperty>(tag: ProspectString.prospectTag);
+  Listener get _listener => Get.find<Listener>(tag: ProspectString.prospectTag);
+  Property get _property => Get.find<Property>(tag: ProspectString.prospectTag);
 
   final Rx<List<KeyableDropdownItem<int, DBType>>> _statusItems = Rx<List<KeyableDropdownItem<int, DBType>>>([]);
   set statusItems(List<KeyableDropdownItem<int, DBType>> value) => _statusItems.value = value;
@@ -50,6 +59,6 @@ class ProspectDataSource extends StateDataSource<ProspectPresenter> implements F
       prospects = data['prospects'].map<Prospect>((e) => Prospect.fromJson(e)).toList();
     }
 
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+    Get.find<TaskHelper>().loaderPop(_property.task.name);
   }
 }
