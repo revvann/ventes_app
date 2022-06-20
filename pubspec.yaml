@@ -52,6 +52,9 @@ dependencies:
   flutter_speed_dial: ^6.0.0
   flutter_local_notifications: ^9.5.3+1
   contacts_service: ^0.6.3
+  meta: ^1.7.0
+  permission_handler: ^8.3.0
+  device_info_plus: ^3.2.3
 
 dev_dependencies:
   flutter_test:

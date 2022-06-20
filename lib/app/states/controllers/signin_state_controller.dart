@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 import 'package:ventes/app/states/data_sources/signin_data_source.dart';
-import 'package:ventes/app/states/form_sources/signin_form_source.dart';
+import 'package:ventes/app/states/form/sources/signin_form_source.dart';
 
 class SigninStateController extends GetxController {
   SigninFormSource formSource = SigninFormSource();

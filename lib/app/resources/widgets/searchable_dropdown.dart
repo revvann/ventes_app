@@ -7,7 +7,6 @@ import 'package:get/get.dart';
 import 'package:ventes/app/resources/widgets/border_input.dart';
 import 'package:ventes/app/resources/widgets/dropdown.dart';
 import 'package:ventes/app/resources/widgets/loader.dart';
-import 'package:ventes/app/states/controllers/keyboard_state_controller.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/constants/styles/behavior_style.dart';
 

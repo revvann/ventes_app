@@ -1,11 +1,24 @@
-part of 'package:ventes/app/states/controllers/customer_fc_state_controller.dart';
+import 'dart:async';
 
-class _DataSource extends RegularDataSource<CustomerFormCreatePresenter> implements CustomerCreateContract {
-  _Listener get _listener => Get.find<_Listener>(tag: NearbyString.customerCreateTag);
-  _FormSource get _formSource => Get.find<_FormSource>(tag: NearbyString.customerCreateTag);
-  _Properties get _properties => Get.find<_Properties>(tag: NearbyString.customerCreateTag);
+import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:ventes/app/api/presenters/customer_fc_presenter.dart';
+import 'package:ventes/app/models/bp_customer_model.dart';
+import 'package:ventes/app/models/city_model.dart';
+import 'package:ventes/app/models/country_model.dart';
+import 'package:ventes/app/models/customer_model.dart';
+import 'package:ventes/app/models/maps_loc.dart';
+import 'package:ventes/app/models/province_model.dart';
+import 'package:ventes/app/models/subdistrict_model.dart';
+import 'package:ventes/app/models/type_model.dart';
+import 'package:ventes/app/models/user_detail_model.dart';
+import 'package:ventes/core/states/state_data_source.dart';
+import 'package:ventes/helpers/function_helpers.dart';
+import 'package:ventes/helpers/task_helper.dart';
+import 'package:ventes/app/states/typedefs/customer_fc_typedef.dart';
 
-  final _customers = <BpCustomer>[].obs;
+class CustomerFormCreateDataSource extends StateDataSource<CustomerFormCreatePresenter> with DataSourceMixin implements CustomerCreateContract {
+  final _customers = Rx<List<BpCustomer>>([]);
   set customers(List<BpCustomer> value) => _customers.value = value;
   List<BpCustomer> get customers => _customers.value;
 
@@ -17,11 +30,11 @@ class _DataSource extends RegularDataSource<CustomerFormCreatePresenter> impleme
   set mapsLoc(MapsLoc? value) => _mapsLoc.value = value;
   MapsLoc? get mapsLoc => _mapsLoc.value;
 
-  final _types = <int, String>{}.obs;
+  final _types = Rx<Map<int, String>>({});
   set types(Map<int, String> value) => _types.value = value;
   Map<int, String> get types => _types.value;
 
-  final _statuses = <int, String>{}.obs;
+  final _statuses = Rx<Map<int, String>>({});
   set statuses(Map<int, String> value) => _statuses.value = value;
   Map<int, String> get statuses => _statuses.value;
 
@@ -111,19 +124,19 @@ class _DataSource extends RegularDataSource<CustomerFormCreatePresenter> impleme
   CustomerFormCreatePresenter presenterBuilder() => CustomerFormCreatePresenter();
 
   @override
-  onLoadError(String message) => _listener.onLoadDataError(message);
+  onLoadError(String message) => listener.onLoadDataError(message);
 
   @override
-  onLoadFailed(String message) => _listener.onLoadDataFailed(message);
+  onLoadFailed(String message) => listener.onLoadDataFailed(message);
 
   @override
   onLoadSuccess(Map data) {
     if (data['customers'] != null) {
       customersFromList(
         data['customers'],
-        LatLng(_properties.markers.first.position.latitude, _properties.markers.first.position.longitude),
+        LatLng(property.markers.first.position.latitude, property.markers.first.position.longitude),
       );
-      _properties.deployCustomers(customers);
+      property.deployCustomers(customers);
     }
 
     if (data['types'] != null) {
@@ -135,20 +148,20 @@ class _DataSource extends RegularDataSource<CustomerFormCreatePresenter> impleme
     }
 
     if (data['user'] != null) {
-      _formSource.sbcbpid = UserDetail.fromJson(data['user']).userdtbpid;
+      formSource.sbcbpid = UserDetail.fromJson(data['user']).userdtbpid;
     }
 
     if (data['location'] != null) {
       mapsLoc = MapsLoc.fromJson(data['location']);
-      _properties.fetchPlacesIds();
+      property.fetchPlacesIds();
     }
 
     if (data['places'] != null) {
       Map places = data['places'];
       if (places['province'] != null && places['city'] != null && places['subdistrict'] != null) {
-        _formSource.provinceid = Province.fromJson(places['province']).provid;
-        _formSource.cityid = City.fromJson(places['city']).cityid;
-        _formSource.subdistrictid = Subdistrict.fromJson(places['subdistrict']).subdistrictid;
+        formSource.provinceid = Province.fromJson(places['province']).provid;
+        formSource.cityid = City.fromJson(places['city']).cityid;
+        formSource.subdistrictid = Subdistrict.fromJson(places['subdistrict']).subdistrictid;
       } else {
         throw "The selected location is not available";
       }
@@ -156,18 +169,22 @@ class _DataSource extends RegularDataSource<CustomerFormCreatePresenter> impleme
 
     if (data['customer'] != null) {
       customer = Customer.fromJson(data['customer']);
-      _formSource.prepareFormValues();
+      formSource.prepareFormValues();
     }
-
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 
   @override
-  void onCreateError(String message) => _listener.onCreateDataError(message);
+  void onCreateError(String message) => listener.onCreateDataError(message);
 
   @override
-  void onCreateFailed(String message) => _listener.onCreateDataFailed(message);
+  void onCreateFailed(String message) => listener.onCreateDataFailed(message);
 
   @override
-  void onCreateSuccess(String message) => _listener.onCreateDataSuccess(message);
+  void onCreateSuccess(String message) => listener.onCreateDataSuccess(message);
+
+  @override
+  void onCreateComplete() => listener.onComplete();
+
+  @override
+  onLoadComplete() => listener.onComplete();
 }

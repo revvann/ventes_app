@@ -2,7 +2,6 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
 import 'package:ventes/app/resources/widgets/loader.dart';
 import 'package:ventes/constants/regular_color.dart';
@@ -72,7 +71,7 @@ class SearchListController<T, V> extends GetxController {
   final TextEditingController _searchController = TextEditingController();
   Timer? _debounce;
 
-  final _items = <T>[].obs;
+  final _items = Rx<List<T>>([]);
   List<T> get items => _items.value;
   set items(List<T> value) => _items.value = value;
 

@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ventes/app/resources/views/started_page.dart';
+import 'package:ventes/helpers/function_helpers.dart';
 
 class SplashScreenStateController extends GetxController with GetTickerProviderStateMixin {
   late Animation<double> _logoPos;
@@ -36,6 +37,7 @@ class SplashScreenStateController extends GetxController with GetTickerProviderS
     await Future.delayed(Duration(milliseconds: 300));
     await _bubbleController1.forward();
     await Future.delayed(Duration(milliseconds: 250));
+    await requestPermission();
     Get.offAndToNamed(StartedPageView.route);
   }
 }

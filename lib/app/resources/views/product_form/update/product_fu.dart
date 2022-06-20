@@ -14,7 +14,7 @@ import 'package:ventes/constants/formatters/range_number_formatter.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/constants/strings/prospect_string.dart';
-import 'package:ventes/core/view.dart';
+import 'package:ventes/core/view/view.dart';
 
 class ProductFormUpdateView extends View<ProductFormUpdateStateController> {
   static const String route = "/product/update";
@@ -24,7 +24,7 @@ class ProductFormUpdateView extends View<ProductFormUpdateStateController> {
 
   @override
   void onBuild(state) {
-    state.properties.productid = productid;
+    state.property.productid = productid;
   }
 
   @override

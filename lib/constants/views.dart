@@ -1,1 +1,1 @@
-enum Views { dashboard, nearby, schedule, prospect, settings }
+enum Views { dashboard, nearby, schedule, prospect, profile }

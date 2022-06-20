@@ -17,8 +17,8 @@ class _MapPreview extends StatelessWidget {
           child: Obx(() {
             return GoogleMap(
               mapType: MapType.terrain,
-              initialCameraPosition: CameraPosition(target: LatLng(0, 0), zoom: state.properties.defaultZoom),
-              markers: state.properties.marker,
+              initialCameraPosition: CameraPosition(target: LatLng(0, 0), zoom: state.property.defaultZoom),
+              markers: state.property.marker,
               onMapCreated: state.listener.onMapControllerCreated,
             );
           }),

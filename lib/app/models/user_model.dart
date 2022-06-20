@@ -1,4 +1,4 @@
-import 'package:ventes/core/model.dart';
+import 'package:ventes/core/api/model.dart';
 import 'package:ventes/app/models/user_detail_model.dart';
 
 class User extends Model {
@@ -8,7 +8,7 @@ class User extends Model {
   String? userfullname;
   String? useremail;
   String? userphone;
-  int? userdeviceid;
+  String? userdeviceid;
   String? userfcmtoken;
   List<UserDetail>? userdetails;
 

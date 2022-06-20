@@ -6,20 +6,17 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ventes/app/resources/widgets/editor_input.dart';
-import 'package:ventes/app/resources/widgets/input_search_list.dart';
 import 'package:ventes/app/resources/widgets/keyable_selectbox.dart';
 import 'package:ventes/app/resources/widgets/regular_input.dart';
-import 'package:ventes/app/resources/widgets/search_list.dart';
 import 'package:ventes/app/resources/widgets/top_navigation.dart';
 import 'package:ventes/app/states/controllers/customer_fu_state_controller.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/constants/strings/nearby_string.dart';
-import 'package:ventes/core/view.dart';
+import 'package:ventes/core/view/view.dart';
 
 part 'package:ventes/app/resources/views/customer_form/update/components/_customer_picture.dart';
 part 'package:ventes/app/resources/views/customer_form/update/components/_form.dart';
-part 'package:ventes/app/resources/views/customer_form/update/components/_search_list.dart';
 part 'package:ventes/app/resources/views/customer_form/update/components/_bottomsheet.dart';
 
 class CustomerFormUpdateView extends View<CustomerFormUpdateStateController> {
@@ -30,7 +27,7 @@ class CustomerFormUpdateView extends View<CustomerFormUpdateStateController> {
 
   @override
   void onBuild(state) {
-    state.properties.customerid = customerid;
+    state.property.customerid = customerid;
   }
 
   @override
@@ -41,7 +38,7 @@ class CustomerFormUpdateView extends View<CustomerFormUpdateStateController> {
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      key: state.properties.scaffoldKey,
+      key: state.property.scaffoldKey,
       backgroundColor: RegularColor.primary,
       extendBodyBehindAppBar: true,
       appBar: TopNavigation(
@@ -80,19 +77,19 @@ class CustomerFormUpdateView extends View<CustomerFormUpdateStateController> {
       ).build(context),
       body: SafeArea(
         child: Stack(
-          key: state.properties.stackKey,
+          key: state.property.stackKey,
           children: [
             Obx(() {
               return Container(
                 width: double.infinity,
-                height: state.properties.mapsHeight.value,
+                height: state.property.mapsHeight.value,
                 decoration: BoxDecoration(
                   color: Colors.white,
                 ),
                 child: GoogleMap(
                   mapType: MapType.terrain,
-                  initialCameraPosition: CameraPosition(target: LatLng(0, 0), zoom: state.properties.defaultZoom),
-                  markers: state.properties.markers,
+                  initialCameraPosition: CameraPosition(target: LatLng(0, 0), zoom: state.property.defaultZoom),
+                  markers: state.property.markers,
                   myLocationEnabled: true,
                   onMapCreated: state.listener.onMapControllerUpdated,
                   onCameraMove: state.listener.onCameraMoved,

@@ -1,12 +1,15 @@
 // ignore_for_file: prefer_final_fields
 
-part of 'package:ventes/app/states/controllers/product_fu_state_controller.dart';
+import 'package:get/get.dart';
+import 'package:ventes/app/api/presenters/product_fu_presenter.dart';
+import 'package:ventes/app/models/prospect_product_model.dart';
+import 'package:ventes/app/models/type_model.dart';
+import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
+import 'package:ventes/app/states/typedefs/product_fu_typedef.dart';
+import 'package:ventes/core/states/state_data_source.dart';
+import 'package:ventes/helpers/task_helper.dart';
 
-class _DataSource extends RegularDataSource<ProductFormUpdatePresenter> implements ProductUpdateContract {
-  _Listener get _listener => Get.find<_Listener>(tag: ProspectString.productUpdateTag);
-  _FormSource get _formSource => Get.find<_FormSource>(tag: ProspectString.productUpdateTag);
-  _Properties get _properties => Get.find<_Properties>(tag: ProspectString.productUpdateTag);
-
+class ProductFormUpdateDataSource extends StateDataSource<ProductFormUpdatePresenter> with DataSourceMixin implements ProductUpdateContract {
   final _product = Rx<ProspectProduct?>(null);
   set product(ProspectProduct? value) => _product.value = value;
   ProspectProduct? get product => _product.value;
@@ -22,32 +25,36 @@ class _DataSource extends RegularDataSource<ProductFormUpdatePresenter> implemen
   ProductFormUpdatePresenter presenterBuilder() => ProductFormUpdatePresenter();
 
   @override
-  onLoadError(String message) => _listener.onLoadError(message);
+  onLoadError(String message) => listener.onLoadError(message);
 
   @override
-  onLoadFailed(String message) => _listener.onLoadFailed(message);
+  onLoadFailed(String message) => listener.onLoadFailed(message);
 
   @override
   onLoadSuccess(Map data) {
     if (data['product'] != null) {
       product = ProspectProduct.fromJson(data['product']);
-      _formSource.prepareFormValues();
+      formSource.prepareFormValues();
     }
 
     if (data['taxes'] != null) {
       List<DBType> taxes = data['taxes'].map<DBType>((tax) => DBType.fromJson(tax)).toList();
       taxItems = taxes.map<KeyableDropdownItem<int, DBType>>((tax) => KeyableDropdownItem<int, DBType>(key: tax.typeid!, value: tax)).toList();
     }
-
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 
   @override
-  void onUpdateError(String message) => _listener.onUpdateDataError(message);
+  void onUpdateError(String message) => listener.onUpdateDataError(message);
 
   @override
-  void onUpdateFailed(String message) => _listener.onUpdateDataFailed(message);
+  void onUpdateFailed(String message) => listener.onUpdateDataFailed(message);
 
   @override
-  void onUpdateSuccess(String message) => _listener.onUpdateDataSuccess(message);
+  void onUpdateSuccess(String message) => listener.onUpdateDataSuccess(message);
+
+  @override
+  onLoadComplete() => listener.onComplete();
+
+  @override
+  void onUpdateComplete() => listener.onComplete();
 }

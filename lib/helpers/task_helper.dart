@@ -169,7 +169,7 @@ class Task<T> {
     onFinished?.call(result);
   }
 
-  Task<S> copyWith<S>({String? message, Function(S result)? onFinished, bool snackbar = false}) {
-    return Task<S>(name, message: message, onFinished: onFinished, snackbar: snackbar);
+  Task<S> copyWith<S>({String? name, String? message, Function(S result)? onFinished, bool snackbar = false}) {
+    return Task<S>(name ?? this.name, message: message, onFinished: onFinished, snackbar: snackbar);
   }
 }

@@ -8,7 +8,7 @@ import 'package:ventes/routing/navigators/dashboard_navigator.dart';
 import 'package:ventes/routing/navigators/prospect_navigator.dart';
 import 'package:ventes/routing/navigators/nearby_navigator.dart';
 import 'package:ventes/routing/navigators/schedule_navigator.dart';
-import 'package:ventes/routing/navigators/settings_navigator.dart';
+import 'package:ventes/routing/navigators/profile_navigator.dart';
 import 'package:ventes/app/states/controllers/bottom_navigation_state_controller.dart';
 
 class MainView extends GetView<BottomNavigationStateController> {
@@ -59,9 +59,9 @@ class MainView extends GetView<BottomNavigationStateController> {
                   ),
                 ),
                 Offstage(
-                  offstage: controller.currentIndex != Views.settings,
-                  child: SettingsNavigator(
-                    navigatorKey: controller.navigatorKeys[Views.settings]!,
+                  offstage: controller.currentIndex != Views.profile,
+                  child: ProfileNavigator(
+                    navigatorKey: controller.navigatorKeys[Views.profile]!,
                   ),
                 ),
               ],

@@ -5,7 +5,7 @@ import 'package:ventes/routing/navigators/dashboard_navigator.dart';
 import 'package:ventes/routing/navigators/prospect_navigator.dart';
 import 'package:ventes/routing/navigators/nearby_navigator.dart';
 import 'package:ventes/routing/navigators/schedule_navigator.dart';
-import 'package:ventes/routing/navigators/settings_navigator.dart';
+import 'package:ventes/routing/navigators/profile_navigator.dart';
 
 class BottomNavigationStateController extends GetxController {
   final _currentIndex = Views.dashboard.obs;
@@ -15,7 +15,7 @@ class BottomNavigationStateController extends GetxController {
     Views.nearby: Get.nestedKey(NearbyNavigator.id),
     Views.schedule: Get.nestedKey(ScheduleNavigator.id),
     Views.prospect: Get.nestedKey(ProspectNavigator.id),
-    Views.settings: Get.nestedKey(SettingsNavigator.id),
+    Views.profile: Get.nestedKey(ProfileNavigator.id),
   };
 
   void selectTab(Views tabItem) {

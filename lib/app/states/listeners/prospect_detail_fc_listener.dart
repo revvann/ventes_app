@@ -1,10 +1,15 @@
-part of 'package:ventes/app/states/controllers/prospect_detail_fc_state_controller.dart';
+import 'dart:async';
 
-class _Listener extends RegularListener {
-  _Properties get _properties => Get.find<_Properties>(tag: ProspectString.detailCreateTag);
-  _FormSource get _formSource => Get.find<_FormSource>(tag: ProspectString.detailCreateTag);
-  _DataSource get _dataSource => Get.find<_DataSource>(tag: ProspectString.detailCreateTag);
+import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:ventes/app/states/controllers/prospect_detail_state_controller.dart';
+import 'package:ventes/constants/strings/prospect_string.dart';
+import 'package:ventes/app/states/typedefs/prospect_detail_fc_typedef.dart';
+import 'package:ventes/core/states/state_listener.dart';
+import 'package:ventes/helpers/task_helper.dart';
+import 'package:ventes/routing/navigators/prospect_navigator.dart';
 
+class ProspectDetailFormCreateListener extends StateListener with ListenerMixin {
   void goBack() {
     Get.back(
       id: ProspectNavigator.id,
@@ -12,30 +17,30 @@ class _Listener extends RegularListener {
   }
 
   void onDateSelected(DateTime? date) {
-    _formSource.date = date;
+    formSource.date = date;
   }
 
   void onCategorySelected(category) {
-    _formSource.prosdtcategory = category.value;
+    formSource.prosdtcategory = category.value;
   }
 
   void onTypeSelected(type) {
-    _formSource.prosdttype = type.value;
+    formSource.prosdttype = type.value;
   }
 
   void onMapControllerCreated(GoogleMapController? controller) {
-    if (!_properties.mapsController.isCompleted) {
-      _properties.mapsController.complete(controller);
+    if (!property.mapsController.isCompleted) {
+      property.mapsController.complete(controller);
     }
   }
 
   void onSubmitButtonClicked() {
     Get.find<TaskHelper>().confirmPush(
-      _properties.task.copyWith<bool>(
+      property.task.copyWith<bool>(
         message: ProspectString.createDetailConfirm,
         onFinished: (res) {
           if (res) {
-            _formSource.onSubmit();
+            formSource.onSubmit();
           }
         },
       ),
@@ -43,37 +48,33 @@ class _Listener extends RegularListener {
   }
 
   void onLoadFailed(String message) {
-    Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: message, snackbar: true));
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+    Get.find<TaskHelper>().failedPush(property.task.copyWith(message: message, snackbar: true));
   }
 
   void onLoadError(String message) {
-    Get.find<TaskHelper>().errorPush(_properties.task.copyWith(message: message));
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+    Get.find<TaskHelper>().errorPush(property.task.copyWith(message: message));
   }
 
   void onCreateDataSuccess(String message) {
-    Get.find<TaskHelper>().successPush(_properties.task.copyWith(
+    Get.find<TaskHelper>().successPush(property.task.copyWith(
         message: message,
         onFinished: (res) {
-          Get.find<ProspectDetailStateController>().properties.refresh();
+          Get.find<ProspectDetailStateController>().property.refresh();
           Get.back(id: ProspectNavigator.id);
         }));
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 
   void onCreateDataFailed(String message) {
-    Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: message, snackbar: true));
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+    Get.find<TaskHelper>().failedPush(property.task.copyWith(message: message, snackbar: true));
   }
 
   void onCreateDataError(String message) {
-    Get.find<TaskHelper>().errorPush(_properties.task.copyWith(message: message));
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+    Get.find<TaskHelper>().errorPush(property.task.copyWith(message: message));
   }
 
+  void onComplete() => Get.find<TaskHelper>().loaderPop(property.task.name);
   @override
-  Future onRefresh() async {
-    _properties.refresh();
+  Future onReady() async {
+    property.refresh();
   }
 }

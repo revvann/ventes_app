@@ -1,10 +1,14 @@
-part of 'package:ventes/app/states/controllers/prospect_fc_state_controller.dart';
+import 'package:get/get.dart';
+import 'package:ventes/app/api/presenters/prospect_fc_presenter.dart';
+import 'package:ventes/app/models/bp_customer_model.dart';
+import 'package:ventes/app/models/type_model.dart';
+import 'package:ventes/app/models/user_detail_model.dart';
+import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
+import 'package:ventes/app/states/typedefs/prospect_fc_typedef.dart';
+import 'package:ventes/core/states/state_data_source.dart';
+import 'package:ventes/helpers/task_helper.dart';
 
-class _DataSource extends RegularDataSource<ProspectFormCreatePresenter> implements ProspectCreateContract {
-  _Listener get _listener => Get.find<_Listener>(tag: ProspectString.prospectCreateTag);
-  _FormSource get _formSource => Get.find<_FormSource>(tag: ProspectString.prospectCreateTag);
-  _Properties get _properties => Get.find<_Properties>(tag: ProspectString.prospectCreateTag);
-
+class ProspectFormCreateDataSource extends StateDataSource<ProspectFormCreatePresenter> with DataSourceMixin implements ProspectCreateContract {
   final Rx<Map<int, String>> _followUpItems = Rx<Map<int, String>>({});
   set followUpItems(Map<int, String> value) => _followUpItems.value = value;
   Map<int, String> get followUpItems => _followUpItems.value;
@@ -22,44 +26,48 @@ class _DataSource extends RegularDataSource<ProspectFormCreatePresenter> impleme
   ProspectFormCreatePresenter presenterBuilder() => ProspectFormCreatePresenter();
 
   @override
-  onLoadError(String message) => _listener.onDataLoadError(message);
+  onLoadError(String message) => listener.onDataLoadError(message);
 
   @override
-  onLoadFailed(String message) => _listener.onDataLoadFailed(message);
+  onLoadFailed(String message) => listener.onDataLoadFailed(message);
 
   @override
   onLoadSuccess(Map data) {
     if (data['followup'] != null) {
       List<DBType> followUpList = data['followup'].map<DBType>((item) => DBType.fromJson(item)).toList();
-      _formSource.prostype = followUpList.isEmpty ? null : followUpList.first.typeid!;
+      formSource.prostype = followUpList.isEmpty ? null : followUpList.first.typeid!;
       followUpItems = followUpList.asMap().map((index, item) => MapEntry(item.typeid!, item.typename!));
     }
 
     if (data['status'] != null) {
       List<DBType> statusList = data['status'].map<DBType>((item) => DBType.fromJson(item)).toList();
-      _formSource.prosstatus = statusList.isEmpty ? null : statusList.first.typeid!;
+      formSource.prosstatus = statusList.isEmpty ? null : statusList.first.typeid!;
     }
 
     if (data['taxes'] != null) {
       List<DBType> taxes = data['taxes'].map<DBType>((item) => DBType.fromJson(item)).toList();
-      _formSource.prospectproducttaxdefault = taxes.isNotEmpty ? taxes.first : null;
+      formSource.prospectproducttaxdefault = taxes.isNotEmpty ? taxes.first : null;
       taxItems = taxes.map<KeyableDropdownItem<int, DBType>>((item) => KeyableDropdownItem<int, DBType>(key: item.typeid!, value: item)).toList();
     }
 
     if (data['stage'] != null) {
       List<DBType> stageList = data['stage'].map<DBType>((item) => DBType.fromJson(item)).toList();
-      _formSource.prosstage = stageList.isEmpty ? null : stageList.first.typeid!;
+      formSource.prosstage = stageList.isEmpty ? null : stageList.first.typeid!;
     }
-
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 
   @override
-  void onCreateError(String message) => _listener.onCreateDataError(message);
+  void onCreateError(String message) => listener.onCreateDataError(message);
 
   @override
-  void onCreateFailed(String message) => _listener.onCreateDataFailed(message);
+  void onCreateFailed(String message) => listener.onCreateDataFailed(message);
 
   @override
-  void onCreateSuccess(String message) => _listener.onCreateDataSuccess(message);
+  void onCreateSuccess(String message) => listener.onCreateDataSuccess(message);
+
+  @override
+  void onCreateComplete() => listener.onComplete();
+
+  @override
+  onLoadComplete() => listener.onComplete();
 }

@@ -1,6 +1,6 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
-import 'package:flutter/material.dart' hide MenuItem;
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -16,7 +16,7 @@ import 'package:ventes/app/states/controllers/daily_schedule_state_controller.da
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/constants/strings/schedule_string.dart';
-import 'package:ventes/core/view.dart';
+import 'package:ventes/core/view/view.dart';
 import 'package:ventes/helpers/function_helpers.dart';
 
 part 'package:ventes/app/resources/views/daily_schedule/components/_calendar.dart';
@@ -32,7 +32,7 @@ class DailyScheduleView extends View<DailyScheduleStateController> {
 
   @override
   void onBuild(state) {
-    state.properties.date = date;
+    state.property.date = date;
   }
 
   @override
@@ -68,7 +68,7 @@ class DailyScheduleView extends View<DailyScheduleStateController> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              formatDate(state.properties.date),
+              formatDate(state.property.date),
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -100,10 +100,10 @@ class DailyScheduleView extends View<DailyScheduleStateController> {
               Expanded(
                 child: Obx(() {
                   return _Calendar(
-                    date: state.properties.date,
+                    date: state.property.date,
                     dataSource: RegularCalendarDataSource(
                       state.dataSource.appointments,
-                      date: state.properties.date,
+                      date: state.property.date,
                       type: CalendarDataSourceType.daily,
                     ),
                     onFindColor: state.listener.onFindAppointmentColor,

@@ -1,10 +1,18 @@
-part of 'package:ventes/app/states/controllers/dashboard_state_controller.dart';
+import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:ventes/app/api/presenters/dashboard_presenter.dart';
+import 'package:ventes/app/models/auth_model.dart';
+import 'package:ventes/app/models/bp_customer_model.dart';
+import 'package:ventes/app/models/maps_loc.dart';
+import 'package:ventes/app/models/user_detail_model.dart';
+import 'package:ventes/core/states/state_data_source.dart';
+import 'package:ventes/helpers/auth_helper.dart';
+import 'package:ventes/helpers/function_helpers.dart';
+import 'package:ventes/helpers/task_helper.dart';
+import 'package:ventes/app/states/typedefs/dashboard_typedef.dart';
 
-class _DataSource extends RegularDataSource<DashboardPresenter> implements DashboardContract {
-  _Properties get _properties => Get.find<_Properties>(tag: DashboardString.dashboardTag);
-  _Listener get _listener => Get.find<_Listener>(tag: DashboardString.dashboardTag);
-
-  final _customers = <BpCustomer>[].obs;
+class DashboardDataSource extends StateDataSource<DashboardPresenter> with DataSourceMixin implements DashboardContract {
+  final _customers = Rx<List<BpCustomer>>([]);
   set customers(List<BpCustomer> value) => _customers.value = value;
   List<BpCustomer> get customers => _customers.value;
 
@@ -46,17 +54,17 @@ class _DataSource extends RegularDataSource<DashboardPresenter> implements Dashb
   DashboardPresenter presenterBuilder() => DashboardPresenter();
 
   @override
-  onLoadError(String message) => _listener.onLoadDataError(message);
+  onLoadError(String message) => listener.onLoadDataError(message);
 
   @override
-  onLoadFailed(String message) => _listener.onLoadDataFailed(message);
+  onLoadFailed(String message) => listener.onLoadDataFailed(message);
 
   @override
   onLoadSuccess(Map data) async {
     if (data['customers'] != null) {
       _customersFromList(
         data['customers'],
-        LatLng(_properties.position!.latitude, _properties.position!.longitude),
+        LatLng(property.position!.latitude, property.position!.longitude),
       );
     }
 
@@ -76,14 +84,18 @@ class _DataSource extends RegularDataSource<DashboardPresenter> implements Dashb
         accounts.removeWhere((element) => element.userdtid == authModel.accountActive);
       }
     }
-
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 
   @override
-  void onLogoutError(String message) => _listener.onLogoutError(message);
+  void onLogoutError(String message) => listener.onLogoutError(message);
   @override
-  void onLogoutFailed(String message) => _listener.onLogoutFailed(message);
+  void onLogoutFailed(String message) => listener.onLogoutFailed(message);
   @override
-  void onLogoutSuccess(String message) => _listener.onLogoutSuccess(message);
+  void onLogoutSuccess(String message) => listener.onLogoutSuccess(message);
+
+  @override
+  onLoadComplete() => listener.onComplete();
+
+  @override
+  void onLogoutComplete() => listener.onComplete();
 }

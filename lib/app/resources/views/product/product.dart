@@ -2,7 +2,7 @@
 
 import 'dart:math';
 
-import 'package:flutter/material.dart' hide MenuItem;
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -17,7 +17,7 @@ import 'package:ventes/app/states/controllers/product_state_controller.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/constants/strings/prospect_string.dart';
-import 'package:ventes/core/view.dart';
+import 'package:ventes/core/view/view.dart';
 import 'package:ventes/helpers/function_helpers.dart';
 
 part 'package:ventes/app/resources/views/product/components/_product_list.dart';
@@ -30,7 +30,7 @@ class ProductView extends View<ProductStateController> {
 
   @override
   void onBuild(state) {
-    state.properties.prospectid = prospectid;
+    state.property.prospectid = prospectid;
   }
 
   @override
@@ -120,13 +120,13 @@ class ProductView extends View<ProductStateController> {
                       IconInput(
                         icon: "assets/svg/search.svg",
                         hintText: "Search",
-                        controller: state.properties.searchTEC,
+                        controller: state.property.searchTEC,
                       ),
                       SizedBox(
                         height: RegularSize.m,
                       ),
                       Obx(
-                        () => state.properties.isLoading.value
+                        () => state.property.isLoading.value
                             ? LoaderAnimation(
                                 strokeWidth: 9,
                                 width: 42,

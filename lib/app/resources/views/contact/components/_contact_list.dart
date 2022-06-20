@@ -69,7 +69,7 @@ class _ContactList extends StatelessWidget {
                   ),
                   SizedBox(width: RegularSize.s),
                   PopupMenu(
-                    controller: state.properties.createPopupController(index),
+                    controller: state.property.createPopupController(index),
                     dropdownSettings: DropdownSettings(
                       width: 100,
                       offset: Offset(10, 5),

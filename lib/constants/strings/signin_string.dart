@@ -6,4 +6,6 @@ class SigninString {
   static const signinButton = 'Sign in';
   static const usernameNotValid = 'Username is required';
   static const passwordNotValid = 'Password must be at least 6 characters';
+
+  static const taskCode = "signin";
 }

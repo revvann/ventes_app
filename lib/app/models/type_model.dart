@@ -1,4 +1,4 @@
-import 'package:ventes/core/model.dart';
+import 'package:ventes/core/api/model.dart';
 
 class DBType extends Model {
   int? typeid;

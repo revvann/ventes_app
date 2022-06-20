@@ -1,9 +1,11 @@
 import 'dart:math';
 
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import 'package:timezone/timezone.dart';
 import 'package:intl/intl.dart';
@@ -33,6 +35,11 @@ MaterialColor createSwatch(Color color) {
   });
 }
 
+Future requestPermission() async {
+  await Permission.contacts.request();
+  await Permission.location.request();
+}
+
 List<Location> getTimezoneLocation() {
   LocationDatabase tzDb = timeZoneDatabase;
   return tzDb.locations.values.toList();
@@ -53,25 +60,6 @@ List<Map<String, String>> getTimezoneList() {
 }
 
 Future<Position> getCurrentPosition() async {
-  bool serviceEnabled;
-  LocationPermission permission;
-
-  serviceEnabled = await Geolocator.isLocationServiceEnabled();
-  if (!serviceEnabled) {
-    return Future.error('Location services are disabled.');
-  }
-
-  permission = await Geolocator.checkPermission();
-  if (permission == LocationPermission.denied) {
-    permission = await Geolocator.requestPermission();
-    if (permission == LocationPermission.denied) {
-      return Future.error('Location permissions are denied');
-    }
-  }
-
-  if (permission == LocationPermission.deniedForever) {
-    return Future.error('Location permissions are permanently denied, we cannot request permissions.');
-  }
   return await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
 }
 
@@ -190,4 +178,10 @@ String getInitials(String name) {
     initials += name[0];
   }
   return initials;
+}
+
+Future<String?> getDeviceId() async {
+  var deviceInfo = DeviceInfoPlugin();
+  var androidDeviceInfo = await deviceInfo.androidInfo;
+  return androidDeviceInfo.androidId;
 }

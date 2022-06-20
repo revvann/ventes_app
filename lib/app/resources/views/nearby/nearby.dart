@@ -14,7 +14,7 @@ import 'package:ventes/app/states/controllers/nearby_state_controller.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/constants/strings/nearby_string.dart';
-import 'package:ventes/core/view.dart';
+import 'package:ventes/core/view/view.dart';
 import 'package:ventes/helpers/function_helpers.dart';
 
 part 'package:ventes/app/resources/views/nearby/components/customer_list.dart';
@@ -29,7 +29,7 @@ class NearbyView extends View<NearbyStateController> {
       statusBarColor: RegularColor.primary,
     ));
     return Scaffold(
-      key: state.properties.scaffoldKey,
+      key: state.property.scaffoldKey,
       backgroundColor: RegularColor.primary,
       extendBodyBehindAppBar: true,
       appBar: TopNavigation(
@@ -86,19 +86,19 @@ class NearbyView extends View<NearbyStateController> {
       ).build(context),
       body: SafeArea(
         child: Stack(
-          key: state.properties.stackKey,
+          key: state.property.stackKey,
           children: [
             Obx(() {
               return Container(
                 width: double.infinity,
-                height: state.properties.mapsHeight.value,
+                height: state.property.mapsHeight.value,
                 decoration: BoxDecoration(
                   color: Colors.white,
                 ),
                 child: GoogleMap(
                   mapType: MapType.terrain,
-                  initialCameraPosition: CameraPosition(target: LatLng(0, 0), zoom: state.properties.defaultZoom),
-                  markers: state.properties.markers,
+                  initialCameraPosition: CameraPosition(target: LatLng(0, 0), zoom: state.property.defaultZoom),
+                  markers: state.property.markers,
                   myLocationEnabled: true,
                   onMapCreated: state.listener.onMapControllerCreated,
                   onCameraMove: state.listener.onCameraMoved,
@@ -115,7 +115,7 @@ class NearbyView extends View<NearbyStateController> {
               ],
               builder: (BuildContext context, myscrollController) {
                 return Container(
-                  key: state.properties.bottomSheetKey,
+                  key: state.property.bottomSheetKey,
                   padding: EdgeInsets.only(
                     top: RegularSize.l,
                   ),
@@ -130,7 +130,7 @@ class NearbyView extends View<NearbyStateController> {
                     controller: myscrollController,
                     child: Obx(() {
                       return SizedBox(
-                        height: state.properties.bottomSheetHeight.value,
+                        height: state.property.bottomSheetHeight.value,
                         child: Column(
                           children: [
                             Text(

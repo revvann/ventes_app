@@ -1,5 +1,5 @@
 import 'package:ventes/app/models/province_model.dart';
-import 'package:ventes/core/model.dart';
+import 'package:ventes/core/api/model.dart';
 
 class City extends Model {
   int? cityid;

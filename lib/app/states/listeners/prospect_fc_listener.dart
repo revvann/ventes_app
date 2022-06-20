@@ -1,16 +1,23 @@
-part of 'package:ventes/app/states/controllers/prospect_fc_state_controller.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:ventes/app/models/bp_customer_model.dart';
+import 'package:ventes/app/models/type_model.dart';
+import 'package:ventes/app/models/user_detail_model.dart';
+import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
+import 'package:ventes/app/states/controllers/prospect_state_controller.dart';
+import 'package:ventes/constants/strings/prospect_string.dart';
+import 'package:ventes/app/states/typedefs/prospect_fc_typedef.dart';
+import 'package:ventes/core/states/state_listener.dart';
+import 'package:ventes/helpers/task_helper.dart';
+import 'package:ventes/routing/navigators/prospect_navigator.dart';
 
-class _Listener extends RegularListener {
-  _FormSource get _formSource => Get.find<_FormSource>(tag: ProspectString.prospectCreateTag);
-  _DataSource get _dataSource => Get.find<_DataSource>(tag: ProspectString.prospectCreateTag);
-  _Properties get _properties => Get.find<_Properties>(tag: ProspectString.prospectCreateTag);
-
+class ProspectFormCreateListener extends StateListener with ListenerMixin {
   void onDateStartSelected(DateTime? value) {
     if (value != null) {
-      _formSource.prosstartdate = value;
-      if (_formSource.prosstartdate != null && _formSource.prosenddate != null) {
-        if (_formSource.prosstartdate!.isAfter(_formSource.prosenddate!)) {
-          _formSource.prosenddate = _formSource.prosstartdate;
+      formSource.prosstartdate = value;
+      if (formSource.prosstartdate != null && formSource.prosenddate != null) {
+        if (formSource.prosstartdate!.isAfter(formSource.prosenddate!)) {
+          formSource.prosenddate = formSource.prosstartdate;
         }
       }
     }
@@ -18,23 +25,23 @@ class _Listener extends RegularListener {
 
   void onDateEndSelected(DateTime? value) {
     if (value != null) {
-      _formSource.prosenddate = value;
+      formSource.prosenddate = value;
     }
   }
 
   void onExpDateEndSelected(DateTime? value) {
     if (value != null) {
-      _formSource.prosexpenddate = value;
+      formSource.prosexpenddate = value;
     }
   }
 
   void onFollowUpSelected(dynamic key) {
-    _formSource.prostype = key;
+    formSource.prostype = key;
   }
 
   void onOwnerSelected(dynamic data) {
     if (data != null) {
-      _formSource.prosowner = data.value as UserDetail;
+      formSource.prosowner = data.value as UserDetail;
     }
   }
 
@@ -43,12 +50,12 @@ class _Listener extends RegularListener {
   }
 
   Future<List<UserDetail>> onOwnerFilter(String? search) async {
-    return await _dataSource.fetchUser(search);
+    return await dataSource.fetchUser(search);
   }
 
   void onCustomerSelected(dynamic data) {
     if (data != null) {
-      _formSource.proscustomer = data.value as BpCustomer;
+      formSource.proscustomer = data.value as BpCustomer;
     }
   }
 
@@ -57,16 +64,16 @@ class _Listener extends RegularListener {
   }
 
   Future<List<BpCustomer>> onCustomerFilter(String? search) async {
-    return await _dataSource.fetchCustomer(search);
+    return await dataSource.fetchCustomer(search);
   }
 
   void onSubmitButtonClicked() {
     Get.find<TaskHelper>().confirmPush(
-      _properties.task.copyWith<bool>(
+      property.task.copyWith<bool>(
         message: ProspectString.createProspectConfirm,
         onFinished: (res) {
           if (res) {
-            _formSource.onSubmit();
+            formSource.onSubmit();
           }
         },
       ),
@@ -74,7 +81,7 @@ class _Listener extends RegularListener {
   }
 
   void onAddProduct() {
-    int index = _formSource.prosproducts.length;
+    int index = formSource.prosproducts.length;
     KeyableDropdownController<int, DBType> taxDropdownController = Get.put(
       KeyableDropdownController<int, DBType>(),
       tag: 'taxDropdownController$index',
@@ -85,9 +92,9 @@ class _Listener extends RegularListener {
     TextEditingController discTEC = TextEditingController(text: "0");
     TextEditingController taxTEC = TextEditingController();
 
-    _formSource.addprosproduct = {
+    formSource.addprosproduct = {
       'taxDropdownController': taxDropdownController,
-      'taxType': Rx<DBType>(_formSource.prospectproducttaxdefault!),
+      'taxType': Rx<DBType>(formSource.prospectproducttaxdefault!),
       "nameTEC": nameTEC,
       "priceTEC": priceTEC,
       "qtyTEC": qtyTEC,
@@ -97,9 +104,9 @@ class _Listener extends RegularListener {
   }
 
   void onRemoveProduct(Map<String, dynamic> product) {
-    int index = _formSource.prosproducts.indexOf(product);
+    int index = formSource.prosproducts.indexOf(product);
     Get.delete<KeyableDropdownController<int, DBType>>(tag: 'taxDropdownController$index');
-    _formSource.removeprosproduct = product;
+    formSource.removeprosproduct = product;
   }
 
   void goBack() {
@@ -107,37 +114,33 @@ class _Listener extends RegularListener {
   }
 
   void onDataLoadError(String message) {
-    Get.find<TaskHelper>().errorPush(_properties.task.copyWith(message: message));
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+    Get.find<TaskHelper>().errorPush(property.task.copyWith(message: message));
   }
 
   void onDataLoadFailed(String message) {
-    Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: message, snackbar: true));
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+    Get.find<TaskHelper>().failedPush(property.task.copyWith(message: message, snackbar: true));
   }
 
   void onCreateDataSuccess(String message) {
-    Get.find<TaskHelper>().successPush(_properties.task.copyWith(
+    Get.find<TaskHelper>().successPush(property.task.copyWith(
         message: message,
         onFinished: (res) {
-          Get.find<ProspectStateController>().properties.refresh();
+          Get.find<ProspectStateController>().property.refresh();
           Get.back(id: ProspectNavigator.id);
         }));
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 
   void onCreateDataFailed(String message) {
-    Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: message, snackbar: true));
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+    Get.find<TaskHelper>().failedPush(property.task.copyWith(message: message, snackbar: true));
   }
 
   void onCreateDataError(String message) {
-    Get.find<TaskHelper>().errorPush(_properties.task.copyWith(message: message));
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+    Get.find<TaskHelper>().errorPush(property.task.copyWith(message: message));
   }
 
+  void onComplete() => Get.find<TaskHelper>().loaderPop(property.task.name);
   @override
-  Future onRefresh() async {
-    _properties.refresh();
+  Future onReady() async {
+    property.refresh();
   }
 }

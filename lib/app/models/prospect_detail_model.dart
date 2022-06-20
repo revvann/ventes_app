@@ -1,6 +1,6 @@
 import 'package:ventes/app/models/prospect_model.dart';
 import 'package:ventes/app/models/type_model.dart';
-import 'package:ventes/core/model.dart';
+import 'package:ventes/core/api/model.dart';
 
 class ProspectDetail extends Model {
   int? prospectdtid;

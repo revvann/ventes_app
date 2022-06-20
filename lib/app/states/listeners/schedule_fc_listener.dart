@@ -1,114 +1,121 @@
-part of 'package:ventes/app/states/controllers/schedule_fc_state_controller.dart';
+import 'dart:async';
 
-class _Listener extends RegularListener {
-  _Properties get _properties => Get.find<_Properties>(tag: ScheduleString.scheduleCreateTag);
-  _FormSource get _formSource => Get.find<_FormSource>(tag: ScheduleString.scheduleCreateTag);
-  _DataSource get _dataSource => Get.find<_DataSource>(tag: ScheduleString.scheduleCreateTag);
+import 'package:get/get.dart';
+import 'package:ventes/app/models/schedule_guest_model.dart';
+import 'package:ventes/app/models/user_detail_model.dart';
+import 'package:ventes/app/states/controllers/daily_schedule_state_controller.dart';
+import 'package:ventes/constants/strings/schedule_string.dart';
+import 'package:ventes/app/states/typedefs/schedule_fc_typedef.dart';
+import 'package:ventes/core/states/state_listener.dart';
+import 'package:ventes/helpers/function_helpers.dart';
+import 'package:ventes/helpers/task_helper.dart';
+import 'package:ventes/routing/navigators/schedule_navigator.dart';
 
+class ScheduleFormCreateListener extends StateListener with ListenerMixin {
   void onLocationChanged() {
-    _formSource.schelocquiet = _formSource.schelocTEC.text;
+    formSource.schelocquiet = formSource.schelocTEC.text;
   }
 
   void onOnlineLinkChanged() {
-    _formSource.scheonlinkquiet = _formSource.scheonlinkTEC.text;
+    formSource.scheonlinkquiet = formSource.scheonlinkTEC.text;
   }
 
   void onAlldayValueChanged(value) {
     if (value) {
-      _formSource.schestarttimeDC.enabled = false;
-      _formSource.scheendtimeDC.enabled = false;
-      _formSource.schestarttimeDC.value = null;
-      _formSource.scheendtimeDC.value = null;
+      formSource.schestarttimeDC.enabled = false;
+      formSource.scheendtimeDC.enabled = false;
+      formSource.schestarttimeDC.value = null;
+      formSource.scheendtimeDC.value = null;
     } else {
-      _formSource.schestarttimeDC.enabled = true;
-      _formSource.scheendtimeDC.enabled = true;
-      if (_formSource.schestarttime != null) {
-        _formSource.schestarttimeDC.value = formatTime(_formSource.schestarttime!);
+      formSource.schestarttimeDC.enabled = true;
+      formSource.scheendtimeDC.enabled = true;
+      if (formSource.schestarttime != null) {
+        formSource.schestarttimeDC.value = formatTime(formSource.schestarttime!);
       }
-      if (_formSource.scheendtime != null) {
-        _formSource.scheendtimeDC.value = formatTime(_formSource.scheendtime!);
+      if (formSource.scheendtime != null) {
+        formSource.scheendtimeDC.value = formatTime(formSource.scheendtime!);
       }
     }
-    _formSource.scheallday = value;
+    formSource.scheallday = value;
   }
 
   void onPrivateValueChanged(value) {
-    _formSource.scheprivate = value;
+    formSource.scheprivate = value;
   }
 
   void onOnlineValueChanged(value) {
-    _formSource.scheonline = value;
+    formSource.scheonline = value;
     if (value) {
-      _formSource.scheonlinkTEC.text = _formSource.scheonlink;
-      _formSource.schelocTEC.text = "";
+      formSource.scheonlinkTEC.text = formSource.scheonlink;
+      formSource.schelocTEC.text = "";
     } else {
-      _formSource.scheonlinkTEC.text = "";
-      _formSource.schelocTEC.text = _formSource.scheloc;
+      formSource.scheonlinkTEC.text = "";
+      formSource.schelocTEC.text = formSource.scheloc;
     }
   }
 
   void onDateStartSelected(DateTime? value) {
     if (value != null) {
-      _formSource.schestartdate = value;
-      if (_formSource.schestartdate.isAfter(_formSource.scheenddate)) {
-        _formSource.scheenddate = _formSource.schestartdate;
+      formSource.schestartdate = value;
+      if (formSource.schestartdate.isAfter(formSource.scheenddate)) {
+        formSource.scheenddate = formSource.schestartdate;
       }
     }
   }
 
   void onDateEndSelected(DateTime? value) {
     if (value != null) {
-      _formSource.scheenddate = value;
+      formSource.scheenddate = value;
     }
   }
 
   void onTimeStartSelected(String? value) {
     if (value != null) {
       DateTime time = parseTime(value);
-      if (_formSource.schestarttime != null) {
-        DateTime _dateStart = _formSource.schestarttime!.subtract(Duration(
-          hours: _formSource.schestarttime!.hour,
-          minutes: _formSource.schestarttime!.minute,
-          seconds: _formSource.schestarttime!.second,
+      if (formSource.schestarttime != null) {
+        DateTime _dateStart = formSource.schestarttime!.subtract(Duration(
+          hours: formSource.schestarttime!.hour,
+          minutes: formSource.schestarttime!.minute,
+          seconds: formSource.schestarttime!.second,
         ));
-        _formSource.schestarttimequiet = _dateStart.add(Duration(
+        formSource.schestarttimequiet = _dateStart.add(Duration(
           hours: time.hour,
           minutes: time.minute,
           seconds: time.second,
         ));
       } else {
-        _formSource.schestarttimequiet = DateTime(
-          _formSource.schestartdate.year,
-          _formSource.schestartdate.month,
-          _formSource.schestartdate.day,
+        formSource.schestarttimequiet = DateTime(
+          formSource.schestartdate.year,
+          formSource.schestartdate.month,
+          formSource.schestartdate.day,
           time.hour,
           time.minute,
           time.second,
         );
       }
     }
-    _formSource.setEndTimeList();
+    formSource.setEndTimeList();
   }
 
   void onTimeEndSelected(String? value) {
     if (value != null) {
       DateTime time = parseTime(value);
-      if (_formSource.scheendtime != null) {
-        DateTime _dateEnd = _formSource.scheendtime!.subtract(Duration(
-          hours: _formSource.scheendtime!.hour,
-          minutes: _formSource.scheendtime!.minute,
-          seconds: _formSource.scheendtime!.second,
+      if (formSource.scheendtime != null) {
+        DateTime _dateEnd = formSource.scheendtime!.subtract(Duration(
+          hours: formSource.scheendtime!.hour,
+          minutes: formSource.scheendtime!.minute,
+          seconds: formSource.scheendtime!.second,
         ));
-        _formSource.scheendtimequiet = _dateEnd.add(Duration(
+        formSource.scheendtimequiet = _dateEnd.add(Duration(
           hours: time.hour,
           minutes: time.minute,
           seconds: time.second,
         ));
       } else {
-        _formSource.scheendtimequiet = DateTime(
-          _formSource.scheenddate.year,
-          _formSource.scheenddate.month,
-          _formSource.scheenddate.day,
+        formSource.scheendtimequiet = DateTime(
+          formSource.scheenddate.year,
+          formSource.scheenddate.month,
+          formSource.scheenddate.day,
           time.hour,
           time.minute,
           time.second,
@@ -118,7 +125,7 @@ class _Listener extends RegularListener {
   }
 
   void onTimezoneChanged(selectedItem) {
-    _formSource.schetz = selectedItem.key;
+    formSource.schetz = selectedItem.key;
   }
 
   bool onGuestCompared(dynamic a, UserDetail b) {
@@ -130,8 +137,8 @@ class _Listener extends RegularListener {
   }
 
   void onGuestChanged(dynamic user) {
-    _formSource.guests = List<ScheduleGuest>.from(
-      _formSource.guestDropdownController.selectedKeys.map(
+    formSource.guests = List<ScheduleGuest>.from(
+      formSource.guestDropdownController.selectedKeys.map(
         (user) => ScheduleGuest(
           scheuserid: user.userid,
           schebpid: user.userdtbpid,
@@ -144,58 +151,58 @@ class _Listener extends RegularListener {
 
   void onRemoveGuest(item) {
     if (item != null) {
-      _formSource.removeGuest(item);
+      formSource.removeGuest(item);
     }
   }
 
   void onReadOnlyValueChanged(int userid, bool value) {
     if (value) {
-      _formSource.setPermission(userid, [_formSource.readOnlyId]);
+      formSource.setPermission(userid, [formSource.readOnlyId]);
     } else {
-      _formSource.removePermission(userid, _formSource.readOnlyId);
+      formSource.removePermission(userid, formSource.readOnlyId);
     }
   }
 
   void onShareLinkValueChanged(int userid, bool value) {
     if (value) {
-      _formSource.addPermission(userid, _formSource.shareLinkId);
+      formSource.addPermission(userid, formSource.shareLinkId);
     } else {
-      _formSource.removePermission(userid, _formSource.shareLinkId);
+      formSource.removePermission(userid, formSource.shareLinkId);
     }
   }
 
   void onAddMemberValueChanged(int userid, bool value) {
     if (value) {
-      _formSource.addPermission(userid, _formSource.addMemberId);
+      formSource.addPermission(userid, formSource.addMemberId);
     } else {
-      _formSource.removePermission(userid, _formSource.addMemberId);
+      formSource.removePermission(userid, formSource.addMemberId);
     }
   }
 
   void onTowardSelected(dynamic selectedItem) {
-    _formSource.schetoward = selectedItem?.value;
+    formSource.schetoward = selectedItem?.value;
   }
 
   Future<List<UserDetail>> onGuestFilter(String? search) async {
-    List<UserDetail> userDetails = await _dataSource.filterUser(search);
-    userDetails = userDetails.where((item) => item.userid != _formSource.schetoward?.userid).toList();
+    List<UserDetail> userDetails = await dataSource.filterUser(search);
+    userDetails = userDetails.where((item) => item.userid != formSource.schetoward?.userid).toList();
     return userDetails;
   }
 
   Future<List<UserDetail>> onTowardFilter(String? search) async {
-    List<UserDetail> userDetails = await _dataSource.allUser(search);
-    List<int?> guestIds = _formSource.guests.map((item) => item.scheuserid).toList();
+    List<UserDetail> userDetails = await dataSource.allUser(search);
+    List<int?> guestIds = formSource.guests.map((item) => item.scheuserid).toList();
     userDetails = userDetails.where((item) => !guestIds.contains(item.userid)).toList();
     return userDetails;
   }
 
   void onFormSubmit() {
     Get.find<TaskHelper>().confirmPush(
-      _properties.task.copyWith<bool>(
+      property.task.copyWith<bool>(
         message: ScheduleString.createScheduleConfirm,
         onFinished: (res) {
           if (res) {
-            _formSource.onSubmit();
+            formSource.onSubmit();
           }
         },
       ),
@@ -203,43 +210,39 @@ class _Listener extends RegularListener {
   }
 
   void onCameraMove(position) {
-    _properties.markerLatLng = position.target;
-    _formSource.scheloc = "https://maps.google.com?q=${position.target.latitude},${position.target.longitude}";
+    property.markerLatLng = position.target;
+    formSource.scheloc = "https://maps.google.com?q=${position.target.latitude},${position.target.longitude}";
   }
 
   void onCreateDataFailed(String message) {
-    Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: ScheduleString.createFailed));
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+    Get.find<TaskHelper>().failedPush(property.task.copyWith(message: ScheduleString.createFailed));
   }
 
   void onCreateDataSuccess(String message) {
-    Get.find<TaskHelper>().successPush(_properties.task.copyWith(
+    Get.find<TaskHelper>().successPush(property.task.copyWith(
         message: ScheduleString.createSuccess,
         onFinished: (res) async {
-          await _properties.scheduleNotification();
-          Get.find<DailyScheduleStateController>().properties.refresh();
+          await property.scheduleNotification();
+          Get.find<DailyScheduleStateController>().property.refresh();
           Get.back(id: ScheduleNavigator.id);
         }));
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 
   void onCreateDataError(String message) {
-    Get.find<TaskHelper>().errorPush(_properties.task.copyWith(message: ScheduleString.createError));
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+    Get.find<TaskHelper>().errorPush(property.task.copyWith(message: ScheduleString.createError));
   }
 
   onLoadDataError(String message) {
-    Get.find<TaskHelper>().errorPush(_properties.task.copyWith(message: ScheduleString.createError));
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+    Get.find<TaskHelper>().errorPush(property.task.copyWith(message: ScheduleString.createError));
   }
 
   onLoadDataFailed(String message) {
-    Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: ScheduleString.createFailed));
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+    Get.find<TaskHelper>().failedPush(property.task.copyWith(message: ScheduleString.createFailed));
   }
 
+  void onComplete() => Get.find<TaskHelper>().loaderPop(property.task.name);
   @override
-  Future onRefresh() async {
-    _properties.refresh();
+  Future onReady() async {
+    property.refresh();
   }
 }

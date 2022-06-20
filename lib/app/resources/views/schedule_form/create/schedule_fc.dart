@@ -17,10 +17,11 @@ import 'package:ventes/app/resources/widgets/regular_select_box.dart';
 import 'package:ventes/app/resources/widgets/searchable_dropdown.dart';
 import 'package:ventes/app/resources/widgets/top_navigation.dart';
 import 'package:ventes/app/states/controllers/schedule_fc_state_controller.dart';
+import 'package:ventes/app/states/form/sources/schedule_fc_form_source.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/constants/strings/schedule_string.dart';
-import 'package:ventes/core/view.dart';
+import 'package:ventes/core/view/view.dart';
 import 'package:ventes/routing/navigators/schedule_navigator.dart';
 
 part 'package:ventes/app/resources/views/schedule_form/create/components/_addmember_checkbox.dart';

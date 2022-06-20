@@ -1,11 +1,18 @@
-part of 'package:ventes/app/states/controllers/nearby_state_controller.dart';
+import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:ventes/app/api/presenters/nearby_presenter.dart';
+import 'package:ventes/app/models/bp_customer_model.dart';
+import 'package:ventes/app/models/customer_model.dart';
+import 'package:ventes/app/models/maps_loc.dart';
+import 'package:ventes/app/states/typedefs/nearby_typedef.dart';
+import 'package:ventes/core/states/state_data_source.dart';
+import 'package:ventes/helpers/function_helpers.dart';
+import 'package:ventes/helpers/task_helper.dart';
 
-class _DataSource extends RegularDataSource<NearbyPresenter> implements NearbyContract {
-  _Properties get _properties => Get.find<_Properties>(tag: NearbyString.nearbyTag);
-  _Listener get _listener => Get.find<_Listener>(tag: NearbyString.nearbyTag);
+class NearbyDataSource extends StateDataSource<NearbyPresenter> with DataSourceMixin implements NearbyContract {
   List<BpCustomer> bpCustomers = <BpCustomer>[];
 
-  final _customers = <Customer>[].obs;
+  final _customers = Rx<List<Customer>>([]);
   set customers(List<Customer> value) => _customers.value = value;
   List<Customer> get customers => _customers.value;
 
@@ -46,10 +53,10 @@ class _DataSource extends RegularDataSource<NearbyPresenter> implements NearbyCo
   NearbyPresenter presenterBuilder() => NearbyPresenter();
 
   @override
-  onLoadError(String message) => _listener.onLoadDataError(message);
+  onLoadError(String message) => listener.onLoadDataError(message);
 
   @override
-  onLoadFailed(String message) => _listener.onLoadDataFailed(message);
+  onLoadFailed(String message) => listener.onLoadDataFailed(message);
 
   @override
   onLoadSuccess(Map data) {
@@ -64,19 +71,24 @@ class _DataSource extends RegularDataSource<NearbyPresenter> implements NearbyCo
     if (data['customers'] != null) {
       _customersFromList(
         data['customers'],
-        LatLng(_properties.markers.first.position.latitude, _properties.markers.first.position.longitude),
+        LatLng(property.markers.first.position.latitude, property.markers.first.position.longitude),
       );
-      _properties.deployCustomers(customers);
+      property.deployCustomers(customers);
     }
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 
   @override
-  void onDeleteError(String message) => _listener.onDeleteError(message);
+  void onDeleteError(String message) => listener.onDeleteError(message);
 
   @override
-  void onDeleteFailed(String message) => _listener.onDeleteFailed(message);
+  void onDeleteFailed(String message) => listener.onDeleteFailed(message);
 
   @override
-  void onDeleteSuccess(String message) => _listener.onDeleteSuccess(message);
+  void onDeleteSuccess(String message) => listener.onDeleteSuccess(message);
+
+  @override
+  void onDeleteComplete() => listener.onComplete();
+
+  @override
+  onLoadComplete() => listener.onComplete();
 }

@@ -1,5 +1,5 @@
 import 'package:ventes/app/models/country_model.dart';
-import 'package:ventes/core/model.dart';
+import 'package:ventes/core/api/model.dart';
 
 class Province extends Model {
   int? provid;

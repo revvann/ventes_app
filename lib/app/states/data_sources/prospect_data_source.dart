@@ -1,9 +1,14 @@
-part of 'package:ventes/app/states/controllers/prospect_state_controller.dart';
+import 'package:get/get.dart';
+import 'package:ventes/app/api/contracts/fetch_data_contract.dart';
+import 'package:ventes/app/api/presenters/prospect_presenter.dart';
+import 'package:ventes/app/models/prospect_model.dart';
+import 'package:ventes/app/models/type_model.dart';
+import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
+import 'package:ventes/app/states/typedefs/prospect_typedef.dart';
+import 'package:ventes/core/states/state_data_source.dart';
+import 'package:ventes/helpers/task_helper.dart';
 
-class _DataSource extends RegularDataSource<ProspectPresenter> implements FetchDataContract {
-  _Listener get _listener => Get.find<_Listener>(tag: ProspectString.prospectTag);
-  _Properties get _properties => Get.find<_Properties>(tag: ProspectString.prospectTag);
-
+class ProspectDataSource extends StateDataSource<ProspectPresenter> with DataSourceMixin implements FetchDataContract {
   final Rx<List<KeyableDropdownItem<int, DBType>>> _statusItems = Rx<List<KeyableDropdownItem<int, DBType>>>([]);
   set statusItems(List<KeyableDropdownItem<int, DBType>> value) => _statusItems.value = value;
   List<KeyableDropdownItem<int, DBType>> get statusItems => _statusItems.value;
@@ -24,10 +29,10 @@ class _DataSource extends RegularDataSource<ProspectPresenter> implements FetchD
   void fetchProspect({Map<String, dynamic> params = const {}}) => presenter.fetchProspect(params);
 
   @override
-  onLoadError(String message) => _listener.onLoadError(message);
+  onLoadError(String message) => listener.onLoadError(message);
 
   @override
-  onLoadFailed(String message) => _listener.onLoadFailed(message);
+  onLoadFailed(String message) => listener.onLoadFailed(message);
 
   @override
   onLoadSuccess(Map data) {
@@ -49,7 +54,8 @@ class _DataSource extends RegularDataSource<ProspectPresenter> implements FetchD
     if (data['prospects'] != null) {
       prospects = data['prospects'].map<Prospect>((e) => Prospect.fromJson(e)).toList();
     }
-
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
+
+  @override
+  onLoadComplete() => listener.onComplete();
 }

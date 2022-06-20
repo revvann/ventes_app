@@ -1,32 +1,41 @@
-part of 'package:ventes/app/states/controllers/customer_fu_state_controller.dart';
+import 'dart:async';
+import 'dart:io';
 
-class _Listener extends RegularListener {
-  _Properties get _properties => Get.find<_Properties>(tag: NearbyString.customerUpdateTag);
-  _FormSource get _formSource => Get.find<_FormSource>(tag: NearbyString.customerUpdateTag);
-  _DataSource get _dataSource => Get.find<_DataSource>(tag: NearbyString.customerUpdateTag);
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:ventes/app/states/properties/nearby_property.dart';
+import 'package:ventes/app/states/typedefs/customer_fu_typedef.dart';
+import 'package:ventes/app/states/controllers/nearby_state_controller.dart';
+import 'package:ventes/constants/strings/nearby_string.dart';
+import 'package:ventes/core/states/state_listener.dart';
+import 'package:ventes/helpers/task_helper.dart';
+import 'package:ventes/routing/navigators/nearby_navigator.dart';
 
+class CustomerFormUpdateListener extends StateListener with ListenerMixin {
   void goBack() {
     Get.back(id: NearbyNavigator.id);
   }
 
   void onTypeSelected(int type) {
-    _formSource.cstmtypeid = type;
+    formSource.cstmtypeid = type;
   }
 
   void onMapControllerUpdated(GoogleMapController controller) {
-    if (!_properties.mapsController.isCompleted) {
-      _properties.mapsController.complete(controller);
+    if (!property.mapsController.isCompleted) {
+      property.mapsController.complete(controller);
     }
   }
 
   void onCameraMoved(CameraPosition position) {
-    _properties.markerLatLng = position.target;
-    _formSource.cstmlatitude = position.target.latitude.toString();
-    _formSource.cstmlongitude = position.target.longitude.toString();
+    property.markerLatLng = position.target;
+    formSource.cstmlatitude = position.target.latitude.toString();
+    formSource.cstmlongitude = position.target.longitude.toString();
   }
 
   void onCameraMoveEnd() {
-    _properties.cameraMoveType = CameraMoveType.dragged;
+    property.cameraMoveType = CameraMoveType.dragged;
   }
 
   void onPicturePicked() async {
@@ -36,60 +45,56 @@ class _Listener extends RegularListener {
     );
 
     if (image != null) {
-      _formSource.picture = File(image.path);
-      _formSource.defaultPicture.value = Image.file(_formSource.picture!);
+      formSource.picture = File(image.path);
+      formSource.defaultPicture.value = Image.file(formSource.picture!);
     }
   }
 
   void onStatusSelected(int status) {
-    _formSource.sbccstmstatusid = status;
+    formSource.sbccstmstatusid = status;
   }
 
   void onSubmitButtonClicked() async {
     Get.find<TaskHelper>().confirmPush(
-      _properties.task.copyWith<bool>(
+      property.task.copyWith<bool>(
         message: NearbyString.updateCustomerConfirm,
         onFinished: (res) {
           if (res) {
-            _formSource.onSubmit();
+            formSource.onSubmit();
           }
         },
       ),
     );
   }
 
+  void onComplete() => Get.find<TaskHelper>().loaderPop(property.task.name);
   @override
-  Future onRefresh() async {
-    _properties.refresh();
+  Future onReady() async {
+    property.refresh();
   }
 
   void onLoadDataError(String message) {
-    Get.find<TaskHelper>().errorPush(_properties.task.copyWith(message: message));
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+    Get.find<TaskHelper>().errorPush(property.task.copyWith(message: message));
   }
 
   void onLoadDataFailed(String message) {
-    Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: message, snackbar: true));
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+    Get.find<TaskHelper>().failedPush(property.task.copyWith(message: message, snackbar: true));
   }
 
   void onUpdateDataError(String message) {
-    Get.find<TaskHelper>().errorPush(_properties.task.copyWith(message: message));
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+    Get.find<TaskHelper>().errorPush(property.task.copyWith(message: message));
   }
 
   void onUpdateDataFailed(String message) {
-    Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: message, snackbar: true));
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+    Get.find<TaskHelper>().failedPush(property.task.copyWith(message: message, snackbar: true));
   }
 
   void onUpdateDataSuccess(String message) async {
-    Get.find<TaskHelper>().successPush(_properties.task.copyWith(
+    Get.find<TaskHelper>().successPush(property.task.copyWith(
         message: message,
         onFinished: (res) {
-          Get.find<NearbyStateController>().properties.refresh();
+          Get.find<NearbyStateController>().property.refresh();
           Get.back(id: NearbyNavigator.id);
         }));
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 }

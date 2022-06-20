@@ -43,7 +43,7 @@ class _CustomerList extends StatelessWidget {
                               horizontal: RegularSize.m,
                             ),
                             child: Obx(() {
-                              bool isSelected = state.properties.selectedCustomer.any((c) => c.cstmid == customer.cstmid);
+                              bool isSelected = state.property.selectedCustomer.any((c) => c.cstmid == customer.cstmid);
                               return SvgPicture.asset(
                                 isSelected ? "assets/svg/marker.svg" : "assets/svg/building-bold.svg",
                                 color: isSelected ? RegularColor.green : RegularColor.gray,

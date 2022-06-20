@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:ventes/constants/regular_color.dart';
-import 'package:ventes/constants/regular_size.dart';
 
 class RegularOutlinedButton extends StatelessWidget {
   RegularOutlinedButton({

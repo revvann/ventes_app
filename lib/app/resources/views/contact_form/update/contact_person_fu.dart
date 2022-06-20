@@ -12,7 +12,7 @@ import 'package:ventes/app/states/controllers/contact_person_fu_state_controller
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/constants/strings/prospect_string.dart';
-import 'package:ventes/core/view.dart';
+import 'package:ventes/core/view/view.dart';
 part 'package:ventes/app/resources/views/contact_form/update/components/_contact_dropdown.dart';
 
 class ContactPersonFormUpdateView extends View<ContactPersonFormUpdateStateController> {
@@ -23,7 +23,7 @@ class ContactPersonFormUpdateView extends View<ContactPersonFormUpdateStateContr
 
   @override
   void onBuild(state) {
-    state.properties.contactid = contact;
+    state.property.contactid = contact;
   }
 
   @override

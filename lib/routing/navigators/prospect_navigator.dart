@@ -26,8 +26,8 @@ import 'package:ventes/app/states/controllers/prospect_fc_state_controller.dart'
 import 'package:ventes/app/states/controllers/prospect_fu_state_controller.dart';
 import 'package:ventes/app/states/controllers/prospect_state_controller.dart';
 import 'package:ventes/app/resources/views/prospect/prospect.dart';
-import 'package:ventes/core/page_route.dart';
-import 'package:ventes/core/view_navigator.dart';
+import 'package:ventes/core/routing/page_route.dart';
+import 'package:ventes/core/view/view_navigator.dart';
 
 class ProspectNavigator extends ViewNavigator {
   static const id = 4;

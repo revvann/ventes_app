@@ -1,20 +1,32 @@
 // ignore_for_file: prefer_const_constructors
-part of 'package:ventes/app/states/controllers/nearby_state_controller.dart';
+import 'dart:async';
 
-class _Listener extends RegularListener {
-  _Properties get _properties => Get.find<_Properties>(tag: NearbyString.nearbyTag);
-  _DataSource get _dataSource => Get.find<_DataSource>(tag: NearbyString.nearbyTag);
+import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:ventes/app/models/bp_customer_model.dart';
+import 'package:ventes/app/models/customer_model.dart';
+import 'package:ventes/app/resources/views/customer_form/create/customer_fc.dart';
+import 'package:ventes/app/resources/views/customer_form/update/customer_fu.dart';
+import 'package:ventes/app/states/properties/nearby_property.dart';
+import 'package:ventes/app/states/typedefs/nearby_typedef.dart';
+import 'package:ventes/constants/strings/nearby_string.dart';
+import 'package:ventes/core/states/state_listener.dart';
+import 'package:ventes/helpers/function_helpers.dart';
+import 'package:ventes/helpers/task_helper.dart';
+import 'package:ventes/routing/navigators/nearby_navigator.dart';
+import 'package:ventes/app/states/controllers/nearby_state_controller.dart';
 
+class NearbyListener extends StateListener with ListenerMixin {
   void onMapControllerCreated(GoogleMapController controller) {
-    if (!_properties.mapsController.isCompleted) {
-      _properties.mapsController.complete(controller);
+    if (!property.mapsController.isCompleted) {
+      property.mapsController.complete(controller);
     }
   }
 
   void onCameraMoved(CameraPosition position) {
-    _properties.markerLatLng = position.target;
-    if (_properties.cameraMoveType == CameraMoveType.dragged) {
-      _properties.selectedCustomer = _dataSource.customers.where((customer) {
+    property.markerLatLng = position.target;
+    if (property.cameraMoveType == CameraMoveType.dragged) {
+      property.selectedCustomer = dataSource.customers.where((customer) {
         LatLng customerPos = LatLng(customer.cstmlatitude ?? 0, customer.cstmlongitude ?? 0);
         return calculateDistance(customerPos, position.target) < 0.5;
       }).toList();
@@ -22,27 +34,27 @@ class _Listener extends RegularListener {
   }
 
   void onCameraMoveEnd() {
-    _properties.cameraMoveType = CameraMoveType.dragged;
+    property.cameraMoveType = CameraMoveType.dragged;
   }
 
   void onCustomerSelected(Customer customer) {
-    _properties.cameraMoveType = CameraMoveType.controller;
-    _properties.selectedCustomer = [customer];
+    property.cameraMoveType = CameraMoveType.controller;
+    property.selectedCustomer = [customer];
     LatLng latLng = LatLng(customer.cstmlatitude!, customer.cstmlongitude!);
-    _properties.mapsController.future.then((controller) async {
+    property.mapsController.future.then((controller) async {
       controller.animateCamera(CameraUpdate.newLatLng(latLng));
     });
   }
 
   void onAddDataClick() async {
-    Get.find<TaskHelper>().loaderPush(_properties.task);
+    Get.find<TaskHelper>().loaderPush(property.task);
     getCurrentPosition().then((position) {
-      Get.find<TaskHelper>().loaderPop(_properties.task.name);
-      double radius = calculateDistance(_properties.markers.first.position, LatLng(position.latitude, position.longitude));
+      Get.find<TaskHelper>().loaderPop(property.task.name);
+      double radius = calculateDistance(property.markers.first.position, LatLng(position.latitude, position.longitude));
 
       int? cstmid;
-      if (_properties.selectedCustomer.isNotEmpty) {
-        cstmid = _properties.selectedCustomer.first.cstmid;
+      if (property.selectedCustomer.isNotEmpty) {
+        cstmid = property.selectedCustomer.first.cstmid;
       }
 
       if (radius < 100) {
@@ -50,26 +62,25 @@ class _Listener extends RegularListener {
           CustomerFormCreateView.route,
           id: NearbyNavigator.id,
           arguments: {
-            'latitude': _properties.markers.first.position.latitude,
-            'longitude': _properties.markers.first.position.longitude,
+            'latitude': property.markers.first.position.latitude,
+            'longitude': property.markers.first.position.longitude,
             'cstmid': cstmid,
           },
         );
       } else {
-        Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: NearbyString.customerOuttaRange));
+        Get.find<TaskHelper>().failedPush(property.task.copyWith(message: NearbyString.customerOuttaRange));
       }
     });
   }
 
   void onEditDataClick() async {
-    Get.find<TaskHelper>().loaderPush(_properties.task);
+    Get.find<TaskHelper>().loaderPush(property.task);
     getCurrentPosition().then((position) async {
-      Get.find<TaskHelper>().loaderPop(_properties.task.name);
+      Get.find<TaskHelper>().loaderPop(property.task.name);
+      Customer customer = property.selectedCustomer.first;
+      BpCustomer bpcustomer = dataSource.bpCustomers.firstWhere((element) => element.sbccstmid == customer.cstmid);
 
-      Customer customer = _properties.selectedCustomer.first;
-      BpCustomer bpcustomer = _dataSource.bpCustomers.firstWhere((element) => element.sbccstmid == customer.cstmid);
-
-      double radius = calculateDistance(_properties.markers.first.position, LatLng(position.latitude, position.longitude));
+      double radius = calculateDistance(property.markers.first.position, LatLng(position.latitude, position.longitude));
       if (radius < 100) {
         Get.toNamed(
           CustomerFormUpdateView.route,
@@ -79,21 +90,21 @@ class _Listener extends RegularListener {
           },
         );
       } else {
-        await Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: NearbyString.customerOuttaRange));
+        await Get.find<TaskHelper>().failedPush(property.task.copyWith(message: NearbyString.customerOuttaRange));
       }
     });
   }
 
   void onDeleteDataClick() {
     Get.find<TaskHelper>().confirmPush(
-      _properties.task.copyWith(
+      property.task.copyWith(
         message: NearbyString.deleteCustomerConfirm,
         onFinished: (res) {
           if (res) {
-            Customer customer = _properties.selectedCustomer.first;
-            BpCustomer bpcustomer = _dataSource.bpCustomers.firstWhere((element) => element.sbccstmid == customer.cstmid);
-            _dataSource.deleteData(bpcustomer.sbcid!);
-            Get.find<TaskHelper>().loaderPush(_properties.task);
+            Customer customer = property.selectedCustomer.first;
+            BpCustomer bpcustomer = dataSource.bpCustomers.firstWhere((element) => element.sbccstmid == customer.cstmid);
+            dataSource.deleteData(bpcustomer.sbcid!);
+            Get.find<TaskHelper>().loaderPush(property.task);
           }
         },
       ),
@@ -101,36 +112,32 @@ class _Listener extends RegularListener {
   }
 
   void onLoadDataError(String message) {
-    Get.find<TaskHelper>().errorPush(_properties.task.copyWith(message: message));
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+    Get.find<TaskHelper>().errorPush(property.task.copyWith(message: message));
   }
 
   void onLoadDataFailed(String message) {
-    Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: message, snackbar: true));
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+    Get.find<TaskHelper>().failedPush(property.task.copyWith(message: message, snackbar: true));
   }
 
   void onDeleteFailed(String message) {
-    Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: message, snackbar: true));
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+    Get.find<TaskHelper>().failedPush(property.task.copyWith(message: message, snackbar: true));
   }
 
   void onDeleteSuccess(String message) {
-    Get.find<TaskHelper>().successPush(_properties.task.copyWith(
+    Get.find<TaskHelper>().successPush(property.task.copyWith(
         message: message,
         onFinished: (res) {
           Get.find<NearbyStateController>().refreshStates();
         }));
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 
   void onDeleteError(String message) {
-    Get.find<TaskHelper>().errorPush(_properties.task.copyWith(message: message));
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+    Get.find<TaskHelper>().errorPush(property.task.copyWith(message: message));
   }
 
+  void onComplete() => Get.find<TaskHelper>().loaderPop(property.task.name);
   @override
-  Future onRefresh() async {
-    _properties.refresh();
+  Future onReady() async {
+    property.refresh();
   }
 }

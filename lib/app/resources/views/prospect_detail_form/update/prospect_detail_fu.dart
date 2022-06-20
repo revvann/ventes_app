@@ -15,7 +15,7 @@ import 'package:ventes/app/states/controllers/prospect_detail_fu_state_controlle
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/constants/strings/prospect_string.dart';
-import 'package:ventes/core/view.dart';
+import 'package:ventes/core/view/view.dart';
 
 part 'package:ventes/app/resources/views/prospect_detail_form/update/components/_category_dropdown.dart';
 part 'package:ventes/app/resources/views/prospect_detail_form/update/components/_type_dropdown.dart';
@@ -29,7 +29,7 @@ class ProspectDetailFormUpdateView extends View<ProspectDetailFormUpdateStateCon
 
   @override
   void onBuild(state) {
-    state.properties.prospectDetailId = prospectDetailId;
+    state.property.prospectDetailId = prospectDetailId;
   }
 
   @override

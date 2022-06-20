@@ -1,10 +1,23 @@
-part of 'package:ventes/app/states/controllers/customer_fc_state_controller.dart';
+import 'dart:async';
+import 'dart:io';
 
-class _Listener extends RegularListener {
-  _Properties get _properties => Get.find<_Properties>(tag: NearbyString.customerCreateTag);
-  _FormSource get _formSource => Get.find<_FormSource>(tag: NearbyString.customerCreateTag);
-  _DataSource get _dataSource => Get.find<_DataSource>(tag: NearbyString.customerCreateTag);
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:ventes/app/models/city_model.dart';
+import 'package:ventes/app/models/country_model.dart';
+import 'package:ventes/app/models/province_model.dart';
+import 'package:ventes/app/models/subdistrict_model.dart';
+import 'package:ventes/app/states/controllers/nearby_state_controller.dart';
+import 'package:ventes/constants/strings/nearby_string.dart';
+import 'package:ventes/core/states/state_listener.dart';
+import 'package:ventes/helpers/task_helper.dart';
+import 'package:ventes/routing/navigators/nearby_navigator.dart';
+import 'package:ventes/app/states/typedefs/customer_fc_typedef.dart';
 
+class CustomerFormCreateListener extends StateListener with ListenerMixin {
   void goBack() {
     Get.back(id: NearbyNavigator.id);
   }
@@ -26,21 +39,21 @@ class _Listener extends RegularListener {
   }
 
   void onTypeSelected(int type) {
-    _formSource.cstmtypeid = type;
+    formSource.cstmtypeid = type;
   }
 
   void onStatusSelected(int status) {
-    _formSource.sbccstmstatusid = status;
+    formSource.sbccstmstatusid = status;
   }
 
   void onMapControllerCreated(GoogleMapController controller) {
-    if (!_properties.mapsController.isCompleted) {
-      _properties.mapsController.complete(controller);
+    if (!property.mapsController.isCompleted) {
+      property.mapsController.complete(controller);
     }
   }
 
   Future onCountryFilter(String? search) async {
-    List<Country> countries = await _dataSource.fetchCountries(search);
+    List<Country> countries = await dataSource.fetchCountries(search);
     return countries;
   }
 
@@ -51,18 +64,18 @@ class _Listener extends RegularListener {
     );
 
     if (image != null) {
-      _formSource.picture = File(image.path);
-      _formSource.defaultPicture.value = Image.file(_formSource.picture!);
+      formSource.picture = File(image.path);
+      formSource.defaultPicture.value = Image.file(formSource.picture!);
     }
   }
 
   void onSubmitButtonClicked() async {
     Get.find<TaskHelper>().confirmPush(
-      _properties.task.copyWith<bool>(
+      property.task.copyWith<bool>(
         message: NearbyString.createCustomerConfirm,
         onFinished: (res) {
           if (res) {
-            _formSource.onSubmit();
+            formSource.onSubmit();
           }
         },
       ),
@@ -70,37 +83,33 @@ class _Listener extends RegularListener {
   }
 
   void onLoadDataError(String message) {
-    Get.find<TaskHelper>().errorPush(_properties.task.copyWith(message: message));
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+    Get.find<TaskHelper>().errorPush(property.task.copyWith(message: message));
   }
 
   void onLoadDataFailed(String message) {
-    Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: message, snackbar: true));
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+    Get.find<TaskHelper>().failedPush(property.task.copyWith(message: message, snackbar: true));
   }
 
   void onCreateDataError(String message) {
-    Get.find<TaskHelper>().errorPush(_properties.task.copyWith(message: message));
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+    Get.find<TaskHelper>().errorPush(property.task.copyWith(message: message));
   }
 
   void onCreateDataFailed(String message) {
-    Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: message, snackbar: true));
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+    Get.find<TaskHelper>().failedPush(property.task.copyWith(message: message, snackbar: true));
   }
 
   void onCreateDataSuccess(String message) async {
-    Get.find<TaskHelper>().loaderPop(_properties.task.name);
-    Get.find<TaskHelper>().successPush(_properties.task.copyWith(
+    Get.find<TaskHelper>().successPush(property.task.copyWith(
         message: message,
         onFinished: (res) {
-          Get.find<NearbyStateController>().properties.refresh();
+          Get.find<NearbyStateController>().property.refresh();
           Get.back(id: NearbyNavigator.id);
         }));
   }
 
+  void onComplete() => Get.find<TaskHelper>().loaderPop(property.task.name);
   @override
-  Future onRefresh() async {
-    _properties.refresh();
+  Future onReady() async {
+    property.refresh();
   }
 }
