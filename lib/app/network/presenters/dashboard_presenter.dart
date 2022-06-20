@@ -4,6 +4,7 @@ import 'package:ventes/app/models/auth_model.dart';
 import 'package:ventes/app/models/user_detail_model.dart';
 import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
 import 'package:ventes/app/network/contracts/logout_contract.dart';
+import 'package:ventes/app/network/presenters/regular_presenter.dart';
 import 'package:ventes/app/network/services/auth_service.dart';
 import 'package:ventes/app/network/services/bp_customer_service.dart';
 import 'package:ventes/app/network/services/gmaps_service.dart';
@@ -13,18 +14,12 @@ import 'package:ventes/constants/strings/dashboard_string.dart';
 import 'package:ventes/helpers/auth_helper.dart';
 import 'package:ventes/helpers/function_helpers.dart';
 
-class DashboardPresenter {
-  final _bpCustomerService = Get.find<BpCustomerService>();
-  final _userService = Get.find<UserService>();
-  final _authService = Get.find<AuthService>();
-  final _gmapsService = Get.find<GmapsService>();
-  final _scheduleService = Get.find<ScheduleService>();
-
-  late FetchDataContract _fetchDataContract;
-  set fetchDataContract(FetchDataContract value) => _fetchDataContract = value;
-
-  late LogoutContract _logoutContract;
-  set logoutContract(LogoutContract value) => _logoutContract = value;
+class DashboardPresenter extends RegularPresenter<DashboardContract> {
+  final BpCustomerService _bpCustomerService = Get.find();
+  final UserService _userService = Get.find();
+  final AuthService _authService = Get.find();
+  final GmapsService _gmapsService = Get.find();
+  final ScheduleService _scheduleService = Get.find();
 
   Future<Response> _getSchedule() async {
     int? userdtid = (await _findActiveUser())?.userdtid;
@@ -66,11 +61,6 @@ class DashboardPresenter {
     return await _userService.select(params);
   }
 
-  Future<Response> _getActiveUser() async {
-    AuthModel? authModel = await Get.find<AuthHelper>().get();
-    return await _userService.show(authModel!.accountActive!);
-  }
-
   Future<Response> _getCurrentPosition() async {
     Position position = await getCurrentPosition();
     return await _gmapsService.getDetail(position.latitude, position.longitude);
@@ -88,12 +78,12 @@ class DashboardPresenter {
         data['currentPosition'] = currentPositionResponse.body;
         data['scheduleCount'] = scheduleResponse.body['count'];
         data['user'] = userResponse.body;
-        _fetchDataContract.onLoadSuccess(data);
+        contract.onLoadSuccess(data);
       } else {
-        _fetchDataContract.onLoadFailed(DashboardString.fetchFailed);
+        contract.onLoadFailed(DashboardString.fetchFailed);
       }
     } catch (err) {
-      _fetchDataContract.onLoadError(err.toString());
+      contract.onLoadError(err.toString());
     }
   }
 
@@ -101,12 +91,14 @@ class DashboardPresenter {
     Response authResponse = await _authService.signOut();
     try {
       if (authResponse.statusCode == 200) {
-        _logoutContract.onLogoutSuccess("Logout Success");
+        contract.onLogoutSuccess("Logout Success");
       } else {
-        _logoutContract.onLogoutFailed("Logout Failed");
+        contract.onLogoutFailed("Logout Failed");
       }
     } catch (err) {
-      _logoutContract.onLogoutError(err.toString());
+      contract.onLogoutError(err.toString());
     }
   }
 }
+
+abstract class DashboardContract implements FetchDataContract, LogoutContract {}

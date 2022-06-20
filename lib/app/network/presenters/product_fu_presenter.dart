@@ -1,19 +1,14 @@
 import 'package:get/get.dart';
 import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
 import 'package:ventes/app/network/contracts/update_contract.dart';
+import 'package:ventes/app/network/presenters/regular_presenter.dart';
 import 'package:ventes/app/network/services/prospect_product_service.dart';
 import 'package:ventes/app/network/services/type_service.dart';
 import 'package:ventes/constants/strings/prospect_string.dart';
 
-class ProductFormUpdatePresenter {
+class ProductFormUpdatePresenter extends RegularPresenter<ProductUpdateContract> {
   final ProspectProductService _productService = Get.find<ProspectProductService>();
   final TypeService _typeService = Get.find<TypeService>();
-
-  late FetchDataContract _fetchDataContract;
-  set fetchDataContract(FetchDataContract value) => _fetchDataContract = value;
-
-  late UpdateContract _updateContract;
-  set updateContract(UpdateContract value) => _updateContract = value;
 
   Future<Response> _getTaxes() async {
     return await _typeService.byCode({"typecd": ProspectString.taxTypeCode});
@@ -31,12 +26,12 @@ class ProductFormUpdatePresenter {
 
       if (productResponse.statusCode == 200 && taxResponse.statusCode == 200) {
         data = {"product": productResponse.body, "taxes": taxResponse.body};
-        _fetchDataContract.onLoadSuccess(data);
+        contract.onLoadSuccess(data);
       } else {
-        _fetchDataContract.onLoadError(ProspectString.fetchProductFailed);
+        contract.onLoadError(ProspectString.fetchProductFailed);
       }
     } catch (e) {
-      _fetchDataContract.onLoadError(e.toString());
+      contract.onLoadError(e.toString());
     }
   }
 
@@ -44,12 +39,14 @@ class ProductFormUpdatePresenter {
     try {
       Response response = await _productService.update(id, data);
       if (response.statusCode == 200) {
-        _updateContract.onUpdateSuccess(ProspectString.updateProductSuccess);
+        contract.onUpdateSuccess(ProspectString.updateProductSuccess);
       } else {
-        _updateContract.onUpdateFailed(ProspectString.updateProductFailed);
+        contract.onUpdateFailed(ProspectString.updateProductFailed);
       }
     } catch (e) {
-      _updateContract.onUpdateError(e.toString());
+      contract.onUpdateError(e.toString());
     }
   }
 }
+
+abstract class ProductUpdateContract implements UpdateContract, FetchDataContract {}

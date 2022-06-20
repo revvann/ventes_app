@@ -1,19 +1,9 @@
-import 'package:get/get.dart';
-import 'package:ventes/app/models/schedule_guest_model.dart';
-import 'package:ventes/app/models/user_detail_model.dart';
-import 'package:ventes/app/states/controllers/daily_schedule_state_controller.dart';
-import 'package:ventes/app/states/controllers/schedule_fu_state_controller.dart';
-import 'package:ventes/app/states/data_sources/schedule_fu_data_source.dart';
-import 'package:ventes/app/states/form_sources/schedule_fu_form_source.dart';
-import 'package:ventes/constants/strings/schedule_string.dart';
-import 'package:ventes/helpers/function_helpers.dart';
-import 'package:ventes/helpers/task_helper.dart';
-import 'package:ventes/routing/navigators/schedule_navigator.dart';
+part of 'package:ventes/app/states/controllers/schedule_fu_state_controller.dart';
 
-class ScheduleFormUpdateListener {
-  ScheduleFormUpdateProperties get _properties => Get.find<ScheduleFormUpdateProperties>();
-  ScheduleFormUpdateFormSource get _formSource => Get.find<ScheduleFormUpdateFormSource>();
-  ScheduleFormUpdateDataSource get _dataSource => Get.find<ScheduleFormUpdateDataSource>();
+class _Listener extends RegularListener {
+  _Properties get _properties => Get.find<_Properties>(tag: ScheduleString.scheduleUpdateTag);
+  _FormSource get _formSource => Get.find<_FormSource>(tag: ScheduleString.scheduleUpdateTag);
+  _DataSource get _dataSource => Get.find<_DataSource>(tag: ScheduleString.scheduleUpdateTag);
 
   void onLocationChanged() {
     _formSource.schelocquiet = _formSource.schelocTEC.text;
@@ -200,11 +190,16 @@ class ScheduleFormUpdateListener {
   }
 
   void onFormSubmit() {
-    if (_formSource.isValid()) {
-      Map<String, dynamic> data = _formSource.toJson();
-      Get.find<TaskHelper>().loaderPush(ScheduleString.updateScheduleTaskCode);
-      _dataSource.updateSchedule(data);
-    }
+    Get.find<TaskHelper>().confirmPush(
+      _properties.task.copyWith<bool>(
+        message: ScheduleString.updateScheduleConfirm,
+        onFinished: (res) {
+          if (res) {
+            _formSource.onSubmit();
+          }
+        },
+      ),
+    );
   }
 
   void onCameraMove(position) {
@@ -212,39 +207,40 @@ class ScheduleFormUpdateListener {
     _formSource.scheloc = "https://maps.google.com?q=${position.target.latitude},${position.target.longitude}";
   }
 
-  Future onRefresh() async {
-    _properties.refresh();
-  }
-
   void onUpdateDataFailed(String message) {
-    Get.find<TaskHelper>().failedPush(ScheduleString.updateScheduleTaskCode, ScheduleString.updateFailed);
-    Get.find<TaskHelper>().loaderPop(ScheduleString.updateScheduleTaskCode);
+    Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: ScheduleString.updateFailed));
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 
   void onUpdateDataSuccess(String message) {
     Get.find<TaskHelper>().successPush(
-      ScheduleString.updateScheduleTaskCode,
-      ScheduleString.updateSuccess,
-      () {
-        Get.find<DailyScheduleStateController>().properties.refresh();
-        Get.back(id: ScheduleNavigator.id);
-      },
+      _properties.task.copyWith(
+          message: ScheduleString.updateSuccess,
+          onFinished: (res) {
+            Get.find<DailyScheduleStateController>().properties.refresh();
+            Get.back(id: ScheduleNavigator.id);
+          }),
     );
-    Get.find<TaskHelper>().loaderPop(ScheduleString.updateScheduleTaskCode);
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 
   void onUpdateDataError(String message) {
-    Get.find<TaskHelper>().errorPush(ScheduleString.updateScheduleTaskCode, ScheduleString.updateError);
-    Get.find<TaskHelper>().loaderPop(ScheduleString.updateScheduleTaskCode);
+    Get.find<TaskHelper>().errorPush(_properties.task.copyWith(message: ScheduleString.updateError));
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 
   onLoadDataError(String message) {
-    Get.find<TaskHelper>().errorPush(ScheduleString.updateScheduleTaskCode, ScheduleString.fetchError);
-    Get.find<TaskHelper>().loaderPop(ScheduleString.updateScheduleTaskCode);
+    Get.find<TaskHelper>().errorPush(_properties.task.copyWith(message: ScheduleString.fetchError));
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 
   onLoadDataFailed(String message) {
-    Get.find<TaskHelper>().failedPush(ScheduleString.updateScheduleTaskCode, ScheduleString.fetchFailed);
-    Get.find<TaskHelper>().loaderPop(ScheduleString.updateScheduleTaskCode);
+    Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: ScheduleString.fetchFailed));
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+  }
+
+  @override
+  Future onRefresh() async {
+    _properties.refresh();
   }
 }

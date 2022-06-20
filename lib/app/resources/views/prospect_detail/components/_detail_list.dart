@@ -14,81 +14,141 @@ class _DetailList extends StatelessWidget {
         itemCount: state.dataSource.prospectDetails.length,
         itemBuilder: (_, index) {
           ProspectDetail _prospectDetail = state.dataSource.prospectDetails[index];
-          return GestureDetector(
-            onTap: () => state.listener.onProspectDetailClicked(_prospectDetail.prospectdtid!),
-            child: Container(
-              padding: EdgeInsets.symmetric(
-                vertical: RegularSize.m,
-                horizontal: RegularSize.m,
-              ),
-              margin: EdgeInsets.only(
-                bottom: RegularSize.m,
-              ),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(RegularSize.m),
-                boxShadow: [
-                  BoxShadow(
-                    offset: Offset(0, 4),
-                    blurRadius: 30,
-                    color: Color(0xFF0157E4).withOpacity(0.1),
-                  ),
-                ],
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Text(
-                        formatDate(dbParseDate(_prospectDetail.prospectdtdate!)),
+          return Container(
+            padding: EdgeInsets.symmetric(
+              vertical: RegularSize.m,
+              horizontal: RegularSize.m,
+            ),
+            margin: EdgeInsets.only(
+              bottom: RegularSize.m,
+            ),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(RegularSize.m),
+              boxShadow: [
+                BoxShadow(
+                  offset: Offset(0, 4),
+                  blurRadius: 30,
+                  color: Color(0xFF0157E4).withOpacity(0.1),
+                ),
+              ],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      formatDate(dbParseDate(_prospectDetail.prospectdtdate!)),
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: RegularColor.dark,
+                      ),
+                    ),
+                    Expanded(
+                      child: SizedBox(),
+                    ),
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: RegularSize.s,
+                        vertical: RegularSize.xs,
+                      ),
+                      decoration: BoxDecoration(
+                        color: RegularColor.secondary,
+                        borderRadius: BorderRadius.circular(RegularSize.s),
+                      ),
+                      child: Text(
+                        _prospectDetail.prospectdttype?.typename ?? "",
                         style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                          color: RegularColor.dark,
+                          fontSize: 12,
+                          color: Colors.white,
                         ),
                       ),
-                      Expanded(
-                        child: SizedBox(),
-                      ),
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: RegularSize.s,
-                          vertical: RegularSize.xs,
-                        ),
-                        decoration: BoxDecoration(
-                          color: RegularColor.secondary,
-                          borderRadius: BorderRadius.circular(RegularSize.s),
-                        ),
-                        child: Text(
-                          _prospectDetail.prospectdttype?.typename ?? "",
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.white,
+                    ),
+                    PopupMenu(
+                      controller: state.properties.createPopupController(index),
+                      dropdownSettings: DropdownSettings(
+                        width: 100,
+                        offset: Offset(10, 5),
+                        builder: (controller) => Padding(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: RegularSize.s,
+                            horizontal: RegularSize.s,
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              MenuItem(
+                                title: "Edit",
+                                icon: "assets/svg/edit.svg",
+                                onTap: () => state.listener.onProspectDetailClicked(_prospectDetail.prospectdtid!),
+                              ),
+                              MenuItem(
+                                title: "Delete",
+                                icon: "assets/svg/delete.svg",
+                                onTap: () => state.listener.deleteDetail(_prospectDetail.prospectdtid!),
+                              ),
+                              MenuItem(
+                                title: "Detail",
+                                icon: "assets/svg/detail.svg",
+                                onTap: () => showProspectDetail(_prospectDetail),
+                              ),
+                            ],
                           ),
                         ),
                       ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: RegularSize.m,
-                  ),
-                  Text(
-                    _prospectDetail.prospectdtdesc ?? "",
-                    maxLines: 3,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: RegularColor.dark,
+                      child: Container(
+                        width: 20,
+                        height: 20,
+                        margin: EdgeInsets.only(
+                          left: RegularSize.s,
+                        ),
+                        padding: EdgeInsets.all(RegularSize.xs),
+                        alignment: Alignment.center,
+                        child: Transform.rotate(
+                          angle: pi / 2,
+                          child: SvgPicture.asset(
+                            "assets/svg/menu-dots.svg",
+                            color: RegularColor.dark,
+                            width: RegularSize.m,
+                          ),
+                        ),
+                      ),
                     ),
+                  ],
+                ),
+                SizedBox(
+                  height: RegularSize.m,
+                ),
+                Text(
+                  _prospectDetail.prospectdtdesc ?? "",
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: RegularColor.dark,
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           );
         },
       );
     });
+  }
+
+  void showProspectDetail(ProspectDetail detail) {
+    RegularDialog(
+      width: Get.width * 0.9,
+      alignment: Alignment.centerLeft,
+      padding: EdgeInsets.symmetric(
+        vertical: RegularSize.m,
+        horizontal: RegularSize.m,
+      ),
+      child: _DetailDialog(detail),
+    ).show();
   }
 }

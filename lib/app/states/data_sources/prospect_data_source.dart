@@ -1,17 +1,8 @@
-import 'package:get/get.dart';
-import 'package:ventes/app/models/prospect_model.dart';
-import 'package:ventes/app/models/type_model.dart';
-import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
-import 'package:ventes/app/network/presenters/prospect_presenter.dart';
-import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
-import 'package:ventes/app/states/listeners/prospect_listener.dart';
-import 'package:ventes/constants/strings/prospect_string.dart';
-import 'package:ventes/helpers/task_helper.dart';
+part of 'package:ventes/app/states/controllers/prospect_state_controller.dart';
 
-class ProspectDataSource implements FetchDataContract {
-  ProspectListener get _listener => Get.find<ProspectListener>();
-
-  final ProspectPresenter _presenter = ProspectPresenter();
+class _DataSource extends RegularDataSource<ProspectPresenter> implements FetchDataContract {
+  _Listener get _listener => Get.find<_Listener>(tag: ProspectString.prospectTag);
+  _Properties get _properties => Get.find<_Properties>(tag: ProspectString.prospectTag);
 
   final Rx<List<KeyableDropdownItem<int, DBType>>> _statusItems = Rx<List<KeyableDropdownItem<int, DBType>>>([]);
   set statusItems(List<KeyableDropdownItem<int, DBType>> value) => _statusItems.value = value;
@@ -25,19 +16,12 @@ class ProspectDataSource implements FetchDataContract {
   set prospects(List<Prospect> value) => _prospects.value = value;
   List<Prospect> get prospects => _prospects.value;
 
-  init() {
-    _presenter.fetchContract = this;
-  }
+  @override
+  ProspectPresenter presenterBuilder() => ProspectPresenter();
 
-  reset() {
-    _prospects.value = [];
-    _statusItems.value = [];
-    _followUpItems.value = {};
-  }
+  void fetchData() => presenter.fetchData();
 
-  void fetchData() => _presenter.fetchData();
-
-  void fetchProspect({Map<String, dynamic> params = const {}}) => _presenter.fetchProspect(params);
+  void fetchProspect({Map<String, dynamic> params = const {}}) => presenter.fetchProspect(params);
 
   @override
   onLoadError(String message) => _listener.onLoadError(message);
@@ -66,6 +50,6 @@ class ProspectDataSource implements FetchDataContract {
       prospects = data['prospects'].map<Prospect>((e) => Prospect.fromJson(e)).toList();
     }
 
-    Get.find<TaskHelper>().loaderPop(ProspectString.taskCode);
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 }

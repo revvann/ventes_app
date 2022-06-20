@@ -1,13 +1,9 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:ventes/app/resources/widgets/border_input.dart';
 import 'package:ventes/app/states/controllers/keyboard_state_controller.dart';
 import 'package:ventes/constants/regular_size.dart';
-import 'package:ventes/constants/styles/behavior_style.dart';
 
 abstract class DropdownController<K, V> extends GetxController with GetSingleTickerProviderStateMixin {
   double get maxHeight => 200;
@@ -55,10 +51,10 @@ abstract class DropdownController<K, V> extends GetxController with GetSingleTic
   }
 
   @override
-  void dispose() {
+  void onClose() async {
     animationController.dispose();
     Get.find<KeyboardStateController>().remove(_onKeyboardChanged);
-    super.dispose();
+    super.onClose();
   }
 
   _onKeyboardChanged(bool visible) {
@@ -70,7 +66,7 @@ abstract class DropdownController<K, V> extends GetxController with GetSingleTic
     items = [];
   }
 
-  void toggleDropdown({bool close = false}) async {
+  Future toggleDropdown({bool close = false}) async {
     OverlayState? overlay = Overlay.of(context);
     if (isOpen || close) {
       await animationController.reverse();
@@ -94,6 +90,8 @@ abstract class DropdownController<K, V> extends GetxController with GetSingleTic
       builder: (context) {
         return GestureDetector(
           onTap: () => toggleDropdown(close: true),
+          onVerticalDragStart: (details) => toggleDropdown(close: true),
+          onHorizontalDragStart: (details) => toggleDropdown(close: true),
           behavior: HitTestBehavior.translucent,
           child: SizedBox(
             height: Get.height,

@@ -3,33 +3,28 @@ import 'package:ventes/app/models/auth_model.dart';
 import 'package:ventes/app/models/user_detail_model.dart';
 import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
 import 'package:ventes/app/network/contracts/update_contract.dart';
+import 'package:ventes/app/network/presenters/regular_presenter.dart';
 import 'package:ventes/app/network/services/schedule_service.dart';
 import 'package:ventes/app/network/services/type_service.dart';
 import 'package:ventes/app/network/services/user_service.dart';
 import 'package:ventes/constants/strings/regular_string.dart';
 import 'package:ventes/helpers/auth_helper.dart';
 
-class ScheduleFormUpdatePresenter {
+class ScheduleFormUpdatePresenter extends RegularPresenter<ScheduleUpdateContract> {
   final _userService = Get.find<UserService>();
   final _scheduleService = Get.find<ScheduleService>();
   final _typeService = Get.find<TypeService>();
-
-  late final UpdateContract _updateContract;
-  set updateContract(UpdateContract contract) => _updateContract = contract;
-
-  late final FetchDataContract _fetchDataContract;
-  set fetchDataContract(FetchDataContract contract) => _fetchDataContract = contract;
 
   void updateSchedule(Map<String, dynamic> data) async {
     try {
       Response response = await _scheduleService.update(data['scheid'], data);
       if (response.statusCode == 200) {
-        _updateContract.onUpdateSuccess(response.body['message']);
+        contract.onUpdateSuccess(response.body['message']);
       } else {
-        _updateContract.onUpdateFailed(response.body['message']);
+        contract.onUpdateFailed(response.body['message']);
       }
     } catch (err) {
-      _updateContract.onUpdateFailed(err.toString());
+      contract.onUpdateFailed(err.toString());
     }
   }
 
@@ -46,15 +41,15 @@ class ScheduleFormUpdatePresenter {
         data['types'] = typeResponse.body;
         if (scheduleResponse.statusCode == 200) {
           data['schedule'] = scheduleResponse.body;
-          _fetchDataContract.onLoadSuccess(data);
+          contract.onLoadSuccess(data);
         } else {
-          _fetchDataContract.onLoadFailed("Failed to fetch schedule");
+          contract.onLoadFailed("Failed to fetch schedule");
         }
       } else {
-        _fetchDataContract.onLoadFailed("Failed to fetch schedule");
+        contract.onLoadFailed("Failed to fetch schedule");
       }
     } catch (err) {
-      _fetchDataContract.onLoadError(err.toString());
+      contract.onLoadError(err.toString());
     }
   }
 
@@ -81,3 +76,5 @@ class ScheduleFormUpdatePresenter {
     return null;
   }
 }
+
+abstract class ScheduleUpdateContract implements FetchDataContract, UpdateContract {}

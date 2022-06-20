@@ -2,14 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:simple_animations/simple_animations.dart';
 import 'package:ventes/app/resources/views/started_page.dart';
-import 'package:ventes/app/states/controllers/regular_state_controller.dart';
 
-class SplashScreenStateController extends RegularStateController with GetTickerProviderStateMixin {
-  @override
-  bool get isFixedBody => false;
-
+class SplashScreenStateController extends GetxController with GetTickerProviderStateMixin {
   late Animation<double> _logoPos;
   late AnimationController _logoController;
   late Animation<double> _bubblePos1;

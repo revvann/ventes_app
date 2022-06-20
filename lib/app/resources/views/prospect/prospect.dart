@@ -26,12 +26,9 @@ part 'package:ventes/app/resources/views/prospect/components/_twin_datepicker.da
 
 class ProspectView extends View<ProspectStateController> {
   static const String route = "/history";
-  ProspectView() {
-    state = controller;
-  }
 
   @override
-  Widget build(BuildContext context) {
+  Widget buildWidget(BuildContext context, state) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: RegularColor.primary,
     ));
@@ -41,10 +38,11 @@ class ProspectView extends View<ProspectStateController> {
       appBar: TopNavigation(
         title: ProspectString.appBarTitle,
         appBarKey: state.appBarKey,
+        onTitleTap: () async => state.refreshStates(),
       ).build(context),
       body: SafeArea(
         child: RefreshIndicator(
-          onRefresh: state.listener.onRefresh,
+          onRefresh: () async => state.refreshStates(),
           child: SingleChildScrollView(
             physics: AlwaysScrollableScrollPhysics(),
             child: Obx(

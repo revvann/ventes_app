@@ -1,20 +1,9 @@
-import 'package:contacts_service/contacts_service.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:ventes/app/models/type_model.dart';
-import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
-import 'package:ventes/app/states/controllers/contact_person_fu_state_controller.dart';
-import 'package:ventes/app/states/controllers/contact_person_state_controller.dart';
-import 'package:ventes/app/states/data_sources/contact_person_fu_data_source.dart';
-import 'package:ventes/app/states/form_sources/contact_person_fu_form_source.dart';
-import 'package:ventes/constants/strings/prospect_string.dart';
-import 'package:ventes/helpers/task_helper.dart';
-import 'package:ventes/routing/navigators/prospect_navigator.dart';
+part of 'package:ventes/app/states/controllers/contact_person_fu_state_controller.dart';
 
-class ContactPersonFormUpdateListener {
-  ContactPersonFormUpdateProperties get _properties => Get.find<ContactPersonFormUpdateProperties>();
-  ContactPersonFormUpdateFormSource get _formSource => Get.find<ContactPersonFormUpdateFormSource>();
-  ContactPersonFormUpdateDataSource get _dataSource => Get.find<ContactPersonFormUpdateDataSource>();
+class _Listener extends RegularListener {
+  _Properties get _properties => Get.find<_Properties>(tag: ProspectString.contactUpdateTag);
+  _FormSource get _formSource => Get.find<_FormSource>(tag: ProspectString.contactUpdateTag);
+  _DataSource get _dataSource => Get.find<_DataSource>(tag: ProspectString.contactUpdateTag);
 
   void goBack() {
     Get.back(
@@ -22,6 +11,7 @@ class ContactPersonFormUpdateListener {
     );
   }
 
+  @override
   Future onRefresh() async {
     _properties.refresh();
   }
@@ -43,40 +33,45 @@ class ContactPersonFormUpdateListener {
   }
 
   void onSubmitButtonClicked() {
-    if (_formSource.isValid) {
-      Map<String, dynamic> data = _formSource.toJson();
-      _dataSource.updateData(data);
-      Get.find<TaskHelper>().loaderPush(ProspectString.formUpdateContactTaskCode);
-    } else {
-      Get.find<TaskHelper>().failedPush(ProspectString.formUpdateContactTaskCode, "Form is not valid");
-    }
+    Get.find<TaskHelper>().confirmPush(
+      _properties.task.copyWith<bool>(
+        message: ProspectString.updateContactConfirm,
+        onFinished: (res) {
+          if (res) {
+            _formSource.onSubmit();
+          }
+        },
+      ),
+    );
   }
 
   void onLoadFailed(String message) {
-    Get.find<TaskHelper>().failedPush(ProspectString.formUpdateContactTaskCode, message);
-    Get.find<TaskHelper>().loaderPop(ProspectString.formUpdateContactTaskCode);
+    Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: message, snackbar: true));
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 
   void onLoadError(String message) {
-    Get.find<TaskHelper>().errorPush(ProspectString.formUpdateContactTaskCode, message);
-    Get.find<TaskHelper>().loaderPop(ProspectString.formUpdateContactTaskCode);
+    Get.find<TaskHelper>().errorPush(_properties.task.copyWith(message: message));
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 
   void onUpdateDataSuccess(String message) {
-    Get.find<TaskHelper>().successPush(ProspectString.formUpdateContactTaskCode, message, () {
-      Get.find<ContactPersonStateController>().properties.refresh();
-      Get.back(id: ProspectNavigator.id);
-    });
-    Get.find<TaskHelper>().loaderPop(ProspectString.formUpdateContactTaskCode);
+    Get.find<TaskHelper>().successPush(_properties.task.copyWith(
+        message: message,
+        onFinished: (res) {
+          Get.find<ContactPersonStateController>().properties.refresh();
+          Get.back(id: ProspectNavigator.id);
+        }));
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 
   void onUpdateDataFailed(String message) {
-    Get.find<TaskHelper>().failedPush(ProspectString.formUpdateContactTaskCode, message);
-    Get.find<TaskHelper>().loaderPop(ProspectString.formUpdateContactTaskCode);
+    Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: message, snackbar: true));
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 
   void onUpdateDataError(String message) {
-    Get.find<TaskHelper>().errorPush(ProspectString.formUpdateContactTaskCode, message);
-    Get.find<TaskHelper>().loaderPop(ProspectString.formUpdateContactTaskCode);
+    Get.find<TaskHelper>().errorPush(_properties.task.copyWith(message: message));
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 }

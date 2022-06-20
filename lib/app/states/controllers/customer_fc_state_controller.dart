@@ -5,46 +5,68 @@ import 'dart:async';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ventes/app/models/bp_customer_model.dart';
-import 'package:ventes/app/states/controllers/regular_state_controller.dart';
-import 'package:ventes/app/states/data_sources/customer_fc_data_source.dart';
-import 'package:ventes/app/states/form_sources/customer_fc_form_source.dart';
-import 'package:ventes/app/states/listeners/customer_fc_listener.dart';
+import 'package:ventes/app/models/city_model.dart';
+import 'package:ventes/app/models/country_model.dart';
+import 'package:ventes/app/models/customer_model.dart';
+import 'package:ventes/app/models/maps_loc.dart';
+import 'package:ventes/app/models/province_model.dart';
+import 'package:ventes/app/models/subdistrict_model.dart';
+import 'package:ventes/app/models/type_model.dart';
+import 'package:ventes/app/models/user_detail_model.dart';
+import 'package:ventes/app/network/presenters/customer_fc_presenter.dart';
+import 'package:ventes/app/states/controllers/form_state_controller.dart';
+import 'package:ventes/app/states/controllers/nearby_state_controller.dart';
+import 'package:ventes/app/states/data_sources/regular_data_source.dart';
+import 'package:ventes/app/states/form_sources/update_form_source.dart';
+import 'package:ventes/app/states/listeners/regular_listener.dart';
 import 'package:ventes/constants/strings/nearby_string.dart';
+import 'package:ventes/helpers/function_helpers.dart';
 import 'package:ventes/helpers/task_helper.dart';
+import 'dart:io';
+import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart' as path;
+import 'package:ventes/routing/navigators/nearby_navigator.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart' show rootBundle;
+import 'package:path_provider/path_provider.dart';
+import 'package:ventes/app/resources/widgets/search_list.dart';
 
-class CustomerFormCreateStateController extends RegularStateController {
-  CustomerFormCreateDataSource dataSource = Get.put(CustomerFormCreateDataSource());
-  CustomerFormCreateProperties properties = Get.put(CustomerFormCreateProperties());
-  CustomerFormCreateListener listener = Get.put(CustomerFormCreateListener());
-  CustomerFormCreateFormSource formSource = Get.put(CustomerFormCreateFormSource());
+part 'package:ventes/app/states/form_sources/customer_fc_form_source.dart';
+part 'package:ventes/app/states/data_sources/customer_fc_data_source.dart';
+part 'package:ventes/app/states/listeners/customer_fc_listener.dart';
+part 'package:ventes/app/states/form_validators/customer_fc_validator.dart';
+
+class CustomerFormCreateStateController extends FormStateController<_Properties, _Listener, _DataSource, _FormSource> {
+  @override
+  String get tag => NearbyString.customerCreateTag;
 
   @override
-  onInit() {
-    super.onInit();
-    dataSource.init();
-    formSource.init();
-  }
+  _Properties propertiesBuilder() => _Properties();
 
   @override
-  void onReady() async {
-    super.onReady();
+  _Listener listenerBuilder() => _Listener();
+
+  @override
+  _DataSource dataSourceBuilder() => _DataSource();
+
+  @override
+  _FormSource formSourceBuilder() => _FormSource();
+
+  @override
+  void ready() async {
+    super.ready();
 
     if (properties.latitude != null && properties.longitude != null) {
       properties.refresh();
     }
   }
-
-  @override
-  void onClose() {
-    Get.delete<CustomerFormCreateProperties>();
-    Get.delete<CustomerFormCreateListener>();
-    Get.delete<CustomerFormCreateFormSource>();
-    super.onClose();
-  }
 }
 
-class CustomerFormCreateProperties {
-  CustomerFormCreateDataSource get _dataSource => Get.find<CustomerFormCreateDataSource>();
+class _Properties {
+  _DataSource get _dataSource => Get.find<_DataSource>(tag: NearbyString.customerCreateTag);
+
+  Task task = Task(NearbyString.createTaskCode);
 
   final double defaultZoom = 20;
   final Completer<GoogleMapController> mapsController = Completer();
@@ -94,7 +116,7 @@ class CustomerFormCreateProperties {
 
   void fetchPlacesIds() {
     _dataSource.fetchPlacesIds(_dataSource.getSubdistrictName()!);
-    Get.find<TaskHelper>().loaderPush(NearbyString.createTaskCode);
+    Get.find<TaskHelper>().loaderPush(task);
   }
 
   void refresh() async {
@@ -106,6 +128,6 @@ class CustomerFormCreateProperties {
       CameraUpdate.newLatLng(pos),
     );
     markerLatLng = pos;
-    Get.find<TaskHelper>().loaderPush(NearbyString.createTaskCode);
+    Get.find<TaskHelper>().loaderPush(task);
   }
 }

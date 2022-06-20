@@ -1,17 +1,11 @@
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:ventes/app/models/prospect_detail_model.dart';
-import 'package:ventes/app/models/prospect_model.dart';
-import 'package:ventes/app/models/type_model.dart';
-import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
-import 'package:ventes/app/states/form_validators/prospect_detail_fu_validator.dart';
-import 'package:ventes/constants/strings/prospect_string.dart';
-import 'package:ventes/helpers/function_helpers.dart';
+part of 'package:ventes/app/states/controllers/prospect_detail_fu_state_controller.dart';
 
-class ProspectDetailFormUpdateFormSource {
+class _FormSource extends UpdateFormSource {
+  _DataSource get _dataSource => Get.find<_DataSource>(tag: ProspectString.detailUpdateTag);
+  _Properties get _properties => Get.find<_Properties>(tag: ProspectString.detailUpdateTag);
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
-  late ProspectDetailFormUpdateValidator validator;
+  _Validator validator = _Validator();
 
   KeyableDropdownController<int, DBType> categoryDropdownController = Get.put(
     KeyableDropdownController<int, DBType>(),
@@ -43,12 +37,15 @@ class ProspectDetailFormUpdateFormSource {
 
   String? get dateString => date != null ? formatDate(date!) : null;
 
+  @override
   init() {
+    super.init();
     date = DateTime.now();
-    validator = ProspectDetailFormUpdateValidator(this);
   }
 
-  void dispose() {
+  @override
+  void close() {
+    super.close();
     prosdtdescTEC.dispose();
     Get.delete<KeyableDropdownController<int, DBType>>(
       tag: ProspectString.categoryDropdownTag,
@@ -58,15 +55,17 @@ class ProspectDetailFormUpdateFormSource {
     );
   }
 
-  void prepareValue(ProspectDetail prospectDetail) {
-    prosdtdescTEC.text = prospectDetail.prospectdtdesc ?? "";
-    date = dbParseDate(prospectDetail.prospectdtdate!);
-    prosdtcategory = prospectDetail.prospectdtcat;
+  @override
+  void prepareFormValues() {
+    prosdtdescTEC.text = _dataSource.prospectdetail!.prospectdtdesc ?? "";
+    date = dbParseDate(_dataSource.prospectdetail!.prospectdtdate!);
+    prosdtcategory = _dataSource.prospectdetail!.prospectdtcat;
     categoryDropdownController.selectedKeys = [prosdtcategory!.typeid!];
-    prosdttype = prospectDetail.prospectdttype;
+    prosdttype = _dataSource.prospectdetail!.prospectdttype;
     typeDropdownController.selectedKeys = [prosdttype!.typeid!];
   }
 
+  @override
   Map<String, dynamic> toJson() {
     return {
       'prospectdtdesc': prosdtdescTEC.text,
@@ -74,5 +73,16 @@ class ProspectDetailFormUpdateFormSource {
       'prospectdtcatid': prosdtcategory?.typeid.toString(),
       'prospectdttypeid': prosdttype?.typeid.toString(),
     };
+  }
+
+  @override
+  void onSubmit() {
+    if (isValid) {
+      Map<String, dynamic> data = toJson();
+      _dataSource.updateData(_properties.prospectDetailId, data);
+      Get.find<TaskHelper>().loaderPush(_properties.task);
+    } else {
+      Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: "Form invalid, Make sure all fields are filled"));
+    }
   }
 }

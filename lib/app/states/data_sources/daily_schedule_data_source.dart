@@ -1,16 +1,8 @@
-import 'package:get/get.dart';
-import 'package:ventes/app/models/schedule_model.dart';
-import 'package:ventes/app/models/type_model.dart';
-import 'package:ventes/app/network/presenters/daily_schedule_presenter.dart';
-import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
-import 'package:ventes/app/states/listeners/daily_schedule_listener.dart';
-import 'package:ventes/constants/strings/schedule_string.dart';
-import 'package:ventes/helpers/task_helper.dart';
+part of 'package:ventes/app/states/controllers/daily_schedule_state_controller.dart';
 
-class DailyScheduleDataSource implements FetchDataContract {
-  DailyScheduleListener get _listener => Get.find<DailyScheduleListener>();
-
-  final DailySchedulePresenter _presenter = DailySchedulePresenter();
+class _DataSource extends RegularDataSource<DailySchedulePresenter> implements DailyScheduleContract {
+  _Listener get _listener => Get.find<_Listener>(tag: ScheduleString.dailyScheduleTag);
+  _Properties get _properties => Get.find<_Properties>(tag: ScheduleString.dailyScheduleTag);
 
   final _types = <String, int>{}.obs;
   Map<String, int> get types => _types.value;
@@ -20,9 +12,7 @@ class DailyScheduleDataSource implements FetchDataContract {
   List<Schedule> get appointments => _appointments.value;
   set appointments(List<Schedule> value) => _appointments.value = value;
 
-  void init() {
-    _presenter.fetchContract = this;
-  }
+  List<DBType> permissions = <DBType>[];
 
   void listToTypes(List types) {
     List<DBType> dbType = List<DBType>.from(types.map((e) => DBType.fromJson(e)).toList());
@@ -36,8 +26,13 @@ class DailyScheduleDataSource implements FetchDataContract {
   }
 
   void fetchData(String date) async {
-    _presenter.fetchData(date);
+    presenter.fetchData(date);
   }
+
+  void deleteData(int scheduleid) => presenter.deleteData(scheduleid);
+
+  @override
+  DailySchedulePresenter presenterBuilder() => DailySchedulePresenter();
 
   @override
   onLoadFailed(String message) => _listener.onLoadDataFailed(message);
@@ -50,9 +45,21 @@ class DailyScheduleDataSource implements FetchDataContract {
     if (data['schedules'] != null) {
       listToAppointments(data['schedules']);
     }
-    Get.find<TaskHelper>().loaderPop(ScheduleString.dailyScheduleTaskCode);
+    if (data['permissions'] != null) {
+      permissions = List<DBType>.from(data['permissions'].map((e) => DBType.fromJson(e)));
+    }
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 
   @override
   onLoadError(String message) => _listener.onLoadDataError(message);
+
+  @override
+  void onDeleteError(String message) => _listener.onDeleteError(message);
+
+  @override
+  void onDeleteFailed(String message) => _listener.onDeleteFailed(message);
+
+  @override
+  void onDeleteSuccess(String message) => _listener.onDeleteSuccess(message);
 }

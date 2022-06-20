@@ -4,12 +4,8 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:simple_animations/simple_animations.dart';
-import 'package:ventes/app/states/controllers/regular_state_controller.dart';
 
-class StartedPageStateController extends RegularStateController with GetTickerProviderStateMixin {
-  @override
-  bool get isFixedBody => false;
-
+class StartedPageStateController extends GetxController with GetTickerProviderStateMixin {
   final CarouselController _carouselController = CarouselController();
   late Animation<MultiTweenValues<String>> _indicator1;
   late Animation<MultiTweenValues<String>> _indicator2;

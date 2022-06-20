@@ -43,7 +43,7 @@ class ScheduleGuest extends Model {
     scheid = json['scheid'];
     scheuserid = json['scheuserid'];
     schebpid = json['schebpid'];
-    schepermisid = json['schepermisid'];
+    schepermisid = json['schepermisid'].replaceAll(RegExp(r'[{}]'), '').split(',').map<int>((e) => int.parse(e)).toList();
     if (json['schedule'] != null) {
       schedule = Schedule.fromJson(json['schedule']);
     }

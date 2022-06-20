@@ -3,11 +3,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ventes/constants/regular_color.dart';
-import 'package:ventes/helpers/auth_helper.dart';
 import 'package:ventes/app/states/controllers/splash_screen_state_controller.dart';
-import 'package:ventes/core/view.dart';
 
-class SplashScreenView extends View<SplashScreenStateController> {
+class SplashScreenView extends GetView<SplashScreenStateController> {
   static const String route = "/welcome";
 
   @override
@@ -32,13 +30,13 @@ class SplashScreenView extends View<SplashScreenStateController> {
 
   Widget _buildDownScreen() {
     return AnimatedBuilder(
-      animation: state.bubbleController1,
+      animation: controller.bubbleController1,
       builder: (_, __) => Positioned(
         top: 0,
         left: 0,
         right: 0,
         child: Container(
-          height: state.bubblePos1.value,
+          height: controller.bubblePos1.value,
           decoration: BoxDecoration(
             color: RegularColor.secondary,
             // shape: BoxShape.circle,
@@ -50,9 +48,9 @@ class SplashScreenView extends View<SplashScreenStateController> {
 
   Widget _buildLogo() {
     return AnimatedBuilder(
-      animation: state.logoController,
+      animation: controller.logoController,
       builder: (_, __) => Positioned(
-        right: state.logoPos.value,
+        right: controller.logoPos.value,
         child: Container(
           width: 200,
           alignment: Alignment.center,

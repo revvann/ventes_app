@@ -5,11 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:ventes/app/models/bp_customer_model.dart';
-import 'package:ventes/app/models/city_model.dart';
-import 'package:ventes/app/models/country_model.dart';
-import 'package:ventes/app/models/province_model.dart';
-import 'package:ventes/app/models/subdistrict_model.dart';
 import 'package:ventes/app/resources/widgets/editor_input.dart';
 import 'package:ventes/app/resources/widgets/input_search_list.dart';
 import 'package:ventes/app/resources/widgets/keyable_selectbox.dart';
@@ -29,13 +24,17 @@ part 'package:ventes/app/resources/views/customer_form/update/components/_bottom
 
 class CustomerFormUpdateView extends View<CustomerFormUpdateStateController> {
   static const String route = "/customer/update";
+  int customerid;
 
-  CustomerFormUpdateView(int customerid) {
+  CustomerFormUpdateView(this.customerid);
+
+  @override
+  void onBuild(state) {
     state.properties.customerid = customerid;
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget buildWidget(BuildContext context, state) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: RegularColor.primary,
     ));
@@ -47,7 +46,7 @@ class CustomerFormUpdateView extends View<CustomerFormUpdateStateController> {
       extendBodyBehindAppBar: true,
       appBar: TopNavigation(
         title: NearbyString.appBarTitle,
-        onTitleTap: state.listener.onRefresh,
+        onTitleTap: () async => state.refreshStates(),
         appBarKey: state.appBarKey,
         leading: GestureDetector(
           child: Container(

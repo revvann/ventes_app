@@ -36,7 +36,7 @@ class ProspectFormCreateView extends View<ProspectFormCreateStateController> {
   static const String route = "/prospect/create";
 
   @override
-  Widget build(BuildContext context) {
+  Widget buildWidget(BuildContext context, state) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: RegularColor.primary,
     ));
@@ -47,6 +47,7 @@ class ProspectFormCreateView extends View<ProspectFormCreateStateController> {
       appBar: TopNavigation(
         title: ProspectString.appBarTitle,
         appBarKey: state.appBarKey,
+        onTitleTap: () async => state.refreshStates(),
         leading: GestureDetector(
           child: Container(
             padding: EdgeInsets.all(RegularSize.xs),
@@ -79,7 +80,7 @@ class ProspectFormCreateView extends View<ProspectFormCreateStateController> {
       ).build(context),
       body: SafeArea(
         child: RefreshIndicator(
-          onRefresh: state.listener.onRefresh,
+          onRefresh: () async => state.refreshStates(),
           child: Obx(
             () {
               return Container(

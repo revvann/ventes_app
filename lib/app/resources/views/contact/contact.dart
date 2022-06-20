@@ -20,13 +20,17 @@ part 'package:ventes/app/resources/views/contact/components/_contact_list.dart';
 
 class ContactPersonView extends View<ContactPersonStateController> {
   static const String route = "/contactperson";
+  int customerid;
 
-  ContactPersonView(int customerid) {
+  ContactPersonView(this.customerid);
+
+  @override
+  void onBuild(state) {
     state.properties.customerid = customerid;
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget buildWidget(BuildContext context, state) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: RegularColor.primary,
     ));
@@ -38,6 +42,7 @@ class ContactPersonView extends View<ContactPersonStateController> {
         title: ProspectString.appBarTitle,
         height: 80,
         appBarKey: state.appBarKey,
+        onTitleTap: () async => state.refreshStates(),
         leading: GestureDetector(
           child: Container(
             padding: EdgeInsets.all(RegularSize.xs),
@@ -70,7 +75,7 @@ class ContactPersonView extends View<ContactPersonStateController> {
       ).build(context),
       body: SafeArea(
         child: RefreshIndicator(
-          onRefresh: state.listener.onRefresh,
+          onRefresh: () async => state.refreshStates(),
           child: Obx(
             () {
               return Container(

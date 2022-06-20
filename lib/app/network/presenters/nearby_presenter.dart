@@ -3,7 +3,9 @@ import 'package:ventes/app/models/auth_model.dart';
 import 'package:ventes/app/models/maps_loc.dart';
 import 'package:ventes/app/models/subdistrict_model.dart';
 import 'package:ventes/app/models/user_detail_model.dart';
+import 'package:ventes/app/network/contracts/delete_contract.dart';
 import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
+import 'package:ventes/app/network/presenters/regular_presenter.dart';
 import 'package:ventes/app/network/services/bp_customer_service.dart';
 import 'package:ventes/app/network/services/customer_service.dart';
 import 'package:ventes/app/network/services/gmaps_service.dart';
@@ -12,15 +14,12 @@ import 'package:ventes/app/network/services/user_service.dart';
 import 'package:ventes/constants/strings/nearby_string.dart';
 import 'package:ventes/helpers/auth_helper.dart';
 
-class NearbyPresenter {
-  final _gmapsService = Get.find<GmapsService>();
-  final _bpCustomerService = Get.find<BpCustomerService>();
-  final PlaceService _placeService = Get.find<PlaceService>();
-  final _customerService = Get.find<CustomerService>();
-  final _userService = Get.find<UserService>();
-
-  late FetchDataContract _fetchDataContract;
-  set fetchDataContract(FetchDataContract value) => _fetchDataContract = value;
+class NearbyPresenter extends RegularPresenter<NearbyContract> {
+  final GmapsService _gmapsService = Get.find();
+  final BpCustomerService _bpCustomerService = Get.find();
+  final PlaceService _placeService = Get.find();
+  final CustomerService _customerService = Get.find();
+  final UserService _userService = Get.find();
 
   Future<Response> _getSubdistrict(String name) async {
     return await _placeService.subdistrict().byName(name);
@@ -73,14 +72,29 @@ class NearbyPresenter {
           Response customersResponse = await _getCustomers(subdistrictModel.subdistrictid!);
           if (customersResponse.statusCode == 200) {
             data['customers'] = customersResponse.body;
-            _fetchDataContract.onLoadSuccess(data);
+            contract.onLoadSuccess(data);
           }
         }
       } else {
-        _fetchDataContract.onLoadFailed(NearbyString.fetchFailed);
+        contract.onLoadFailed(NearbyString.fetchFailed);
       }
     } catch (err) {
-      _fetchDataContract.onLoadError(err.toString());
+      contract.onLoadError(err.toString());
+    }
+  }
+
+  void deleteData(int id) async {
+    try {
+      Response response = await _bpCustomerService.destroy(id);
+      if (response.statusCode == 200) {
+        contract.onDeleteSuccess(NearbyString.deleteSuccess);
+      } else {
+        contract.onDeleteFailed(NearbyString.deleteFailed);
+      }
+    } catch (e) {
+      contract.onDeleteError(e.toString());
     }
   }
 }
+
+abstract class NearbyContract implements FetchDataContract, DeleteContract {}

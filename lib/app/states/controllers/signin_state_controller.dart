@@ -1,14 +1,8 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:ventes/app/network/presenters/auth_presenter.dart';
-import 'package:ventes/app/states/controllers/regular_state_controller.dart';
 import 'package:ventes/app/states/data_sources/signin_data_source.dart';
 import 'package:ventes/app/states/form_sources/signin_form_source.dart';
 
-class SigninStateController extends RegularStateController {
-  @override
-  bool get isFixedBody => false;
-
+class SigninStateController extends GetxController {
   SigninFormSource formSource = SigninFormSource();
   SigninDataSource dataSource = SigninDataSource();
 

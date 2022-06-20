@@ -1,18 +1,12 @@
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:ventes/app/models/bp_customer_model.dart';
-import 'package:ventes/app/models/type_model.dart';
-import 'package:ventes/app/models/user_detail_model.dart';
-import 'package:ventes/app/resources/widgets/searchable_dropdown.dart';
-import 'package:ventes/app/states/form_validators/prospect_fc_validator.dart';
-import 'package:ventes/constants/formatters/currency_formatter.dart';
-import 'package:ventes/helpers/function_helpers.dart';
+part of 'package:ventes/app/states/controllers/prospect_fc_state_controller.dart';
 
-class ProspectFormCreateFormSource {
+class _FormSource extends RegularFormSource {
+  _DataSource get _dataSource => Get.find<_DataSource>(tag: ProspectString.prospectCreateTag);
+  _Properties get _properties => Get.find<_Properties>(tag: ProspectString.prospectCreateTag);
   SearchableDropdownController<UserDetail> ownerDropdownController = Get.put(SearchableDropdownController<UserDetail>());
   SearchableDropdownController<BpCustomer> customerDropdownController = Get.put(SearchableDropdownController<BpCustomer>());
 
-  late ProspectFormCreateValidator validator;
+  _Validator validator = _Validator();
 
   final TextEditingController prosnameTEC = TextEditingController();
   final TextEditingController prosvalueTEC = TextEditingController();
@@ -69,11 +63,19 @@ class ProspectFormCreateFormSource {
 
   bool get isValid => formKey.currentState?.validate() ?? false;
 
-  init() {
-    validator = ProspectFormCreateValidator(this);
+  @override
+  init() async {
+    super.init();
+    int accountId = Get.find<AuthHelper>().accountActive.val!;
+    List<UserDetail> userDetails = await _dataSource.fetchUser("");
+    prosowner = userDetails.firstWhereOrNull((element) => element.userdtid == accountId);
+    ownerDropdownController.selectedKeys = prosowner != null ? [prosowner!] : [];
   }
 
+  @override
   close() {
+    super.close();
+
     prosnameTEC.dispose();
     prosvalueTEC.dispose();
     prosdescTEC.dispose();
@@ -89,22 +91,7 @@ class ProspectFormCreateFormSource {
     }
   }
 
-  reset() {
-    prosnameTEC.text = '';
-    prosvalueTEC.text = '';
-    prosdescTEC.text = '';
-    prosstartdate = null;
-    prosenddate = null;
-    prosexpenddate = null;
-    prosowner = null;
-    proscustomer = null;
-    prostype = null;
-    prosstatus = null;
-    prosstage = null;
-    customerDropdownController.reset();
-    ownerDropdownController.reset();
-  }
-
+  @override
   Map<String, dynamic> toJson() {
     return {
       'prospectname': prosname,
@@ -128,6 +115,7 @@ class ProspectFormCreateFormSource {
       String priceString = prosproduct['priceTEC'].text.replaceAll(RegExp(r'[.]'), '').replaceAll(RegExp(r'[,]'), '.');
       String qtyString = prosproduct['qtyTEC'].text.replaceAll(RegExp(r'[.]'), '').replaceAll(RegExp(r'[,]'), '.');
       String taxString = prosproduct['taxTEC'].text.replaceAll(RegExp(r'[.]'), '').replaceAll(RegExp(r'[,]'), '.');
+      String discount = prosproduct['discTEC'].text.replaceAll(RegExp(r'[.]'), '').replaceAll(RegExp(r'[,]'), '.');
 
       double price = double.tryParse(priceString) ?? 0;
       double qty = double.tryParse(qtyString) ?? 0;
@@ -139,10 +127,21 @@ class ProspectFormCreateFormSource {
         'prosproductprice': priceString,
         'prosproductqty': qtyString,
         'prosproducttax': taxString,
-        'prosproductdiscount': prosproduct['discTEC'].text,
+        'prosproductdiscount': discount,
         'prosproductamount': total.toString(),
         'prosproducttaxtypeid': prosproduct['taxType'].value.typeid.toString(),
       };
     }).toList();
+  }
+
+  @override
+  void onSubmit() {
+    if (isValid) {
+      Map<String, dynamic> data = toJson();
+      _dataSource.createProspect(data);
+      Get.find<TaskHelper>().loaderPush(_properties.task);
+    } else {
+      Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: "Form is not valid"));
+    }
   }
 }

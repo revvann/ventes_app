@@ -14,6 +14,13 @@ class NearbyString {
   static const updateError = "Could not update customer";
   static const formInvalid = "Form is invalid, please fill all fields";
 
+  static const createCustomerConfirm = "Are you sure you want to create this customer?";
+  static const updateCustomerConfirm = "Are you sure you want to update this customer?";
+  static const deleteCustomerConfirm = "Are you sure you want to delete this customer?";
+
+  static const deleteSuccess = "Customer deleted successfully";
+  static const deleteFailed = "Failed to delete customer";
+
   static const customerOuttaRange = "Customer is out of range";
 
   static const defaultCustomerName = "Customer Name";
@@ -36,4 +43,8 @@ class NearbyString {
   static const taskCode = 'nearby';
   static const updateTaskCode = 'update';
   static const createTaskCode = 'create';
+
+  static const nearbyTag = "nearby";
+  static const customerCreateTag = "customercreate";
+  static const customerUpdateTag = "customerupdate";
 }

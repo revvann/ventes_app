@@ -1,18 +1,23 @@
 import 'package:get/get.dart';
+import 'package:ventes/app/network/contracts/delete_contract.dart';
 import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
+import 'package:ventes/app/network/presenters/regular_presenter.dart';
 import 'package:ventes/app/network/services/prospect_detail_service.dart';
 import 'package:ventes/app/network/services/prospect_service.dart';
+import 'package:ventes/app/network/services/type_service.dart';
 import 'package:ventes/constants/strings/prospect_string.dart';
 
-class ProspectDetailPresenter {
+class ProspectDetailPresenter extends RegularPresenter<ProspectDetailContract> {
   final ProspectService _prospectService = Get.find<ProspectService>();
   final ProspectDetailService _prospectDetailService = Get.find<ProspectDetailService>();
-
-  late FetchDataContract _fetchDataContract;
-  set fetchDataContract(FetchDataContract value) => _fetchDataContract = value;
+  final TypeService _typeService = Get.find<TypeService>();
 
   Future<Response> _getProspect(int id) {
     return _prospectService.show(id);
+  }
+
+  Future<Response> _getStages() {
+    return _typeService.byCode({'typecd': ProspectString.stageTypeCode});
   }
 
   Future<Response> _getProspectDetail(Map<String, dynamic> data) {
@@ -27,15 +32,32 @@ class ProspectDetailPresenter {
     try {
       Response prospectResponse = await _getProspect(prospectid);
       Response prospectDetailResponse = await _getProspectDetail(detailParams);
-      if (prospectResponse.statusCode == 200 && prospectDetailResponse.statusCode == 200) {
+      Response stageResponse = await _getStages();
+      if (prospectResponse.statusCode == 200 && prospectDetailResponse.statusCode == 200 && stageResponse.statusCode == 200) {
         data['prospect'] = prospectResponse.body;
         data['prospectdetails'] = prospectDetailResponse.body;
-        _fetchDataContract.onLoadSuccess(data);
+        data['stages'] = stageResponse.body;
+        contract.onLoadSuccess(data);
       } else {
-        _fetchDataContract.onLoadFailed(ProspectString.fetchDataFailed);
+        contract.onLoadFailed(ProspectString.fetchDataFailed);
       }
     } catch (e) {
-      _fetchDataContract.onLoadError(e.toString());
+      contract.onLoadError(e.toString());
+    }
+  }
+
+  void deleteData(int detailid) async {
+    try {
+      Response response = await _prospectDetailService.destroy(detailid);
+      if (response.statusCode == 200) {
+        contract.onDeleteSuccess(ProspectString.deleteProspectDetailSuccess);
+      } else {
+        contract.onDeleteFailed(ProspectString.deleteProspectDetailFailed);
+      }
+    } catch (e) {
+      contract.onDeleteError(e.toString());
     }
   }
 }
+
+abstract class ProspectDetailContract implements FetchDataContract, DeleteContract {}

@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'dart:math';
+
 import 'package:flutter/material.dart' hide MenuItem;
 import 'package:flutter/services.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
@@ -8,10 +10,12 @@ import 'package:get/get.dart';
 import 'package:ventes/app/models/prospect_detail_model.dart';
 import 'package:ventes/app/resources/widgets/pop_up_item.dart';
 import 'package:ventes/app/resources/widgets/popup_button.dart';
+import 'package:ventes/app/resources/widgets/prospect_detail_dialog.dart';
 import 'package:ventes/app/resources/widgets/regular_dialog.dart';
 import 'package:ventes/app/resources/widgets/regular_outlined_button.dart';
 import 'package:ventes/app/resources/widgets/top_navigation.dart';
 import 'package:ventes/app/states/controllers/prospect_detail_state_controller.dart';
+import 'package:ventes/constants/gestures/copy_gesture_recognizer.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/constants/strings/prospect_string.dart';
@@ -21,16 +25,21 @@ import 'package:ventes/helpers/function_helpers.dart';
 part 'package:ventes/app/resources/views/prospect_detail/components/_floating_button.dart';
 part 'package:ventes/app/resources/views/prospect_detail/components/_detail_list.dart';
 part 'package:ventes/app/resources/views/prospect_detail/components/_app_bar_menu.dart';
+part 'package:ventes/app/resources/views/prospect_detail/components/_detail_dialog.dart';
 
 class ProspectDetailView extends View<ProspectDetailStateController> {
   static const String route = "/prospect/detail";
+  int prospectId;
 
-  ProspectDetailView(int prospectId) {
+  ProspectDetailView(this.prospectId);
+
+  @override
+  void onBuild(state) {
     state.properties.prospectId = prospectId;
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget buildWidget(BuildContext context, state) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: RegularColor.primary,
     ));
@@ -42,6 +51,7 @@ class ProspectDetailView extends View<ProspectDetailStateController> {
         title: ProspectString.appBarTitle,
         height: 80,
         appBarKey: state.appBarKey,
+        onTitleTap: () async => state.refreshStates(),
         leading: GestureDetector(
           child: Container(
             padding: EdgeInsets.all(RegularSize.xs),
@@ -66,7 +76,7 @@ class ProspectDetailView extends View<ProspectDetailStateController> {
             alignment: Alignment.center,
             child: Obx(() {
               return Text(
-                state.dataSource.prospect?.prospectcust?.sbccstmname ?? "",
+                state.dataSource.prospect?.prospectname ?? "",
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   color: Colors.white,
@@ -79,7 +89,7 @@ class ProspectDetailView extends View<ProspectDetailStateController> {
       ).build(context),
       body: SafeArea(
         child: RefreshIndicator(
-          onRefresh: state.listener.onRefresh,
+          onRefresh: () async => state.refreshStates(),
           child: Obx(
             () {
               return Container(

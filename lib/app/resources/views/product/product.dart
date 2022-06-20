@@ -11,6 +11,7 @@ import 'package:ventes/app/resources/widgets/icon_input.dart';
 import 'package:ventes/app/resources/widgets/loader.dart';
 import 'package:ventes/app/resources/widgets/pop_up_item.dart';
 import 'package:ventes/app/resources/widgets/popup_button.dart';
+import 'package:ventes/app/resources/widgets/regular_dialog.dart';
 import 'package:ventes/app/resources/widgets/top_navigation.dart';
 import 'package:ventes/app/states/controllers/product_state_controller.dart';
 import 'package:ventes/constants/regular_color.dart';
@@ -23,13 +24,17 @@ part 'package:ventes/app/resources/views/product/components/_product_list.dart';
 
 class ProductView extends View<ProductStateController> {
   static const String route = "/product";
+  int prospectid;
 
-  ProductView(int prospectid) {
+  ProductView(this.prospectid);
+
+  @override
+  void onBuild(state) {
     state.properties.prospectid = prospectid;
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget buildWidget(BuildContext context, state) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: RegularColor.primary,
     ));
@@ -41,6 +46,7 @@ class ProductView extends View<ProductStateController> {
         title: ProspectString.appBarTitle,
         height: 80,
         appBarKey: state.appBarKey,
+        onTitleTap: () async => state.refreshStates(),
         leading: GestureDetector(
           child: Container(
             padding: EdgeInsets.all(RegularSize.xs),
@@ -60,7 +66,7 @@ class ProductView extends View<ProductStateController> {
             alignment: Alignment.center,
             child: Obx(() {
               return Text(
-                state.dataSource.prospect?.prospectcust?.sbccstmname ?? "",
+                state.dataSource.prospect?.prospectname ?? "",
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   color: Colors.white,
@@ -73,7 +79,7 @@ class ProductView extends View<ProductStateController> {
       ).build(context),
       body: SafeArea(
         child: RefreshIndicator(
-          onRefresh: state.listener.onRefresh,
+          onRefresh: () async => state.refreshStates(),
           child: Obx(
             () {
               return Container(

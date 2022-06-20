@@ -2,19 +2,17 @@ import 'package:get/get.dart';
 import 'package:ventes/app/models/auth_model.dart';
 import 'package:ventes/app/models/user_detail_model.dart';
 import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
+import 'package:ventes/app/network/presenters/regular_presenter.dart';
 import 'package:ventes/app/network/services/prospect_service.dart';
 import 'package:ventes/app/network/services/type_service.dart';
 import 'package:ventes/app/network/services/user_service.dart';
 import 'package:ventes/constants/strings/prospect_string.dart';
 import 'package:ventes/helpers/auth_helper.dart';
 
-class ProspectPresenter {
+class ProspectPresenter extends RegularPresenter<FetchDataContract> {
   final TypeService _typeService = Get.find<TypeService>();
   final UserService _userService = Get.find<UserService>();
   final ProspectService _prospectService = Get.find<ProspectService>();
-
-  late final FetchDataContract _fetchContract;
-  set fetchContract(FetchDataContract value) => _fetchContract = value;
 
   Future<UserDetail?> findActiveUser() async {
     AuthModel? authModel = await Get.find<AuthHelper>().get();
@@ -37,7 +35,7 @@ class ProspectPresenter {
   Future<Response> _getProspects([Map<String, dynamic> additionParams = const {}]) async {
     UserDetail? userDetail = await findActiveUser();
     Map<String, dynamic> params = {
-      'prospectbpid': userDetail?.userdtbpid.toString(),
+      'prospectowner': userDetail?.userdtid?.toString(),
       ...additionParams,
     };
     return await _prospectService.select(params);
@@ -53,12 +51,12 @@ class ProspectPresenter {
         data['statusses'] = statusses.body;
         data['followup'] = followUp.body;
         data['prospects'] = prospects.body;
-        _fetchContract.onLoadSuccess(data);
+        contract.onLoadSuccess(data);
       } else {
-        _fetchContract.onLoadFailed(ProspectString.fetchDataFailed);
+        contract.onLoadFailed(ProspectString.fetchDataFailed);
       }
     } catch (e) {
-      _fetchContract.onLoadError(e.toString());
+      contract.onLoadError(e.toString());
     }
   }
 
@@ -68,12 +66,12 @@ class ProspectPresenter {
       Response prospects = await _getProspects(params);
       if (prospects.statusCode == 200) {
         data['prospects'] = prospects.body;
-        _fetchContract.onLoadSuccess(data);
+        contract.onLoadSuccess(data);
       } else {
-        _fetchContract.onLoadFailed(ProspectString.fetchDataFailed);
+        contract.onLoadFailed(ProspectString.fetchDataFailed);
       }
     } catch (e) {
-      _fetchContract.onLoadError(e.toString());
+      contract.onLoadError(e.toString());
     }
   }
 }

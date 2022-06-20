@@ -1,18 +1,8 @@
-import 'package:get/get.dart';
-import 'package:ventes/app/models/prospect_model.dart';
-import 'package:ventes/app/models/prospect_product_model.dart';
-import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
-import 'package:ventes/app/network/presenters/product_presenter.dart';
-import 'package:ventes/app/states/controllers/product_state_controller.dart';
-import 'package:ventes/app/states/listeners/product_listener.dart';
-import 'package:ventes/constants/strings/prospect_string.dart';
-import 'package:ventes/helpers/task_helper.dart';
+part of 'package:ventes/app/states/controllers/product_state_controller.dart';
 
-class ProductDataSource implements FetchDataContract {
-  ProductListener get _listener => Get.find<ProductListener>();
-  ProductProperties get _properties => Get.find<ProductProperties>();
-
-  final ProductPresenter _presenter = ProductPresenter();
+class _DataSource extends RegularDataSource<ProductPresenter> implements ProductContract {
+  _Listener get _listener => Get.find<_Listener>(tag: ProspectString.productTag);
+  _Properties get _properties => Get.find<_Properties>(tag: ProspectString.productTag);
 
   final _prospect = Rx<Prospect?>(null);
   Prospect? get prospect => _prospect.value;
@@ -22,12 +12,12 @@ class ProductDataSource implements FetchDataContract {
   List<ProspectProduct> get products => _products.value;
   set products(List<ProspectProduct> products) => _products.value = products;
 
-  init() {
-    _presenter.fetchContract = this;
-  }
+  void fetchData(int prospectid) => presenter.fetchData(prospectid);
+  void fetchProducts(int productid, String search) => presenter.fetchProducts(productid, search);
+  void deleteProduct(int productid) => presenter.deleteProduct(productid);
 
-  void fetchData(int prospectid) => _presenter.fetchData(prospectid);
-  void fetchProducts(int productid, String search) => _presenter.fetchProducts(productid, search);
+  @override
+  ProductPresenter presenterBuilder() => ProductPresenter();
 
   @override
   onLoadError(String message) => _listener.onLoadError(message);
@@ -45,7 +35,16 @@ class ProductDataSource implements FetchDataContract {
       products = data['prospectproducts'].map<ProspectProduct>((e) => ProspectProduct.fromJson(e)).toList();
     }
 
-    Get.find<TaskHelper>().loaderPop(ProspectString.productTaskCode);
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
     _properties.isLoading.value = false;
   }
+
+  @override
+  void onDeleteError(String message) => _listener.onDeleteError(message);
+
+  @override
+  void onDeleteFailed(String message) => _listener.onDeleteFailed(message);
+
+  @override
+  void onDeleteSuccess(String message) => _listener.onDeleteSuccess(message);
 }

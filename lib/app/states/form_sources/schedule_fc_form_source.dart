@@ -1,30 +1,16 @@
 // ignore_for_file: unnecessary_getters_setters, prefer_const_constructors
 
-import 'dart:convert';
+part of 'package:ventes/app/states/controllers/schedule_fc_state_controller.dart';
 
-import 'package:flutter/material.dart';
-import 'package:flutter_native_timezone/flutter_native_timezone.dart';
-import 'package:get/get.dart';
-import 'package:ventes/app/models/schedule_guest_model.dart';
-import 'package:ventes/app/models/user_detail_model.dart';
-import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
-import 'package:ventes/app/resources/widgets/regular_dropdown.dart';
-import 'package:ventes/app/resources/widgets/search_list.dart';
-import 'package:ventes/app/resources/widgets/searchable_dropdown.dart';
-import 'package:ventes/app/states/data_sources/schedule_fc_data_source.dart';
-import 'package:ventes/helpers/function_helpers.dart';
-import 'package:ventes/app/states/controllers/schedule_fc_state_controller.dart';
-import 'package:ventes/app/states/form_validators/schedule_fc_validator.dart';
-import 'package:ventes/app/states/listeners/schedule_fc_listener.dart';
-
-class ScheduleFormCreateFormSource {
+class _FormSource extends RegularFormSource {
   int readOnlyId = 14;
   int addMemberId = 15;
   int shareLinkId = 16;
 
-  ScheduleFormCreateDataSource get _dataSource => Get.find<ScheduleFormCreateDataSource>();
-  ScheduleFormCreateListener get _listener => Get.find<ScheduleFormCreateListener>();
-  late ScheduleFormCreateValidator validator;
+  _DataSource get _dataSource => Get.find<_DataSource>(tag: ScheduleString.scheduleCreateTag);
+  _Listener get _listener => Get.find<_Listener>(tag: ScheduleString.scheduleCreateTag);
+  _Properties get _properties => Get.find<_Properties>(tag: ScheduleString.scheduleCreateTag);
+  _Validator validator = _Validator();
 
   UserDetail? userDefault;
   final Rx<List<KeyableDropdownItem<String, String>>> _timezones = Rx<List<KeyableDropdownItem<String, String>>>([]);
@@ -279,7 +265,9 @@ class ScheduleFormCreateFormSource {
     setEndTimeList();
   }
 
-  formSourceDispose() {
+  @override
+  close() {
+    super.close();
     schenmTEC.dispose();
     schestartdateTEC.dispose();
     scheenddateTEC.dispose();
@@ -292,9 +280,9 @@ class ScheduleFormCreateFormSource {
     Get.delete<KeyableDropdownController<String, String>>(tag: "DropdownTimezone");
   }
 
+  @override
   init() async {
-    validator = ScheduleFormCreateValidator(this);
-
+    super.init();
     setStartTimeList();
 
     scheremindTEC.text = "0";
@@ -311,6 +299,7 @@ class ScheduleFormCreateFormSource {
     schetz = currentTimeZone;
   }
 
+  @override
   Map<String, dynamic> toJson() {
     return {
       "schenm": schenm,
@@ -331,6 +320,15 @@ class ScheduleFormCreateFormSource {
       "schebpid": isEvent ? schebpid : userDefault?.userdtbpid,
       "members": isEvent ? jsonEncode(guests.map((g) => g.toJson()).toList()) : null,
     };
+  }
+
+  @override
+  void onSubmit() {
+    if (isValid()) {
+      Map<String, dynamic> data = toJson();
+      Get.find<TaskHelper>().loaderPush(_properties.task);
+      _dataSource.createSchedule(data);
+    }
   }
 }
 

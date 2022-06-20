@@ -24,9 +24,9 @@ class _FloatingButton extends StatelessWidget {
           state.listener.navigateToContactPerson,
         ),
         _buildChild(
-          'assets/svg/plus.svg',
-          "Add Detail",
-          state.listener.navigateToProspectDetailForm,
+          'assets/svg/user.svg',
+          "Assigned Users",
+          state.listener.navigateToProspectAssign,
         ),
       ],
     );

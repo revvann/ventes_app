@@ -1,20 +1,13 @@
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:ventes/app/models/bp_customer_model.dart';
-import 'package:ventes/app/models/user_detail_model.dart';
-import 'package:ventes/app/resources/widgets/searchable_dropdown.dart';
-import 'package:ventes/app/states/data_sources/prospect_fu_data_source.dart';
-import 'package:ventes/app/states/form_validators/prospect_fu_validator.dart';
-import 'package:ventes/constants/formatters/currency_formatter.dart';
-import 'package:ventes/helpers/function_helpers.dart';
+part of 'package:ventes/app/states/controllers/prospect_fu_state_controller.dart';
 
-class ProspectFormUpdateFormSource {
-  ProspectFormUpdateDataSource get _dataSource => Get.find<ProspectFormUpdateDataSource>();
+class _FormSource extends UpdateFormSource {
+  _DataSource get _dataSource => Get.find<_DataSource>(tag: ProspectString.prospectUpdateTag);
+  _Properties get _properties => Get.find<_Properties>(tag: ProspectString.prospectUpdateTag);
 
   SearchableDropdownController<UserDetail> ownerDropdownController = Get.put(SearchableDropdownController<UserDetail>());
   SearchableDropdownController<BpCustomer> customerDropdownController = Get.put(SearchableDropdownController<BpCustomer>());
 
-  late ProspectFormUpdateValidator validator;
+  _Validator validator = _Validator();
 
   final prosvaluemask = CurrencyInputFormatter();
 
@@ -63,11 +56,9 @@ class ProspectFormUpdateFormSource {
 
   bool get isValid => formKey.currentState?.validate() ?? false;
 
-  init() {
-    validator = ProspectFormUpdateValidator(this);
-  }
-
+  @override
   void close() {
+    super.close();
     prosnameTEC.dispose();
     prosvalueTEC.dispose();
     prosdescTEC.dispose();
@@ -75,23 +66,8 @@ class ProspectFormUpdateFormSource {
     Get.delete<SearchableDropdownController<BpCustomer>>();
   }
 
-  reset() {
-    prosnameTEC.text = '';
-    prosvalueTEC.text = '';
-    prosdescTEC.text = '';
-    prosstartdate = null;
-    prosenddate = null;
-    prosexpenddate = null;
-    prosowner = null;
-    proscustomer = null;
-    prosstatus = null;
-    prosstage = null;
-    prostype = null;
-    customerDropdownController.reset();
-    ownerDropdownController.reset();
-  }
-
-  prepareValue() {
+  @override
+  prepareFormValues() {
     prosnameTEC.text = _dataSource.prospect?.prospectname ?? "";
     prosvalueTEC.text = currencyFormat(_dataSource.prospect?.prospectvalue.toString() ?? "");
     prosdescTEC.text = _dataSource.prospect?.prospectdescription ?? "";
@@ -113,8 +89,12 @@ class ProspectFormUpdateFormSource {
     prostype = _dataSource.prospect?.prospecttypeid;
     prosstatus = _dataSource.prospect?.prospectstatusid;
     prosstage = _dataSource.prospect?.prospectstageid;
+
+    ownerDropdownController.selectedKeys = prosowner != null ? [prosowner!] : [];
+    customerDropdownController.selectedKeys = proscustomer != null ? [proscustomer!] : [];
   }
 
+  @override
   Map<String, dynamic> toJson() {
     return {
       'prospectname': prosname,
@@ -130,5 +110,16 @@ class ProspectFormUpdateFormSource {
       'prospectdescription': prosdesc,
       'prospectcustid': proscustomer?.sbcid,
     };
+  }
+
+  @override
+  void onSubmit() {
+    if (isValid) {
+      Map<String, dynamic> data = toJson();
+      _dataSource.updateProspect(_properties.prospectId, data);
+      Get.find<TaskHelper>().loaderPush(_properties.task);
+    } else {
+      Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: "Form is not valid"));
+    }
   }
 }

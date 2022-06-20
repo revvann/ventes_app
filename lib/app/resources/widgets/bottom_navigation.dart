@@ -9,7 +9,7 @@ import 'package:ventes/constants/views.dart';
 import 'package:ventes/app/states/controllers/bottom_navigation_state_controller.dart';
 import 'package:ventes/core/view.dart';
 
-class BottomNavigation extends View<BottomNavigationStateController> {
+class BottomNavigation extends GetView<BottomNavigationStateController> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -55,7 +55,7 @@ class BottomNavigation extends View<BottomNavigationStateController> {
                 ),
               ),
               onTap: () {
-                state.currentIndex = Views.schedule;
+                controller.currentIndex = Views.schedule;
               },
             ),
           ),
@@ -79,7 +79,7 @@ class BottomNavigation extends View<BottomNavigationStateController> {
   }
 }
 
-class BottomNavigationItem extends View<BottomNavigationStateController> {
+class BottomNavigationItem extends GetView<BottomNavigationStateController> {
   BottomNavigationItem({
     Key? key,
     required this.icon,
@@ -110,7 +110,7 @@ class BottomNavigationItem extends View<BottomNavigationStateController> {
               SizedBox(
                 height: RegularSize.xs,
               ),
-              if (state.currentIndex == view)
+              if (controller.currentIndex == view)
                 Text(
                   title,
                   style: TextStyle(

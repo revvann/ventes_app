@@ -24,15 +24,19 @@ part 'package:ventes/app/resources/views/daily_schedule/components/_app_bar_menu
 
 class DailyScheduleView extends View<DailyScheduleStateController> {
   static const String route = "/schedule/daily";
+  DateTime date;
 
   DailyScheduleView({
-    required DateTime date,
-  }) : super() {
+    required this.date,
+  });
+
+  @override
+  void onBuild(state) {
     state.properties.date = date;
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget buildWidget(BuildContext context, state) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: RegularColor.primary,
     ));
@@ -40,7 +44,7 @@ class DailyScheduleView extends View<DailyScheduleStateController> {
       backgroundColor: RegularColor.primary,
       extendBodyBehindAppBar: true,
       appBar: TopNavigation(
-        onTitleTap: state.listener.onRefresh,
+        onTitleTap: () async => state.refreshStates(),
         title: ScheduleString.appBarTitle,
         height: 85,
         appBarKey: state.appBarKey,

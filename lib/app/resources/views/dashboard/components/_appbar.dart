@@ -35,7 +35,7 @@ class _AppBar extends StatelessWidget {
               dropdownSettings: DropdownSettings(
                 width: 200,
                 offset: Offset(10, 0),
-                child: Padding(
+                builder: (controller) => Padding(
                   padding: const EdgeInsets.symmetric(
                     vertical: RegularSize.s,
                     horizontal: RegularSize.s,
@@ -50,20 +50,27 @@ class _AppBar extends StatelessWidget {
                           isActive: true,
                         );
                       }),
-                      MenuDivider(text: "Account"),
                       Obx(() {
-                        return Container(
-                          child: ListView.builder(
-                            padding: EdgeInsets.zero,
-                            itemCount: state.dataSource.accounts.length,
-                            shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),
-                            itemBuilder: (_, index) {
-                              UserDetail user = state.dataSource.accounts[index];
-                              return _UserMenuItem(user: user, onTap: () => state.listener.switchAccount(user.userdtid!));
-                            },
-                          ),
-                        );
+                        return state.dataSource.accounts.isNotEmpty ? MenuDivider(text: "Account") : Container();
+                      }),
+                      Obx(() {
+                        return state.dataSource.accounts.isNotEmpty
+                            ? Expanded(
+                                child: Container(
+                                  child: ScrollConfiguration(
+                                    behavior: BehaviorStyle(),
+                                    child: ListView.builder(
+                                      padding: EdgeInsets.zero,
+                                      itemCount: state.dataSource.accounts.length,
+                                      itemBuilder: (_, index) {
+                                        UserDetail user = state.dataSource.accounts[index];
+                                        return _UserMenuItem(user: user, onTap: () => state.listener.switchAccount(user.userdtid!));
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              )
+                            : Container();
                       }),
                       MenuDivider(),
                       MenuItem(

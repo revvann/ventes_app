@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_const_constructors
-
 part of "package:ventes/app/resources/views/contact_form/create/contact_person_fc.dart";
 
 class _ContactDropdown extends StatelessWidget {

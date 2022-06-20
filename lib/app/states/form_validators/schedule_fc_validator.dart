@@ -1,10 +1,7 @@
-import 'package:ventes/constants/strings/schedule_string.dart';
-import 'package:ventes/app/states/form_sources/schedule_fc_form_source.dart';
+part of 'package:ventes/app/states/controllers/schedule_fc_state_controller.dart';
 
-class ScheduleFormCreateValidator {
-  ScheduleFormCreateValidator(this.formSource);
-  ScheduleFormCreateFormSource formSource;
-
+class _Validator {
+  _FormSource get _formSource => Get.find<_FormSource>(tag: ScheduleString.scheduleCreateTag);
   String? schenm(String? value) {
     if (value == null || value.isEmpty) {
       return ScheduleString.schenmInvalid;
@@ -12,8 +9,8 @@ class ScheduleFormCreateValidator {
   }
 
   String? scheonlink(String? value) {
-    if (formSource.isEvent) {
-      if (formSource.scheonline) {
+    if (_formSource.isEvent) {
+      if (_formSource.scheonline) {
         if (value == null || value.isEmpty) {
           return ScheduleString.scheonlinkInvalid;
         }
@@ -22,8 +19,8 @@ class ScheduleFormCreateValidator {
   }
 
   String? scheloc(String? value) {
-    if (formSource.isEvent) {
-      if (!formSource.scheonline) {
+    if (_formSource.isEvent) {
+      if (!_formSource.scheonline) {
         if (value == null || value.isEmpty) {
           return ScheduleString.schelocInvalid;
         }

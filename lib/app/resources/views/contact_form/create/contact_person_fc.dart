@@ -21,13 +21,17 @@ part 'package:ventes/app/resources/views/contact_form/create/components/_contact
 
 class ContactPersonFormCreateView extends View<ContactPersonFormCreateStateController> {
   static const String route = "/contactperson/create";
+  int customerid;
 
-  ContactPersonFormCreateView(int customerid) {
+  ContactPersonFormCreateView(this.customerid);
+
+  @override
+  void onBuild(state) {
     state.properties.customerid = customerid;
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget buildWidget(BuildContext context, state) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: RegularColor.primary,
     ));
@@ -38,6 +42,7 @@ class ContactPersonFormCreateView extends View<ContactPersonFormCreateStateContr
       appBar: TopNavigation(
         title: ProspectString.appBarTitle,
         appBarKey: state.appBarKey,
+        onTitleTap: () async => state.refreshStates(),
         leading: GestureDetector(
           child: Container(
             padding: EdgeInsets.all(RegularSize.xs),
@@ -70,7 +75,7 @@ class ContactPersonFormCreateView extends View<ContactPersonFormCreateStateContr
       ).build(context),
       body: SafeArea(
         child: RefreshIndicator(
-          onRefresh: state.listener.onRefresh,
+          onRefresh: () async => state.refreshStates(),
           child: Obx(
             () {
               return Container(

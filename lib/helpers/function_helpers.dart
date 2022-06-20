@@ -183,10 +183,10 @@ String getInitials(String name) {
   }
   var names = name.split(' ');
   if (names.length == 1) {
-    return names[0].substring(0, 1).toUpperCase();
+    return names[0].substring(0, 2).toUpperCase();
   }
   var initials = '';
-  for (var name in names) {
+  for (var name in names.getRange(0, 2)) {
     initials += name[0];
   }
   return initials;

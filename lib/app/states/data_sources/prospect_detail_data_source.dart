@@ -1,16 +1,8 @@
-import 'package:get/get.dart';
-import 'package:ventes/app/models/prospect_detail_model.dart';
-import 'package:ventes/app/models/prospect_model.dart';
-import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
-import 'package:ventes/app/network/presenters/prospect_detail_presenter.dart';
-import 'package:ventes/app/states/listeners/prospect_detail_listener.dart';
-import 'package:ventes/constants/strings/prospect_string.dart';
-import 'package:ventes/helpers/task_helper.dart';
+part of 'package:ventes/app/states/controllers/prospect_detail_state_controller.dart';
 
-class ProspectDetailDataSource implements FetchDataContract {
-  ProspectDetailListener get _listener => Get.find<ProspectDetailListener>();
-
-  final ProspectDetailPresenter _presenter = ProspectDetailPresenter();
+class _DataSource extends RegularDataSource<ProspectDetailPresenter> implements ProspectDetailContract {
+  _Listener get _listener => Get.find<_Listener>(tag: ProspectString.detailTag);
+  _Properties get _properties => Get.find<_Properties>(tag: ProspectString.detailTag);
 
   final _prospect = Rx<Prospect?>(null);
   Prospect? get prospect => _prospect.value;
@@ -20,11 +12,15 @@ class ProspectDetailDataSource implements FetchDataContract {
   List<ProspectDetail> get prospectDetails => _prospectDetails.value;
   set prospectDetails(List<ProspectDetail> value) => _prospectDetails.value = value;
 
-  void fetchData(int prospectid) => _presenter.fetchData(prospectid);
+  final _stages = Rx<List<DBType>>([]);
+  List<DBType> get stages => _stages.value;
+  set stages(List<DBType> value) => _stages.value = value;
 
-  init() {
-    _presenter.fetchDataContract = this;
-  }
+  void fetchData(int prospectid) => presenter.fetchData(prospectid);
+  void deleteData(int detailid) => presenter.deleteData(detailid);
+
+  @override
+  ProspectDetailPresenter presenterBuilder() => ProspectDetailPresenter();
 
   @override
   onLoadError(String message) => _listener.onLoadError(message);
@@ -42,6 +38,19 @@ class ProspectDetailDataSource implements FetchDataContract {
       prospectDetails = data['prospectdetails'].map<ProspectDetail>((json) => ProspectDetail.fromJson(json)).toList();
     }
 
-    Get.find<TaskHelper>().loaderPop(ProspectString.detailTaskCode);
+    if (data['stages'] != null) {
+      stages = data['stages'].map<DBType>((json) => DBType.fromJson(json)).toList();
+    }
+
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
+
+  @override
+  void onDeleteError(String message) => _listener.onDeleteError(message);
+
+  @override
+  void onDeleteFailed(String message) => _listener.onDeleteFailed(message);
+
+  @override
+  void onDeleteSuccess(String message) => _listener.onDeleteSuccess(message);
 }

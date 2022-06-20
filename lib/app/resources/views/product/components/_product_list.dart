@@ -78,7 +78,7 @@ class _ProductList extends StatelessWidget {
                         dropdownSettings: DropdownSettings(
                           width: 100,
                           offset: Offset(10, 5),
-                          child: Padding(
+                          builder: (controller) => Padding(
                             padding: const EdgeInsets.symmetric(
                               vertical: RegularSize.s,
                               horizontal: RegularSize.s,
@@ -91,7 +91,17 @@ class _ProductList extends StatelessWidget {
                                   title: "Edit",
                                   icon: "assets/svg/edit.svg",
                                   onTap: () => state.listener.navigateToFormEdit(product.prosproductid!),
-                                )
+                                ),
+                                MenuItem(
+                                  title: "Delete",
+                                  icon: "assets/svg/delete.svg",
+                                  onTap: () => state.listener.deleteProduct(product.prosproductid!),
+                                ),
+                                MenuItem(
+                                  title: "Detail",
+                                  icon: "assets/svg/detail.svg",
+                                  onTap: () => showProductDetail(product),
+                                ),
                               ],
                             ),
                           ),
@@ -143,5 +153,114 @@ class _ProductList extends StatelessWidget {
         },
       );
     });
+  }
+
+  void showProductDetail(ProspectProduct product) {
+    String price = currencyFormat(product.prosproductprice?.toString().replaceAll(RegExp(r'[.]'), ',') ?? "0");
+    RegularDialog(
+      width: Get.width * 0.9,
+      alignment: Alignment.centerLeft,
+      padding: EdgeInsets.symmetric(
+        vertical: RegularSize.m,
+        horizontal: RegularSize.m,
+      ),
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              product.prosproductproduct?.productname ?? "",
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                color: RegularColor.dark,
+              ),
+            ),
+            SizedBox(
+              height: RegularSize.xs,
+            ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  price,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: RegularColor.dark,
+                  ),
+                ),
+                Text(
+                  " x${product.prosproductqty ?? 0}",
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: RegularColor.green,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: RegularSize.m,
+            ),
+            _DetailItem(title: "Amount", value: currencyFormat(product.prosproductamount?.toString().replaceAll('.', ',') ?? "0")),
+            SizedBox(
+              height: RegularSize.m,
+            ),
+            _DetailItem(title: "Discount", value: "${product.prosproductdiscount ?? 0} %".replaceAll('.', ',')),
+            SizedBox(
+              height: RegularSize.m,
+            ),
+            _DetailItem(title: "Tax Type", value: product.prosproducttaxtype?.typename ?? "No Tax"),
+            SizedBox(
+              height: RegularSize.m,
+            ),
+            _DetailItem(title: "Tax Total", value: currencyFormat(product.prosproducttax?.toString().replaceAll(RegExp(r'[.]'), ',') ?? "0")),
+          ],
+        ),
+      ),
+    ).show();
+  }
+}
+
+class _DetailItem extends StatelessWidget {
+  String title;
+  String value;
+  Color color;
+
+  _DetailItem({
+    required this.title,
+    required this.value,
+    this.color = RegularColor.dark,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: color,
+          ),
+        ),
+        SizedBox(
+          height: RegularSize.xs,
+        ),
+        Text(
+          value,
+          style: TextStyle(
+            fontSize: 14,
+            color: color,
+          ),
+        ),
+      ],
+    );
   }
 }

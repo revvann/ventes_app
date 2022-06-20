@@ -5,7 +5,7 @@ select table_name,
     column_default,
     is_nullable
 from INFORMATION_SCHEMA.COLUMNS
-where table_name in ('msuserdt')
+where table_name in ('trprospectassign', 'trprospect')
 order by table_name,
     ordinal_position;
 -- select column_name,
@@ -147,3 +147,20 @@ from msuserdt;
 --         now(),
 --         true
 --     );
+select *
+from msuser;
+INSERT INTO msuserdt
+values (
+        default,
+        7,
+        2,
+        2,
+        null,
+        null,
+        null,
+        1,
+        now(),
+        1,
+        now(),
+        true
+    );

@@ -1,20 +1,9 @@
-import 'package:get/get.dart';
-import 'package:ventes/app/models/customer_model.dart';
-import 'package:ventes/app/models/type_model.dart';
-import 'package:ventes/app/network/contracts/create_contract.dart';
-import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
-import 'package:ventes/app/network/presenters/contact_person_fc_presenter.dart';
-import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
-import 'package:ventes/app/states/form_sources/contact_person_fc_form_source.dart';
-import 'package:ventes/app/states/listeners/contact_person_fc_listener.dart';
-import 'package:ventes/constants/strings/prospect_string.dart';
-import 'package:ventes/helpers/task_helper.dart';
+part of 'package:ventes/app/states/controllers/contact_person_fc_state_controller.dart';
 
-class ContactPersonFormCreateDataSource implements FetchDataContract, CreateContract {
-  ContactPersonFormCreateListener get _listener => Get.find<ContactPersonFormCreateListener>();
-  ContactPersonFormCreateFormSource get _formSource => Get.find<ContactPersonFormCreateFormSource>();
-
-  final ContactPersonFormCreatePresenter _presenter = ContactPersonFormCreatePresenter();
+class _DataSource extends RegularDataSource<ContactPersonFormCreatePresenter> implements ContactPersonCreateContract {
+  _Listener get _listener => Get.find<_Listener>(tag: ProspectString.contactCreateTag);
+  _Properties get _properties => Get.find<_Properties>(tag: ProspectString.contactCreateTag);
+  _FormSource get _formSource => Get.find<_FormSource>(tag: ProspectString.contactCreateTag);
 
   final Rx<Customer?> _customer = Rx<Customer?>(null);
   Customer? get customer => _customer.value;
@@ -24,13 +13,11 @@ class ContactPersonFormCreateDataSource implements FetchDataContract, CreateCont
   List<KeyableDropdownItem<int, DBType>> get types => _types.value;
   set types(List<KeyableDropdownItem<int, DBType>> value) => _types.value = value;
 
-  init() {
-    _presenter.fetchDataContract = this;
-    _presenter.createContract = this;
-  }
+  void fetchData(int id) => presenter.fetchData(id);
+  void createData(Map<String, dynamic> data) => presenter.createData(data);
 
-  void fetchData(int id) => _presenter.fetchData(id);
-  void createData(Map<String, dynamic> data) => _presenter.createData(data);
+  @override
+  ContactPersonFormCreatePresenter presenterBuilder() => ContactPersonFormCreatePresenter();
 
   @override
   onLoadError(String message) => _listener.onLoadError(message);
@@ -50,7 +37,7 @@ class ContactPersonFormCreateDataSource implements FetchDataContract, CreateCont
       _formSource.contacttype = types.isNotEmpty ? types.first : null;
       this.types = types.map<KeyableDropdownItem<int, DBType>>((type) => KeyableDropdownItem<int, DBType>(key: type.typeid!, value: type)).toList();
     }
-    Get.find<TaskHelper>().loaderPop(ProspectString.formCreateContactTaskCode);
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 
   @override

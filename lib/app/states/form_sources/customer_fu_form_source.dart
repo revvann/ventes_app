@@ -1,26 +1,9 @@
-import 'dart:io';
+part of 'package:ventes/app/states/controllers/customer_fu_state_controller.dart';
 
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/services.dart' show rootBundle;
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:get/get.dart';
-import 'package:ventes/app/models/city_model.dart';
-import 'package:ventes/app/models/country_model.dart';
-import 'package:ventes/app/models/province_model.dart';
-import 'package:ventes/app/models/subdistrict_model.dart';
-import 'package:ventes/app/resources/widgets/search_list.dart';
-import 'package:ventes/app/states/controllers/customer_fu_state_controller.dart';
-import 'package:ventes/app/states/data_sources/customer_fu_data_source.dart';
-import 'package:ventes/app/states/form_validators/customer_fu_validator.dart';
-import 'package:ventes/app/states/listeners/customer_fu_listener.dart';
-import 'package:ventes/constants/strings/nearby_string.dart';
-
-class CustomerFormUpdateFormSource {
-  late CustomerFormUpdateValidator validator;
-  final CustomerFormUpdateProperties _properties = Get.find<CustomerFormUpdateProperties>();
-  final CustomerFormUpdateListener _listener = Get.find<CustomerFormUpdateListener>();
-  final CustomerFormUpdateDataSource _dataSource = Get.find<CustomerFormUpdateDataSource>();
+class _FormSource extends UpdateFormSource {
+  _Validator validator = _Validator();
+  final _Properties _properties = Get.find<_Properties>(tag: NearbyString.customerUpdateTag);
+  final _DataSource _dataSource = Get.find<_DataSource>(tag: NearbyString.customerUpdateTag);
 
   SearchListController<Country, Country> countrySearchListController = Get.put(SearchListController<Country, Country>());
   SearchListController<Province, Province> provinceSearchListController = Get.put(SearchListController<Province, Province>());
@@ -62,11 +45,9 @@ class CustomerFormUpdateFormSource {
 
   set cstmtypeid(int? value) => _cstmtypeid.value = value;
 
-  init() async {
-    validator = CustomerFormUpdateValidator(this);
-  }
-
-  dispose() {
+  @override
+  void close() {
+    super.close();
     nameTEC.dispose();
     addressTEC.dispose();
     phoneTEC.dispose();
@@ -77,7 +58,8 @@ class CustomerFormUpdateFormSource {
     Get.delete<SearchListController<Subdistrict, Subdistrict>>();
   }
 
-  void prepareFormValue() {
+  @override
+  void prepareFormValues() {
     if (_dataSource.bpCustomer != null) {
       sbcid = _dataSource.bpCustomer!.sbcid;
 
@@ -114,6 +96,7 @@ class CustomerFormUpdateFormSource {
     }
   }
 
+  @override
   Map<String, dynamic> toJson() {
     return {
       'sbccstmpic': picture?.path,
@@ -125,5 +108,31 @@ class CustomerFormUpdateFormSource {
       'cstmlatitude': cstmlatitude,
       'cstmlongitude': cstmlongitude,
     };
+  }
+
+  @override
+  void onSubmit() {
+    double newLat = double.tryParse(cstmlatitude) ?? 0.0;
+    double newLng = double.tryParse(cstmlongitude) ?? 0.0;
+    LatLng newPos = LatLng(newLat, newLng);
+
+    double radius = calculateDistance(_properties.markers.first.position, newPos);
+    bool inRange = radius <= 100;
+
+    if (isValid && inRange) {
+      Map<String, dynamic> data = toJson();
+      data['_method'] = 'PUT';
+
+      if (data['sbccstmpic'] != null) {
+        String filename = path.basename(data['sbccstmpic']);
+        data['sbccstmpic'] = MultipartFile(File(data['sbccstmpic']), filename: filename);
+      }
+
+      FormData formData = FormData(data);
+      _dataSource.updateCustomer(sbcid!, formData);
+      Get.find<TaskHelper>().loaderPush(_properties.task);
+    } else {
+      Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: NearbyString.formInvalid));
+    }
   }
 }

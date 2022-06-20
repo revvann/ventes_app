@@ -7,6 +7,8 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ventes/app/models/customer_model.dart';
 import 'package:ventes/app/resources/widgets/icon_input.dart';
+import 'package:ventes/app/resources/widgets/pop_up_item.dart';
+import 'package:ventes/app/resources/widgets/popup_button.dart';
 import 'package:ventes/app/resources/widgets/top_navigation.dart';
 import 'package:ventes/app/states/controllers/nearby_state_controller.dart';
 import 'package:ventes/constants/regular_color.dart';
@@ -16,12 +18,13 @@ import 'package:ventes/core/view.dart';
 import 'package:ventes/helpers/function_helpers.dart';
 
 part 'package:ventes/app/resources/views/nearby/components/customer_list.dart';
+part 'package:ventes/app/resources/views/nearby/components/_app_bar_menu.dart';
 
 class NearbyView extends View<NearbyStateController> {
   static const String route = "/nearby";
 
   @override
-  Widget build(BuildContext context) {
+  Widget buildWidget(BuildContext context, state) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: RegularColor.primary,
     ));
@@ -31,7 +34,7 @@ class NearbyView extends View<NearbyStateController> {
       extendBodyBehindAppBar: true,
       appBar: TopNavigation(
         title: NearbyString.appBarTitle,
-        onTitleTap: state.listener.onRefresh,
+        onTitleTap: () async => state.refreshStates(),
         height: 80,
         appBarKey: state.appBarKey,
         leading: GestureDetector(
@@ -46,37 +49,8 @@ class NearbyView extends View<NearbyStateController> {
           onTap: backToDashboard,
         ),
         actions: [
-          Obx(() {
-            bool isCustomerSelected = state.properties.selectedCustomer.isNotEmpty;
-            bool isBpHasCustomer = false;
-            if (state.dataSource.bpCustomers.isNotEmpty && state.properties.selectedCustomer.isNotEmpty) {
-              isBpHasCustomer = state.dataSource.bpCustomersHas(state.properties.selectedCustomer.first);
-            }
-            return GestureDetector(
-              onTap: isCustomerSelected
-                  ? isBpHasCustomer
-                      ? state.listener.onEditDataClick
-                      : state.listener.onAddDataClick
-                  : state.listener.onAddDataClick,
-              child: Container(
-                padding: EdgeInsets.symmetric(
-                  vertical: RegularSize.s,
-                  horizontal: RegularSize.m,
-                ),
-                child: Text(
-                  isCustomerSelected
-                      ? isBpHasCustomer
-                          ? NearbyString.editCustomerText
-                          : NearbyString.addCustomerText
-                      : NearbyString.addCustomerText,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                  ),
-                ),
-              ),
-            );
-          }),
+          _AppBarMenu(),
+          SizedBox(width: RegularSize.xs),
         ],
         below: Container(
           padding: EdgeInsets.symmetric(

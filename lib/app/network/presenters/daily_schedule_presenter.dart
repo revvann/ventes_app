@@ -1,17 +1,17 @@
 import 'package:get/get.dart';
 import 'package:ventes/app/models/auth_model.dart';
+import 'package:ventes/app/network/contracts/delete_contract.dart';
+import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
+import 'package:ventes/app/network/presenters/regular_presenter.dart';
 import 'package:ventes/app/network/services/type_service.dart';
 import 'package:ventes/constants/strings/regular_string.dart';
 import 'package:ventes/constants/strings/schedule_string.dart';
 import 'package:ventes/helpers/auth_helper.dart';
-import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
 import 'package:ventes/app/network/services/schedule_service.dart';
 
-class DailySchedulePresenter {
+class DailySchedulePresenter extends RegularPresenter<DailyScheduleContract> {
   final TypeService _typeService = Get.find<TypeService>();
   final _scheduleService = Get.find<ScheduleService>();
-  late final FetchDataContract _fetchContract;
-  set fetchContract(FetchDataContract contract) => _fetchContract = contract;
 
   Future<Response> getSchedules(String date) async {
     AuthModel? authModel = await Get.find<AuthHelper>().get();
@@ -31,21 +31,45 @@ class DailySchedulePresenter {
     return await _typeService.byCode(params);
   }
 
+  Future<Response> getPermissions() async {
+    Map<String, dynamic> params = {
+      "typecd": ScheduleString.permissionTypeCode,
+    };
+    return await _typeService.byCode(params);
+  }
+
   void fetchData(String date) async {
     try {
       Map data = {};
       Response scheduleResponse = await getSchedules(date);
       Response typesResponse = await getTypes();
+      Response permissionsResponse = await getPermissions();
 
-      if (scheduleResponse.statusCode == 200 && typesResponse.statusCode == 200) {
+      if (scheduleResponse.statusCode == 200 && typesResponse.statusCode == 200 && permissionsResponse.statusCode == 200) {
         data["schedules"] = scheduleResponse.body;
         data["types"] = typesResponse.body;
-        _fetchContract.onLoadSuccess(data);
+        data["permissions"] = permissionsResponse.body;
+        contract.onLoadSuccess(data);
       } else {
-        _fetchContract.onLoadFailed(ScheduleString.fetchFailed);
+        contract.onLoadFailed(ScheduleString.fetchFailed);
       }
     } catch (e) {
-      _fetchContract.onLoadFailed(e.toString());
+      contract.onLoadFailed(e.toString());
+    }
+  }
+
+  void deleteData(int scheduleid) async {
+    try {
+      Response response = await _scheduleService.destroy(scheduleid);
+      if (response.statusCode == 200) {
+        contract.onDeleteSuccess(ScheduleString.deleteSuccess);
+      } else {
+        contract.onDeleteFailed(ScheduleString.deleteFailed);
+      }
+    } catch (e) {
+      contract.onDeleteFailed(e.toString());
     }
   }
 }
+
+abstract class DailyScheduleContract implements FetchDataContract, DeleteContract {}

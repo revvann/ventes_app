@@ -1,16 +1,12 @@
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:ventes/app/models/prospect_model.dart';
-import 'package:ventes/app/models/type_model.dart';
-import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
-import 'package:ventes/app/states/form_validators/prospect_detail_fc_validator.dart';
-import 'package:ventes/constants/strings/prospect_string.dart';
-import 'package:ventes/helpers/function_helpers.dart';
+part of 'package:ventes/app/states/controllers/prospect_detail_fc_state_controller.dart';
 
-class ProspectDetailFormCreateFormSource {
+class _FormSource extends RegularFormSource {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
-  late ProspectDetailFormCreateValidator validator;
+  _Properties get _properties => Get.find<_Properties>(tag: ProspectString.detailCreateTag);
+  _DataSource get _dataSource => Get.find<_DataSource>(tag: ProspectString.detailCreateTag);
+
+  _Validator validator = _Validator();
 
   KeyableDropdownController<int, DBType> categoryDropdownController = Get.put(
     KeyableDropdownController<int, DBType>(),
@@ -29,6 +25,9 @@ class ProspectDetailFormCreateFormSource {
 
   final Rx<DateTime?> _date = Rx<DateTime?>(null);
   Prospect? prospect;
+  final Rx<String?> _prosdtloc = Rx<String?>(null);
+  double? prosdtlat;
+  double? prosdtlong;
 
   bool get isValid => formKey.currentState?.validate() ?? false;
 
@@ -41,14 +40,40 @@ class ProspectDetailFormCreateFormSource {
   DBType? get prosdttype => _prosdttype.value;
   set prosdttype(DBType? value) => _prosdttype.value = value;
 
+  String? get prosdtloc => _prosdtloc.value;
+  set prosdtloc(String? value) => _prosdtloc.value = value;
+
   String? get dateString => date != null ? formatDate(date!) : null;
 
-  init() {
+  @override
+  init() async {
+    super.init();
     date = DateTime.now();
-    validator = ProspectDetailFormCreateValidator(this);
+
+    Position pos = await getCurrentPosition();
+    prosdtlat = pos.latitude;
+    prosdtlong = pos.longitude;
+    prosdtloc = "https://maps.google.com?q=$prosdtlat,$prosdtlong";
+
+    Marker marker = Marker(
+      markerId: MarkerId("currentloc"),
+      position: LatLng(prosdtlat ?? 0, prosdtlong ?? 0),
+      infoWindow: InfoWindow(
+        title: "Current position",
+      ),
+    );
+    _properties.marker = {marker};
+
+    _properties.mapsController.future.then((controller) {
+      controller.animateCamera(
+        CameraUpdate.newLatLng(LatLng(prosdtlat ?? 0, prosdtlong ?? 0)),
+      );
+    });
   }
 
-  void dispose() {
+  @override
+  void close() {
+    super.close();
     prosdtdescTEC.dispose();
     Get.delete<KeyableDropdownController<int, DBType>>(
       tag: ProspectString.categoryDropdownTag,
@@ -58,6 +83,7 @@ class ProspectDetailFormCreateFormSource {
     );
   }
 
+  @override
   Map<String, dynamic> toJson() {
     return {
       'prospectdtprospectid': prospect?.prospectid?.toString(),
@@ -65,6 +91,20 @@ class ProspectDetailFormCreateFormSource {
       'prospectdtdate': dbFormatDate(date!),
       'prospectdtcatid': prosdtcategory?.typeid.toString(),
       'prospectdttypeid': prosdttype?.typeid.toString(),
+      'prospectdtloc': prosdtloc,
+      'prospectdtlatitude': prosdtlat.toString(),
+      'prospectdtlongitude': prosdtlong.toString(),
     };
+  }
+
+  @override
+  void onSubmit() {
+    if (isValid) {
+      Map<String, dynamic> data = toJson();
+      _dataSource.createData(data);
+      Get.find<TaskHelper>().loaderPush(_properties.task);
+    } else {
+      Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: "Form invalid, Make sure all fields are filled"));
+    }
   }
 }

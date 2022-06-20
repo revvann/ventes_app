@@ -1,17 +1,8 @@
-import 'package:get/get.dart';
-import 'package:ventes/app/resources/views/contact/contact.dart';
-import 'package:ventes/app/resources/views/product/product.dart';
-import 'package:ventes/app/resources/views/prospect_detail_form/create/prospect_detail_fc.dart';
-import 'package:ventes/app/resources/views/prospect_detail_form/update/prospect_detail_fu.dart';
-import 'package:ventes/app/states/controllers/prospect_detail_state_controller.dart';
-import 'package:ventes/app/states/data_sources/prospect_detail_data_source.dart';
-import 'package:ventes/constants/strings/prospect_string.dart';
-import 'package:ventes/helpers/task_helper.dart';
-import 'package:ventes/routing/navigators/prospect_navigator.dart';
+part of 'package:ventes/app/states/controllers/prospect_detail_state_controller.dart';
 
-class ProspectDetailListener {
-  ProspectDetailProperties get _properties => Get.find<ProspectDetailProperties>();
-  ProspectDetailDataSource get _dataSource => Get.find<ProspectDetailDataSource>();
+class _Listener extends RegularListener {
+  _Properties get _properties => Get.find<_Properties>(tag: ProspectString.detailTag);
+  _DataSource get _dataSource => Get.find<_DataSource>(tag: ProspectString.detailTag);
 
   void goBack() {
     Get.back(id: ProspectNavigator.id);
@@ -20,6 +11,26 @@ class ProspectDetailListener {
   void navigateToProspectDetailForm() {
     Get.toNamed(
       ProspectDetailFormCreateView.route,
+      id: ProspectNavigator.id,
+      arguments: {
+        'prospect': _properties.prospectId,
+      },
+    );
+  }
+
+  void navigateToProspectAssign() {
+    Get.toNamed(
+      ProspectAssignView.route,
+      id: ProspectNavigator.id,
+      arguments: {
+        'prospect': _properties.prospectId,
+      },
+    );
+  }
+
+  void navigateToProspectUpdateForm() {
+    Get.toNamed(
+      ProspectFormUpdateView.route,
       id: ProspectNavigator.id,
       arguments: {
         'prospect': _properties.prospectId,
@@ -53,17 +64,51 @@ class ProspectDetailListener {
     );
   }
 
-  Future onRefresh() async {
-    _properties.refresh();
+  void deleteDetail(int id) {
+    Get.find<TaskHelper>().confirmPush(
+      _properties.task.copyWith<bool>(
+        message: ProspectString.deleteDetailConfirm,
+        onFinished: (res) {
+          if (res) {
+            _dataSource.deleteData(id);
+            Get.find<TaskHelper>().loaderPush(_properties.task);
+          }
+        },
+      ),
+    );
   }
 
   void onLoadFailed(String message) {
-    Get.find<TaskHelper>().failedPush(ProspectString.detailTaskCode, message);
-    Get.find<TaskHelper>().loaderPop(ProspectString.detailTaskCode);
+    Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: message, snackbar: true));
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 
   void onLoadError(String message) {
-    Get.find<TaskHelper>().errorPush(ProspectString.detailTaskCode, message);
-    Get.find<TaskHelper>().loaderPop(ProspectString.detailTaskCode);
+    Get.find<TaskHelper>().errorPush(_properties.task.copyWith(message: message));
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+  }
+
+  void onDeleteFailed(String message) {
+    Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: message, snackbar: true));
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+  }
+
+  void onDeleteSuccess(String message) {
+    Get.find<TaskHelper>().successPush(_properties.task.copyWith(
+        message: message,
+        onFinished: (res) {
+          Get.find<ProspectDetailStateController>().refreshStates();
+        }));
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+  }
+
+  void onDeleteError(String message) {
+    Get.find<TaskHelper>().errorPush(_properties.task.copyWith(message: message));
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+  }
+
+  @override
+  Future onRefresh() async {
+    _properties.refresh();
   }
 }

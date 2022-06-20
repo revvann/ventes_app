@@ -1,24 +1,9 @@
 // ignore_for_file: prefer_const_constructors
+part of 'package:ventes/app/states/controllers/nearby_state_controller.dart';
 
-import 'package:get/get.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:ventes/app/models/bp_customer_model.dart';
-import 'package:ventes/app/models/customer_model.dart';
-import 'package:ventes/app/resources/views/customer_form/create/customer_fc.dart';
-import 'package:ventes/app/resources/views/customer_form/update/customer_fu.dart';
-import 'package:ventes/app/resources/widgets/error_alert.dart';
-import 'package:ventes/app/resources/widgets/failed_alert.dart';
-import 'package:ventes/app/resources/widgets/loader.dart';
-import 'package:ventes/app/states/data_sources/nearby_data_source.dart';
-import 'package:ventes/constants/strings/nearby_string.dart';
-import 'package:ventes/helpers/function_helpers.dart';
-import 'package:ventes/helpers/task_helper.dart';
-import 'package:ventes/routing/navigators/nearby_navigator.dart';
-import 'package:ventes/app/states/controllers/nearby_state_controller.dart';
-
-class NearbyListener {
-  NearbyProperties get _properties => Get.find<NearbyProperties>();
-  NearbyDataSource get _dataSource => Get.find<NearbyDataSource>();
+class _Listener extends RegularListener {
+  _Properties get _properties => Get.find<_Properties>(tag: NearbyString.nearbyTag);
+  _DataSource get _dataSource => Get.find<_DataSource>(tag: NearbyString.nearbyTag);
 
   void onMapControllerCreated(GoogleMapController controller) {
     if (!_properties.mapsController.isCompleted) {
@@ -50,9 +35,9 @@ class NearbyListener {
   }
 
   void onAddDataClick() async {
-    Get.find<TaskHelper>().loaderPush(NearbyString.taskCode);
+    Get.find<TaskHelper>().loaderPush(_properties.task);
     getCurrentPosition().then((position) {
-      Get.find<TaskHelper>().loaderPop(NearbyString.taskCode);
+      Get.find<TaskHelper>().loaderPop(_properties.task.name);
       double radius = calculateDistance(_properties.markers.first.position, LatLng(position.latitude, position.longitude));
 
       int? cstmid;
@@ -71,19 +56,15 @@ class NearbyListener {
           },
         );
       } else {
-        Get.find<TaskHelper>().failedPush(NearbyString.taskCode, NearbyString.customerOuttaRange);
+        Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: NearbyString.customerOuttaRange));
       }
     });
   }
 
-  Future onRefresh() async {
-    _properties.refresh();
-  }
-
   void onEditDataClick() async {
-    Get.find<TaskHelper>().loaderPush(NearbyString.taskCode);
+    Get.find<TaskHelper>().loaderPush(_properties.task);
     getCurrentPosition().then((position) async {
-      Get.find<TaskHelper>().loaderPop(NearbyString.taskCode);
+      Get.find<TaskHelper>().loaderPop(_properties.task.name);
 
       Customer customer = _properties.selectedCustomer.first;
       BpCustomer bpcustomer = _dataSource.bpCustomers.firstWhere((element) => element.sbccstmid == customer.cstmid);
@@ -98,18 +79,58 @@ class NearbyListener {
           },
         );
       } else {
-        await Get.find<TaskHelper>().failedPush(NearbyString.taskCode, NearbyString.customerOuttaRange);
+        await Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: NearbyString.customerOuttaRange));
       }
     });
   }
 
+  void onDeleteDataClick() {
+    Get.find<TaskHelper>().confirmPush(
+      _properties.task.copyWith(
+        message: NearbyString.deleteCustomerConfirm,
+        onFinished: (res) {
+          if (res) {
+            Customer customer = _properties.selectedCustomer.first;
+            BpCustomer bpcustomer = _dataSource.bpCustomers.firstWhere((element) => element.sbccstmid == customer.cstmid);
+            _dataSource.deleteData(bpcustomer.sbcid!);
+            Get.find<TaskHelper>().loaderPush(_properties.task);
+          }
+        },
+      ),
+    );
+  }
+
   void onLoadDataError(String message) {
-    Get.find<TaskHelper>().errorPush(NearbyString.taskCode, message);
-    Get.find<TaskHelper>().loaderPop(NearbyString.taskCode);
+    Get.find<TaskHelper>().errorPush(_properties.task.copyWith(message: message));
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 
   void onLoadDataFailed(String message) {
-    Get.find<TaskHelper>().failedPush(NearbyString.taskCode, message);
-    Get.find<TaskHelper>().loaderPop(NearbyString.taskCode);
+    Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: message, snackbar: true));
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+  }
+
+  void onDeleteFailed(String message) {
+    Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: message, snackbar: true));
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+  }
+
+  void onDeleteSuccess(String message) {
+    Get.find<TaskHelper>().successPush(_properties.task.copyWith(
+        message: message,
+        onFinished: (res) {
+          Get.find<NearbyStateController>().refreshStates();
+        }));
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+  }
+
+  void onDeleteError(String message) {
+    Get.find<TaskHelper>().errorPush(_properties.task.copyWith(message: message));
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+  }
+
+  @override
+  Future onRefresh() async {
+    _properties.refresh();
   }
 }

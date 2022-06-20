@@ -1,19 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:ventes/app/models/schedule_model.dart';
-import 'package:ventes/app/resources/views/daily_schedule/daily_schedule.dart';
-import 'package:ventes/app/resources/widgets/failed_alert.dart';
-import 'package:ventes/app/resources/widgets/loader.dart';
-import 'package:ventes/app/states/data_sources/schedule_data_source.dart';
-import 'package:ventes/constants/regular_color.dart';
-import 'package:ventes/constants/strings/schedule_string.dart';
-import 'package:ventes/helpers/task_helper.dart';
-import 'package:ventes/routing/navigators/schedule_navigator.dart';
-import 'package:ventes/app/states/controllers/schedule_state_controller.dart';
+part of 'package:ventes/app/states/controllers/schedule_state_controller.dart';
 
-class ScheduleListener {
-  ScheduleProperties get _properties => Get.find<ScheduleProperties>();
-  ScheduleDataSource get _dataSource => Get.find<ScheduleDataSource>();
+class _Listener extends RegularListener {
+  _Properties get _properties => Get.find<_Properties>(tag: ScheduleString.scheduleTag);
+  _DataSource get _dataSource => Get.find<_DataSource>(tag: ScheduleString.scheduleTag);
 
   void onDateShownChanged(String data) {
     if (data == 'displayDate') {
@@ -21,7 +10,7 @@ class ScheduleListener {
         _properties.dateShown = _properties.calendarController.displayDate!;
       }
       _dataSource.fetchSchedules(_properties.dateShown.month);
-      Get.find<TaskHelper>().loaderPush(ScheduleString.taskCode);
+      Get.find<TaskHelper>().loaderPush(_properties.task);
     }
   }
 
@@ -59,17 +48,18 @@ class ScheduleListener {
     return color;
   }
 
+  @override
   Future onRefresh() async {
     _properties.refresh();
   }
 
   onLoadDataFailed(String message) {
-    Get.find<TaskHelper>().failedPush(ScheduleString.taskCode, message);
-    Get.find<TaskHelper>().loaderPop(ScheduleString.taskCode);
+    Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: message, snackbar: true));
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 
   onLoadDataError(String message) {
-    Get.find<TaskHelper>().failedPush(ScheduleString.taskCode, message);
-    Get.find<TaskHelper>().loaderPop(ScheduleString.taskCode);
+    Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: message, snackbar: true));
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 }

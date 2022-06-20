@@ -18,6 +18,8 @@ class _Calendar extends StatelessWidget {
   DateTime? initialDate;
   Widget Function(BuildContext, MonthCellDetails)? monthCellBuilder;
 
+  ScheduleStateController get state => Get.find<ScheduleStateController>();
+
   @override
   Widget build(BuildContext context) {
     return SfCalendar(
@@ -97,7 +99,7 @@ class _Calendar extends StatelessWidget {
         horizontal: RegularSize.m,
       ),
       child: SingleChildScrollView(
-        child: ScheduleDetail(schedule),
+        child: ScheduleDetail(schedule, state.dataSource.permissions),
       ),
     ).show();
   }

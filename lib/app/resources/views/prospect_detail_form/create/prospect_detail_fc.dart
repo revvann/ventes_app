@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ventes/app/models/type_model.dart';
 import 'package:ventes/app/resources/widgets/editor_input.dart';
 import 'package:ventes/app/resources/widgets/icon_input.dart';
@@ -20,16 +21,21 @@ import 'package:ventes/core/view.dart';
 part 'package:ventes/app/resources/views/prospect_detail_form/create/components/_category_dropdown.dart';
 part 'package:ventes/app/resources/views/prospect_detail_form/create/components/_type_dropdown.dart';
 part 'package:ventes/app/resources/views/prospect_detail_form/create/components/_date_picker.dart';
+part 'package:ventes/app/resources/views/prospect_detail_form/create/components/_map_preview.dart';
 
 class ProspectDetailFormCreateView extends View<ProspectDetailFormCreateStateController> {
   static const String route = "/prospect/detail/create";
+  int prospectId;
 
-  ProspectDetailFormCreateView(int prospectId) {
+  ProspectDetailFormCreateView(this.prospectId);
+
+  @override
+  void onBuild(state) {
     state.properties.prospectId = prospectId;
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget buildWidget(BuildContext context, state) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: RegularColor.primary,
     ));
@@ -40,6 +46,7 @@ class ProspectDetailFormCreateView extends View<ProspectDetailFormCreateStateCon
       appBar: TopNavigation(
         title: ProspectString.appBarTitle,
         appBarKey: state.appBarKey,
+        onTitleTap: () async => state.refreshStates(),
         leading: GestureDetector(
           child: Container(
             padding: EdgeInsets.all(RegularSize.xs),
@@ -72,7 +79,7 @@ class ProspectDetailFormCreateView extends View<ProspectDetailFormCreateStateCon
       ).build(context),
       body: SafeArea(
         child: RefreshIndicator(
-          onRefresh: state.listener.onRefresh,
+          onRefresh: () async => state.refreshStates(),
           child: Obx(
             () {
               return Container(
@@ -132,17 +139,7 @@ class ProspectDetailFormCreateView extends View<ProspectDetailFormCreateStateCon
                         SizedBox(
                           height: RegularSize.m,
                         ),
-                        Container(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            "Products",
-                            style: TextStyle(
-                              color: RegularColor.primary,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                            ),
-                          ),
-                        ),
+                        _MapPreview(),
                         SizedBox(
                           height: RegularSize.m,
                         ),

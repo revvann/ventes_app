@@ -1,20 +1,11 @@
-import 'package:get/get.dart';
-import 'package:ventes/app/resources/views/contact_form/create/contact_person_fc.dart';
-import 'package:ventes/app/resources/views/contact_form/update/contact_person_fu.dart';
-import 'package:ventes/app/states/controllers/contact_person_state_controller.dart';
-import 'package:ventes/constants/strings/prospect_string.dart';
-import 'package:ventes/helpers/task_helper.dart';
-import 'package:ventes/routing/navigators/prospect_navigator.dart';
+part of 'package:ventes/app/states/controllers/contact_person_state_controller.dart';
 
-class ContactPersonListener {
-  ContactPersonProperties get _properties => Get.find<ContactPersonProperties>();
+class _Listener extends RegularListener {
+  _Properties get _properties => Get.find<_Properties>(tag: ProspectString.contactTag);
+  _DataSource get _dataSource => Get.find<_DataSource>(tag: ProspectString.contactTag);
 
   void goBack() {
     Get.back(id: ProspectNavigator.id);
-  }
-
-  Future onRefresh() async {
-    _properties.refresh();
   }
 
   void onAddButtonClicked() {
@@ -37,13 +28,51 @@ class ContactPersonListener {
     );
   }
 
+  void deleteData(int id) {
+    Get.find<TaskHelper>().confirmPush(
+      _properties.task.copyWith<bool>(
+        message: ProspectString.deleteContactConfirm,
+        onFinished: (res) {
+          if (res) {
+            _dataSource.deleteData(id);
+            Get.find<TaskHelper>().loaderPush(_properties.task);
+          }
+        },
+      ),
+    );
+  }
+
   void onLoadFailed(String message) {
-    Get.find<TaskHelper>().failedPush(ProspectString.contactPersonTaskCode, message);
-    Get.find<TaskHelper>().loaderPop(ProspectString.contactPersonTaskCode);
+    Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: message, snackbar: true));
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 
   void onLoadError(String message) {
-    Get.find<TaskHelper>().errorPush(ProspectString.contactPersonTaskCode, message);
-    Get.find<TaskHelper>().loaderPop(ProspectString.contactPersonTaskCode);
+    Get.find<TaskHelper>().errorPush(_properties.task.copyWith(message: message));
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+  }
+
+  void onDeleteFailed(String message) {
+    Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: message, snackbar: true));
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+  }
+
+  void onDeleteSuccess(String message) {
+    Get.find<TaskHelper>().successPush(_properties.task.copyWith(
+        message: message,
+        onFinished: (res) async {
+          Get.find<ContactPersonStateController>().refreshStates();
+        }));
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+  }
+
+  void onDeleteError(String message) {
+    Get.find<TaskHelper>().errorPush(_properties.task.copyWith(message: message));
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+  }
+
+  @override
+  Future onRefresh() async {
+    _properties.refresh();
   }
 }

@@ -23,13 +23,17 @@ part 'package:ventes/app/resources/views/prospect_detail_form/update/components/
 
 class ProspectDetailFormUpdateView extends View<ProspectDetailFormUpdateStateController> {
   static const String route = "/prospect/detail/update";
+  int prospectDetailId;
 
-  ProspectDetailFormUpdateView(int prospectDetailId) {
+  ProspectDetailFormUpdateView(this.prospectDetailId);
+
+  @override
+  void onBuild(state) {
     state.properties.prospectDetailId = prospectDetailId;
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget buildWidget(BuildContext context, state) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: RegularColor.primary,
     ));
@@ -40,6 +44,7 @@ class ProspectDetailFormUpdateView extends View<ProspectDetailFormUpdateStateCon
       appBar: TopNavigation(
         title: ProspectString.appBarTitle,
         appBarKey: state.appBarKey,
+        onTitleTap: () async => state.refreshStates(),
         leading: GestureDetector(
           child: Container(
             padding: EdgeInsets.all(RegularSize.xs),
@@ -72,7 +77,7 @@ class ProspectDetailFormUpdateView extends View<ProspectDetailFormUpdateStateCon
       ).build(context),
       body: SafeArea(
         child: RefreshIndicator(
-          onRefresh: state.listener.onRefresh,
+          onRefresh: () async => state.refreshStates(),
           child: Obx(
             () {
               return Container(

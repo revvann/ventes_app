@@ -7,59 +7,67 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ventes/app/resources/widgets/regular_bottom_sheet.dart';
+import 'package:ventes/app/states/controllers/form_state_controller.dart';
+import 'package:ventes/app/states/data_sources/regular_data_source.dart';
+import 'package:ventes/app/states/form_sources/regular_form_source.dart';
+import 'package:ventes/app/states/listeners/regular_listener.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/constants/strings/schedule_string.dart';
 import 'package:ventes/helpers/function_helpers.dart';
-import 'package:ventes/app/states/controllers/regular_state_controller.dart';
-import 'package:ventes/app/states/data_sources/schedule_fc_data_source.dart';
-import 'package:ventes/app/states/form_sources/schedule_fc_form_source.dart';
-import 'package:ventes/app/states/listeners/schedule_fc_listener.dart';
 import 'package:ventes/helpers/notification_helper.dart';
 import 'package:ventes/helpers/task_helper.dart';
+import 'package:ventes/app/models/schedule_guest_model.dart';
+import 'package:ventes/app/models/user_detail_model.dart';
+import 'package:ventes/app/states/controllers/daily_schedule_state_controller.dart';
+import 'package:ventes/routing/navigators/schedule_navigator.dart';
+import 'dart:convert';
 
-class ScheduleFormCreateStateController extends RegularStateController {
+import 'package:flutter_native_timezone/flutter_native_timezone.dart';
+import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
+import 'package:ventes/app/resources/widgets/regular_dropdown.dart';
+import 'package:ventes/app/resources/widgets/searchable_dropdown.dart';
+import 'package:ventes/app/models/auth_model.dart';
+import 'package:ventes/app/models/type_model.dart';
+import 'package:ventes/app/network/presenters/schedule_fc_presenter.dart';
+import 'package:ventes/helpers/auth_helper.dart';
+
+part 'package:ventes/app/states/form_validators/schedule_fc_validator.dart';
+part 'package:ventes/app/states/data_sources/schedule_fc_data_source.dart';
+part 'package:ventes/app/states/form_sources/schedule_fc_form_source.dart';
+part 'package:ventes/app/states/listeners/schedule_fc_listener.dart';
+
+class ScheduleFormCreateStateController extends FormStateController<_Properties, _Listener, _DataSource, _FormSource> {
+  @override
+  String get tag => ScheduleString.scheduleCreateTag;
+
+  @override
+  _Properties propertiesBuilder() => _Properties();
+
+  @override
+  _Listener listenerBuilder() => _Listener();
+
+  @override
+  _DataSource dataSourceBuilder() => _DataSource();
+
+  @override
+  _FormSource formSourceBuilder() => _FormSource();
+
   @override
   bool get isFixedBody => false;
-
-  ScheduleFormCreateDataSource dataSource = Get.put(ScheduleFormCreateDataSource());
-  ScheduleFormCreateListener listener = Get.put(ScheduleFormCreateListener());
-  ScheduleFormCreateFormSource formSource = Get.put(ScheduleFormCreateFormSource());
-  ScheduleFormCreateProperties properties = Get.put(ScheduleFormCreateProperties());
-
-  @override
-  void onClose() {
-    formSource.formSourceDispose();
-    Get.delete<ScheduleFormCreateProperties>();
-    Get.delete<ScheduleFormCreateListener>();
-    Get.delete<ScheduleFormCreateFormSource>();
-    Get.delete<ScheduleFormCreateDataSource>();
-    super.dispose();
-  }
-
-  @override
-  void onInit() {
-    super.onInit();
-    dataSource.init();
-    formSource.init();
-  }
-
-  @override
-  void onReady() async {
-    super.onReady();
-    properties.refresh();
-  }
 }
 
-class ScheduleFormCreateProperties {
-  ScheduleFormCreateDataSource get _dataSource => Get.find<ScheduleFormCreateDataSource>();
-  ScheduleFormCreateListener get _listener => Get.find<ScheduleFormCreateListener>();
-  ScheduleFormCreateFormSource get _formSource => Get.find<ScheduleFormCreateFormSource>();
+class _Properties {
+  _DataSource get _dataSource => Get.find<_DataSource>(tag: ScheduleString.scheduleCreateTag);
+  _Listener get _listener => Get.find<_Listener>(tag: ScheduleString.scheduleCreateTag);
+  _FormSource get _formSource => Get.find<_FormSource>(tag: ScheduleString.scheduleCreateTag);
 
   final Completer<GoogleMapController> mapsController = Completer();
   CameraPosition currentPos = CameraPosition(target: LatLng(0, 0), zoom: 14.4764);
 
   final Rx<Set<Marker>> _markers = Rx<Set<Marker>>({});
+
+  Task task = Task(ScheduleString.createScheduleTaskCode);
 
   Set<Marker> get markers => _markers.value;
   set markers(Set<Marker> value) => _markers.value = value;
@@ -73,7 +81,7 @@ class ScheduleFormCreateProperties {
   }
 
   void refresh() async {
-    Get.find<TaskHelper>().loaderPush(ScheduleString.createScheduleTaskCode);
+    Get.find<TaskHelper>().loaderPush(task);
     Position pos = await getCurrentPosition();
     mapsController.future.then((controller) {
       controller.animateCamera(

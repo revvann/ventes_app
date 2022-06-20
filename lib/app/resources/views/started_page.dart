@@ -5,15 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:simple_animations/simple_animations.dart';
+import 'package:ventes/app/states/controllers/started_page_state_controller.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
-import 'package:ventes/app/states/controllers/started_page_state_controller.dart';
-import 'package:ventes/core/view.dart';
 import 'package:ventes/app/resources/views/signin/signin.dart';
 
-class StartedPageView extends View<StartedPageStateController> {
+class StartedPageView extends GetView<StartedPageStateController> {
   static const route = "/started-page";
-  StartedPageView();
 
   @override
   Widget build(BuildContext context) {
@@ -28,17 +26,17 @@ class StartedPageView extends View<StartedPageStateController> {
               ),
               SizedBox(
                 child: CarouselSlider(
-                  carouselController: state.carouselController,
+                  carouselController: controller.carouselController,
                   options: CarouselOptions(
                     enableInfiniteScroll: false,
                     onPageChanged: (index, reason) {
-                      state.activeIndex = index;
-                      state.setIndicator(index);
+                      controller.activeIndex = index;
+                      controller.setIndicator(index);
                     },
                     height: Get.height * 0.6,
                     viewportFraction: 1,
                   ),
-                  items: _buildCarouselList(),
+                  items: _buildCarouselList(controller),
                 ),
               ),
               SizedBox(
@@ -48,25 +46,28 @@ class StartedPageView extends View<StartedPageStateController> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   _buildIndicator(
+                    controller,
                     0,
-                    state.indicatorController1,
-                    state.indicator1,
+                    controller.indicatorController1,
+                    controller.indicator1,
                   ),
                   SizedBox(
                     width: 5,
                   ),
                   _buildIndicator(
+                    controller,
                     1,
-                    state.indicatorController2,
-                    state.indicator2,
+                    controller.indicatorController2,
+                    controller.indicator2,
                   ),
                   SizedBox(
                     width: 5,
                   ),
                   _buildIndicator(
+                    controller,
                     2,
-                    state.indicatorController3,
-                    state.indicator3,
+                    controller.indicatorController3,
+                    controller.indicator3,
                   ),
                 ],
               ),
@@ -85,14 +86,14 @@ class StartedPageView extends View<StartedPageStateController> {
                   ),
                   TextButton(
                     onPressed: () {
-                      if (state.activeIndex != 2) {
-                        state.movePage(state.activeIndex + 1);
+                      if (controller.activeIndex != 2) {
+                        controller.movePage(controller.activeIndex + 1);
                       } else {
                         Get.toNamed(SigninView.route);
                       }
                     },
                     child: Obx(() {
-                      return Text(state.activeIndex != 2 ? "Next" : "Start");
+                      return Text(controller.activeIndex != 2 ? "Next" : "Start");
                     }),
                     style: TextButton.styleFrom(
                       primary: RegularColor.secondary,
@@ -107,8 +108,8 @@ class StartedPageView extends View<StartedPageStateController> {
     );
   }
 
-  List<Widget>? _buildCarouselList() {
-    return state.carouselData.map((i) {
+  List<Widget>? _buildCarouselList(StartedPageStateController controller) {
+    return controller.carouselData.map((i) {
       return Builder(
         builder: (BuildContext context) {
           return Container(
@@ -169,16 +170,17 @@ class StartedPageView extends View<StartedPageStateController> {
   }
 
   Widget _buildIndicator(
+    StartedPageStateController controller,
     int index,
-    AnimationController controller,
+    AnimationController animController,
     Animation<MultiTweenValues<String>> animation,
   ) {
     return GestureDetector(
       onTap: () {
-        state.movePage(index);
+        controller.movePage(index);
       },
       child: AnimatedBuilder(
-        animation: controller,
+        animation: animController,
         builder: (_, __) => Container(
           width: animation.value.get("width"),
           height: 8,

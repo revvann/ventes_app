@@ -15,6 +15,7 @@ class _TwinDatePicker extends StatelessWidget {
                   onSelected: state.listener.onDateStartSelected,
                   displaydate: state.formSource.prosstartdate,
                   initialdate: state.formSource.prosstartdate,
+                  maxDate: state.formSource.prosenddate,
                 ).show();
               },
               child: IconInput(

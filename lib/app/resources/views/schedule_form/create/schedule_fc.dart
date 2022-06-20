@@ -14,11 +14,9 @@ import 'package:ventes/app/resources/widgets/regular_date_picker.dart';
 import 'package:ventes/app/resources/widgets/regular_dropdown.dart';
 import 'package:ventes/app/resources/widgets/regular_input.dart';
 import 'package:ventes/app/resources/widgets/regular_select_box.dart';
-import 'package:ventes/app/resources/widgets/search_list.dart';
 import 'package:ventes/app/resources/widgets/searchable_dropdown.dart';
 import 'package:ventes/app/resources/widgets/top_navigation.dart';
 import 'package:ventes/app/states/controllers/schedule_fc_state_controller.dart';
-import 'package:ventes/app/states/form_sources/schedule_fc_form_source.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/constants/strings/schedule_string.dart';
@@ -54,7 +52,7 @@ class ScheduleFormCreateView extends View<ScheduleFormCreateStateController> {
   static const String route = "/schedule/create";
 
   @override
-  Widget build(BuildContext context) {
+  Widget buildWidget(BuildContext context, state) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: RegularColor.primary,
     ));
@@ -64,7 +62,7 @@ class ScheduleFormCreateView extends View<ScheduleFormCreateStateController> {
       extendBodyBehindAppBar: true,
       appBar: TopNavigation(
         title: ScheduleString.appBarTitle,
-        onTitleTap: state.listener.onRefresh,
+        onTitleTap: () async => state.refreshStates(),
         appBarKey: state.appBarKey,
         leading: GestureDetector(
           child: Container(

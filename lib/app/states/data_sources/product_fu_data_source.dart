@@ -1,22 +1,11 @@
 // ignore_for_file: prefer_final_fields
 
-import 'package:get/get.dart';
-import 'package:ventes/app/models/prospect_product_model.dart';
-import 'package:ventes/app/models/type_model.dart';
-import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
-import 'package:ventes/app/network/contracts/update_contract.dart';
-import 'package:ventes/app/network/presenters/product_fu_presenter.dart';
-import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
-import 'package:ventes/app/states/form_sources/product_fu_form_source.dart';
-import 'package:ventes/app/states/listeners/product_fu_listener.dart';
-import 'package:ventes/constants/strings/prospect_string.dart';
-import 'package:ventes/helpers/task_helper.dart';
+part of 'package:ventes/app/states/controllers/product_fu_state_controller.dart';
 
-class ProductFormUpdateDataSource implements FetchDataContract, UpdateContract {
-  ProductFormUpdateListener get _listener => Get.find<ProductFormUpdateListener>();
-  ProductFormUpdateFormSource get _formSource => Get.find<ProductFormUpdateFormSource>();
-
-  ProductFormUpdatePresenter _presenter = ProductFormUpdatePresenter();
+class _DataSource extends RegularDataSource<ProductFormUpdatePresenter> implements ProductUpdateContract {
+  _Listener get _listener => Get.find<_Listener>(tag: ProspectString.productUpdateTag);
+  _FormSource get _formSource => Get.find<_FormSource>(tag: ProspectString.productUpdateTag);
+  _Properties get _properties => Get.find<_Properties>(tag: ProspectString.productUpdateTag);
 
   final _product = Rx<ProspectProduct?>(null);
   set product(ProspectProduct? value) => _product.value = value;
@@ -26,13 +15,11 @@ class ProductFormUpdateDataSource implements FetchDataContract, UpdateContract {
   set taxItems(List<KeyableDropdownItem<int, DBType>> value) => _taxItems.value = value;
   List<KeyableDropdownItem<int, DBType>> get taxItems => _taxItems.value;
 
-  void init() {
-    _presenter.fetchDataContract = this;
-    _presenter.updateContract = this;
-  }
+  void fetchData(int id) => presenter.fetchData(id);
+  void updateData(int id, Map<String, dynamic> data) => presenter.updateProduct(id, data);
 
-  void fetchData(int id) => _presenter.fetchData(id);
-  void updateData(int id, Map<String, dynamic> data) => _presenter.updateProduct(id, data);
+  @override
+  ProductFormUpdatePresenter presenterBuilder() => ProductFormUpdatePresenter();
 
   @override
   onLoadError(String message) => _listener.onLoadError(message);
@@ -44,7 +31,7 @@ class ProductFormUpdateDataSource implements FetchDataContract, UpdateContract {
   onLoadSuccess(Map data) {
     if (data['product'] != null) {
       product = ProspectProduct.fromJson(data['product']);
-      _formSource.prepareFormValue(product!);
+      _formSource.prepareFormValues();
     }
 
     if (data['taxes'] != null) {
@@ -52,7 +39,7 @@ class ProductFormUpdateDataSource implements FetchDataContract, UpdateContract {
       taxItems = taxes.map<KeyableDropdownItem<int, DBType>>((tax) => KeyableDropdownItem<int, DBType>(key: tax.typeid!, value: tax)).toList();
     }
 
-    Get.find<TaskHelper>().loaderPop(ProspectString.formUpdateProductTaskCode);
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 
   @override

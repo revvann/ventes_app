@@ -1,20 +1,9 @@
-import 'package:get/get.dart';
-import 'package:ventes/app/models/prospect_model.dart';
-import 'package:ventes/app/models/type_model.dart';
-import 'package:ventes/app/network/contracts/create_contract.dart';
-import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
-import 'package:ventes/app/network/presenters/prospect_detail_fc_presenter.dart';
-import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
-import 'package:ventes/app/states/form_sources/prospect_detail_fc_form_source.dart';
-import 'package:ventes/app/states/listeners/prospect_detail_fc_listener.dart';
-import 'package:ventes/constants/strings/prospect_string.dart';
-import 'package:ventes/helpers/task_helper.dart';
+part of 'package:ventes/app/states/controllers/prospect_detail_fc_state_controller.dart';
 
-class ProspectDetailFormCreateDataSource implements FetchDataContract, CreateContract {
-  ProspectDetailFormCreateListener get _listener => Get.find<ProspectDetailFormCreateListener>();
-  ProspectDetailFormCreateFormSource get _formSource => Get.find<ProspectDetailFormCreateFormSource>();
-
-  final ProspectDetailFormCreatePresenter _presenter = ProspectDetailFormCreatePresenter();
+class _DataSource extends RegularDataSource<ProspectDetailFormCreatePresenter> implements ProspectDetailCreateContract {
+  _Listener get _listener => Get.find<_Listener>(tag: ProspectString.detailCreateTag);
+  _FormSource get _formSource => Get.find<_FormSource>(tag: ProspectString.detailCreateTag);
+  _Properties get _properties => Get.find<_Properties>(tag: ProspectString.detailCreateTag);
 
   final Rx<List<KeyableDropdownItem<int, DBType>>> _categoryItems = Rx<List<KeyableDropdownItem<int, DBType>>>([]);
   set categoryItems(List<KeyableDropdownItem<int, DBType>> value) => _categoryItems.value = value;
@@ -28,13 +17,11 @@ class ProspectDetailFormCreateDataSource implements FetchDataContract, CreateCon
   set prospect(Prospect? value) => _prospect.value = value;
   Prospect? get prospect => _prospect.value;
 
-  init() {
-    _presenter.fetchDataContract = this;
-    _presenter.createContract = this;
-  }
+  void fetchData(int id) => presenter.fetchData(id);
+  void createData(Map<String, dynamic> data) => presenter.createData(data);
 
-  void fetchData(int id) => _presenter.fetchData(id);
-  void createData(Map<String, dynamic> data) => _presenter.createData(data);
+  @override
+  ProspectDetailFormCreatePresenter presenterBuilder() => ProspectDetailFormCreatePresenter();
 
   @override
   onLoadError(String message) => _listener.onLoadError(message);
@@ -60,7 +47,7 @@ class ProspectDetailFormCreateDataSource implements FetchDataContract, CreateCon
       prospect = Prospect.fromJson(data['prospect']);
       _formSource.prospect = prospect;
     }
-    Get.find<TaskHelper>().loaderPop(ProspectString.formCreateDetailTaskCode);
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 
   @override

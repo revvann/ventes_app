@@ -1,48 +1,59 @@
 // ignore_for_file: prefer_const_constructors
 import 'package:get/get.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
-import 'package:ventes/app/resources/widgets/loader.dart';
 import 'package:ventes/app/states/controllers/regular_state_controller.dart';
-import 'package:ventes/app/states/data_sources/schedule_data_source.dart';
-import 'package:ventes/app/states/listeners/schedule_listener.dart';
-import 'package:ventes/constants/strings/schedule_string.dart';
+import 'package:ventes/app/states/listeners/regular_listener.dart';
 import 'package:ventes/helpers/task_helper.dart';
+import 'package:ventes/app/models/schedule_model.dart';
+import 'package:ventes/app/models/type_model.dart';
+import 'package:ventes/app/network/presenters/schedule_presenter.dart';
+import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
+import 'package:ventes/app/states/data_sources/regular_data_source.dart';
+import 'package:flutter/material.dart';
+import 'package:ventes/app/resources/views/daily_schedule/daily_schedule.dart';
+import 'package:ventes/constants/regular_color.dart';
+import 'package:ventes/constants/strings/schedule_string.dart';
+import 'package:ventes/routing/navigators/schedule_navigator.dart';
 
-class ScheduleStateController extends RegularStateController {
+part 'package:ventes/app/states/listeners/schedule_listener.dart';
+part 'package:ventes/app/states/data_sources/schedule_data_source.dart';
+
+class ScheduleStateController extends RegularStateController<_Properties, _Listener, _DataSource> {
+  @override
+  String get tag => ScheduleString.scheduleTag;
+
   @override
   bool get isFixedBody => false;
 
-  ScheduleDataSource dataSource = Get.put(ScheduleDataSource());
-  ScheduleListener listener = Get.put(ScheduleListener());
-  ScheduleProperties properties = Get.put(ScheduleProperties());
+  @override
+  _Properties propertiesBuilder() => _Properties();
 
   @override
-  void onInit() {
-    super.onInit();
-    dataSource.init();
-  }
+  _Listener listenerBuilder() => _Listener();
 
   @override
-  void onReady() {
-    super.onReady();
+  _DataSource dataSourceBuilder() => _DataSource();
+
+  @override
+  void ready() {
+    super.ready();
     properties.ready();
   }
 
   @override
-  void onClose() {
+  void close() {
+    super.close();
     properties.calendarController.dispose();
-    Get.delete<ScheduleProperties>();
-    Get.delete<ScheduleListener>();
-    Get.delete<ScheduleDataSource>();
-    super.onClose();
   }
 }
 
-class ScheduleProperties {
-  ScheduleListener get _listener => Get.find<ScheduleListener>();
-  ScheduleDataSource get _dataSource => Get.find<ScheduleDataSource>();
+class _Properties {
+  _Listener get _listener => Get.find<_Listener>(tag: ScheduleString.scheduleTag);
+  _DataSource get _dataSource => Get.find<_DataSource>(tag: ScheduleString.scheduleTag);
 
   final CalendarController calendarController = CalendarController();
+
+  Task task = Task(ScheduleString.taskCode);
 
   final _dateShown = DateTime.now().obs;
   DateTime get dateShown => _dateShown.value;
@@ -67,6 +78,6 @@ class ScheduleProperties {
 
   void refresh() {
     _dataSource.fetchData(dateShown.month);
-    Get.find<TaskHelper>().loaderPush(ScheduleString.taskCode);
+    Get.find<TaskHelper>().loaderPush(task);
   }
 }

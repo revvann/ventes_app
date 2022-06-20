@@ -14,6 +14,7 @@ class Loader {
       height: 160,
       dismissable: false,
       backgroundColor: Colors.transparent,
+      onWillPop: () => Future.value(false),
       child: Container(
         alignment: Alignment.center,
         child: LoaderAnimation(),

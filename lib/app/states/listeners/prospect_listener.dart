@@ -1,19 +1,9 @@
-import 'package:get/get.dart';
-import 'package:ventes/app/models/type_model.dart';
-import 'package:ventes/app/resources/views/prospect_detail/prospect_detail.dart';
-import 'package:ventes/app/resources/views/prospect_form/create/prospect_fc.dart';
-import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
-import 'package:ventes/app/states/controllers/prospect_state_controller.dart';
-import 'package:ventes/app/states/data_sources/prospect_data_source.dart';
-import 'package:ventes/app/states/form_sources/prospect_form_source.dart';
-import 'package:ventes/constants/strings/prospect_string.dart';
-import 'package:ventes/helpers/task_helper.dart';
-import 'package:ventes/routing/navigators/prospect_navigator.dart';
+part of 'package:ventes/app/states/controllers/prospect_state_controller.dart';
 
-class ProspectListener {
-  ProspectProperties get _properties => Get.find<ProspectProperties>();
-  ProspectFormSource get _formSource => Get.find<ProspectFormSource>();
-  ProspectDataSource get _dataSource => Get.find<ProspectDataSource>();
+class _Listener extends RegularListener {
+  _Properties get _properties => Get.find<_Properties>(tag: ProspectString.prospectTag);
+  _FormSource get _formSource => Get.find<_FormSource>(tag: ProspectString.prospectTag);
+  _DataSource get _dataSource => Get.find<_DataSource>(tag: ProspectString.prospectTag);
 
   void onDateStartSelected(DateTime? value) {
     if (value != null) {
@@ -52,14 +42,10 @@ class ProspectListener {
     Get.toNamed(ProspectFormCreateView.route, id: ProspectNavigator.id);
   }
 
-  Future onRefresh() async {
-    _properties.refresh();
-  }
-
   Future onFilterChanged() async {
     Map<String, dynamic> filter = _formSource.toJson();
     _dataSource.fetchProspect(params: filter);
-    Get.find<TaskHelper>().loaderPush(ProspectString.taskCode);
+    Get.find<TaskHelper>().loaderPush(_properties.task);
   }
 
   void onProspectClicked() {
@@ -73,12 +59,17 @@ class ProspectListener {
   }
 
   void onLoadFailed(String message) {
-    Get.find<TaskHelper>().failedPush(ProspectString.taskCode, message);
-    Get.find<TaskHelper>().loaderPop(ProspectString.taskCode);
+    Get.find<TaskHelper>().failedPush(_properties.task.copyWith(message: message, snackbar: true));
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
   }
 
   void onLoadError(String message) {
-    Get.find<TaskHelper>().errorPush(ProspectString.taskCode, message);
-    Get.find<TaskHelper>().loaderPop(ProspectString.taskCode);
+    Get.find<TaskHelper>().errorPush(_properties.task.copyWith(message: message));
+    Get.find<TaskHelper>().loaderPop(_properties.task.name);
+  }
+
+  @override
+  Future onRefresh() async {
+    _properties.refresh();
   }
 }

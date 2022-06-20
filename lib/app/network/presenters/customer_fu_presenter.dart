@@ -6,9 +6,9 @@ import 'package:ventes/app/models/country_model.dart';
 import 'package:ventes/app/models/province_model.dart';
 import 'package:ventes/app/models/subdistrict_model.dart';
 import 'package:ventes/app/models/user_detail_model.dart';
-import 'package:ventes/app/network/contracts/create_contract.dart';
 import 'package:ventes/app/network/contracts/fetch_data_contract.dart';
 import 'package:ventes/app/network/contracts/update_contract.dart';
+import 'package:ventes/app/network/presenters/regular_presenter.dart';
 import 'package:ventes/app/network/services/bp_customer_service.dart';
 import 'package:ventes/app/network/services/customer_service.dart';
 import 'package:ventes/app/network/services/place_service.dart';
@@ -17,18 +17,12 @@ import 'package:ventes/app/network/services/user_service.dart';
 import 'package:ventes/constants/strings/nearby_string.dart';
 import 'package:ventes/helpers/auth_helper.dart';
 
-class CustomerFormUpdatePresenter {
+class CustomerFormUpdatePresenter extends RegularPresenter<CustomerUpdateContract> {
   final PlaceService _placeService = Get.find<PlaceService>();
   final BpCustomerService _bpCustomerService = Get.find<BpCustomerService>();
   final CustomerService _customerService = Get.find<CustomerService>();
   final UserService _userService = Get.find<UserService>();
   final TypeService _typeService = Get.find<TypeService>();
-
-  late FetchDataContract _fetchDataContract;
-  set fetchDataContract(FetchDataContract value) => _fetchDataContract = value;
-
-  late UpdateContract _createContract;
-  set createContract(UpdateContract value) => _createContract = value;
 
   Future<Response> _getBpCustomers() async {
     int? bpid = (await _findActiveUser())?.userdtbpid;
@@ -98,12 +92,12 @@ class CustomerFormUpdatePresenter {
 
         data['bpcustomer'] = bpCustomer.toJson();
 
-        _fetchDataContract.onLoadSuccess(data);
+        contract.onLoadSuccess(data);
       } else {
-        _fetchDataContract.onLoadFailed(NearbyString.fetchFailed);
+        contract.onLoadFailed(NearbyString.fetchFailed);
       }
     } catch (err) {
-      _fetchDataContract.onLoadError(err.toString());
+      contract.onLoadError(err.toString());
     }
   }
 
@@ -115,12 +109,12 @@ class CustomerFormUpdatePresenter {
         contentType: "multipart/form-data",
       );
       if (response.statusCode == 200) {
-        _createContract.onUpdateSuccess(NearbyString.createSuccess);
+        contract.onUpdateSuccess(NearbyString.createSuccess);
       } else {
-        _createContract.onUpdateFailed(NearbyString.createFailed);
+        contract.onUpdateFailed(NearbyString.createFailed);
       }
     } catch (err) {
-      _createContract.onUpdateError(err.toString());
+      contract.onUpdateError(err.toString());
     }
   }
 
@@ -175,3 +169,5 @@ class CustomerFormUpdatePresenter {
     return [];
   }
 }
+
+abstract class CustomerUpdateContract implements FetchDataContract, UpdateContract {}

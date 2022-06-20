@@ -9,6 +9,9 @@ class ProspectDetail extends Model {
   int? prospectdttypeid;
   String? prospectdtdate;
   String? prospectdtdesc;
+  double? prospectdtlatitude;
+  double? prospectdtlongitude;
+  String? prospectdtloc;
   Prospect? prospectdtprospect;
   DBType? prospectdtcat;
   DBType? prospectdttype;
@@ -20,6 +23,9 @@ class ProspectDetail extends Model {
     this.prospectdttypeid,
     this.prospectdtdate,
     this.prospectdtdesc,
+    this.prospectdtlatitude,
+    this.prospectdtlongitude,
+    this.prospectdtloc,
     this.prospectdtprospect,
     this.prospectdtcat,
     this.prospectdttype,
@@ -43,6 +49,9 @@ class ProspectDetail extends Model {
     prospectdttypeid = json['prospectdttypeid'];
     prospectdtdate = json['prospectdtdate'];
     prospectdtdesc = json['prospectdtdesc'];
+    prospectdtlatitude = json['prospectdtlatitude'];
+    prospectdtlongitude = json['prospectdtlongitude'];
+    prospectdtloc = json['prospectdtloc'];
 
     if (json['prospectdtprospect'] != null) {
       prospectdtprospect = Prospect.fromJson(json['prospectdtprospect']);
@@ -68,6 +77,9 @@ class ProspectDetail extends Model {
     data['prospectdttypeid'] = prospectdttypeid;
     data['prospectdtdate'] = prospectdtdate;
     data['prospectdtdesc'] = prospectdtdesc;
+    data['prospectdtlatitude'] = prospectdtlatitude;
+    data['prospectdtlongitude'] = prospectdtlongitude;
+    data['prospectdtloc'] = prospectdtloc;
 
     if (prospectdtprospect != null) {
       data['prospectdtprospect'] = prospectdtprospect?.toJson();

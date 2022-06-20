@@ -1,8 +1,7 @@
-import 'package:ventes/app/states/form_sources/prospect_fc_form_source.dart';
+part of 'package:ventes/app/states/controllers/prospect_fc_state_controller.dart';
 
-class ProspectFormCreateValidator {
-  ProspectFormCreateFormSource _formSource;
-  ProspectFormCreateValidator(this._formSource);
+class _Validator {
+  _FormSource get _formSource => Get.find<_FormSource>(tag: ProspectString.prospectCreateTag);
 
   String? prosname(String? value) {
     if (value == null || value.isEmpty) {
@@ -17,7 +16,7 @@ class ProspectFormCreateValidator {
     }
 
     try {
-      double.parse(_formSource.prosvalue!);
+      double.parse(value.replaceAll(RegExp(r'[,.]'), ''));
     } catch (e) {
       return "Prospect value must be a number";
     }
