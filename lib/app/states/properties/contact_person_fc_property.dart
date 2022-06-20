@@ -4,15 +4,12 @@ import 'package:ventes/core/states/state_property.dart';
 import 'package:ventes/helpers/task_helper.dart';
 import 'package:ventes/app/states/typedefs/contact_person_fc_typedef.dart';
 
-class ContactPersonFormCreateProperty extends StateProperty {
+class ContactPersonFormCreateProperty extends StateProperty with PropertyMixin {
   late int customerid;
-
-  DataSource get _dataSource => Get.find<DataSource>(tag: ProspectString.contactCreateTag);
-
   Task task = Task(ProspectString.formCreateContactTaskCode);
 
   void refresh() {
-    _dataSource.fetchData(customerid);
+    dataSource.fetchData(customerid);
     Get.find<TaskHelper>().loaderPush(task);
   }
 }

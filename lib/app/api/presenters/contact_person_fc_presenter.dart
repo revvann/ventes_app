@@ -35,6 +35,8 @@ class ContactPersonFormCreatePresenter extends RegularPresenter<ContactPersonCre
     } catch (e) {
       contract.onLoadError(e.toString());
     }
+    contract.onLoadComplete();
+    contract.onLoadComplete();
   }
 
   void createData(Map<String, dynamic> data) async {
@@ -48,6 +50,8 @@ class ContactPersonFormCreatePresenter extends RegularPresenter<ContactPersonCre
     } catch (e) {
       contract.onCreateError(e.toString());
     }
+    contract.onCreateComplete();
+    contract.onCreateComplete();
   }
 }
 

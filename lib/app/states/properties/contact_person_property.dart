@@ -1,12 +1,11 @@
 import 'package:get/get.dart';
 import 'package:ventes/app/resources/widgets/popup_button.dart';
+import 'package:ventes/app/states/typedefs/contact_person_typedef.dart';
 import 'package:ventes/constants/strings/prospect_string.dart';
 import 'package:ventes/core/states/state_property.dart';
 import 'package:ventes/helpers/task_helper.dart';
-import 'package:ventes/app/states/typedefs/contact_person_typedef.dart';
 
-class ContactPersonProperty extends StateProperty {
-  DataSource get _dataSource => Get.find<DataSource>(tag: ProspectString.contactTag);
+class ContactPersonProperty extends StateProperty with PropertyMixin {
   Set<String> popupControllers = {};
 
   late int customerid;
@@ -14,7 +13,7 @@ class ContactPersonProperty extends StateProperty {
   Task task = Task(ProspectString.contactPersonTaskCode);
 
   void refresh() {
-    _dataSource.fetchData(customerid);
+    dataSource.fetchData(customerid);
     Get.find<TaskHelper>().loaderPush(task);
   }
 

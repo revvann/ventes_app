@@ -5,20 +5,17 @@ import 'package:ventes/app/models/type_model.dart';
 import 'package:ventes/app/models/user_detail_model.dart';
 import 'package:ventes/app/resources/widgets/searchable_dropdown.dart';
 import 'package:ventes/constants/formatters/currency_formatter.dart';
-import 'package:ventes/constants/strings/prospect_string.dart';
 import 'package:ventes/app/states/typedefs/prospect_fc_typedef.dart';
 import 'package:ventes/core/states/state_form_source.dart';
 import 'package:ventes/helpers/auth_helper.dart';
 import 'package:ventes/helpers/function_helpers.dart';
 import 'package:ventes/helpers/task_helper.dart';
 
-class ProspectFormCreateFormSource extends StateFormSource {
-  DataSource get _dataSource => Get.find<DataSource>(tag: ProspectString.prospectCreateTag);
-  Property get _property => Get.find<Property>(tag: ProspectString.prospectCreateTag);
+class ProspectFormCreateFormSource extends StateFormSource with FormSourceMixin {
+  Validator validator = Validator();
+
   SearchableDropdownController<UserDetail> ownerDropdownController = Get.put(SearchableDropdownController<UserDetail>());
   SearchableDropdownController<BpCustomer> customerDropdownController = Get.put(SearchableDropdownController<BpCustomer>());
-
-  Validator validator = Validator();
 
   final TextEditingController prosnameTEC = TextEditingController();
   final TextEditingController prosvalueTEC = TextEditingController();
@@ -78,8 +75,9 @@ class ProspectFormCreateFormSource extends StateFormSource {
   @override
   init() async {
     super.init();
+    validator.formSource = this;
     int accountId = Get.find<AuthHelper>().accountActive.val!;
-    List<UserDetail> userDetails = await _dataSource.fetchUser("");
+    List<UserDetail> userDetails = await dataSource.fetchUser("");
     prosowner = userDetails.firstWhereOrNull((element) => element.userdtid == accountId);
     ownerDropdownController.selectedKeys = prosowner != null ? [prosowner!] : [];
   }
@@ -150,10 +148,10 @@ class ProspectFormCreateFormSource extends StateFormSource {
   void onSubmit() {
     if (isValid) {
       Map<String, dynamic> data = toJson();
-      _dataSource.createProspect(data);
-      Get.find<TaskHelper>().loaderPush(_property.task);
+      dataSource.createProspect(data);
+      Get.find<TaskHelper>().loaderPush(property.task);
     } else {
-      Get.find<TaskHelper>().failedPush(_property.task.copyWith(message: "Form is not valid"));
+      Get.find<TaskHelper>().failedPush(property.task.copyWith(message: "Form is not valid"));
     }
   }
 }

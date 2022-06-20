@@ -8,9 +8,7 @@ import 'package:ventes/core/states/state_property.dart';
 import 'package:ventes/helpers/task_helper.dart';
 import 'package:ventes/app/states/typedefs/customer_fc_typedef.dart';
 
-class CustomerFormCreateProperty extends StateProperty {
-  DataSource get _dataSource => Get.find<DataSource>(tag: NearbyString.customerCreateTag);
-
+class CustomerFormCreateProperty extends StateProperty with PropertyMixin {
   Task task = Task(NearbyString.createTaskCode);
 
   final double defaultZoom = 20;
@@ -60,12 +58,12 @@ class CustomerFormCreateProperty extends StateProperty {
   }
 
   void fetchPlacesIds() {
-    _dataSource.fetchPlacesIds(_dataSource.getSubdistrictName()!);
+    dataSource.fetchPlacesIds(dataSource.getSubdistrictName()!);
     Get.find<TaskHelper>().loaderPush(task);
   }
 
   void refresh() async {
-    _dataSource.fetchData(latitude!, longitude!, cstmid);
+    dataSource.fetchData(latitude!, longitude!, cstmid);
 
     LatLng pos = LatLng(latitude!, longitude!);
     GoogleMapController controller = await mapsController.future;

@@ -6,10 +6,7 @@ import 'package:ventes/core/states/state_listener.dart';
 import 'package:ventes/helpers/task_helper.dart';
 import 'package:ventes/routing/navigators/prospect_navigator.dart';
 
-class ProductFormUpdateListener extends StateListener {
-  FormSource get _formSource => Get.find<FormSource>(tag: ProspectString.productUpdateTag);
-  Property get _property => Get.find<Property>(tag: ProspectString.productUpdateTag);
-
+class ProductFormUpdateListener extends StateListener with ListenerMixin {
   void goBack() {
     Get.back(
       id: ProspectNavigator.id,
@@ -18,11 +15,11 @@ class ProductFormUpdateListener extends StateListener {
 
   void onSubmitButtonClicked() {
     Get.find<TaskHelper>().confirmPush(
-      _property.task.copyWith<bool>(
+      property.task.copyWith<bool>(
         message: ProspectString.updateProductConfirm,
         onFinished: (res) {
           if (res) {
-            _formSource.onSubmit();
+            formSource.onSubmit();
           }
         },
       ),
@@ -30,41 +27,37 @@ class ProductFormUpdateListener extends StateListener {
   }
 
   void onTaxChanged(item) {
-    _formSource.prosproducttax = item.value;
+    formSource.prosproducttax = item.value;
   }
 
   void onLoadFailed(String message) {
-    Get.find<TaskHelper>().failedPush(_property.task.copyWith(message: message, snackbar: true));
-    Get.find<TaskHelper>().loaderPop(_property.task.name);
+    Get.find<TaskHelper>().failedPush(property.task.copyWith(message: message, snackbar: true));
   }
 
   void onLoadError(String message) {
-    Get.find<TaskHelper>().errorPush(_property.task.copyWith(message: message));
-    Get.find<TaskHelper>().loaderPop(_property.task.name);
+    Get.find<TaskHelper>().errorPush(property.task.copyWith(message: message));
   }
 
   void onUpdateDataSuccess(String message) {
-    Get.find<TaskHelper>().successPush(_property.task.copyWith(
+    Get.find<TaskHelper>().successPush(property.task.copyWith(
         message: message,
         onFinished: (res) {
           Get.find<ProductStateController>().property.refresh();
           Get.back(id: ProspectNavigator.id);
         }));
-    Get.find<TaskHelper>().loaderPop(_property.task.name);
   }
 
   void onUpdateDataFailed(String message) {
-    Get.find<TaskHelper>().failedPush(_property.task.copyWith(message: message, snackbar: true));
-    Get.find<TaskHelper>().loaderPop(_property.task.name);
+    Get.find<TaskHelper>().failedPush(property.task.copyWith(message: message, snackbar: true));
   }
 
   void onUpdateDataError(String message) {
-    Get.find<TaskHelper>().errorPush(_property.task.copyWith(message: message));
-    Get.find<TaskHelper>().loaderPop(_property.task.name);
+    Get.find<TaskHelper>().errorPush(property.task.copyWith(message: message));
   }
 
+  void onComplete() => Get.find<TaskHelper>().loaderPop(property.task.name);
   @override
   Future onReady() async {
-    _property.refresh();
+    property.refresh();
   }
 }

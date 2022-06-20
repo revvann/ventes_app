@@ -6,6 +6,8 @@ import 'package:ventes/core/states/state_form_source.dart';
 import 'package:ventes/core/states/state_listener.dart';
 import 'package:meta/meta.dart';
 
+typedef UnformablePropertyMixin<C extends StateController, L extends StateListener?, D extends StateDataSource?> = StatePropertyMixin<C, L, D, StateFormSource?>;
+
 abstract class StateProperty {
   @mustCallSuper
   void init() {}

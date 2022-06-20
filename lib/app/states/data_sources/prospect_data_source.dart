@@ -4,15 +4,11 @@ import 'package:ventes/app/api/presenters/prospect_presenter.dart';
 import 'package:ventes/app/models/prospect_model.dart';
 import 'package:ventes/app/models/type_model.dart';
 import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
-import 'package:ventes/constants/strings/prospect_string.dart';
 import 'package:ventes/app/states/typedefs/prospect_typedef.dart';
 import 'package:ventes/core/states/state_data_source.dart';
 import 'package:ventes/helpers/task_helper.dart';
 
-class ProspectDataSource extends StateDataSource<ProspectPresenter> implements FetchDataContract {
-  Listener get _listener => Get.find<Listener>(tag: ProspectString.prospectTag);
-  Property get _property => Get.find<Property>(tag: ProspectString.prospectTag);
-
+class ProspectDataSource extends StateDataSource<ProspectPresenter> with DataSourceMixin implements FetchDataContract {
   final Rx<List<KeyableDropdownItem<int, DBType>>> _statusItems = Rx<List<KeyableDropdownItem<int, DBType>>>([]);
   set statusItems(List<KeyableDropdownItem<int, DBType>> value) => _statusItems.value = value;
   List<KeyableDropdownItem<int, DBType>> get statusItems => _statusItems.value;
@@ -33,10 +29,10 @@ class ProspectDataSource extends StateDataSource<ProspectPresenter> implements F
   void fetchProspect({Map<String, dynamic> params = const {}}) => presenter.fetchProspect(params);
 
   @override
-  onLoadError(String message) => _listener.onLoadError(message);
+  onLoadError(String message) => listener.onLoadError(message);
 
   @override
-  onLoadFailed(String message) => _listener.onLoadFailed(message);
+  onLoadFailed(String message) => listener.onLoadFailed(message);
 
   @override
   onLoadSuccess(Map data) {
@@ -59,6 +55,9 @@ class ProspectDataSource extends StateDataSource<ProspectPresenter> implements F
       prospects = data['prospects'].map<Prospect>((e) => Prospect.fromJson(e)).toList();
     }
 
-    Get.find<TaskHelper>().loaderPop(_property.task.name);
+    Get.find<TaskHelper>().loaderPop(property.task.name);
   }
+
+  @override
+  onLoadComplete() => listener.onComplete();
 }

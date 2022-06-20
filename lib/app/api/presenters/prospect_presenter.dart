@@ -58,6 +58,7 @@ class ProspectPresenter extends RegularPresenter<FetchDataContract> {
     } catch (e) {
       contract.onLoadError(e.toString());
     }
+    contract.onLoadComplete();
   }
 
   void fetchProspect(Map<String, dynamic> params) async {
@@ -73,5 +74,6 @@ class ProspectPresenter extends RegularPresenter<FetchDataContract> {
     } catch (e) {
       contract.onLoadError(e.toString());
     }
+    contract.onLoadComplete();
   }
 }

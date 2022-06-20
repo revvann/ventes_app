@@ -108,9 +108,10 @@ class ProspectFormUpdatePresenter extends RegularPresenter<ProspectUpdateContrac
       } else {
         contract.onLoadFailed(ProspectString.fetchUsersDataFailed);
       }
-    } catch (err) {
-      contract.onLoadError(err.toString());
+    } catch (e) {
+      contract.onLoadError(e.toString());
     }
+    contract.onLoadComplete();
   }
 
   void updateProspect(int prospectid, Map<String, dynamic> data) async {
@@ -121,9 +122,10 @@ class ProspectFormUpdatePresenter extends RegularPresenter<ProspectUpdateContrac
       } else {
         contract.onUpdateFailed(ProspectString.updateDataFailed);
       }
-    } catch (err) {
-      contract.onUpdateError(err.toString());
+    } catch (e) {
+      contract.onUpdateError(e.toString());
     }
+    contract.onUpdateComplete();
   }
 }
 

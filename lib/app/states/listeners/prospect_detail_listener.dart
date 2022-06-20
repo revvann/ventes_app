@@ -12,10 +12,7 @@ import 'package:ventes/core/states/state_listener.dart';
 import 'package:ventes/helpers/task_helper.dart';
 import 'package:ventes/routing/navigators/prospect_navigator.dart';
 
-class ProspectDetailListener extends StateListener {
-  Property get _property => Get.find<Property>(tag: ProspectString.detailTag);
-  DataSource get _dataSource => Get.find<DataSource>(tag: ProspectString.detailTag);
-
+class ProspectDetailListener extends StateListener with ListenerMixin {
   void goBack() {
     Get.back(id: ProspectNavigator.id);
   }
@@ -25,7 +22,7 @@ class ProspectDetailListener extends StateListener {
       ProspectDetailFormCreateView.route,
       id: ProspectNavigator.id,
       arguments: {
-        'prospect': _property.prospectId,
+        'prospect': property.prospectId,
       },
     );
   }
@@ -35,7 +32,7 @@ class ProspectDetailListener extends StateListener {
       ProspectAssignView.route,
       id: ProspectNavigator.id,
       arguments: {
-        'prospect': _property.prospectId,
+        'prospect': property.prospectId,
       },
     );
   }
@@ -45,7 +42,7 @@ class ProspectDetailListener extends StateListener {
       ProspectFormUpdateView.route,
       id: ProspectNavigator.id,
       arguments: {
-        'prospect': _property.prospectId,
+        'prospect': property.prospectId,
       },
     );
   }
@@ -55,14 +52,14 @@ class ProspectDetailListener extends StateListener {
       ProductView.route,
       id: ProspectNavigator.id,
       arguments: {
-        'prospect': _property.prospectId,
+        'prospect': property.prospectId,
       },
     );
   }
 
   void navigateToContactPerson() {
     Get.toNamed(ContactPersonView.route, id: ProspectNavigator.id, arguments: {
-      'customer': _dataSource.prospect?.prospectcust?.sbccstmid,
+      'customer': dataSource.prospect?.prospectcust?.sbccstmid,
     });
   }
 
@@ -78,12 +75,12 @@ class ProspectDetailListener extends StateListener {
 
   void deleteDetail(int id) {
     Get.find<TaskHelper>().confirmPush(
-      _property.task.copyWith<bool>(
+      property.task.copyWith<bool>(
         message: ProspectString.deleteDetailConfirm,
         onFinished: (res) {
           if (res) {
-            _dataSource.deleteData(id);
-            Get.find<TaskHelper>().loaderPush(_property.task);
+            dataSource.deleteData(id);
+            Get.find<TaskHelper>().loaderPush(property.task);
           }
         },
       ),
@@ -91,36 +88,32 @@ class ProspectDetailListener extends StateListener {
   }
 
   void onLoadFailed(String message) {
-    Get.find<TaskHelper>().failedPush(_property.task.copyWith(message: message, snackbar: true));
-    Get.find<TaskHelper>().loaderPop(_property.task.name);
+    Get.find<TaskHelper>().failedPush(property.task.copyWith(message: message, snackbar: true));
   }
 
   void onLoadError(String message) {
-    Get.find<TaskHelper>().errorPush(_property.task.copyWith(message: message));
-    Get.find<TaskHelper>().loaderPop(_property.task.name);
+    Get.find<TaskHelper>().errorPush(property.task.copyWith(message: message));
   }
 
   void onDeleteFailed(String message) {
-    Get.find<TaskHelper>().failedPush(_property.task.copyWith(message: message, snackbar: true));
-    Get.find<TaskHelper>().loaderPop(_property.task.name);
+    Get.find<TaskHelper>().failedPush(property.task.copyWith(message: message, snackbar: true));
   }
 
   void onDeleteSuccess(String message) {
-    Get.find<TaskHelper>().successPush(_property.task.copyWith(
+    Get.find<TaskHelper>().successPush(property.task.copyWith(
         message: message,
         onFinished: (res) {
           Get.find<ProspectDetailStateController>().refreshStates();
         }));
-    Get.find<TaskHelper>().loaderPop(_property.task.name);
   }
 
   void onDeleteError(String message) {
-    Get.find<TaskHelper>().errorPush(_property.task.copyWith(message: message));
-    Get.find<TaskHelper>().loaderPop(_property.task.name);
+    Get.find<TaskHelper>().errorPush(property.task.copyWith(message: message));
   }
 
+  void onComplete() => Get.find<TaskHelper>().loaderPop(property.task.name);
   @override
   Future onReady() async {
-    _property.refresh();
+    property.refresh();
   }
 }

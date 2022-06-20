@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart' hide Listener;
+import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -13,10 +13,7 @@ import 'package:ventes/core/states/state_property.dart';
 import 'package:ventes/helpers/function_helpers.dart';
 import 'package:ventes/helpers/task_helper.dart';
 
-class ScheduleFormUpdateProperty extends StateProperty {
-  Listener get listener => Get.find<Listener>(tag: ScheduleString.scheduleUpdateTag);
-  DataSource get _dataSource => Get.find<DataSource>(tag: ScheduleString.scheduleUpdateTag);
-
+class ScheduleFormUpdateProperty extends StateProperty with PropertyMixin {
   final Completer<GoogleMapController> mapsController = Completer();
   CameraPosition currentPos = CameraPosition(target: LatLng(0, 0), zoom: 14.4764);
 
@@ -36,7 +33,7 @@ class ScheduleFormUpdateProperty extends StateProperty {
   }
 
   void refresh() async {
-    _dataSource.fetchData();
+    dataSource.fetchData();
     Get.find<TaskHelper>().loaderPush(task);
   }
 

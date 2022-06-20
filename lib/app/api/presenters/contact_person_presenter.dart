@@ -56,6 +56,7 @@ class ContactPersonPresenter extends RegularPresenter<ContactPersonContract> {
     } catch (e) {
       contract.onLoadError(e.toString());
     }
+    contract.onLoadComplete();
   }
 
   void deleteData(int contactid) async {

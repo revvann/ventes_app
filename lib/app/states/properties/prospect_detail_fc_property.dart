@@ -7,8 +7,7 @@ import 'package:ventes/app/states/typedefs/prospect_detail_fc_typedef.dart';
 import 'package:ventes/core/states/state_property.dart';
 import 'package:ventes/helpers/task_helper.dart';
 
-class ProspectDetailFormCreateProperty extends StateProperty {
-  DataSource get _dataSource => Get.find<DataSource>(tag: ProspectString.detailCreateTag);
+class ProspectDetailFormCreateProperty extends StateProperty with PropertyMixin {
   final Completer<GoogleMapController> mapsController = Completer();
 
   final Rx<Set<Marker>> _marker = Rx<Set<Marker>>(<Marker>{});
@@ -21,7 +20,7 @@ class ProspectDetailFormCreateProperty extends StateProperty {
   Task task = Task(ProspectString.formCreateDetailTaskCode);
 
   refresh() {
-    _dataSource.fetchData(prospectId);
+    dataSource.fetchData(prospectId);
     Get.find<TaskHelper>().loaderPush(task);
   }
 }

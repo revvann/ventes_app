@@ -155,36 +155,55 @@ class DashboardView extends View<DashboardStateController> {
                     ],
                   ),
                 ),
-                SizedBox(
-                  height: 148,
-                  child: Obx(() {
-                    return ListView.builder(
-                      physics: BouncingScrollPhysics(),
-                      itemCount: state.dataSource.customers.length,
-                      scrollDirection: Axis.horizontal,
-                      itemBuilder: (_, index) {
-                        BpCustomer customer = state.dataSource.customers[index];
-                        double mRight = 0;
-                        if (index == 9) {
-                          mRight = 16;
-                        }
-                        return CustomerCard(
-                          image: NetworkImage(customer.sbccstmpic ?? ""),
-                          margin: EdgeInsets.only(
-                            left: 16,
-                            right: mRight,
-                            top: 24,
-                            bottom: 24,
-                          ),
-                          width: 250,
-                          title: customer.sbccstmname,
-                          type: customer.sbccstm?.cstmtype?.typename ?? "",
-                          radius: (customer.radius! / 1000).toStringAsFixed(2) + " KM",
-                        );
-                      },
-                    );
-                  }),
-                ),
+                if (state.dataSource.customers.isNotEmpty) ...[
+                  SizedBox(
+                    height: 148,
+                    child: Obx(() {
+                      return ListView.builder(
+                        physics: BouncingScrollPhysics(),
+                        itemCount: state.dataSource.customers.length,
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (_, index) {
+                          BpCustomer customer = state.dataSource.customers[index];
+                          double mRight = 0;
+                          if (index == 9) {
+                            mRight = 16;
+                          }
+                          return CustomerCard(
+                            image: NetworkImage(customer.sbccstmpic ?? ""),
+                            margin: EdgeInsets.only(
+                              left: 16,
+                              right: mRight,
+                              top: 24,
+                              bottom: 24,
+                            ),
+                            width: 250,
+                            title: customer.sbccstmname,
+                            type: customer.sbccstm?.cstmtype?.typename ?? "",
+                            radius: (customer.radius! / 1000).toStringAsFixed(2) + " KM",
+                          );
+                        },
+                      );
+                    }),
+                  ),
+                ] else ...[
+                  SizedBox(
+                    height: RegularSize.s,
+                  ),
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: RegularSize.m,
+                    ),
+                    child: Text(
+                      "There is no customer in this area",
+                      style: TextStyle(
+                        color: RegularColor.dark,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                ],
                 SizedBox(
                   height: RegularSize.xl,
                 ),

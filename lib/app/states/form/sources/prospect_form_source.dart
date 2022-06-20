@@ -1,11 +1,12 @@
 import 'package:get/get.dart';
 import 'package:ventes/app/models/type_model.dart';
 import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
+import 'package:ventes/app/states/typedefs/prospect_typedef.dart';
 import 'package:ventes/constants/strings/prospect_string.dart';
 import 'package:ventes/core/states/state_form_source.dart';
 import 'package:ventes/helpers/function_helpers.dart';
 
-class ProspectFormSource extends StateFormSource {
+class ProspectFormSource extends StateFormSource with FormSourceMixin {
   KeyableDropdownController<int, DBType> statusDropdownController = Get.put(KeyableDropdownController<int, DBType>(), tag: ProspectString.statusDropdownTag);
 
   final Rx<DateTime?> _prosstartdate = Rx<DateTime?>(null);

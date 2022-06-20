@@ -5,18 +5,14 @@ import 'package:ventes/app/models/auth_model.dart';
 import 'package:ventes/app/models/bp_customer_model.dart';
 import 'package:ventes/app/models/maps_loc.dart';
 import 'package:ventes/app/models/user_detail_model.dart';
-import 'package:ventes/constants/strings/dashboard_string.dart';
 import 'package:ventes/core/states/state_data_source.dart';
 import 'package:ventes/helpers/auth_helper.dart';
 import 'package:ventes/helpers/function_helpers.dart';
 import 'package:ventes/helpers/task_helper.dart';
 import 'package:ventes/app/states/typedefs/dashboard_typedef.dart';
 
-class DashboardDataSource extends StateDataSource<DashboardPresenter> implements DashboardContract {
-  Property get _property => Get.find<Property>(tag: DashboardString.dashboardTag);
-  Listener get _listener => Get.find<Listener>(tag: DashboardString.dashboardTag);
-
-  final _customers = <BpCustomer>[].obs;
+class DashboardDataSource extends StateDataSource<DashboardPresenter> with DataSourceMixin implements DashboardContract {
+  final _customers = Rx<List<BpCustomer>>([]);
   set customers(List<BpCustomer> value) => _customers.value = value;
   List<BpCustomer> get customers => _customers.value;
 
@@ -58,17 +54,17 @@ class DashboardDataSource extends StateDataSource<DashboardPresenter> implements
   DashboardPresenter presenterBuilder() => DashboardPresenter();
 
   @override
-  onLoadError(String message) => _listener.onLoadDataError(message);
+  onLoadError(String message) => listener.onLoadDataError(message);
 
   @override
-  onLoadFailed(String message) => _listener.onLoadDataFailed(message);
+  onLoadFailed(String message) => listener.onLoadDataFailed(message);
 
   @override
   onLoadSuccess(Map data) async {
     if (data['customers'] != null) {
       _customersFromList(
         data['customers'],
-        LatLng(_property.position!.latitude, _property.position!.longitude),
+        LatLng(property.position!.latitude, property.position!.longitude),
       );
     }
 
@@ -89,13 +85,19 @@ class DashboardDataSource extends StateDataSource<DashboardPresenter> implements
       }
     }
 
-    Get.find<TaskHelper>().loaderPop(_property.task.name);
+    Get.find<TaskHelper>().loaderPop(property.task.name);
   }
 
   @override
-  void onLogoutError(String message) => _listener.onLogoutError(message);
+  void onLogoutError(String message) => listener.onLogoutError(message);
   @override
-  void onLogoutFailed(String message) => _listener.onLogoutFailed(message);
+  void onLogoutFailed(String message) => listener.onLogoutFailed(message);
   @override
-  void onLogoutSuccess(String message) => _listener.onLogoutSuccess(message);
+  void onLogoutSuccess(String message) => listener.onLogoutSuccess(message);
+
+  @override
+  onLoadComplete() => listener.onComplete();
+
+  @override
+  void onLogoutComplete() => listener.onComplete();
 }

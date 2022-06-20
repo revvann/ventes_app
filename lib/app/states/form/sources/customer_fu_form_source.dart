@@ -10,16 +10,13 @@ import 'package:ventes/app/models/province_model.dart';
 import 'package:ventes/app/models/subdistrict_model.dart';
 import 'package:ventes/app/resources/widgets/search_list.dart';
 import 'package:ventes/app/states/typedefs/customer_fu_typedef.dart';
-import 'package:ventes/app/states/form/validators/customer_fu_validator.dart';
 import 'package:ventes/constants/strings/nearby_string.dart';
 import 'package:ventes/core/states/update_form_source.dart';
 import 'package:ventes/helpers/function_helpers.dart';
 import 'package:ventes/helpers/task_helper.dart';
 
-class CustomerFormUpdateFormSource extends UpdateFormSource {
-  CustomerFormUpdateValidator validator = CustomerFormUpdateValidator();
-  Property get _property => Get.find<Property>(tag: NearbyString.customerUpdateTag);
-  DataSource get _dataSource => Get.find<DataSource>(tag: NearbyString.customerUpdateTag);
+class CustomerFormUpdateFormSource extends UpdateFormSource with FormSourceMixin {
+  Validator validator = Validator();
 
   SearchListController<Country, Country> countrySearchListController = Get.put(SearchListController<Country, Country>());
   SearchListController<Province, Province> provinceSearchListController = Get.put(SearchListController<Province, Province>());
@@ -76,38 +73,38 @@ class CustomerFormUpdateFormSource extends UpdateFormSource {
 
   @override
   void prepareFormValues() {
-    if (_dataSource.bpCustomer != null) {
-      sbcid = _dataSource.bpCustomer!.sbcid;
+    if (dataSource.bpCustomer != null) {
+      sbcid = dataSource.bpCustomer!.sbcid;
 
-      cstmlatitude = _dataSource.bpCustomer!.sbccstm!.cstmlatitude!.toString();
-      cstmlongitude = _dataSource.bpCustomer!.sbccstm!.cstmlongitude!.toString();
-      _property.markerLatLng = LatLng(double.parse(cstmlatitude), double.parse(cstmlongitude));
+      cstmlatitude = dataSource.bpCustomer!.sbccstm!.cstmlatitude!.toString();
+      cstmlongitude = dataSource.bpCustomer!.sbccstm!.cstmlongitude!.toString();
+      property.markerLatLng = LatLng(double.parse(cstmlatitude), double.parse(cstmlongitude));
 
-      nameTEC.text = _dataSource.bpCustomer!.sbccstm!.cstmname ?? "";
-      addressTEC.text = _dataSource.bpCustomer!.sbccstm!.cstmaddress ?? "";
-      phoneTEC.text = _dataSource.bpCustomer!.sbccstm!.cstmphone ?? "";
-      postalCodeTEC.text = _dataSource.bpCustomer!.sbccstm!.cstmpostalcode ?? "";
+      nameTEC.text = dataSource.bpCustomer!.sbccstm!.cstmname ?? "";
+      addressTEC.text = dataSource.bpCustomer!.sbccstm!.cstmaddress ?? "";
+      phoneTEC.text = dataSource.bpCustomer!.sbccstm!.cstmphone ?? "";
+      postalCodeTEC.text = dataSource.bpCustomer!.sbccstm!.cstmpostalcode ?? "";
 
-      cstmtypeid = _dataSource.bpCustomer!.sbccstm!.cstmtypeid;
+      cstmtypeid = dataSource.bpCustomer!.sbccstm!.cstmtypeid;
 
-      if (_dataSource.bpCustomer!.sbccstmpic != null) {
-        defaultPicture.value = Image.network(_dataSource.bpCustomer!.sbccstmpic!);
+      if (dataSource.bpCustomer!.sbccstmpic != null) {
+        defaultPicture.value = Image.network(dataSource.bpCustomer!.sbccstmpic!);
       }
 
-      if (_dataSource.bpCustomer!.sbccstm!.cstmcountry != null) {
-        countrySearchListController.selectedItem = _dataSource.bpCustomer!.sbccstm!.cstmcountry!;
+      if (dataSource.bpCustomer!.sbccstm!.cstmcountry != null) {
+        countrySearchListController.selectedItem = dataSource.bpCustomer!.sbccstm!.cstmcountry!;
       }
 
-      if (_dataSource.bpCustomer!.sbccstm!.cstmprovince != null) {
-        provinceSearchListController.selectedItem = _dataSource.bpCustomer!.sbccstm!.cstmprovince!;
+      if (dataSource.bpCustomer!.sbccstm!.cstmprovince != null) {
+        provinceSearchListController.selectedItem = dataSource.bpCustomer!.sbccstm!.cstmprovince!;
       }
 
-      if (_dataSource.bpCustomer!.sbccstm!.cstmcity != null) {
-        citySearchListController.selectedItem = _dataSource.bpCustomer!.sbccstm!.cstmcity!;
+      if (dataSource.bpCustomer!.sbccstm!.cstmcity != null) {
+        citySearchListController.selectedItem = dataSource.bpCustomer!.sbccstm!.cstmcity!;
       }
 
-      if (_dataSource.bpCustomer!.sbccstm!.cstmsubdistrict != null) {
-        subdistrictSearchListController.selectedItem = _dataSource.bpCustomer!.sbccstm!.cstmsubdistrict!;
+      if (dataSource.bpCustomer!.sbccstm!.cstmsubdistrict != null) {
+        subdistrictSearchListController.selectedItem = dataSource.bpCustomer!.sbccstm!.cstmsubdistrict!;
       }
     }
   }
@@ -132,7 +129,7 @@ class CustomerFormUpdateFormSource extends UpdateFormSource {
     double newLng = double.tryParse(cstmlongitude) ?? 0.0;
     LatLng newPos = LatLng(newLat, newLng);
 
-    double radius = calculateDistance(_property.markers.first.position, newPos);
+    double radius = calculateDistance(property.markers.first.position, newPos);
     bool inRange = radius <= 100;
 
     if (isValid && inRange) {
@@ -145,10 +142,10 @@ class CustomerFormUpdateFormSource extends UpdateFormSource {
       }
 
       FormData formData = FormData(data);
-      _dataSource.updateCustomer(sbcid!, formData);
-      Get.find<TaskHelper>().loaderPush(_property.task);
+      dataSource.updateCustomer(sbcid!, formData);
+      Get.find<TaskHelper>().loaderPush(property.task);
     } else {
-      Get.find<TaskHelper>().failedPush(_property.task.copyWith(message: NearbyString.formInvalid));
+      Get.find<TaskHelper>().failedPush(property.task.copyWith(message: NearbyString.formInvalid));
     }
   }
 }

@@ -35,5 +35,6 @@ class ProspectAssignPresenter extends RegularPresenter<FetchDataContract> {
     } catch (e) {
       contract.onLoadError(e.toString());
     }
+    contract.onLoadComplete();
   }
 }

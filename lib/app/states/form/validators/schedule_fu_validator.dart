@@ -1,9 +1,9 @@
-import 'package:get/get.dart';
-import 'package:ventes/app/states/form/sources/schedule_fu_form_source.dart';
+import 'package:ventes/app/states/typedefs/schedule_fu_typedef.dart';
 import 'package:ventes/constants/strings/schedule_string.dart';
 
 class ScheduleFormUpdateValidator {
-  ScheduleFormUpdateFormSource get _formSource => Get.find<ScheduleFormUpdateFormSource>(tag: ScheduleString.scheduleUpdateTag);
+  late FormSource _formSource;
+  set formSource(FormSource value) => _formSource = value;
 
   String? schenm(String? value) {
     if (value == null || value.isEmpty) {

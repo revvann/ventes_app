@@ -6,10 +6,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ventes/app/resources/widgets/editor_input.dart';
-import 'package:ventes/app/resources/widgets/input_search_list.dart';
 import 'package:ventes/app/resources/widgets/keyable_selectbox.dart';
 import 'package:ventes/app/resources/widgets/regular_input.dart';
-import 'package:ventes/app/resources/widgets/search_list.dart';
 import 'package:ventes/app/resources/widgets/top_navigation.dart';
 import 'package:ventes/app/states/controllers/customer_fu_state_controller.dart';
 import 'package:ventes/constants/regular_color.dart';
@@ -19,7 +17,6 @@ import 'package:ventes/core/view/view.dart';
 
 part 'package:ventes/app/resources/views/customer_form/update/components/_customer_picture.dart';
 part 'package:ventes/app/resources/views/customer_form/update/components/_form.dart';
-part 'package:ventes/app/resources/views/customer_form/update/components/_search_list.dart';
 part 'package:ventes/app/resources/views/customer_form/update/components/_bottomsheet.dart';
 
 class CustomerFormUpdateView extends View<CustomerFormUpdateStateController> {

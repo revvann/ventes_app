@@ -5,12 +5,8 @@ import 'package:ventes/app/states/typedefs/schedule_typedef.dart';
 import 'package:ventes/core/states/state_property.dart';
 import 'package:ventes/helpers/task_helper.dart';
 
-class ScheduleProperty extends StateProperty {
-  Listener get _listener => Get.find<Listener>(tag: ScheduleString.scheduleTag);
-  DataSource get _dataSource => Get.find<DataSource>(tag: ScheduleString.scheduleTag);
-
+class ScheduleProperty extends StateProperty with PropertyMixin {
   final CalendarController calendarController = CalendarController();
-
   Task task = Task(ScheduleString.taskCode);
 
   final _dateShown = DateTime.now().obs;
@@ -24,20 +20,20 @@ class ScheduleProperty extends StateProperty {
   DateTime initialDate = DateTime.now();
 
   void refresh() {
-    _dataSource.fetchData(dateShown.month);
+    dataSource.fetchData(dateShown.month);
     Get.find<TaskHelper>().loaderPush(task);
   }
 
   @override
   void ready() {
-    super.close();
+    super.ready();
     DateTime now = DateTime.now();
 
     selectedDate = DateTime(now.year, now.month, now.day);
     dateShown = calendarController.displayDate ?? now;
     initialDate = dateShown;
 
-    calendarController.addPropertyChangedListener(_listener.onDateShownChanged);
+    calendarController.addPropertyChangedListener(listener.onDateShownChanged);
     refresh();
   }
 

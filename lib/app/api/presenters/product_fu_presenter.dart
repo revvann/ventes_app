@@ -33,6 +33,7 @@ class ProductFormUpdatePresenter extends RegularPresenter<ProductUpdateContract>
     } catch (e) {
       contract.onLoadError(e.toString());
     }
+    contract.onLoadComplete();
   }
 
   void updateProduct(int id, Map<String, dynamic> data) async {
@@ -46,6 +47,7 @@ class ProductFormUpdatePresenter extends RegularPresenter<ProductUpdateContract>
     } catch (e) {
       contract.onUpdateError(e.toString());
     }
+    contract.onUpdateComplete();
   }
 }
 

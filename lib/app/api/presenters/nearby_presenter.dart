@@ -78,9 +78,10 @@ class NearbyPresenter extends RegularPresenter<NearbyContract> {
       } else {
         contract.onLoadFailed(NearbyString.fetchFailed);
       }
-    } catch (err) {
-      contract.onLoadError(err.toString());
+    } catch (e) {
+      contract.onLoadError(e.toString());
     }
+    contract.onLoadComplete();
   }
 
   void deleteData(int id) async {

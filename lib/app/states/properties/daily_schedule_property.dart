@@ -8,9 +8,7 @@ import 'package:ventes/helpers/function_helpers.dart';
 import 'package:ventes/helpers/task_helper.dart';
 import 'package:ventes/app/states/typedefs/daily_schedule_typedef.dart';
 
-class DailyScheduleProperty extends StateProperty {
-  DataSource get _dataSource => Get.find<DataSource>(tag: ScheduleString.dailyScheduleTag);
-
+class DailyScheduleProperty extends StateProperty with PropertyMixin {
   Task task = Task(ScheduleString.dailyScheduleTaskCode);
 
   final Rx<DateTime> _date = Rx<DateTime>(DateTime.now());
@@ -22,17 +20,17 @@ class DailyScheduleProperty extends StateProperty {
   set selectedAppointment(Schedule? value) => _selectedAppointment.value = value;
 
   void refresh() {
-    _dataSource.fetchData(dbFormatDate(date));
+    dataSource.fetchData(dbFormatDate(date));
     Get.find<TaskHelper>().loaderPush(task);
   }
 
   Color getAppointmentColor(Schedule appointment) {
     Color color = RegularColor.primary;
-    if (appointment.schetypeid == _dataSource.types["Event"]) {
+    if (appointment.schetypeid == dataSource.types["Event"]) {
       color = RegularColor.yellow;
-    } else if (appointment.schetypeid == _dataSource.types["Task"]) {
+    } else if (appointment.schetypeid == dataSource.types["Task"]) {
       color = RegularColor.red;
-    } else if (appointment.schetypeid == _dataSource.types["Reminder"]) {
+    } else if (appointment.schetypeid == dataSource.types["Reminder"]) {
       color = RegularColor.cyan;
     }
     return color;

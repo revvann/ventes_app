@@ -3,16 +3,11 @@ import 'package:ventes/app/api/presenters/prospect_detail_fc_presenter.dart';
 import 'package:ventes/app/models/prospect_model.dart';
 import 'package:ventes/app/models/type_model.dart';
 import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
-import 'package:ventes/constants/strings/prospect_string.dart';
 import 'package:ventes/app/states/typedefs/prospect_detail_fc_typedef.dart';
 import 'package:ventes/core/states/state_data_source.dart';
 import 'package:ventes/helpers/task_helper.dart';
 
-class ProspectDetailFormCreateDataSource extends StateDataSource<ProspectDetailFormCreatePresenter> implements ProspectDetailCreateContract {
-  Listener get _listener => Get.find<Listener>(tag: ProspectString.detailCreateTag);
-  FormSource get _formSource => Get.find<FormSource>(tag: ProspectString.detailCreateTag);
-  Property get _property => Get.find<Property>(tag: ProspectString.detailCreateTag);
-
+class ProspectDetailFormCreateDataSource extends StateDataSource<ProspectDetailFormCreatePresenter> with DataSourceMixin implements ProspectDetailCreateContract {
   final Rx<List<KeyableDropdownItem<int, DBType>>> _categoryItems = Rx<List<KeyableDropdownItem<int, DBType>>>([]);
   set categoryItems(List<KeyableDropdownItem<int, DBType>> value) => _categoryItems.value = value;
   List<KeyableDropdownItem<int, DBType>> get categoryItems => _categoryItems.value;
@@ -32,38 +27,44 @@ class ProspectDetailFormCreateDataSource extends StateDataSource<ProspectDetailF
   ProspectDetailFormCreatePresenter presenterBuilder() => ProspectDetailFormCreatePresenter();
 
   @override
-  onLoadError(String message) => _listener.onLoadError(message);
+  onLoadError(String message) => listener.onLoadError(message);
 
   @override
-  onLoadFailed(String message) => _listener.onLoadFailed(message);
+  onLoadFailed(String message) => listener.onLoadFailed(message);
 
   @override
   onLoadSuccess(Map data) {
     if (data['categories'] != null) {
       List<DBType> categories = data['categories'].map<DBType>((item) => DBType.fromJson(item)).toList();
-      _formSource.prosdtcategory = categories.isNotEmpty ? categories.first : null;
+      formSource.prosdtcategory = categories.isNotEmpty ? categories.first : null;
       categoryItems = categories.map<KeyableDropdownItem<int, DBType>>((item) => KeyableDropdownItem<int, DBType>(key: item.typeid!, value: item)).toList();
     }
 
     if (data['types'] != null) {
       List<DBType> types = data['types'].map<DBType>((item) => DBType.fromJson(item)).toList();
-      _formSource.prosdttype = types.isNotEmpty ? types.first : null;
+      formSource.prosdttype = types.isNotEmpty ? types.first : null;
       typeItems = types.map<KeyableDropdownItem<int, DBType>>((item) => KeyableDropdownItem<int, DBType>(key: item.typeid!, value: item)).toList();
     }
 
     if (data['prospect'] != null) {
       prospect = Prospect.fromJson(data['prospect']);
-      _formSource.prospect = prospect;
+      formSource.prospect = prospect;
     }
-    Get.find<TaskHelper>().loaderPop(_property.task.name);
+    Get.find<TaskHelper>().loaderPop(property.task.name);
   }
 
   @override
-  void onCreateError(String message) => _listener.onCreateDataError(message);
+  void onCreateError(String message) => listener.onCreateDataError(message);
 
   @override
-  void onCreateFailed(String message) => _listener.onCreateDataFailed(message);
+  void onCreateFailed(String message) => listener.onCreateDataFailed(message);
 
   @override
-  void onCreateSuccess(String message) => _listener.onCreateDataSuccess(message);
+  void onCreateSuccess(String message) => listener.onCreateDataSuccess(message);
+
+  @override
+  void onCreateComplete() => listener.onComplete();
+
+  @override
+  onLoadComplete() => listener.onComplete();
 }

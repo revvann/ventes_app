@@ -11,21 +11,16 @@ import 'package:ventes/app/models/province_model.dart';
 import 'package:ventes/app/models/subdistrict_model.dart';
 import 'package:ventes/app/models/type_model.dart';
 import 'package:ventes/app/states/typedefs/customer_fu_typedef.dart';
-import 'package:ventes/constants/strings/nearby_string.dart';
 import 'package:ventes/core/states/state_data_source.dart';
 import 'package:ventes/helpers/function_helpers.dart';
 import 'package:ventes/helpers/task_helper.dart';
 
-class CustomerFormUpdateDataSource extends StateDataSource<CustomerFormUpdatePresenter> implements CustomerUpdateContract {
-  Listener get _listener => Get.find<Listener>(tag: NearbyString.customerUpdateTag);
-  FormSource get _formSource => Get.find<FormSource>(tag: NearbyString.customerUpdateTag);
-  Property get _property => Get.find<Property>(tag: NearbyString.customerUpdateTag);
-
-  final _customers = <Customer>[].obs;
+class CustomerFormUpdateDataSource extends StateDataSource<CustomerFormUpdatePresenter> with DataSourceMixin implements CustomerUpdateContract {
+  final _customers = Rx<List<Customer>>([]);
   set customers(List<Customer> value) => _customers.value = value;
   List<Customer> get customers => _customers.value;
 
-  final _bpCustomers = <BpCustomer>[].obs;
+  final _bpCustomers = Rx<List<BpCustomer>>([]);
   set bpCustomers(List<BpCustomer> value) => _bpCustomers.value = value;
   List<BpCustomer> get bpCustomers => _bpCustomers.value;
 
@@ -33,11 +28,11 @@ class CustomerFormUpdateDataSource extends StateDataSource<CustomerFormUpdatePre
   set bpCustomer(BpCustomer? value) => _bpCustomer.value = value;
   BpCustomer? get bpCustomer => _bpCustomer.value;
 
-  final _types = <int, String>{}.obs;
+  final _types = Rx<Map<int, String>>({});
   set types(Map<int, String> value) => _types.value = value;
   Map<int, String> get types => _types.value;
 
-  final _statuses = <int, String>{}.obs;
+  final _statuses = Rx<Map<int, String>>({});
   set statuses(Map<int, String> value) => _statuses.value = value;
   Map<int, String> get statuses => _statuses.value;
 
@@ -86,25 +81,25 @@ class CustomerFormUpdateDataSource extends StateDataSource<CustomerFormUpdatePre
   CustomerFormUpdatePresenter presenterBuilder() => CustomerFormUpdatePresenter();
 
   @override
-  onLoadError(String message) => _listener.onLoadDataError(message);
+  onLoadError(String message) => listener.onLoadDataError(message);
 
   @override
-  onLoadFailed(String message) => _listener.onLoadDataFailed(message);
+  onLoadFailed(String message) => listener.onLoadDataFailed(message);
 
   @override
   onLoadSuccess(Map data) async {
     if (data['bpcustomer'] != null) {
       bpCustomer = BpCustomer.fromJson(data['bpcustomer']);
-      await _property.moveCamera();
-      _formSource.prepareFormValues();
+      await property.moveCamera();
+      formSource.prepareFormValues();
     }
 
     if (data['customers'] != null) {
       customersFromList(
         data['customers'],
-        LatLng(_property.markers.first.position.latitude, _property.markers.first.position.longitude),
+        LatLng(property.markers.first.position.latitude, property.markers.first.position.longitude),
       );
-      _property.deployCustomers(customers);
+      property.deployCustomers(customers);
     }
 
     if (data['bpcustomers'] != null) {
@@ -119,15 +114,21 @@ class CustomerFormUpdateDataSource extends StateDataSource<CustomerFormUpdatePre
       statusesFromList(data['statuses']);
     }
 
-    Get.find<TaskHelper>().loaderPop(_property.task.name);
+    Get.find<TaskHelper>().loaderPop(property.task.name);
   }
 
   @override
-  void onUpdateError(String message) => _listener.onUpdateDataError(message);
+  void onUpdateError(String message) => listener.onUpdateDataError(message);
 
   @override
-  void onUpdateFailed(String message) => _listener.onUpdateDataFailed(message);
+  void onUpdateFailed(String message) => listener.onUpdateDataFailed(message);
 
   @override
-  void onUpdateSuccess(String message) => _listener.onUpdateDataSuccess(message);
+  void onUpdateSuccess(String message) => listener.onUpdateDataSuccess(message);
+
+  @override
+  onLoadComplete() => listener.onComplete();
+
+  @override
+  void onUpdateComplete() => listener.onComplete();
 }

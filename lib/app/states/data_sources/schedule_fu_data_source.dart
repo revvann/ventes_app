@@ -6,17 +6,12 @@ import 'package:ventes/app/models/auth_model.dart';
 import 'package:ventes/app/models/schedule_model.dart';
 import 'package:ventes/app/models/type_model.dart';
 import 'package:ventes/app/models/user_detail_model.dart';
-import 'package:ventes/constants/strings/schedule_string.dart';
 import 'package:ventes/app/states/typedefs/schedule_fu_typedef.dart';
 import 'package:ventes/core/states/state_data_source.dart';
 import 'package:ventes/helpers/auth_helper.dart';
 import 'package:ventes/helpers/task_helper.dart';
 
-class ScheduleFormUpdateDataSource extends StateDataSource<ScheduleFormUpdatePresenter> implements ScheduleUpdateContract {
-  Listener get _listener => Get.find<Listener>(tag: ScheduleString.scheduleUpdateTag);
-  FormSource get _formSource => Get.find<FormSource>(tag: ScheduleString.scheduleUpdateTag);
-  Property get _property => Get.find<Property>(tag: ScheduleString.scheduleUpdateTag);
-
+class ScheduleFormUpdateDataSource extends StateDataSource<ScheduleFormUpdatePresenter> with DataSourceMixin implements ScheduleUpdateContract {
   late int scheduleId;
 
   final Rx<List<Map<String, int>>?> _types = Rx<List<Map<String, int>>?>(null);
@@ -75,25 +70,31 @@ class ScheduleFormUpdateDataSource extends StateDataSource<ScheduleFormUpdatePre
   ScheduleFormUpdatePresenter presenterBuilder() => ScheduleFormUpdatePresenter();
 
   @override
-  void onUpdateFailed(String message) => _listener.onUpdateDataFailed(message);
+  void onUpdateFailed(String message) => listener.onUpdateDataFailed(message);
 
   @override
-  void onUpdateSuccess(String message) => _listener.onUpdateDataSuccess(message);
+  void onUpdateSuccess(String message) => listener.onUpdateDataSuccess(message);
 
   @override
-  void onUpdateError(String message) => _listener.onUpdateDataError(message);
+  void onUpdateError(String message) => listener.onUpdateDataError(message);
 
   @override
-  onLoadError(String message) => _listener.onLoadDataError(message);
+  onLoadError(String message) => listener.onLoadDataError(message);
 
   @override
-  onLoadFailed(String message) => _listener.onLoadDataFailed(message);
+  onLoadFailed(String message) => listener.onLoadDataFailed(message);
 
   @override
   onLoadSuccess(Map data) {
     schedule = Schedule.fromJson(data['schedule']);
     insertTypes(List<Map<String, dynamic>>.from(data['types']));
-    _formSource.prepareFormValues();
-    Get.find<TaskHelper>().loaderPop(_property.task.name);
+    formSource.prepareFormValues();
+    Get.find<TaskHelper>().loaderPop(property.task.name);
   }
+
+  @override
+  onLoadComplete() => listener.onComplete();
+
+  @override
+  void onUpdateComplete() => listener.onComplete();
 }

@@ -58,11 +58,6 @@ abstract class StateController<P extends StateProperty?, L extends StateListener
     dataSource = dataSourceBuilder();
     formSource = formSourceBuilder();
 
-    Get.replace<L>(listener, tag: tag);
-    Get.replace<P>(property, tag: tag);
-    Get.replace<D>(dataSource, tag: tag);
-    Get.replace<F>(formSource, tag: tag);
-
     dataSource?.init();
     property?.init();
     formSource?.init();
@@ -85,15 +80,6 @@ abstract class StateController<P extends StateProperty?, L extends StateListener
   @mustCallSuper
   void close() {
     loading = false;
-    Get.delete<P>(
-      tag: tag,
-    );
-    Get.delete<L>(
-      tag: tag,
-    );
-    Get.delete<D>(
-      tag: tag,
-    );
     dataSource?.close();
     property?.close();
     formSource?.close();

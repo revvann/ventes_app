@@ -6,11 +6,9 @@ import 'package:ventes/helpers/function_helpers.dart';
 import 'package:ventes/helpers/task_helper.dart';
 import 'package:ventes/app/states/typedefs/dashboard_typedef.dart';
 
-class DashboardProperty extends StateProperty with StatePropertyMixin<Controller, Listener, DataSource, FormSource> {
+class DashboardProperty extends StateProperty with PropertyMixin {
   Position? position;
-
   Task task = Task(DashboardString.taskCode);
-
   String? get shortName => getInitials(dataSource.account?.user?.userfullname ?? "");
 
   void logout() {

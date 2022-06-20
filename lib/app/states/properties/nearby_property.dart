@@ -12,9 +12,7 @@ import 'package:ventes/core/states/state_property.dart';
 import 'package:ventes/helpers/function_helpers.dart';
 import 'package:ventes/helpers/task_helper.dart';
 
-class NearbyProperty extends StateProperty {
-  DataSource get _dataSource => Get.find<DataSource>(tag: NearbyString.nearbyTag);
-
+class NearbyProperty extends StateProperty with PropertyMixin {
   Task task = Task(NearbyString.taskCode);
 
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
@@ -55,7 +53,7 @@ class NearbyProperty extends StateProperty {
   void deployCustomers(List<Customer> data) async {
     List<Marker> markersList = [markers.first];
     for (var element in data) {
-      bool isInBp = _dataSource.bpCustomersHas(element);
+      bool isInBp = dataSource.bpCustomersHas(element);
       Marker marker = Marker(
         markerId: MarkerId((element.cstmid ?? "0").toString()),
         infoWindow: InfoWindow(title: element.cstmname ?? "Unknown"),
@@ -73,7 +71,7 @@ class NearbyProperty extends StateProperty {
     controller.animateCamera(
       CameraUpdate.newLatLng(LatLng(position.latitude, position.longitude)),
     );
-    _dataSource.fetchData(LatLng(position.latitude, position.longitude));
+    dataSource.fetchData(LatLng(position.latitude, position.longitude));
     Get.find<TaskHelper>().loaderPush(task);
   }
 

@@ -11,13 +11,10 @@ import 'package:ventes/core/states/state_form_source.dart';
 import 'package:ventes/helpers/function_helpers.dart';
 import 'package:ventes/helpers/task_helper.dart';
 
-class ProspectDetailFormCreateFormSource extends StateFormSource {
-  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-
-  Property get _property => Get.find<Property>(tag: ProspectString.detailCreateTag);
-  DataSource get _dataSource => Get.find<DataSource>(tag: ProspectString.detailCreateTag);
-
+class ProspectDetailFormCreateFormSource extends StateFormSource with FormSourceMixin {
   Validator validator = Validator();
+
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   KeyableDropdownController<int, DBType> categoryDropdownController = Get.put(
     KeyableDropdownController<int, DBType>(),
@@ -59,6 +56,7 @@ class ProspectDetailFormCreateFormSource extends StateFormSource {
   @override
   init() async {
     super.init();
+    validator.formSource = this;
     date = DateTime.now();
 
     Position pos = await getCurrentPosition();
@@ -73,9 +71,9 @@ class ProspectDetailFormCreateFormSource extends StateFormSource {
         title: "Current position",
       ),
     );
-    _property.marker = {marker};
+    property.marker = {marker};
 
-    _property.mapsController.future.then((controller) {
+    property.mapsController.future.then((controller) {
       controller.animateCamera(
         CameraUpdate.newLatLng(LatLng(prosdtlat ?? 0, prosdtlong ?? 0)),
       );
@@ -112,10 +110,10 @@ class ProspectDetailFormCreateFormSource extends StateFormSource {
   void onSubmit() {
     if (isValid) {
       Map<String, dynamic> data = toJson();
-      _dataSource.createData(data);
-      Get.find<TaskHelper>().loaderPush(_property.task);
+      dataSource.createData(data);
+      Get.find<TaskHelper>().loaderPush(property.task);
     } else {
-      Get.find<TaskHelper>().failedPush(_property.task.copyWith(message: "Form invalid, Make sure all fields are filled"));
+      Get.find<TaskHelper>().failedPush(property.task.copyWith(message: "Form invalid, Make sure all fields are filled"));
     }
   }
 }

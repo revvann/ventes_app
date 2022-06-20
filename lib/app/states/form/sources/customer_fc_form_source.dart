@@ -17,10 +17,8 @@ import 'package:ventes/core/states/update_form_source.dart';
 import 'package:ventes/helpers/task_helper.dart';
 import 'package:ventes/app/states/typedefs/customer_fc_typedef.dart';
 
-class CustomerFormCreateFormSource extends UpdateFormSource {
+class CustomerFormCreateFormSource extends UpdateFormSource with FormSourceMixin {
   Validator validator = Validator();
-  Property get _property => Get.find<Property>(tag: NearbyString.customerCreateTag);
-  DataSource get _dataSource => Get.find<DataSource>(tag: NearbyString.customerCreateTag);
 
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final defaultPicture = Image.asset('assets/' + NearbyString.defaultImage).obs;
@@ -58,8 +56,8 @@ class CustomerFormCreateFormSource extends UpdateFormSource {
     super.init();
     picture = await _getImageFileFromAssets(NearbyString.defaultImage);
 
-    latitudeTEC.text = _property.latitude!.toString();
-    longitudeTEC.text = _property.longitude!.toString();
+    latitudeTEC.text = property.latitude!.toString();
+    longitudeTEC.text = property.longitude!.toString();
   }
 
   @override
@@ -78,14 +76,14 @@ class CustomerFormCreateFormSource extends UpdateFormSource {
 
   @override
   void prepareFormValues() {
-    nameTEC.text = _dataSource.customer!.cstmname ?? "";
-    addressTEC.text = _dataSource.customer!.cstmaddress ?? "";
-    phoneTEC.text = _dataSource.customer!.cstmphone ?? "";
-    cstmtypeid = _dataSource.customer!.cstmtypeid;
-    provinceid = _dataSource.customer!.cstmprovinceid;
-    cityid = _dataSource.customer!.cstmcityid;
-    subdistrictid = _dataSource.customer!.cstmsubdistrictid;
-    cstmid = _dataSource.customer!.cstmid;
+    nameTEC.text = dataSource.customer!.cstmname ?? "";
+    addressTEC.text = dataSource.customer!.cstmaddress ?? "";
+    phoneTEC.text = dataSource.customer!.cstmphone ?? "";
+    cstmtypeid = dataSource.customer!.cstmtypeid;
+    provinceid = dataSource.customer!.cstmprovinceid;
+    cityid = dataSource.customer!.cstmcityid;
+    subdistrictid = dataSource.customer!.cstmsubdistrictid;
+    cstmid = dataSource.customer!.cstmid;
   }
 
   Future<File> _getImageFileFromAssets(String path) async {
@@ -108,7 +106,7 @@ class CustomerFormCreateFormSource extends UpdateFormSource {
       'cstmname': cstmname,
       'cstmaddress': cstmaddress,
       'cstmphone': cstmphone,
-      'cstmpostalcode': _dataSource.getPostalCodeName(),
+      'cstmpostalcode': dataSource.getPostalCodeName(),
       'cstmprovinceid': provinceid.toString(),
       'cstmcityid': cityid.toString(),
       'cstmsubdistrictid': subdistrictid.toString(),
@@ -128,10 +126,10 @@ class CustomerFormCreateFormSource extends UpdateFormSource {
       data['sbccstmpic'] = MultipartFile(File(data['sbccstmpic']), filename: filename);
 
       FormData formData = FormData(data);
-      _dataSource.createCustomer(formData);
-      Get.find<TaskHelper>().loaderPush(_property.task);
+      dataSource.createCustomer(formData);
+      Get.find<TaskHelper>().loaderPush(property.task);
     } else {
-      Get.find<TaskHelper>().failedPush(_property.task.copyWith(message: NearbyString.formInvalid));
+      Get.find<TaskHelper>().failedPush(property.task.copyWith(message: NearbyString.formInvalid));
     }
   }
 }

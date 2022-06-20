@@ -4,12 +4,8 @@ import 'package:ventes/app/states/typedefs/prospect_fu_typedef.dart';
 import 'package:ventes/core/states/state_property.dart';
 import 'package:ventes/helpers/task_helper.dart';
 
-class ProspectFormUpdateProperty extends StateProperty {
-  DataSource get dataSource => Get.find<DataSource>(tag: ProspectString.prospectUpdateTag);
-  FormSource get formSource => Get.find<FormSource>(tag: ProspectString.prospectUpdateTag);
-
+class ProspectFormUpdateProperty extends StateProperty with PropertyMixin {
   late int prospectId;
-
   Task task = Task(ProspectString.formUpdateTaskCode);
 
   void refresh() {

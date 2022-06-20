@@ -28,8 +28,8 @@ class AuthPresenter {
       } else {
         _authContract.onAuthFailed(response.body['message']);
       }
-    } catch (err) {
-      _authContract.onAuthFailed(err.toString());
+    } catch (e) {
+      _authContract.onAuthFailed(e.toString());
     }
   }
 }

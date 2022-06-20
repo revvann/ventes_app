@@ -96,9 +96,10 @@ class CustomerFormUpdatePresenter extends RegularPresenter<CustomerUpdateContrac
       } else {
         contract.onLoadFailed(NearbyString.fetchFailed);
       }
-    } catch (err) {
-      contract.onLoadError(err.toString());
+    } catch (e) {
+      contract.onLoadError(e.toString());
     }
+    contract.onLoadComplete();
   }
 
   void updateCustomer(int id, FormData data) async {
@@ -113,9 +114,10 @@ class CustomerFormUpdatePresenter extends RegularPresenter<CustomerUpdateContrac
       } else {
         contract.onUpdateFailed(NearbyString.createFailed);
       }
-    } catch (err) {
-      contract.onUpdateError(err.toString());
+    } catch (e) {
+      contract.onUpdateError(e.toString());
     }
+    contract.onUpdateComplete();
   }
 
   Future<List<Country>> fetchCountries([String? search]) async {

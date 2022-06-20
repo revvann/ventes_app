@@ -1,7 +1,6 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 
@@ -150,40 +149,6 @@ class ProspectCard extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-}
-
-class _TextIcon extends StatelessWidget {
-  String icon;
-  String text;
-
-  _TextIcon({
-    Key? key,
-    required this.icon,
-    required this.text,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        SvgPicture.asset(
-          icon,
-          width: RegularSize.m,
-          color: RegularColor.primary,
-        ),
-        SizedBox(
-          width: RegularSize.xs,
-        ),
-        Text(
-          text,
-          style: TextStyle(
-            color: RegularColor.dark,
-            fontSize: 12,
-          ),
-        ),
-      ],
     );
   }
 }

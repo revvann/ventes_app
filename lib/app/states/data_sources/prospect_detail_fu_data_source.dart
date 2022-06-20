@@ -3,16 +3,11 @@ import 'package:ventes/app/api/presenters/prospect_detail_fu_presenter.dart';
 import 'package:ventes/app/models/prospect_detail_model.dart';
 import 'package:ventes/app/models/type_model.dart';
 import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
-import 'package:ventes/constants/strings/prospect_string.dart';
 import 'package:ventes/app/states/typedefs/prospect_detail_fu_typedef.dart';
 import 'package:ventes/core/states/state_data_source.dart';
 import 'package:ventes/helpers/task_helper.dart';
 
-class ProspectDetailFormUpdateDataSource extends StateDataSource<ProspectDetailFormUpdatePresenter> implements ProspectDetailUpdateContract {
-  Listener get _listener => Get.find<Listener>(tag: ProspectString.detailUpdateTag);
-  FormSource get _formSource => Get.find<FormSource>(tag: ProspectString.detailUpdateTag);
-  Property get _property => Get.find<Property>(tag: ProspectString.detailUpdateTag);
-
+class ProspectDetailFormUpdateDataSource extends StateDataSource<ProspectDetailFormUpdatePresenter> with DataSourceMixin implements ProspectDetailUpdateContract {
   final Rx<List<KeyableDropdownItem<int, DBType>>> _categoryItems = Rx<List<KeyableDropdownItem<int, DBType>>>([]);
   set categoryItems(List<KeyableDropdownItem<int, DBType>> value) => _categoryItems.value = value;
   List<KeyableDropdownItem<int, DBType>> get categoryItems => _categoryItems.value;
@@ -36,10 +31,10 @@ class ProspectDetailFormUpdateDataSource extends StateDataSource<ProspectDetailF
   ProspectDetailFormUpdatePresenter presenterBuilder() => ProspectDetailFormUpdatePresenter();
 
   @override
-  onLoadError(String message) => _listener.onLoadError(message);
+  onLoadError(String message) => listener.onLoadError(message);
 
   @override
-  onLoadFailed(String message) => _listener.onLoadFailed(message);
+  onLoadFailed(String message) => listener.onLoadFailed(message);
 
   @override
   onLoadSuccess(Map data) {
@@ -55,17 +50,23 @@ class ProspectDetailFormUpdateDataSource extends StateDataSource<ProspectDetailF
 
     if (data['prospectdetail'] != null) {
       prospectdetail = ProspectDetail.fromJson(data['prospectdetail']);
-      _formSource.prepareFormValues();
+      formSource.prepareFormValues();
     }
-    Get.find<TaskHelper>().loaderPop(_property.task.name);
+    Get.find<TaskHelper>().loaderPop(property.task.name);
   }
 
   @override
-  void onUpdateError(String message) => _listener.onUpdateDataError(message);
+  void onUpdateError(String message) => listener.onUpdateDataError(message);
 
   @override
-  void onUpdateFailed(String message) => _listener.onUpdateDataFailed(message);
+  void onUpdateFailed(String message) => listener.onUpdateDataFailed(message);
 
   @override
-  void onUpdateSuccess(String message) => _listener.onUpdateDataSuccess(message);
+  void onUpdateSuccess(String message) => listener.onUpdateDataSuccess(message);
+
+  @override
+  onLoadComplete() => listener.onComplete();
+
+  @override
+  void onUpdateComplete() => listener.onComplete();
 }

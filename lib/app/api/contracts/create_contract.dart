@@ -8,4 +8,5 @@ abstract class CreateContract {
   void onCreateError(
     String message,
   );
+  void onCreateComplete();
 }

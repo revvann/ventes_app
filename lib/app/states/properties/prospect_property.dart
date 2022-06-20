@@ -5,15 +5,12 @@ import 'package:ventes/app/states/typedefs/prospect_typedef.dart';
 import 'package:ventes/core/states/state_property.dart';
 import 'package:ventes/helpers/task_helper.dart';
 
-class ProspectProperty extends StateProperty {
-  DataSource get _dataSource => Get.find<DataSource>(tag: ProspectString.prospectTag);
-
+class ProspectProperty extends StateProperty with PropertyMixin {
   Prospect? selectedProspect;
-
   Task task = Task(ProspectString.taskCode);
 
   void refresh() {
-    _dataSource.fetchData();
+    dataSource.fetchData();
     Get.find<TaskHelper>().loaderPush(task);
   }
 }

@@ -3,19 +3,15 @@ import 'package:ventes/app/api/presenters/daily_schedule_presenter.dart';
 import 'package:ventes/app/models/schedule_model.dart';
 import 'package:ventes/app/models/type_model.dart';
 import 'package:ventes/app/states/typedefs/daily_schedule_typedef.dart';
-import 'package:ventes/constants/strings/schedule_string.dart';
 import 'package:ventes/core/states/state_data_source.dart';
 import 'package:ventes/helpers/task_helper.dart';
 
-class DailyScheduleDataSource extends StateDataSource<DailySchedulePresenter> implements DailyScheduleContract {
-  Listener get _listener => Get.find<Listener>(tag: ScheduleString.dailyScheduleTag);
-  Property get _property => Get.find<Property>(tag: ScheduleString.dailyScheduleTag);
-
-  final _types = <String, int>{}.obs;
+class DailyScheduleDataSource extends StateDataSource<DailySchedulePresenter> with DataSourceMixin implements DailyScheduleContract {
+  final _types = Rx<Map<String, int>>({});
   Map<String, int> get types => _types.value;
   set types(Map<String, int> value) => _types.value = value;
 
-  final _appointments = <Schedule>[].obs;
+  final _appointments = Rx<List<Schedule>>([]);
   List<Schedule> get appointments => _appointments.value;
   set appointments(List<Schedule> value) => _appointments.value = value;
 
@@ -42,7 +38,7 @@ class DailyScheduleDataSource extends StateDataSource<DailySchedulePresenter> im
   DailySchedulePresenter presenterBuilder() => DailySchedulePresenter();
 
   @override
-  onLoadFailed(String message) => _listener.onLoadDataFailed(message);
+  onLoadFailed(String message) => listener.onLoadDataFailed(message);
 
   @override
   onLoadSuccess(Map data) {
@@ -55,18 +51,24 @@ class DailyScheduleDataSource extends StateDataSource<DailySchedulePresenter> im
     if (data['permissions'] != null) {
       permissions = List<DBType>.from(data['permissions'].map((e) => DBType.fromJson(e)));
     }
-    Get.find<TaskHelper>().loaderPop(_property.task.name);
+    Get.find<TaskHelper>().loaderPop(property.task.name);
   }
 
   @override
-  onLoadError(String message) => _listener.onLoadDataError(message);
+  onLoadError(String message) => listener.onLoadDataError(message);
 
   @override
-  void onDeleteError(String message) => _listener.onDeleteError(message);
+  void onDeleteError(String message) => listener.onDeleteError(message);
 
   @override
-  void onDeleteFailed(String message) => _listener.onDeleteFailed(message);
+  void onDeleteFailed(String message) => listener.onDeleteFailed(message);
 
   @override
-  void onDeleteSuccess(String message) => _listener.onDeleteSuccess(message);
+  void onDeleteSuccess(String message) => listener.onDeleteSuccess(message);
+
+  @override
+  void onDeleteComplete() => listener.onComplete();
+
+  @override
+  onLoadComplete() => listener.onComplete();
 }

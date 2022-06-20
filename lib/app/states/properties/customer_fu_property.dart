@@ -12,10 +12,7 @@ import 'package:ventes/constants/strings/nearby_string.dart';
 import 'package:ventes/core/states/state_property.dart';
 import 'package:ventes/helpers/task_helper.dart';
 
-class CustomerFormUpdateProperty extends StateProperty {
-  FormSource get _formSource => Get.find<FormSource>(tag: NearbyString.customerUpdateTag);
-  DataSource get _dataSource => Get.find<DataSource>(tag: NearbyString.customerUpdateTag);
-
+class CustomerFormUpdateProperty extends StateProperty with PropertyMixin {
   Task task = Task(NearbyString.updateTaskCode);
 
   final double defaultZoom = 20;
@@ -37,7 +34,7 @@ class CustomerFormUpdateProperty extends StateProperty {
   set markerLatLng(LatLng latlng) {
     Marker marker = Marker(
       markerId: MarkerId(NearbyString.selectedLocId),
-      infoWindow: InfoWindow(title: _formSource.cstmname),
+      infoWindow: InfoWindow(title: formSource.cstmname),
       position: latlng,
     );
 
@@ -53,7 +50,7 @@ class CustomerFormUpdateProperty extends StateProperty {
   void deployCustomers(List<Customer> data) async {
     List<Marker> markersList = [markers.first];
     for (var element in data) {
-      bool isInBp = _dataSource.bpCustomersHas(element);
+      bool isInBp = dataSource.bpCustomersHas(element);
       Marker marker = Marker(
         markerId: MarkerId((element.cstmid ?? "0").toString()),
         infoWindow: InfoWindow(title: element.cstmname ?? "Unknown"),
@@ -66,8 +63,8 @@ class CustomerFormUpdateProperty extends StateProperty {
   }
 
   Future moveCamera() async {
-    if (_dataSource.bpCustomer != null) {
-      LatLng pos = LatLng(_dataSource.bpCustomer!.sbccstm!.cstmlatitude!, _dataSource.bpCustomer!.sbccstm!.cstmlongitude!);
+    if (dataSource.bpCustomer != null) {
+      LatLng pos = LatLng(dataSource.bpCustomer!.sbccstm!.cstmlatitude!, dataSource.bpCustomer!.sbccstm!.cstmlongitude!);
       GoogleMapController controller = await mapsController.future;
       await controller.animateCamera(
         CameraUpdate.newLatLng(pos),
@@ -77,7 +74,7 @@ class CustomerFormUpdateProperty extends StateProperty {
   }
 
   void refresh() {
-    _dataSource.fetchData(customerid ?? 0);
+    dataSource.fetchData(customerid ?? 0);
     Get.find<TaskHelper>().loaderPush(task);
   }
 

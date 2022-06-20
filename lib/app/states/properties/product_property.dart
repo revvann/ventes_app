@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ventes/app/resources/widgets/popup_button.dart';
 import 'package:ventes/constants/strings/prospect_string.dart';
@@ -8,9 +8,7 @@ import 'package:ventes/app/states/typedefs/product_typedef.dart';
 import 'package:ventes/core/states/state_property.dart';
 import 'package:ventes/helpers/task_helper.dart';
 
-class ProductProperty extends StateProperty {
-  DataSource get _dataSource => Get.find<DataSource>(tag: ProspectString.productTag);
-
+class ProductProperty extends StateProperty with PropertyMixin {
   Task task = Task(ProspectString.productTaskCode);
 
   Set<String> popupControllers = {};
@@ -23,13 +21,13 @@ class ProductProperty extends StateProperty {
   late int prospectid;
 
   void refresh() {
-    _dataSource.fetchData(prospectid);
+    dataSource.fetchData(prospectid);
     Get.find<TaskHelper>().loaderPush(task);
   }
 
   void searchProducts() {
     isLoading.value = true;
-    _dataSource.fetchProducts(prospectid, lastSearch);
+    dataSource.fetchProducts(prospectid, lastSearch);
   }
 
   void onSearchChanged() {

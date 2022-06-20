@@ -82,9 +82,10 @@ class DashboardPresenter extends RegularPresenter<DashboardContract> {
       } else {
         contract.onLoadFailed(DashboardString.fetchFailed);
       }
-    } catch (err) {
-      contract.onLoadError(err.toString());
+    } catch (e) {
+      contract.onLoadError(e.toString());
     }
+    contract.onLoadComplete();
   }
 
   void logout() async {
@@ -95,9 +96,10 @@ class DashboardPresenter extends RegularPresenter<DashboardContract> {
       } else {
         contract.onLogoutFailed("Logout Failed");
       }
-    } catch (err) {
-      contract.onLogoutError(err.toString());
+    } catch (e) {
+      contract.onLogoutError(e.toString());
     }
+    contract.onLogoutComplete();
   }
 }
 

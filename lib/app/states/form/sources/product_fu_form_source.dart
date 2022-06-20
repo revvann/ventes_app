@@ -2,20 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ventes/app/models/type_model.dart';
 import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
-import 'package:ventes/app/states/form/validators/product_fu_validator.dart';
 import 'package:ventes/constants/strings/prospect_string.dart';
 import 'package:ventes/app/states/typedefs/product_fu_typedef.dart';
 import 'package:ventes/core/states/update_form_source.dart';
 import 'package:ventes/helpers/function_helpers.dart';
 import 'package:ventes/helpers/task_helper.dart';
 
-class ProductFormUpdateFormSource extends UpdateFormSource {
-  DataSource get _dataSource => Get.find<DataSource>(tag: ProspectString.productUpdateTag);
-  Property get _property => Get.find<Property>(tag: ProspectString.productUpdateTag);
+class ProductFormUpdateFormSource extends UpdateFormSource with FormSourceMixin {
+  Validator validator = Validator();
 
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
-
-  ProductFormUpdateValidator validator = ProductFormUpdateValidator();
 
   TextEditingController nameTEC = TextEditingController();
   TextEditingController priceTEC = TextEditingController();
@@ -42,12 +38,12 @@ class ProductFormUpdateFormSource extends UpdateFormSource {
 
   @override
   void prepareFormValues() {
-    nameTEC.text = _dataSource.product?.prosproductproduct?.productname ?? "";
-    priceTEC.text = currencyFormat(_dataSource.product?.prosproductprice?.toString().replaceAll('.', ',') ?? "");
-    qtyTEC.text = _dataSource.product?.prosproductqty?.toString().replaceAll('.', ',') ?? "";
-    discTEC.text = _dataSource.product?.prosproductdiscount?.toString().replaceAll('.', ',') ?? "";
-    taxTEC.text = currencyFormat(_dataSource.product?.prosproducttax?.toString().replaceAll('.', ',') ?? "");
-    prosproducttax = _dataSource.product?.prosproducttaxtype;
+    nameTEC.text = dataSource.product?.prosproductproduct?.productname ?? "";
+    priceTEC.text = currencyFormat(dataSource.product?.prosproductprice?.toString().replaceAll('.', ',') ?? "");
+    qtyTEC.text = dataSource.product?.prosproductqty?.toString().replaceAll('.', ',') ?? "";
+    discTEC.text = dataSource.product?.prosproductdiscount?.toString().replaceAll('.', ',') ?? "";
+    taxTEC.text = currencyFormat(dataSource.product?.prosproducttax?.toString().replaceAll('.', ',') ?? "");
+    prosproducttax = dataSource.product?.prosproducttaxtype;
     taxDropdownController.selectedKeys = prosproducttax != null ? [prosproducttax!.typeid!] : [];
   }
 
@@ -78,10 +74,10 @@ class ProductFormUpdateFormSource extends UpdateFormSource {
   void onSubmit() {
     if (isValid) {
       Map<String, dynamic> data = toJson();
-      _dataSource.updateData(_property.productid, data);
-      Get.find<TaskHelper>().loaderPush(_property.task);
+      dataSource.updateData(property.productid, data);
+      Get.find<TaskHelper>().loaderPush(property.task);
     } else {
-      Get.find<TaskHelper>().failedPush(_property.task.copyWith(message: "Please fill all required fields"));
+      Get.find<TaskHelper>().failedPush(property.task.copyWith(message: "Please fill all required fields"));
     }
   }
 }

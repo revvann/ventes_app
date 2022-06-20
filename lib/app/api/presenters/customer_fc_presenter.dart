@@ -113,9 +113,10 @@ class CustomerFormCreatePresenter extends RegularPresenter<CustomerCreateContrac
       } else {
         contract.onLoadFailed(NearbyString.fetchFailed);
       }
-    } catch (err) {
-      contract.onLoadError(err.toString());
+    } catch (e) {
+      contract.onLoadError(e.toString());
     }
+    contract.onLoadComplete();
   }
 
   void fetchPlaces(String subdistrictSearch) async {
@@ -143,9 +144,10 @@ class CustomerFormCreatePresenter extends RegularPresenter<CustomerCreateContrac
       } else {
         contract.onLoadFailed(NearbyString.fetchFailed);
       }
-    } catch (err) {
-      contract.onLoadError(err.toString());
+    } catch (e) {
+      contract.onLoadError(e.toString());
     }
+    contract.onLoadComplete();
   }
 
   void createCustomer(FormData data) async {
@@ -159,9 +161,10 @@ class CustomerFormCreatePresenter extends RegularPresenter<CustomerCreateContrac
       } else {
         contract.onCreateFailed(NearbyString.createFailed);
       }
-    } catch (err) {
-      contract.onCreateError(err.toString());
+    } catch (e) {
+      contract.onCreateError(e.toString());
     }
+    contract.onCreateComplete();
   }
 
   Future<List<Country>> fetchCountries([String? search]) async {

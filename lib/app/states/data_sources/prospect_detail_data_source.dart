@@ -3,15 +3,11 @@ import 'package:ventes/app/api/presenters/prospect_detail_presenter.dart';
 import 'package:ventes/app/models/prospect_detail_model.dart';
 import 'package:ventes/app/models/prospect_model.dart';
 import 'package:ventes/app/models/type_model.dart';
-import 'package:ventes/constants/strings/prospect_string.dart';
 import 'package:ventes/app/states/typedefs/prospect_detail_typedef.dart';
 import 'package:ventes/core/states/state_data_source.dart';
 import 'package:ventes/helpers/task_helper.dart';
 
-class ProspectDetailDataSource extends StateDataSource<ProspectDetailPresenter> implements ProspectDetailContract {
-  Listener get _listener => Get.find<Listener>(tag: ProspectString.detailTag);
-  Property get _property => Get.find<Property>(tag: ProspectString.detailTag);
-
+class ProspectDetailDataSource extends StateDataSource<ProspectDetailPresenter> with DataSourceMixin implements ProspectDetailContract {
   final _prospect = Rx<Prospect?>(null);
   Prospect? get prospect => _prospect.value;
   set prospect(Prospect? value) => _prospect.value = value;
@@ -31,10 +27,10 @@ class ProspectDetailDataSource extends StateDataSource<ProspectDetailPresenter> 
   ProspectDetailPresenter presenterBuilder() => ProspectDetailPresenter();
 
   @override
-  onLoadError(String message) => _listener.onLoadError(message);
+  onLoadError(String message) => listener.onLoadError(message);
 
   @override
-  onLoadFailed(String message) => _listener.onLoadFailed(message);
+  onLoadFailed(String message) => listener.onLoadFailed(message);
 
   @override
   onLoadSuccess(Map data) {
@@ -50,15 +46,21 @@ class ProspectDetailDataSource extends StateDataSource<ProspectDetailPresenter> 
       stages = data['stages'].map<DBType>((json) => DBType.fromJson(json)).toList();
     }
 
-    Get.find<TaskHelper>().loaderPop(_property.task.name);
+    Get.find<TaskHelper>().loaderPop(property.task.name);
   }
 
   @override
-  void onDeleteError(String message) => _listener.onDeleteError(message);
+  void onDeleteError(String message) => listener.onDeleteError(message);
 
   @override
-  void onDeleteFailed(String message) => _listener.onDeleteFailed(message);
+  void onDeleteFailed(String message) => listener.onDeleteFailed(message);
 
   @override
-  void onDeleteSuccess(String message) => _listener.onDeleteSuccess(message);
+  void onDeleteSuccess(String message) => listener.onDeleteSuccess(message);
+
+  @override
+  void onDeleteComplete() => listener.onComplete();
+
+  @override
+  onLoadComplete() => listener.onComplete();
 }

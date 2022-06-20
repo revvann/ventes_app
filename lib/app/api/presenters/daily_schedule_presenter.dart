@@ -54,8 +54,9 @@ class DailySchedulePresenter extends RegularPresenter<DailyScheduleContract> {
         contract.onLoadFailed(ScheduleString.fetchFailed);
       }
     } catch (e) {
-      contract.onLoadFailed(e.toString());
+      contract.onLoadError(e.toString());
     }
+    contract.onLoadComplete();
   }
 
   void deleteData(int scheduleid) async {
@@ -67,8 +68,9 @@ class DailySchedulePresenter extends RegularPresenter<DailyScheduleContract> {
         contract.onDeleteFailed(ScheduleString.deleteFailed);
       }
     } catch (e) {
-      contract.onDeleteFailed(e.toString());
+      contract.onDeleteError(e.toString());
     }
+    contract.onDeleteComplete();
   }
 }
 

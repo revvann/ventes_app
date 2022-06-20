@@ -1,9 +1,8 @@
-import 'package:get/get.dart';
 import 'package:ventes/app/states/typedefs/prospect_detail_fc_typedef.dart';
-import 'package:ventes/constants/strings/prospect_string.dart';
 
 class ProspectDetailFormCreateValidator {
-  FormSource get _formSource => Get.find<FormSource>(tag: ProspectString.detailCreateTag);
+  late FormSource _formSource;
+  set formSource(FormSource value) => _formSource = value;
 
   String? prosdtdesc(String? value) {
     if (value == null) {

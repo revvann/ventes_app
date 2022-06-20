@@ -48,8 +48,9 @@ class SchedulePresenter extends RegularPresenter<FetchDataContract> {
         contract.onLoadFailed(ScheduleString.fetchFailed);
       }
     } catch (e) {
-      contract.onLoadFailed(e.toString());
+      contract.onLoadError(e.toString());
     }
+    contract.onLoadComplete();
   }
 
   void fetchData([int? scheduleMonth]) async {
@@ -64,10 +65,11 @@ class SchedulePresenter extends RegularPresenter<FetchDataContract> {
         data["permissions"] = permissionsResponse.body;
         contract.onLoadSuccess(data);
       } else {
-        contract.onLoadFailed("${scheduleResponse.statusCode} ${typesResponse.statusCode}");
+        contract.onLoadFailed(ScheduleString.fetchFailed);
       }
     } catch (e) {
       contract.onLoadFailed(e.toString());
     }
+    contract.onLoadComplete();
   }
 }

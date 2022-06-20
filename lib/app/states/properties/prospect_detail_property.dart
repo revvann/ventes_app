@@ -5,15 +5,13 @@ import 'package:ventes/app/states/typedefs/prospect_detail_typedef.dart';
 import 'package:ventes/core/states/state_property.dart';
 import 'package:ventes/helpers/task_helper.dart';
 
-class ProspectDetailProperty extends StateProperty {
-  DataSource get _dataSource => Get.find<DataSource>(tag: ProspectString.detailTag);
+class ProspectDetailProperty extends StateProperty with PropertyMixin {
   late int prospectId;
   Set<String> popupControllers = {};
-
   Task task = Task(ProspectString.detailTaskCode);
 
   refresh() {
-    _dataSource.fetchData(prospectId);
+    dataSource.fetchData(prospectId);
     Get.find<TaskHelper>().loaderPush(task);
   }
 

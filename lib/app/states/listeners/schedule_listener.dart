@@ -3,36 +3,32 @@ import 'package:get/get.dart';
 import 'package:ventes/app/models/schedule_model.dart';
 import 'package:ventes/app/resources/views/daily_schedule/daily_schedule.dart';
 import 'package:ventes/constants/regular_color.dart';
-import 'package:ventes/constants/strings/schedule_string.dart';
 import 'package:ventes/app/states/typedefs/schedule_typedef.dart';
 import 'package:ventes/core/states/state_listener.dart';
 import 'package:ventes/helpers/task_helper.dart';
 import 'package:ventes/routing/navigators/schedule_navigator.dart';
 
-class ScheduleListener extends StateListener {
-  Property get _property => Get.find<Property>(tag: ScheduleString.scheduleTag);
-  DataSource get _dataSource => Get.find<DataSource>(tag: ScheduleString.scheduleTag);
-
+class ScheduleListener extends StateListener with ListenerMixin {
   void onDateShownChanged(String data) {
     if (data == 'displayDate') {
-      if (_property.calendarController.displayDate != null) {
-        _property.dateShown = _property.calendarController.displayDate!;
+      if (property.calendarController.displayDate != null) {
+        property.dateShown = property.calendarController.displayDate!;
       }
-      _dataSource.fetchSchedules(_property.dateShown.month);
-      Get.find<TaskHelper>().loaderPush(_property.task);
+      dataSource.fetchSchedules(property.dateShown.month);
+      Get.find<TaskHelper>().loaderPush(property.task);
     }
   }
 
   void onCalendarBackwardClick() {
-    _property.calendarController.backward?.call();
+    property.calendarController.backward?.call();
   }
 
   void onCalendarForwardClick() {
-    _property.calendarController.forward?.call();
+    property.calendarController.forward?.call();
   }
 
   void onDateSelectionChanged(details) {
-    _property.selectedDate = details.date!;
+    property.selectedDate = details.date!;
   }
 
   void onDetailClick() {
@@ -40,35 +36,34 @@ class ScheduleListener extends StateListener {
       DailyScheduleView.route,
       id: ScheduleNavigator.id,
       arguments: {
-        "date": _property.selectedDate,
+        "date": property.selectedDate,
       },
     );
   }
 
   Color onAppointmentFindColor(Schedule appointment) {
     Color color = RegularColor.primary;
-    if (appointment.schetypeid == _dataSource.types["Event"]) {
+    if (appointment.schetypeid == dataSource.types["Event"]) {
       color = RegularColor.yellow;
-    } else if (appointment.schetypeid == _dataSource.types["Task"]) {
+    } else if (appointment.schetypeid == dataSource.types["Task"]) {
       color = RegularColor.red;
-    } else if (appointment.schetypeid == _dataSource.types["Reminder"]) {
+    } else if (appointment.schetypeid == dataSource.types["Reminder"]) {
       color = RegularColor.cyan;
     }
     return color;
   }
 
+  void onComplete() => Get.find<TaskHelper>().loaderPop(property.task.name);
   @override
   Future onReady() async {
-    _property.refresh();
+    property.refresh();
   }
 
   onLoadDataFailed(String message) {
-    Get.find<TaskHelper>().failedPush(_property.task.copyWith(message: message, snackbar: true));
-    Get.find<TaskHelper>().loaderPop(_property.task.name);
+    Get.find<TaskHelper>().failedPush(property.task.copyWith(message: message, snackbar: true));
   }
 
   onLoadDataError(String message) {
-    Get.find<TaskHelper>().failedPush(_property.task.copyWith(message: message, snackbar: true));
-    Get.find<TaskHelper>().loaderPop(_property.task.name);
+    Get.find<TaskHelper>().failedPush(property.task.copyWith(message: message, snackbar: true));
   }
 }

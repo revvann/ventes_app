@@ -17,11 +17,7 @@ import 'package:ventes/helpers/task_helper.dart';
 import 'package:ventes/routing/navigators/nearby_navigator.dart';
 import 'package:ventes/app/states/typedefs/customer_fc_typedef.dart';
 
-class CustomerFormCreateListener extends StateListener {
-  Property get _property => Get.find<Property>(tag: NearbyString.customerCreateTag);
-  FormSource get _formSource => Get.find<FormSource>(tag: NearbyString.customerCreateTag);
-  DataSource get _dataSource => Get.find<DataSource>(tag: NearbyString.customerCreateTag);
-
+class CustomerFormCreateListener extends StateListener with ListenerMixin {
   void goBack() {
     Get.back(id: NearbyNavigator.id);
   }
@@ -43,21 +39,21 @@ class CustomerFormCreateListener extends StateListener {
   }
 
   void onTypeSelected(int type) {
-    _formSource.cstmtypeid = type;
+    formSource.cstmtypeid = type;
   }
 
   void onStatusSelected(int status) {
-    _formSource.sbccstmstatusid = status;
+    formSource.sbccstmstatusid = status;
   }
 
   void onMapControllerCreated(GoogleMapController controller) {
-    if (!_property.mapsController.isCompleted) {
-      _property.mapsController.complete(controller);
+    if (!property.mapsController.isCompleted) {
+      property.mapsController.complete(controller);
     }
   }
 
   Future onCountryFilter(String? search) async {
-    List<Country> countries = await _dataSource.fetchCountries(search);
+    List<Country> countries = await dataSource.fetchCountries(search);
     return countries;
   }
 
@@ -68,18 +64,18 @@ class CustomerFormCreateListener extends StateListener {
     );
 
     if (image != null) {
-      _formSource.picture = File(image.path);
-      _formSource.defaultPicture.value = Image.file(_formSource.picture!);
+      formSource.picture = File(image.path);
+      formSource.defaultPicture.value = Image.file(formSource.picture!);
     }
   }
 
   void onSubmitButtonClicked() async {
     Get.find<TaskHelper>().confirmPush(
-      _property.task.copyWith<bool>(
+      property.task.copyWith<bool>(
         message: NearbyString.createCustomerConfirm,
         onFinished: (res) {
           if (res) {
-            _formSource.onSubmit();
+            formSource.onSubmit();
           }
         },
       ),
@@ -87,28 +83,23 @@ class CustomerFormCreateListener extends StateListener {
   }
 
   void onLoadDataError(String message) {
-    Get.find<TaskHelper>().errorPush(_property.task.copyWith(message: message));
-    Get.find<TaskHelper>().loaderPop(_property.task.name);
+    Get.find<TaskHelper>().errorPush(property.task.copyWith(message: message));
   }
 
   void onLoadDataFailed(String message) {
-    Get.find<TaskHelper>().failedPush(_property.task.copyWith(message: message, snackbar: true));
-    Get.find<TaskHelper>().loaderPop(_property.task.name);
+    Get.find<TaskHelper>().failedPush(property.task.copyWith(message: message, snackbar: true));
   }
 
   void onCreateDataError(String message) {
-    Get.find<TaskHelper>().errorPush(_property.task.copyWith(message: message));
-    Get.find<TaskHelper>().loaderPop(_property.task.name);
+    Get.find<TaskHelper>().errorPush(property.task.copyWith(message: message));
   }
 
   void onCreateDataFailed(String message) {
-    Get.find<TaskHelper>().failedPush(_property.task.copyWith(message: message, snackbar: true));
-    Get.find<TaskHelper>().loaderPop(_property.task.name);
+    Get.find<TaskHelper>().failedPush(property.task.copyWith(message: message, snackbar: true));
   }
 
   void onCreateDataSuccess(String message) async {
-    Get.find<TaskHelper>().loaderPop(_property.task.name);
-    Get.find<TaskHelper>().successPush(_property.task.copyWith(
+    Get.find<TaskHelper>().successPush(property.task.copyWith(
         message: message,
         onFinished: (res) {
           Get.find<NearbyStateController>().property.refresh();
@@ -116,8 +107,9 @@ class CustomerFormCreateListener extends StateListener {
         }));
   }
 
+  void onComplete() => Get.find<TaskHelper>().loaderPop(property.task.name);
   @override
   Future onReady() async {
-    _property.refresh();
+    property.refresh();
   }
 }

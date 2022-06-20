@@ -7,10 +7,7 @@ import 'package:ventes/helpers/task_helper.dart';
 import 'package:ventes/routing/navigators/prospect_navigator.dart';
 import 'package:ventes/app/states/typedefs/contact_person_fc_typedef.dart';
 
-class ContactPersonFormCreateListener extends StateListener {
-  Property get _property => Get.find<Property>(tag: ProspectString.contactCreateTag);
-  FormSource get _formSource => Get.find<FormSource>(tag: ProspectString.contactCreateTag);
-
+class ContactPersonFormCreateListener extends StateListener with ListenerMixin {
   void goBack() {
     Get.back(
       id: ProspectNavigator.id,
@@ -18,7 +15,7 @@ class ContactPersonFormCreateListener extends StateListener {
   }
 
   void onTypeSelected(type) {
-    _formSource.contacttype = type.value;
+    formSource.contacttype = type.value;
   }
 
   Future<List<Contact>> onContactFilter(String? search) async {
@@ -30,7 +27,7 @@ class ContactPersonFormCreateListener extends StateListener {
   }
 
   void onContactChanged(contactItem) {
-    _formSource.contact = contactItem.value;
+    formSource.contact = contactItem.value;
   }
 
   bool onContactCompared(selectedItem, item) {
@@ -39,11 +36,11 @@ class ContactPersonFormCreateListener extends StateListener {
 
   void onSubmitButtonClicked() {
     Get.find<TaskHelper>().confirmPush(
-      _property.task.copyWith<bool>(
+      property.task.copyWith<bool>(
         message: ProspectString.createContactConfirm,
         onFinished: (res) {
           if (res) {
-            _formSource.onSubmit();
+            formSource.onSubmit();
           }
         },
       ),
@@ -51,37 +48,33 @@ class ContactPersonFormCreateListener extends StateListener {
   }
 
   void onLoadFailed(String message) {
-    Get.find<TaskHelper>().failedPush(_property.task.copyWith(message: message, snackbar: true));
-    Get.find<TaskHelper>().loaderPop(ProspectString.formCreateContactTaskCode);
+    Get.find<TaskHelper>().failedPush(property.task.copyWith(message: message, snackbar: true));
   }
 
   void onLoadError(String message) {
-    Get.find<TaskHelper>().errorPush(_property.task.copyWith(message: message));
-    Get.find<TaskHelper>().loaderPop(ProspectString.formCreateContactTaskCode);
+    Get.find<TaskHelper>().errorPush(property.task.copyWith(message: message));
   }
 
   void onCreateDataSuccess(String message) {
-    Get.find<TaskHelper>().successPush(_property.task.copyWith(
+    Get.find<TaskHelper>().successPush(property.task.copyWith(
         message: message,
         onFinished: (res) {
           Get.find<ContactPersonStateController>().property.refresh();
           Get.back(id: ProspectNavigator.id);
         }));
-    Get.find<TaskHelper>().loaderPop(ProspectString.formCreateContactTaskCode);
   }
 
   void onCreateDataFailed(String message) {
-    Get.find<TaskHelper>().failedPush(_property.task.copyWith(message: message, snackbar: true));
-    Get.find<TaskHelper>().loaderPop(ProspectString.formCreateContactTaskCode);
+    Get.find<TaskHelper>().failedPush(property.task.copyWith(message: message, snackbar: true));
   }
 
   void onCreateDataError(String message) {
-    Get.find<TaskHelper>().errorPush(_property.task.copyWith(message: message));
-    Get.find<TaskHelper>().loaderPop(ProspectString.formCreateContactTaskCode);
+    Get.find<TaskHelper>().errorPush(property.task.copyWith(message: message));
   }
 
+  void onComplete() => Get.find<TaskHelper>().loaderPop(property.task.name);
   @override
   Future onReady() async {
-    _property.refresh();
+    property.refresh();
   }
 }

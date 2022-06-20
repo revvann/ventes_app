@@ -12,10 +12,7 @@ import 'package:ventes/helpers/task_helper.dart';
 import 'package:ventes/routing/navigators/schedule_navigator.dart';
 import 'package:ventes/app/states/typedefs/daily_schedule_typedef.dart';
 
-class DailyScheduleListener extends StateListener {
-  Property get _property => Get.find<Property>(tag: ScheduleString.dailyScheduleTag);
-  DataSource get _dataSource => Get.find<DataSource>(tag: ScheduleString.dailyScheduleTag);
-
+class DailyScheduleListener extends StateListener with ListenerMixin {
   void onArrowBackClick() {
     Get.back(id: ScheduleNavigator.id);
   }
@@ -26,11 +23,11 @@ class DailyScheduleListener extends StateListener {
 
   Color onFindAppointmentColor(Schedule appointment) {
     Color color = RegularColor.primary;
-    if (appointment.schetypeid == _dataSource.types["Event"]) {
+    if (appointment.schetypeid == dataSource.types["Event"]) {
       color = RegularColor.yellow;
-    } else if (appointment.schetypeid == _dataSource.types["Task"]) {
+    } else if (appointment.schetypeid == dataSource.types["Task"]) {
       color = RegularColor.red;
-    } else if (appointment.schetypeid == _dataSource.types["Reminder"]) {
+    } else if (appointment.schetypeid == dataSource.types["Reminder"]) {
       color = RegularColor.cyan;
     }
     return color;
@@ -38,22 +35,22 @@ class DailyScheduleListener extends StateListener {
 
   void onEditButtonClick() {
     Get.toNamed(ScheduleFormUpdateView.route, id: ScheduleNavigator.id, arguments: {
-      'scheduleId': _property.selectedAppointment?.scheid,
+      'scheduleId': property.selectedAppointment?.scheid,
     });
   }
 
   void onCalendarTap(CalendarTapDetails details) {
-    _property.selectedAppointment = details.appointments?.first;
+    property.selectedAppointment = details.appointments?.first;
   }
 
   void deleteSchedule() {
     Get.find<TaskHelper>().confirmPush(
-      _property.task.copyWith<bool>(
+      property.task.copyWith<bool>(
         message: ScheduleString.deleteScheduleConfirm,
         onFinished: (res) {
           if (res) {
-            _dataSource.deleteData(_property.selectedAppointment!.scheid!);
-            Get.find<TaskHelper>().loaderPush(_property.task);
+            dataSource.deleteData(property.selectedAppointment!.scheid!);
+            Get.find<TaskHelper>().loaderPush(property.task);
           }
         },
       ),
@@ -61,36 +58,32 @@ class DailyScheduleListener extends StateListener {
   }
 
   onLoadDataFailed(String message) {
-    Get.find<TaskHelper>().failedPush(_property.task.copyWith(message: message, snackbar: true));
-    Get.find<TaskHelper>().loaderPop(_property.task.name);
+    Get.find<TaskHelper>().failedPush(property.task.copyWith(message: message, snackbar: true));
   }
 
   onLoadDataError(String message) {
-    Get.find<TaskHelper>().errorPush(_property.task.copyWith(message: message));
-    Get.find<TaskHelper>().loaderPop(_property.task.name);
+    Get.find<TaskHelper>().errorPush(property.task.copyWith(message: message));
   }
 
   void onDeleteFailed(String message) {
-    Get.find<TaskHelper>().failedPush(_property.task.copyWith(message: message, snackbar: true));
-    Get.find<TaskHelper>().loaderPop(_property.task.name);
+    Get.find<TaskHelper>().failedPush(property.task.copyWith(message: message, snackbar: true));
   }
 
   void onDeleteSuccess(String message) {
-    Get.find<TaskHelper>().successPush(_property.task.copyWith(
+    Get.find<TaskHelper>().successPush(property.task.copyWith(
         message: message,
         onFinished: (res) {
           Get.find<DailyScheduleStateController>().refreshStates();
         }));
-    Get.find<TaskHelper>().loaderPop(_property.task.name);
   }
 
   void onDeleteError(String message) {
-    Get.find<TaskHelper>().errorPush(_property.task.copyWith(message: message));
-    Get.find<TaskHelper>().loaderPop(_property.task.name);
+    Get.find<TaskHelper>().errorPush(property.task.copyWith(message: message));
   }
 
+  void onComplete() => Get.find<TaskHelper>().loaderPop(property.task.name);
   @override
   Future onReady() async {
-    _property.refresh();
+    property.refresh();
   }
 }

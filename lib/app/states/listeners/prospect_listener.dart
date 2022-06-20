@@ -3,23 +3,18 @@ import 'package:ventes/app/models/type_model.dart';
 import 'package:ventes/app/resources/views/prospect_detail/prospect_detail.dart';
 import 'package:ventes/app/resources/views/prospect_form/create/prospect_fc.dart';
 import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
-import 'package:ventes/constants/strings/prospect_string.dart';
 import 'package:ventes/app/states/typedefs/prospect_typedef.dart';
 import 'package:ventes/core/states/state_listener.dart';
 import 'package:ventes/helpers/task_helper.dart';
 import 'package:ventes/routing/navigators/prospect_navigator.dart';
 
-class ProspectListener extends StateListener {
-  Property get _property => Get.find<Property>(tag: ProspectString.prospectTag);
-  FormSource get _formSource => Get.find<FormSource>(tag: ProspectString.prospectTag);
-  DataSource get _dataSource => Get.find<DataSource>(tag: ProspectString.prospectTag);
-
+class ProspectListener extends StateListener with ListenerMixin {
   void onDateStartSelected(DateTime? value) {
     if (value != null) {
-      _formSource.prosstartdate = value;
-      if (_formSource.prosstartdate != null && _formSource.prosenddate != null) {
-        if (_formSource.prosstartdate!.isAfter(_formSource.prosenddate!)) {
-          _formSource.prosenddate = _formSource.prosstartdate;
+      formSource.prosstartdate = value;
+      if (formSource.prosstartdate != null && formSource.prosenddate != null) {
+        if (formSource.prosstartdate!.isAfter(formSource.prosenddate!)) {
+          formSource.prosenddate = formSource.prosstartdate;
         }
       }
     }
@@ -28,22 +23,22 @@ class ProspectListener extends StateListener {
 
   void onDateEndSelected(DateTime? value) {
     if (value != null) {
-      _formSource.prosenddate = value;
+      formSource.prosenddate = value;
     }
     onFilterChanged();
   }
 
   void onStatusSelected(selectedItem) {
     if (selectedItem != null) {
-      _formSource.prosstatus = (selectedItem as KeyableDropdownItem<int, DBType>).value;
+      formSource.prosstatus = (selectedItem as KeyableDropdownItem<int, DBType>).value;
     } else {
-      _formSource.prosstatus = null;
+      formSource.prosstatus = null;
     }
     onFilterChanged();
   }
 
   void onFollowUpSelected(dynamic key) {
-    _formSource.prostype = key;
+    formSource.prostype = key;
     onFilterChanged();
   }
 
@@ -52,9 +47,9 @@ class ProspectListener extends StateListener {
   }
 
   Future onFilterChanged() async {
-    Map<String, dynamic> filter = _formSource.toJson();
-    _dataSource.fetchProspect(params: filter);
-    Get.find<TaskHelper>().loaderPush(_property.task);
+    Map<String, dynamic> filter = formSource.toJson();
+    dataSource.fetchProspect(params: filter);
+    Get.find<TaskHelper>().loaderPush(property.task);
   }
 
   void onProspectClicked() {
@@ -62,23 +57,22 @@ class ProspectListener extends StateListener {
       ProspectDetailView.route,
       id: ProspectNavigator.id,
       arguments: {
-        'prospect': _property.selectedProspect?.prospectid,
+        'prospect': property.selectedProspect?.prospectid,
       },
     );
   }
 
   void onLoadFailed(String message) {
-    Get.find<TaskHelper>().failedPush(_property.task.copyWith(message: message, snackbar: true));
-    Get.find<TaskHelper>().loaderPop(_property.task.name);
+    Get.find<TaskHelper>().failedPush(property.task.copyWith(message: message, snackbar: true));
   }
 
   void onLoadError(String message) {
-    Get.find<TaskHelper>().errorPush(_property.task.copyWith(message: message));
-    Get.find<TaskHelper>().loaderPop(_property.task.name);
+    Get.find<TaskHelper>().errorPush(property.task.copyWith(message: message));
   }
 
+  void onComplete() => Get.find<TaskHelper>().loaderPop(property.task.name);
   @override
   Future onReady() async {
-    _property.refresh();
+    property.refresh();
   }
 }

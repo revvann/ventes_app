@@ -44,6 +44,7 @@ class ProspectDetailPresenter extends RegularPresenter<ProspectDetailContract> {
     } catch (e) {
       contract.onLoadError(e.toString());
     }
+    contract.onLoadComplete();
   }
 
   void deleteData(int detailid) async {

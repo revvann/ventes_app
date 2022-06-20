@@ -1,7 +1,7 @@
 // ignore_for_file: unnecessary_getters_setters, prefer_const_constructors
 import 'dart:convert';
 
-import 'package:flutter/material.dart' hide Listener;
+import 'package:flutter/material.dart';
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:get/get.dart';
 import 'package:ventes/app/models/schedule_guest_model.dart';
@@ -9,21 +9,17 @@ import 'package:ventes/app/models/user_detail_model.dart';
 import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
 import 'package:ventes/app/resources/widgets/regular_dropdown.dart';
 import 'package:ventes/app/resources/widgets/searchable_dropdown.dart';
-import 'package:ventes/constants/strings/schedule_string.dart';
 import 'package:ventes/app/states/typedefs/schedule_fc_typedef.dart';
 import 'package:ventes/core/states/state_form_source.dart';
 import 'package:ventes/helpers/function_helpers.dart';
 import 'package:ventes/helpers/task_helper.dart';
 
-class ScheduleFormCreateFormSource extends StateFormSource {
+class ScheduleFormCreateFormSource extends StateFormSource with FormSourceMixin {
+  Validator validator = Validator();
+
   int readOnlyId = 14;
   int addMemberId = 15;
   int shareLinkId = 16;
-
-  DataSource get _dataSource => Get.find<DataSource>(tag: ScheduleString.scheduleCreateTag);
-  Listener get _listener => Get.find<Listener>(tag: ScheduleString.scheduleCreateTag);
-  Property get _property => Get.find<Property>(tag: ScheduleString.scheduleCreateTag);
-  Validator validator = Validator();
 
   UserDetail? userDefault;
   final Rx<List<KeyableDropdownItem<String, String>>> _timezones = Rx<List<KeyableDropdownItem<String, String>>>([]);
@@ -56,9 +52,9 @@ class ScheduleFormCreateFormSource extends StateFormSource {
   final Rx<UserDetail?> _schetoward = Rx<UserDetail?>(null);
   final Rx<String?> _schetz = Rx<String?>(null);
 
-  bool get isEvent => _dataSource.typeName(schetype) == "Event";
-  bool get isTask => _dataSource.typeName(schetype) == "Task";
-  bool get isReminder => _dataSource.typeName(schetype) == "Reminder";
+  bool get isEvent => dataSource.typeName(schetype) == "Event";
+  bool get isTask => dataSource.typeName(schetype) == "Task";
+  bool get isReminder => dataSource.typeName(schetype) == "Reminder";
 
   int? get schebpid => schetoward?.userdtbpid;
 
@@ -296,13 +292,14 @@ class ScheduleFormCreateFormSource extends StateFormSource {
   @override
   init() async {
     super.init();
+    validator.formSource = this;
     setStartTimeList();
 
     scheremindTEC.text = "0";
-    scheonlinkTEC.addListener(_listener.onOnlineLinkChanged);
-    schelocTEC.addListener(_listener.onLocationChanged);
+    scheonlinkTEC.addListener(listener.onOnlineLinkChanged);
+    schelocTEC.addListener(listener.onLocationChanged);
 
-    userDefault = await _dataSource.userActive;
+    userDefault = await dataSource.userActive;
     towardDropdownController.selectedKeys = userDefault != null ? [userDefault!] : [];
     schetoward = userDefault;
 
@@ -326,7 +323,7 @@ class ScheduleFormCreateFormSource extends StateFormSource {
       "scheonline": isEvent ? scheonline : false,
       "scheonlink": isEvent ? scheonlink : null,
       "scheallday": scheallday,
-      "schetypeid": _dataSource.typeId(schetype),
+      "schetypeid": dataSource.typeId(schetype),
       "schetz": schetz,
       "scheprivate": isEvent ? scheprivate : false,
       "schetowardid": isEvent ? schetoward?.userid : userDefault?.userid,
@@ -339,8 +336,8 @@ class ScheduleFormCreateFormSource extends StateFormSource {
   void onSubmit() {
     if (isValid()) {
       Map<String, dynamic> data = toJson();
-      Get.find<TaskHelper>().loaderPush(_property.task);
-      _dataSource.createSchedule(data);
+      Get.find<TaskHelper>().loaderPush(property.task);
+      dataSource.createSchedule(data);
     }
   }
 }

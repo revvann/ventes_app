@@ -1,16 +1,11 @@
 import 'package:get/get.dart';
 import 'package:ventes/app/api/presenters/contact_person_fu_presenter.dart';
 import 'package:ventes/app/models/contact_person_model.dart';
-import 'package:ventes/constants/strings/prospect_string.dart';
 import 'package:ventes/core/states/state_data_source.dart';
 import 'package:ventes/helpers/task_helper.dart';
 import 'package:ventes/app/states/typedefs/contact_person_fu_typedef.dart';
 
-class ContactPersonFormUpdateDataSource extends StateDataSource<ContactPersonFormUpdatePresenter> implements ContactPersonUpdateContract {
-  Listener get _listener => Get.find<Listener>(tag: ProspectString.contactUpdateTag);
-  Property get _property => Get.find<Property>(tag: ProspectString.contactUpdateTag);
-  FormSource get _formSource => Get.find<FormSource>(tag: ProspectString.contactUpdateTag);
-
+class ContactPersonFormUpdateDataSource extends StateDataSource<ContactPersonFormUpdatePresenter> with DataSourceMixin implements ContactPersonUpdateContract {
   final Rx<ContactPerson?> _contactPerson = Rx<ContactPerson?>(null);
   ContactPerson? get contactPerson => _contactPerson.value;
   set contactPerson(ContactPerson? value) => _contactPerson.value = value;
@@ -26,27 +21,33 @@ class ContactPersonFormUpdateDataSource extends StateDataSource<ContactPersonFor
   ContactPersonFormUpdatePresenter presenterBuilder() => ContactPersonFormUpdatePresenter();
 
   @override
-  onLoadError(String message) => _listener.onLoadError(message);
+  onLoadError(String message) => listener.onLoadError(message);
 
   @override
-  onLoadFailed(String message) => _listener.onLoadFailed(message);
+  onLoadFailed(String message) => listener.onLoadFailed(message);
 
   @override
   onLoadSuccess(Map data) {
     if (data['contactperson'] != null) {
       contactPerson = ContactPerson.fromJson(data['contactperson']);
       customerName = contactPerson?.contactcustomer?.cstmname;
-      _formSource.prepareFormValues();
+      formSource.prepareFormValues();
     }
-    Get.find<TaskHelper>().loaderPop(_property.task.name);
+    Get.find<TaskHelper>().loaderPop(property.task.name);
   }
 
   @override
-  void onUpdateError(String message) => _listener.onUpdateDataError(message);
+  void onUpdateError(String message) => listener.onUpdateDataError(message);
 
   @override
-  void onUpdateFailed(String message) => _listener.onUpdateDataFailed(message);
+  void onUpdateFailed(String message) => listener.onUpdateDataFailed(message);
 
   @override
-  void onUpdateSuccess(String message) => _listener.onUpdateDataSuccess(message);
+  void onUpdateSuccess(String message) => listener.onUpdateDataSuccess(message);
+
+  @override
+  onLoadComplete() => listener.onComplete();
+
+  @override
+  void onUpdateComplete() => listener.onComplete();
 }

@@ -9,9 +9,8 @@ import 'package:ventes/app/states/typedefs/contact_person_fc_typedef.dart';
 import 'package:ventes/core/states/state_form_source.dart';
 import 'package:ventes/helpers/task_helper.dart';
 
-class ContactPersonFormCreateFormSource extends StateFormSource {
-  Property get _property => Get.find<Property>(tag: ProspectString.contactCreateTag);
-  DataSource get _dataSource => Get.find<DataSource>(tag: ProspectString.contactCreateTag);
+class ContactPersonFormCreateFormSource extends StateFormSource with FormSourceMixin {
+  Validator validator = Validator();
 
   KeyableDropdownController<int, DBType> typeDropdownController = Get.put(
     KeyableDropdownController<int, DBType>(),
@@ -26,8 +25,6 @@ class ContactPersonFormCreateFormSource extends StateFormSource {
   TextEditingController valueTEC = TextEditingController();
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-
-  Validator validator = Validator();
 
   bool get isValid => formKey.currentState?.validate() ?? false;
   bool get isPhone => contacttype?.typename == "Phone";
@@ -63,10 +60,10 @@ class ContactPersonFormCreateFormSource extends StateFormSource {
   void onSubmit() {
     if (isValid) {
       Map<String, dynamic> data = toJson();
-      _dataSource.createData(data);
-      Get.find<TaskHelper>().loaderPush(_property.task);
+      dataSource.createData(data);
+      Get.find<TaskHelper>().loaderPush(property.task);
     } else {
-      Get.find<TaskHelper>().failedPush(_property.task.copyWith(message: "Form is not valid"));
+      Get.find<TaskHelper>().failedPush(property.task.copyWith(message: "Form is not valid"));
     }
   }
 }

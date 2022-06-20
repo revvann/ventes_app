@@ -5,8 +5,7 @@ import 'package:ventes/app/states/typedefs/prospect_assign_typedef.dart';
 import 'package:ventes/core/states/state_property.dart';
 import 'package:ventes/helpers/task_helper.dart';
 
-class ProspectAssignProperty extends StateProperty {
-  DataSource get _dataSource => Get.find<DataSource>(tag: ProspectString.prospectAssignTag);
+class ProspectAssignProperty extends StateProperty with PropertyMixin {
   Set<String> popupControllers = {};
 
   late int prospectid;
@@ -14,7 +13,7 @@ class ProspectAssignProperty extends StateProperty {
   Task task = Task(ProspectString.prospectAssignTaskCode);
 
   void refresh() {
-    _dataSource.fetchData(prospectid);
+    dataSource.fetchData(prospectid);
     Get.find<TaskHelper>().loaderPush(task);
   }
 

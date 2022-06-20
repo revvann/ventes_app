@@ -3,22 +3,17 @@ import 'package:get/get.dart';
 import 'package:ventes/app/models/bp_customer_model.dart';
 import 'package:ventes/app/models/user_detail_model.dart';
 import 'package:ventes/app/resources/widgets/searchable_dropdown.dart';
-import 'package:ventes/app/states/form/validators/prospect_fu_validator.dart';
 import 'package:ventes/constants/formatters/currency_formatter.dart';
-import 'package:ventes/constants/strings/prospect_string.dart';
 import 'package:ventes/app/states/typedefs/prospect_fu_typedef.dart';
 import 'package:ventes/core/states/update_form_source.dart';
 import 'package:ventes/helpers/function_helpers.dart';
 import 'package:ventes/helpers/task_helper.dart';
 
-class ProspectFormUpdateFormSource extends UpdateFormSource {
-  DataSource get _dataSource => Get.find<DataSource>(tag: ProspectString.prospectUpdateTag);
-  Property get _property => Get.find<Property>(tag: ProspectString.prospectUpdateTag);
+class ProspectFormUpdateFormSource extends UpdateFormSource with FormSourceMixin {
+  Validator validator = Validator();
 
   SearchableDropdownController<UserDetail> ownerDropdownController = Get.put(SearchableDropdownController<UserDetail>());
   SearchableDropdownController<BpCustomer> customerDropdownController = Get.put(SearchableDropdownController<BpCustomer>());
-
-  ProspectFormUpdateValidator validator = ProspectFormUpdateValidator();
 
   final prosvaluemask = CurrencyInputFormatter();
 
@@ -68,6 +63,12 @@ class ProspectFormUpdateFormSource extends UpdateFormSource {
   bool get isValid => formKey.currentState?.validate() ?? false;
 
   @override
+  void init() {
+    super.init();
+    validator.formSource = this;
+  }
+
+  @override
   void close() {
     super.close();
     prosnameTEC.dispose();
@@ -79,27 +80,27 @@ class ProspectFormUpdateFormSource extends UpdateFormSource {
 
   @override
   prepareFormValues() {
-    prosnameTEC.text = _dataSource.prospect?.prospectname ?? "";
-    prosvalueTEC.text = currencyFormat(_dataSource.prospect?.prospectvalue.toString() ?? "");
-    prosdescTEC.text = _dataSource.prospect?.prospectdescription ?? "";
+    prosnameTEC.text = dataSource.prospect?.prospectname ?? "";
+    prosvalueTEC.text = currencyFormat(dataSource.prospect?.prospectvalue.toString() ?? "");
+    prosdescTEC.text = dataSource.prospect?.prospectdescription ?? "";
 
-    if (_dataSource.prospect?.prospectstartdate != null) {
-      prosstartdate = dbParseDate(_dataSource.prospect!.prospectstartdate!);
+    if (dataSource.prospect?.prospectstartdate != null) {
+      prosstartdate = dbParseDate(dataSource.prospect!.prospectstartdate!);
     }
 
-    if (_dataSource.prospect?.prospectenddate != null) {
-      prosenddate = dbParseDate(_dataSource.prospect!.prospectenddate!);
+    if (dataSource.prospect?.prospectenddate != null) {
+      prosenddate = dbParseDate(dataSource.prospect!.prospectenddate!);
     }
 
-    if (_dataSource.prospect?.prospectexpclosedate != null) {
-      prosexpenddate = dbParseDate(_dataSource.prospect!.prospectexpclosedate!);
+    if (dataSource.prospect?.prospectexpclosedate != null) {
+      prosexpenddate = dbParseDate(dataSource.prospect!.prospectexpclosedate!);
     }
 
-    prosowner = _dataSource.prospect?.prospectowneruser;
-    proscustomer = _dataSource.prospect?.prospectcust;
-    prostype = _dataSource.prospect?.prospecttypeid;
-    prosstatus = _dataSource.prospect?.prospectstatusid;
-    prosstage = _dataSource.prospect?.prospectstageid;
+    prosowner = dataSource.prospect?.prospectowneruser;
+    proscustomer = dataSource.prospect?.prospectcust;
+    prostype = dataSource.prospect?.prospecttypeid;
+    prosstatus = dataSource.prospect?.prospectstatusid;
+    prosstage = dataSource.prospect?.prospectstageid;
 
     ownerDropdownController.selectedKeys = prosowner != null ? [prosowner!] : [];
     customerDropdownController.selectedKeys = proscustomer != null ? [proscustomer!] : [];
@@ -127,10 +128,10 @@ class ProspectFormUpdateFormSource extends UpdateFormSource {
   void onSubmit() {
     if (isValid) {
       Map<String, dynamic> data = toJson();
-      _dataSource.updateProspect(_property.prospectId, data);
-      Get.find<TaskHelper>().loaderPush(_property.task);
+      dataSource.updateProspect(property.prospectId, data);
+      Get.find<TaskHelper>().loaderPush(property.task);
     } else {
-      Get.find<TaskHelper>().failedPush(_property.task.copyWith(message: "Form is not valid"));
+      Get.find<TaskHelper>().failedPush(property.task.copyWith(message: "Form is not valid"));
     }
   }
 }

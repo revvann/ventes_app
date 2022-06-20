@@ -23,9 +23,10 @@ class ScheduleFormCreatePresenter extends RegularPresenter<ScheduleCreateContrac
       } else {
         contract.onCreateFailed(response.body['message']);
       }
-    } catch (err) {
-      contract.onCreateFailed(err.toString());
+    } catch (e) {
+      contract.onCreateError(e.toString());
     }
+    contract.onCreateComplete();
   }
 
   void fetchTypes() async {
@@ -39,9 +40,10 @@ class ScheduleFormCreatePresenter extends RegularPresenter<ScheduleCreateContrac
       } else {
         contract.onLoadFailed(response.body['message']);
       }
-    } catch (err) {
-      contract.onLoadError(err.toString());
+    } catch (e) {
+      contract.onLoadError(e.toString());
     }
+    contract.onLoadComplete();
   }
 
   Future<List<UserDetail>> fetchUsers(String? search) async {

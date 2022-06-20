@@ -23,9 +23,10 @@ class ScheduleFormUpdatePresenter extends RegularPresenter<ScheduleUpdateContrac
       } else {
         contract.onUpdateFailed(response.body['message']);
       }
-    } catch (err) {
-      contract.onUpdateFailed(err.toString());
+    } catch (e) {
+      contract.onUpdateError(e.toString());
     }
+    contract.onUpdateComplete();
   }
 
   void fetchData(int scheduleId) async {
@@ -48,9 +49,10 @@ class ScheduleFormUpdatePresenter extends RegularPresenter<ScheduleUpdateContrac
       } else {
         contract.onLoadFailed("Failed to fetch schedule");
       }
-    } catch (err) {
-      contract.onLoadError(err.toString());
+    } catch (e) {
+      contract.onLoadError(e.toString());
     }
+    contract.onLoadComplete();
   }
 
   Future<List<UserDetail>> fetchUsers(String? search) async {

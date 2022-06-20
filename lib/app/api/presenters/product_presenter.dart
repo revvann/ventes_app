@@ -39,6 +39,7 @@ class ProductPresenter extends RegularPresenter<ProductContract> {
     } catch (e) {
       contract.onLoadError(e.toString());
     }
+    contract.onLoadComplete();
   }
 
   void fetchProducts(int prospectid, String search) async {
@@ -56,6 +57,7 @@ class ProductPresenter extends RegularPresenter<ProductContract> {
     } catch (e) {
       contract.onLoadError(e.toString());
     }
+    contract.onLoadComplete();
   }
 
   void deleteProduct(int productid) async {

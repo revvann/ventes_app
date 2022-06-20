@@ -8,4 +8,5 @@ abstract class FetchDataContract {
   onLoadError(
     String message,
   );
+  onLoadComplete();
 }
