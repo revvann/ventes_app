@@ -84,8 +84,6 @@ class DashboardDataSource extends StateDataSource<DashboardPresenter> with DataS
         accounts.removeWhere((element) => element.userdtid == authModel.accountActive);
       }
     }
-
-    Get.find<TaskHelper>().loaderPop(property.task.name);
   }
 
   @override

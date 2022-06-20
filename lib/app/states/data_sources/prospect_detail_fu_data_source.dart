@@ -52,7 +52,6 @@ class ProspectDetailFormUpdateDataSource extends StateDataSource<ProspectDetailF
       prospectdetail = ProspectDetail.fromJson(data['prospectdetail']);
       formSource.prepareFormValues();
     }
-    Get.find<TaskHelper>().loaderPop(property.task.name);
   }
 
   @override

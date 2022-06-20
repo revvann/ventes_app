@@ -89,7 +89,6 @@ class ScheduleFormUpdateDataSource extends StateDataSource<ScheduleFormUpdatePre
     schedule = Schedule.fromJson(data['schedule']);
     insertTypes(List<Map<String, dynamic>>.from(data['types']));
     formSource.prepareFormValues();
-    Get.find<TaskHelper>().loaderPop(property.task.name);
   }
 
   @override

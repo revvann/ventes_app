@@ -41,8 +41,6 @@ class ProductFormUpdateDataSource extends StateDataSource<ProductFormUpdatePrese
       List<DBType> taxes = data['taxes'].map<DBType>((tax) => DBType.fromJson(tax)).toList();
       taxItems = taxes.map<KeyableDropdownItem<int, DBType>>((tax) => KeyableDropdownItem<int, DBType>(key: tax.typeid!, value: tax)).toList();
     }
-
-    Get.find<TaskHelper>().loaderPop(property.task.name);
   }
 
   @override

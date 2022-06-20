@@ -57,7 +57,6 @@ class ScheduleDataSource extends StateDataSource<SchedulePresenter> with DataSou
     if (data['permissions'] != null) {
       permissions = List<DBType>.from(data['permissions'].map((e) => DBType.fromJson(e)));
     }
-    Get.find<TaskHelper>().loaderPop(property.task.name);
   }
 
   @override

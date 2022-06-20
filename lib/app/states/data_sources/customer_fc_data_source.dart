@@ -171,8 +171,6 @@ class CustomerFormCreateDataSource extends StateDataSource<CustomerFormCreatePre
       customer = Customer.fromJson(data['customer']);
       formSource.prepareFormValues();
     }
-
-    Get.find<TaskHelper>().loaderPop(property.task.name);
   }
 
   @override

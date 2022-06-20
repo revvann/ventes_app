@@ -3,6 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:ventes/app/api/contracts/update_contract.dart';
+import 'package:ventes/app/models/user_model.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/constants/strings/signin_string.dart';
@@ -14,15 +16,17 @@ import 'package:ventes/app/resources/widgets/regular_button.dart';
 import 'package:ventes/app/resources/widgets/regular_dialog.dart';
 import 'package:ventes/app/resources/widgets/regular_input.dart';
 import 'package:ventes/helpers/function_helpers.dart';
+import 'package:ventes/helpers/task_helper.dart';
 
 part 'package:ventes/app/resources/views/signin/components/_username_input.dart';
 part 'package:ventes/app/resources/views/signin/components/_password_input.dart';
 
-class SigninView extends GetView<SigninStateController> implements AuthContract {
+class SigninView extends GetView<SigninStateController> implements AuthContract, UpdateContract {
   static const String route = "/signin";
 
   SigninView() {
     controller.dataSource.authContract = this;
+    controller.dataSource.updateContract = this;
   }
 
   @override
@@ -197,8 +201,49 @@ class SigninView extends GetView<SigninStateController> implements AuthContract 
   }
 
   @override
-  void onAuthSuccess(String message) async {
+  void onAuthSuccess(Map data) async {
     controller.dataSource.isLoading = false;
-    Get.offAllNamed(DashboardView.route);
+    User user = User.fromJson(data['user']);
+    String deviceid = (await getDeviceId())!;
+    if (user.userdeviceid == null) {
+      controller.dataSource.attachDevice(data['userid'], deviceid);
+      Get.find<TaskHelper>().loaderPush(Task(SigninString.taskCode));
+    } else {
+      if (user.userdeviceid != deviceid) {
+        Get.find<TaskHelper>().failedPush(Task(SigninString.taskCode, message: "Your account is already logged in on another device."));
+      } else {
+        Get.offAllNamed(DashboardView.route);
+      }
+    }
+  }
+
+  @override
+  void onUpdateComplete() {
+    Get.find<TaskHelper>().loaderPop(SigninString.taskCode);
+  }
+
+  @override
+  void onUpdateError(String message) {
+    Get.find<TaskHelper>().errorPush(Task(
+      SigninString.taskCode,
+      message: message,
+    ));
+  }
+
+  @override
+  void onUpdateFailed(String message) {
+    Get.find<TaskHelper>().failedPush(Task(
+      SigninString.taskCode,
+      message: message,
+    ));
+  }
+
+  @override
+  void onUpdateSuccess(String message) {
+    Get.find<TaskHelper>().successPush(Task(
+      SigninString.taskCode,
+      message: message,
+      onFinished: (res) => Get.offAllNamed(DashboardView.route),
+    ));
   }
 }

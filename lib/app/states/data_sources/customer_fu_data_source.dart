@@ -113,8 +113,6 @@ class CustomerFormUpdateDataSource extends StateDataSource<CustomerFormUpdatePre
     if (data['statuses'] != null) {
       statusesFromList(data['statuses']);
     }
-
-    Get.find<TaskHelper>().loaderPop(property.task.name);
   }
 
   @override

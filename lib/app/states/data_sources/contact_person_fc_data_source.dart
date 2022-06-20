@@ -40,7 +40,6 @@ class ContactPersonFormCreateDataSource extends StateDataSource<ContactPersonFor
       formSource.contacttype = types.isNotEmpty ? types.first : null;
       this.types = types.map<KeyableDropdownItem<int, DBType>>((type) => KeyableDropdownItem<int, DBType>(key: type.typeid!, value: type)).toList();
     }
-    Get.find<TaskHelper>().loaderPop(property.task.name);
   }
 
   @override

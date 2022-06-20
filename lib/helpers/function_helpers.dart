@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
@@ -36,11 +37,7 @@ MaterialColor createSwatch(Color color) {
 
 Future requestPermission() async {
   await Permission.contacts.request();
-  if (!await Permission.contacts.isGranted) {
-    // if (!await Permission.location.isGranted) {
-    //   await Permission.location.request();
-    // }
-  }
+  await Permission.location.request();
 }
 
 List<Location> getTimezoneLocation() {
@@ -181,4 +178,10 @@ String getInitials(String name) {
     initials += name[0];
   }
   return initials;
+}
+
+Future<String?> getDeviceId() async {
+  var deviceInfo = DeviceInfoPlugin();
+  var androidDeviceInfo = await deviceInfo.androidInfo;
+  return androidDeviceInfo.androidId;
 }

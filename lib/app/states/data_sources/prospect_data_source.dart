@@ -54,8 +54,6 @@ class ProspectDataSource extends StateDataSource<ProspectPresenter> with DataSou
     if (data['prospects'] != null) {
       prospects = data['prospects'].map<Prospect>((e) => Prospect.fromJson(e)).toList();
     }
-
-    Get.find<TaskHelper>().loaderPop(property.task.name);
   }
 
   @override

@@ -75,7 +75,6 @@ class NearbyDataSource extends StateDataSource<NearbyPresenter> with DataSourceM
       );
       property.deployCustomers(customers);
     }
-    Get.find<TaskHelper>().loaderPop(property.task.name);
   }
 
   @override

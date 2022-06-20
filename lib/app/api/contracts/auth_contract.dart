@@ -1,4 +1,4 @@
 abstract class AuthContract {
-  void onAuthSuccess(String message);
+  void onAuthSuccess(Map data);
   void onAuthFailed(String message);
 }

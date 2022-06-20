@@ -78,7 +78,6 @@ class ScheduleFormCreateDataSource extends StateDataSource<ScheduleFormCreatePre
   @override
   onLoadSuccess(Map data) {
     insertTypes(List<Map<String, dynamic>>.from(data['types']));
-    Get.find<TaskHelper>().loaderPop(property.task.name);
   }
 
   @override

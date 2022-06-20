@@ -33,7 +33,6 @@ class ContactPersonFormUpdateDataSource extends StateDataSource<ContactPersonFor
       customerName = contactPerson?.contactcustomer?.cstmname;
       formSource.prepareFormValues();
     }
-    Get.find<TaskHelper>().loaderPop(property.task.name);
   }
 
   @override

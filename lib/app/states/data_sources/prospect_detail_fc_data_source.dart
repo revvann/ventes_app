@@ -50,7 +50,6 @@ class ProspectDetailFormCreateDataSource extends StateDataSource<ProspectDetailF
       prospect = Prospect.fromJson(data['prospect']);
       formSource.prospect = prospect;
     }
-    Get.find<TaskHelper>().loaderPop(property.task.name);
   }
 
   @override

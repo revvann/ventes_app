@@ -31,7 +31,7 @@ class _AppBar extends StatelessWidget {
               ],
             ),
             PopupMenu(
-              controller: Get.put(PopupMenuController(), tag: "SchedulePopup"),
+              controller: state.property.menuController,
               dropdownSettings: DropdownSettings(
                 width: 200,
                 offset: Offset(10, 0),

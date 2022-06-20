@@ -7,11 +7,8 @@ drwxrwxr-x 7 revan revan 4096 Jun 18 22:54 ../
 -rw-rw-r-- 1 revan revan  897 Jun 19 13:38 contact_person_state_controller.dart
 -rw-rw-r-- 1 revan revan 1102 Jun 19 13:38 customer_fc_state_controller.dart
 -rw-rw-r-- 1 revan revan 1102 Jun 19 13:38 customer_fu_state_controller.dart
--rw-rw-r-- 1 revan revan  995 Jun 19 13:38 daily_schedule_state_controller.dart * here
+-rw-rw-r-- 1 revan revan  995 Jun 19 13:38 daily_schedule_state_controller.dart
 -rw-rw-r-- 1 revan revan 1202 Jun 19 13:38 dashboard_state_controller.dart
--rw-rw-r-- 1 revan revan  606 Jun 18 23:21 example_state_controller.dart
--rw-rw-r-- 1 revan revan  970 Mei 26 12:15 keyboard_state_controller.dart
--rw-rw-r-- 1 revan revan    0 Jun 19 13:58 list
 -rw-rw-r-- 1 revan revan  937 Jun 19 13:38 nearby_state_controller.dart
 -rw-rw-r-- 1 revan revan 1088 Jun 19 13:38 product_fu_state_controller.dart
 -rw-rw-r-- 1 revan revan  909 Jun 19 13:38 product_state_controller.dart

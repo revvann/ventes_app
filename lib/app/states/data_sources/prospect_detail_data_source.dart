@@ -45,8 +45,6 @@ class ProspectDetailDataSource extends StateDataSource<ProspectDetailPresenter> 
     if (data['stages'] != null) {
       stages = data['stages'].map<DBType>((json) => DBType.fromJson(json)).toList();
     }
-
-    Get.find<TaskHelper>().loaderPop(property.task.name);
   }
 
   @override

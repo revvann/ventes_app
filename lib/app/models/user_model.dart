@@ -8,7 +8,7 @@ class User extends Model {
   String? userfullname;
   String? useremail;
   String? userphone;
-  int? userdeviceid;
+  String? userdeviceid;
   String? userfcmtoken;
   List<UserDetail>? userdetails;
 

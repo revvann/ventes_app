@@ -54,8 +54,6 @@ class ProspectFormCreateDataSource extends StateDataSource<ProspectFormCreatePre
       List<DBType> stageList = data['stage'].map<DBType>((item) => DBType.fromJson(item)).toList();
       formSource.prosstage = stageList.isEmpty ? null : stageList.first.typeid!;
     }
-
-    Get.find<TaskHelper>().loaderPop(property.task.name);
   }
 
   @override

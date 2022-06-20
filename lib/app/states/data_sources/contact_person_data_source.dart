@@ -37,8 +37,6 @@ class ContactPersonDataSource extends StateDataSource<ContactPersonPresenter> wi
     if (data['contacts'] != null) {
       contactPersons = data['contacts'].map<ContactPerson>((e) => ContactPerson.fromJson(e)).toList();
     }
-
-    Get.find<TaskHelper>().loaderPop(property.task.name);
   }
 
   @override

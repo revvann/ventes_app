@@ -38,7 +38,6 @@ class ProductDataSource extends StateDataSource<ProductPresenter> with DataSourc
       products = data['prospectproducts'].map<ProspectProduct>((e) => ProspectProduct.fromJson(e)).toList();
     }
 
-    Get.find<TaskHelper>().loaderPop(property.task.name);
     property.isLoading.value = false;
   }
 

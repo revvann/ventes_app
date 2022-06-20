@@ -68,8 +68,8 @@ class BottomNavigation extends GetView<BottomNavigationStateController> {
           Expanded(
             child: BottomNavigationItem(
               icon: 'assets/svg/user.svg',
-              title: "Settings",
-              view: Views.settings,
+              title: "Profile",
+              view: Views.profile,
             ),
           ),
         ],

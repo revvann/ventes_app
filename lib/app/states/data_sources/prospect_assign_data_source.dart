@@ -37,8 +37,6 @@ class ProspectAssignDataSource extends StateDataSource<ProspectAssignPresenter> 
     if (data['prospectassigns'] != null) {
       prospectAssigns = data['prospectassigns'].map<ProspectAssign>((e) => ProspectAssign.fromJson(e)).toList();
     }
-
-    Get.find<TaskHelper>().loaderPop(property.task.name);
   }
 
   @override
