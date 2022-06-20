@@ -107,8 +107,8 @@ class ScheduleFormUpdateProperty extends StateProperty with PropertyMixin {
   }
 
   @override
-  void init() async {
-    super.init();
+  void ready() async {
+    super.ready();
     Position pos = await getCurrentPosition();
     GoogleMapController controller = await mapsController.future;
     controller.animateCamera(

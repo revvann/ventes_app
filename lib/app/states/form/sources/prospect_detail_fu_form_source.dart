@@ -47,6 +47,11 @@ class ProspectDetailFormUpdateFormSource extends UpdateFormSource with FormSourc
   init() {
     super.init();
     validator.formSource = this;
+  }
+
+  @override
+  ready() {
+    super.ready();
     date = DateTime.now();
   }
 

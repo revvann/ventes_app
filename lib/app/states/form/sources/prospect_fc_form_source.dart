@@ -76,6 +76,11 @@ class ProspectFormCreateFormSource extends StateFormSource with FormSourceMixin 
   init() async {
     super.init();
     validator.formSource = this;
+  }
+
+  @override
+  ready() async {
+    super.ready();
     int accountId = Get.find<AuthHelper>().accountActive.val!;
     List<UserDetail> userDetails = await dataSource.fetchUser("");
     prosowner = userDetails.firstWhereOrNull((element) => element.userdtid == accountId);

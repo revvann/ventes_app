@@ -57,6 +57,11 @@ class ProspectDetailFormCreateFormSource extends StateFormSource with FormSource
   init() async {
     super.init();
     validator.formSource = this;
+  }
+
+  @override
+  ready() async {
+    super.ready();
     date = DateTime.now();
 
     Position pos = await getCurrentPosition();

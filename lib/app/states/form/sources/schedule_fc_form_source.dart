@@ -293,6 +293,11 @@ class ScheduleFormCreateFormSource extends StateFormSource with FormSourceMixin 
   init() async {
     super.init();
     validator.formSource = this;
+  }
+
+  @override
+  ready() async {
+    super.ready();
     setStartTimeList();
 
     scheremindTEC.text = "0";

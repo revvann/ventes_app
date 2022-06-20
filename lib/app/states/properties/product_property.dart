@@ -57,8 +57,8 @@ class ProductProperty extends StateProperty with PropertyMixin {
   }
 
   @override
-  void init() {
-    super.init();
+  void ready() {
+    super.ready();
     searchTEC.addListener(onSearchChanged);
   }
 

@@ -13,6 +13,7 @@ import 'package:ventes/app/resources/widgets/regular_bottom_sheet.dart';
 import 'package:ventes/app/resources/widgets/regular_button.dart';
 import 'package:ventes/app/resources/widgets/regular_dialog.dart';
 import 'package:ventes/app/resources/widgets/regular_input.dart';
+import 'package:ventes/helpers/function_helpers.dart';
 
 part 'package:ventes/app/resources/views/signin/components/_username_input.dart';
 part 'package:ventes/app/resources/views/signin/components/_password_input.dart';
@@ -196,7 +197,7 @@ class SigninView extends GetView<SigninStateController> implements AuthContract 
   }
 
   @override
-  void onAuthSuccess(String message) {
+  void onAuthSuccess(String message) async {
     controller.dataSource.isLoading = false;
     Get.offAllNamed(DashboardView.route);
   }

@@ -51,6 +51,11 @@ abstract class StateController<P extends StateProperty?, L extends StateListener
   ///
   F formSourceBuilder();
 
+  ///
+  /// use init method only when you need to initialize lateable variables
+  /// if you dont, use ready method instead
+  /// in this method datasource, listener and property will be initialized, and not ready to use yet
+  ///
   @mustCallSuper
   void init() {
     listener = listenerBuilder();
@@ -58,11 +63,15 @@ abstract class StateController<P extends StateProperty?, L extends StateListener
     dataSource = dataSourceBuilder();
     formSource = formSourceBuilder();
 
-    dataSource?.init();
     property?.init();
+    dataSource?.init();
     formSource?.init();
   }
 
+  ///
+  /// ready method will called when controller is ready (in first Get.find)
+  /// usually you want to use this method to get data from api, initialize view controller, or modify view
+  ///
   @mustCallSuper
   void ready() {
     // this code is executed for calculate app bar and body height

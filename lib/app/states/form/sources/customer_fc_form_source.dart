@@ -52,8 +52,8 @@ class CustomerFormCreateFormSource extends UpdateFormSource with FormSourceMixin
   set cstmtypeid(int? value) => _cstmtypeid.value = value;
 
   @override
-  init() async {
-    super.init();
+  ready() async {
+    super.ready();
     picture = await _getImageFileFromAssets(NearbyString.defaultImage);
 
     latitudeTEC.text = property.latitude!.toString();
