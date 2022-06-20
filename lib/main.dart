@@ -50,7 +50,6 @@ void main() async {
   Get.lazyPut(() => AuthHelper(), fenix: true);
   Get.lazyPut(() => NotificationHelper(), fenix: true);
   Get.lazyPut(() => TaskHelper(), fenix: true);
-  await requestPermission();
 }
 
 class MyApp extends StatelessWidget {
