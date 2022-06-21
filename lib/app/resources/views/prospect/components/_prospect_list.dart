@@ -3,7 +3,7 @@
 part of 'package:ventes/app/resources/views/prospect/prospect.dart';
 
 class _ProspectList extends StatelessWidget {
-  ProspectStateController state = Get.find<ProspectStateController>();
+  ProspectStateController state = Get.find<Controller>();
 
   @override
   Widget build(BuildContext context) {

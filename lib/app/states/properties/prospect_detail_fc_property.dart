@@ -1,10 +1,12 @@
 import 'dart:async';
 
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ventes/constants/strings/prospect_string.dart';
 import 'package:ventes/app/states/typedefs/prospect_detail_fc_typedef.dart';
 import 'package:ventes/core/states/state_property.dart';
+import 'package:ventes/helpers/function_helpers.dart';
 import 'package:ventes/helpers/task_helper.dart';
 
 class ProspectDetailFormCreateProperty extends StateProperty with PropertyMixin {
@@ -19,8 +21,9 @@ class ProspectDetailFormCreateProperty extends StateProperty with PropertyMixin 
 
   Task task = Task(ProspectString.formCreateDetailTaskCode);
 
-  refresh() {
-    dataSource.fetchData(prospectId);
+  refresh() async {
+    Position position = await getCurrentPosition();
+    dataSource.fetchData(prospectId, position.latitude, position.longitude);
     Get.find<TaskHelper>().loaderPush(task);
   }
 }

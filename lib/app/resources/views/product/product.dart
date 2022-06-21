@@ -14,6 +14,7 @@ import 'package:ventes/app/resources/widgets/popup_button.dart';
 import 'package:ventes/app/resources/widgets/regular_dialog.dart';
 import 'package:ventes/app/resources/widgets/top_navigation.dart';
 import 'package:ventes/app/states/controllers/product_state_controller.dart';
+import 'package:ventes/app/states/typedefs/product_typedef.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/constants/strings/prospect_string.dart';
@@ -22,7 +23,7 @@ import 'package:ventes/helpers/function_helpers.dart';
 
 part 'package:ventes/app/resources/views/product/components/_product_list.dart';
 
-class ProductView extends View<ProductStateController> {
+class ProductView extends View<Controller> {
   static const String route = "/product";
   int prospectid;
 

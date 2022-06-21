@@ -37,11 +37,6 @@ class ProspectListener extends StateListener with ListenerMixin {
     onFilterChanged();
   }
 
-  void onFollowUpSelected(dynamic key) {
-    formSource.prostype = key;
-    onFilterChanged();
-  }
-
   void onAddButtonClicked() {
     Get.toNamed(ProspectFormCreateView.route, id: ProspectNavigator.id);
   }

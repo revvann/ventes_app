@@ -9,7 +9,7 @@ class _Calendar extends StatelessWidget {
     required this.onFindColor,
     this.onTap,
   });
-  DailyScheduleStateController state = Get.find<DailyScheduleStateController>();
+  DailyScheduleStateController state = Get.find<Controller>();
   Color Function(Schedule appointment) onFindColor;
   void Function(CalendarTapDetails details)? onTap;
   RegularCalendarDataSource? dataSource;

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ventes/app/models/type_model.dart';
 import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
 import 'package:ventes/constants/strings/prospect_string.dart';
@@ -13,11 +14,6 @@ class ProspectDetailFormUpdateFormSource extends UpdateFormSource with FormSourc
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
-  KeyableDropdownController<int, DBType> categoryDropdownController = Get.put(
-    KeyableDropdownController<int, DBType>(),
-    tag: ProspectString.categoryDropdownTag,
-  );
-
   KeyableDropdownController<int, DBType> typeDropdownController = Get.put(
     KeyableDropdownController<int, DBType>(),
     tag: ProspectString.detailTypeCode,
@@ -25,7 +21,6 @@ class ProspectDetailFormUpdateFormSource extends UpdateFormSource with FormSourc
 
   TextEditingController prosdtdescTEC = TextEditingController();
 
-  final Rx<DBType?> _prosdtcategory = Rx<DBType?>(null);
   final Rx<DBType?> _prosdttype = Rx<DBType?>(null);
 
   final Rx<DateTime?> _date = Rx<DateTime?>(null);
@@ -34,9 +29,6 @@ class ProspectDetailFormUpdateFormSource extends UpdateFormSource with FormSourc
 
   DateTime? get date => _date.value;
   set date(DateTime? value) => _date.value = value;
-
-  DBType? get prosdtcategory => _prosdtcategory.value;
-  set prosdtcategory(DBType? value) => _prosdtcategory.value = value;
 
   DBType? get prosdttype => _prosdttype.value;
   set prosdttype(DBType? value) => _prosdttype.value = value;
@@ -68,13 +60,28 @@ class ProspectDetailFormUpdateFormSource extends UpdateFormSource with FormSourc
   }
 
   @override
-  void prepareFormValues() {
+  void prepareFormValues() async {
     prosdtdescTEC.text = dataSource.prospectdetail!.prospectdtdesc ?? "";
     date = dbParseDate(dataSource.prospectdetail!.prospectdtdate!);
-    prosdtcategory = dataSource.prospectdetail!.prospectdtcat;
-    categoryDropdownController.selectedKeys = [prosdtcategory!.typeid!];
     prosdttype = dataSource.prospectdetail!.prospectdttype;
     typeDropdownController.selectedKeys = [prosdttype!.typeid!];
+
+    if (dataSource.prospectdetail?.prospectdtlatitude != null && dataSource.prospectdetail?.prospectdtlongitude != null) {
+      double latitude = dataSource.prospectdetail!.prospectdtlatitude!;
+      double longitude = dataSource.prospectdetail!.prospectdtlongitude!;
+      LatLng latLng = LatLng(latitude, longitude);
+
+      GoogleMapController controller = await property.mapsController.future;
+      controller.animateCamera(
+        CameraUpdate.newLatLng(latLng),
+      );
+
+      Marker marker = Marker(
+        markerId: MarkerId("Current Position"),
+        position: latLng,
+      );
+      property.marker = {marker};
+    }
   }
 
   @override
@@ -82,7 +89,6 @@ class ProspectDetailFormUpdateFormSource extends UpdateFormSource with FormSourc
     return {
       'prospectdtdesc': prosdtdescTEC.text,
       'prospectdtdate': dbFormatDate(date!),
-      'prospectdtcatid': prosdtcategory?.typeid.toString(),
       'prospectdttypeid': prosdttype?.typeid.toString(),
     };
   }

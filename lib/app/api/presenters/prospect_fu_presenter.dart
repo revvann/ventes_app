@@ -50,10 +50,6 @@ class ProspectFormUpdatePresenter extends RegularPresenter<ProspectUpdateContrac
     return await _bpCustomerService.select(params);
   }
 
-  Future<Response> _getFollowUp() async {
-    return await _typeService.byCode({'typecd': ProspectString.followUpTypeCode});
-  }
-
   Future<Response> _getStatus() async {
     return await _typeService.byCode({'typecd': ProspectString.statusTypeCode});
   }
@@ -87,20 +83,13 @@ class ProspectFormUpdatePresenter extends RegularPresenter<ProspectUpdateContrac
     try {
       Response response = await _getUsers();
       Response bpResponse = await _getBpCustomers();
-      Response followUpResponse = await _getFollowUp();
       Response statusResponse = await _getStatus();
       Response stageResponse = await _getStage();
       Response prospectResponse = await _getProspect(prospectid);
 
-      if (response.statusCode == 200 &&
-          bpResponse.statusCode == 200 &&
-          followUpResponse.statusCode == 200 &&
-          statusResponse.statusCode == 200 &&
-          stageResponse.statusCode == 200 &&
-          prospectResponse.statusCode == 200) {
+      if (response.statusCode == 200 && bpResponse.statusCode == 200 && statusResponse.statusCode == 200 && stageResponse.statusCode == 200 && prospectResponse.statusCode == 200) {
         data['users'] = response.body;
         data['bpcustomers'] = bpResponse.body;
-        data['followup'] = followUpResponse.body;
         data['status'] = statusResponse.body;
         data['stage'] = stageResponse.body;
         data['prospect'] = prospectResponse.body;

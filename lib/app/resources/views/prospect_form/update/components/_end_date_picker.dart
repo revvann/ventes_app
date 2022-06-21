@@ -1,7 +1,7 @@
 part of 'package:ventes/app/resources/views/prospect_form/update/prospect_fu.dart';
 
 class _EndDatePicker extends StatelessWidget {
-  ProspectFormUpdateStateController state = Get.find<ProspectFormUpdateStateController>();
+  ProspectFormUpdateStateController state = Get.find<Controller>();
 
   @override
   Widget build(BuildContext context) {

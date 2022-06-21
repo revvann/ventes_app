@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ventes/app/states/controllers/prospect_detail_state_controller.dart';
 import 'package:ventes/constants/strings/prospect_string.dart';
 import 'package:ventes/app/states/typedefs/prospect_detail_fu_typedef.dart';
@@ -17,10 +18,6 @@ class ProspectDetailFormUpdateListener extends StateListener with ListenerMixin 
     formSource.date = date;
   }
 
-  void onCategorySelected(category) {
-    formSource.prosdtcategory = category.value;
-  }
-
   void onTypeSelected(type) {
     formSource.prosdttype = type.value;
   }
@@ -36,6 +33,12 @@ class ProspectDetailFormUpdateListener extends StateListener with ListenerMixin 
         },
       ),
     );
+  }
+
+  void onMapControllerCreated(GoogleMapController? controller) {
+    if (!property.mapsController.isCompleted) {
+      property.mapsController.complete(controller);
+    }
   }
 
   void onLoadFailed(String message) {

@@ -13,6 +13,7 @@ import 'package:ventes/app/resources/widgets/popup_button.dart';
 import 'package:ventes/app/resources/widgets/regular_dialog.dart';
 import 'package:ventes/app/resources/widgets/top_navigation.dart';
 import 'package:ventes/app/states/controllers/prospect_assign_state_controller.dart';
+import 'package:ventes/app/states/typedefs/prospect_assign_typedef.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/constants/strings/prospect_string.dart';
@@ -22,7 +23,7 @@ import 'package:ventes/helpers/function_helpers.dart';
 part 'package:ventes/app/resources/views/prospect_assign/components/_prospect_assign_list.dart';
 part 'package:ventes/app/resources/views/prospect_assign/components/_prospect_assign_detail.dart';
 
-class ProspectAssignView extends View<ProspectAssignStateController> {
+class ProspectAssignView extends View<Controller> {
   static const String route = "/prospectassign";
   int prospectid;
 

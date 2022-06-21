@@ -13,6 +13,7 @@ import 'package:ventes/app/resources/widgets/regular_dialog.dart';
 import 'package:ventes/app/resources/widgets/schedule_detail.dart';
 import 'package:ventes/app/resources/widgets/top_navigation.dart';
 import 'package:ventes/app/states/controllers/daily_schedule_state_controller.dart';
+import 'package:ventes/app/states/typedefs/daily_schedule_typedef.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/constants/strings/schedule_string.dart';
@@ -22,7 +23,7 @@ import 'package:ventes/helpers/function_helpers.dart';
 part 'package:ventes/app/resources/views/daily_schedule/components/_calendar.dart';
 part 'package:ventes/app/resources/views/daily_schedule/components/_app_bar_menu.dart';
 
-class DailyScheduleView extends View<DailyScheduleStateController> {
+class DailyScheduleView extends View<Controller> {
   static const String route = "/schedule/daily";
   DateTime date;
 

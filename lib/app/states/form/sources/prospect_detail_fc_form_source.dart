@@ -16,11 +16,6 @@ class ProspectDetailFormCreateFormSource extends StateFormSource with FormSource
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
-  KeyableDropdownController<int, DBType> categoryDropdownController = Get.put(
-    KeyableDropdownController<int, DBType>(),
-    tag: ProspectString.categoryDropdownTag,
-  );
-
   KeyableDropdownController<int, DBType> typeDropdownController = Get.put(
     KeyableDropdownController<int, DBType>(),
     tag: ProspectString.detailTypeCode,
@@ -28,12 +23,12 @@ class ProspectDetailFormCreateFormSource extends StateFormSource with FormSource
 
   TextEditingController prosdtdescTEC = TextEditingController();
 
-  final Rx<DBType?> _prosdtcategory = Rx<DBType?>(null);
+  final Rx<int?> _prosdtcategory = Rx<int?>(null);
   final Rx<DBType?> _prosdttype = Rx<DBType?>(null);
 
   final Rx<DateTime?> _date = Rx<DateTime?>(null);
-  Prospect? prospect;
   final Rx<String?> _prosdtloc = Rx<String?>(null);
+  Prospect? prospect;
   double? prosdtlat;
   double? prosdtlong;
 
@@ -42,16 +37,18 @@ class ProspectDetailFormCreateFormSource extends StateFormSource with FormSource
   DateTime? get date => _date.value;
   set date(DateTime? value) => _date.value = value;
 
-  DBType? get prosdtcategory => _prosdtcategory.value;
-  set prosdtcategory(DBType? value) => _prosdtcategory.value = value;
-
   DBType? get prosdttype => _prosdttype.value;
   set prosdttype(DBType? value) => _prosdttype.value = value;
 
   String? get prosdtloc => _prosdtloc.value;
   set prosdtloc(String? value) => _prosdtloc.value = value;
 
+  int? get prosdtcategory => _prosdtcategory.value;
+  set prosdtcategory(int? value) => _prosdtcategory.value = value;
+
   String? get dateString => date != null ? formatDate(date!) : null;
+
+  bool get isOnSite => dataSource.categoryItems[prosdtcategory] == "On Site";
 
   @override
   init() async {
@@ -90,25 +87,30 @@ class ProspectDetailFormCreateFormSource extends StateFormSource with FormSource
     super.close();
     prosdtdescTEC.dispose();
     Get.delete<KeyableDropdownController<int, DBType>>(
-      tag: ProspectString.categoryDropdownTag,
-    );
-    Get.delete<KeyableDropdownController<int, DBType>>(
       tag: ProspectString.detailTypeCode,
     );
   }
 
   @override
   Map<String, dynamic> toJson() {
-    return {
+    Map<String, dynamic> json = {
       'prospectdtprospectid': prospect?.prospectid?.toString(),
       'prospectdtdesc': prosdtdescTEC.text,
       'prospectdtdate': dbFormatDate(date!),
-      'prospectdtcatid': prosdtcategory?.typeid.toString(),
+      'prospectdtcatid': prosdtcategory?.toString(),
       'prospectdttypeid': prosdttype?.typeid.toString(),
-      'prospectdtloc': prosdtloc,
-      'prospectdtlatitude': prosdtlat.toString(),
-      'prospectdtlongitude': prosdtlong.toString(),
     };
+
+    if (isOnSite) {
+      json = {
+        ...json,
+        'prospectdtloc': prosdtloc,
+        'prospectdtlatitude': prosdtlat.toString(),
+        'prospectdtlongitude': prosdtlong.toString(),
+      };
+    }
+
+    return json;
   }
 
   @override

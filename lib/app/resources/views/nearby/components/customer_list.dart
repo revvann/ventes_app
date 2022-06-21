@@ -3,7 +3,7 @@
 part of 'package:ventes/app/resources/views/nearby/nearby.dart';
 
 class _CustomerList extends StatelessWidget {
-  final NearbyStateController state = Get.find<NearbyStateController>();
+  final NearbyStateController state = Get.find<Controller>();
   @override
   Widget build(BuildContext context) {
     return Obx(() {

@@ -17,6 +17,7 @@ class ContactPersonFormUpdateFormSource extends UpdateFormSource with FormSource
   );
 
   TextEditingController valueTEC = TextEditingController();
+  TextEditingController nameTEC = TextEditingController();
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
@@ -32,6 +33,12 @@ class ContactPersonFormUpdateFormSource extends UpdateFormSource with FormSource
   set contact(Contact? value) => _contact.value = value;
 
   @override
+  void init() {
+    super.init();
+    validator.formSource = this;
+  }
+
+  @override
   close() {
     super.close();
     Get.delete<SearchableDropdownController<Contact>>(tag: ProspectString.localContactCode);
@@ -39,15 +46,32 @@ class ContactPersonFormUpdateFormSource extends UpdateFormSource with FormSource
   }
 
   @override
-  void prepareFormValues() {
-    valueTEC.text = dataSource.contactPerson?.contactvalueid ?? "";
+  void prepareFormValues() async {
+    Get.find<TaskHelper>().loaderPush(Task('contactgetlist'));
+    List<Contact> contacts = await ContactsService.getContactsForPhone(dataSource.contactPerson?.contactvalueid);
+    Get.find<TaskHelper>().loaderPop('contactgetlist');
+    Contact? contact = contacts.isNotEmpty ? contacts.first : null;
+
+    if (contact != null) {
+      contactDropdownController.selectedKeys = [contact];
+      this.contact = contact;
+    } else {
+      valueTEC.text = dataSource.contactPerson?.contactvalueid ?? "";
+    }
+
     contacttype = dataSource.contactPerson?.contacttype;
+    nameTEC.text = dataSource.contactPerson?.contactname ?? "";
   }
 
   @override
   Map<String, dynamic> toJson() {
     return {
-      'contactvalueid': isPhone ? contact?.phones?.first.value : valueTEC.text,
+      'contactvalueid': isPhone
+          ? valueTEC.text.isNotEmpty
+              ? valueTEC.text
+              : contact?.phones?.first.value
+          : valueTEC.text,
+      'contactname': nameTEC.text,
     };
   }
 

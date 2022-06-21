@@ -15,6 +15,7 @@ import 'package:ventes/app/resources/widgets/regular_dialog.dart';
 import 'package:ventes/app/resources/widgets/regular_outlined_button.dart';
 import 'package:ventes/app/resources/widgets/top_navigation.dart';
 import 'package:ventes/app/states/controllers/prospect_detail_state_controller.dart';
+import 'package:ventes/app/states/typedefs/prospect_detail_typedef.dart';
 import 'package:ventes/constants/gestures/copy_gesture_recognizer.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
@@ -27,7 +28,7 @@ part 'package:ventes/app/resources/views/prospect_detail/components/_detail_list
 part 'package:ventes/app/resources/views/prospect_detail/components/_app_bar_menu.dart';
 part 'package:ventes/app/resources/views/prospect_detail/components/_detail_dialog.dart';
 
-class ProspectDetailView extends View<ProspectDetailStateController> {
+class ProspectDetailView extends View<Controller> {
   static const String route = "/prospect/detail";
   int prospectId;
 

@@ -33,7 +33,9 @@ class ContactPersonFormUpdateListener extends StateListener with ListenerMixin {
   }
 
   bool onContactCompared(selectedItem, item) {
-    return selectedItem == item;
+    Contact selectedContact = selectedItem;
+    Contact contact = item;
+    return selectedContact.phones?.first.value == contact.phones?.first.value;
   }
 
   void onSubmitButtonClicked() {

@@ -14,8 +14,8 @@ import 'package:ventes/app/models/type_model.dart';
 import 'package:ventes/app/models/user_detail_model.dart';
 import 'package:ventes/core/states/state_data_source.dart';
 import 'package:ventes/helpers/function_helpers.dart';
-import 'package:ventes/helpers/task_helper.dart';
 import 'package:ventes/app/states/typedefs/customer_fc_typedef.dart';
+import 'package:ventes/helpers/task_helper.dart';
 
 class CustomerFormCreateDataSource extends StateDataSource<CustomerFormCreatePresenter> with DataSourceMixin implements CustomerCreateContract {
   final _customers = Rx<List<BpCustomer>>([]);
@@ -111,6 +111,49 @@ class CustomerFormCreateDataSource extends StateDataSource<CustomerFormCreatePre
     return null;
   }
 
+  String? getAddress() {
+    return mapsLoc?.adresses?.first.formattedAddress;
+  }
+
+  void checkCustomers(List<Customer> nearbyCustomers) {
+    LatLng currentPos = LatLng(property.latitude!, property.longitude!);
+    nearbyCustomers = nearbyCustomers.where((element) {
+      LatLng coords1 = LatLng(element.cstmlatitude ?? 0.0, element.cstmlongitude ?? 0.0);
+      double radius = calculateDistance(coords1, currentPos);
+      element.radius = radius;
+      return radius <= 100 && (element.cstmname?.toLowerCase() == formSource.cstmname.toLowerCase() || element.cstmaddress?.toLowerCase() == formSource.cstmaddress?.toLowerCase());
+    }).toList();
+
+    if (nearbyCustomers.isNotEmpty) {
+      Customer customer = nearbyCustomers.first;
+      this.customer = customer;
+      formSource.prepareFormValues();
+
+      Get.find<TaskHelper>().confirmPush(
+        property.task.copyWith<bool>(
+          message: "${customer.cstmname} already exists. Your customer will add to existing customer",
+          onFinished: (res) {
+            if (res) {
+              fetchBpCustomers(customer.cstmid!);
+              Get.find<TaskHelper>().loaderPush(property.task);
+            }
+          },
+        ),
+      );
+    } else {
+      Get.find<TaskHelper>().confirmPush(
+        property.task.copyWith<bool>(
+          message: "There is no customer with given name or address in your area, this customer will create as new customer",
+          onFinished: (res) {
+            if (res) {
+              formSource.onSubmit();
+            }
+          },
+        ),
+      );
+    }
+  }
+
   Future<List<Country>> fetchCountries([String? search]) async => await presenter.fetchCountries(search);
   Future<List<Province>> fetchProvinces(int countryId, [String? search]) async => await presenter.fetchProvinces(countryId, search);
   Future<List<City>> fetchCities(int provinceId, [String? search]) async => await presenter.fetchCities(provinceId, search);
@@ -119,6 +162,8 @@ class CustomerFormCreateDataSource extends StateDataSource<CustomerFormCreatePre
   void fetchData(double latitude, double longitude, int? cstmid) => presenter.fetchData(latitude, longitude, cstmid);
   void fetchPlacesIds(String subdistrict) => presenter.fetchPlaces(subdistrict);
   void createCustomer(FormData data) => presenter.createCustomer(data);
+  void fetchNearbyCustomers(int subdistrictid) => presenter.fetchNearbyCustomers(subdistrictid);
+  void fetchBpCustomers(int customerid) => presenter.fetchBpCustomers(customerid);
 
   @override
   CustomerFormCreatePresenter presenterBuilder() => CustomerFormCreatePresenter();
@@ -171,6 +216,24 @@ class CustomerFormCreateDataSource extends StateDataSource<CustomerFormCreatePre
       customer = Customer.fromJson(data['customer']);
       formSource.prepareFormValues();
     }
+
+    if (data['nearbycustomers'] != null) {
+      List<Customer> nearbyCustomers = List<Customer>.from(data['nearbycustomers'].map((e) => Customer.fromJson(e)));
+      checkCustomers(nearbyCustomers);
+    }
+
+    if (data['bpcustomers'] != null) {
+      List<BpCustomer> bpCustomers = List<BpCustomer>.from(data['bpcustomers'].map((e) => BpCustomer.fromJson(e)));
+      if (bpCustomers.isEmpty) {
+        formSource.onSubmit();
+      } else {
+        Get.find<TaskHelper>().failedPush(
+          property.task.copyWith(
+            message: "Customer already exist in your business partner",
+          ),
+        );
+      }
+    }
   }
 
   @override
@@ -183,7 +246,7 @@ class CustomerFormCreateDataSource extends StateDataSource<CustomerFormCreatePre
   void onCreateSuccess(String message) => listener.onCreateDataSuccess(message);
 
   @override
-  void onCreateComplete() => listener.onComplete();
+  void onCreateComplete() => Get.find<TaskHelper>().loaderPop('createcustomer');
 
   @override
   onLoadComplete() => listener.onComplete();

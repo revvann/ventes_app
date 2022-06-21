@@ -9,21 +9,23 @@ import 'package:ventes/app/models/type_model.dart';
 import 'package:ventes/app/resources/widgets/editor_input.dart';
 import 'package:ventes/app/resources/widgets/icon_input.dart';
 import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
+import 'package:ventes/app/resources/widgets/keyable_selectbar.dart';
 import 'package:ventes/app/resources/widgets/regular_date_picker.dart';
 import 'package:ventes/app/resources/widgets/regular_input.dart';
 import 'package:ventes/app/resources/widgets/top_navigation.dart';
 import 'package:ventes/app/states/controllers/prospect_detail_fc_state_controller.dart';
+import 'package:ventes/app/states/typedefs/prospect_detail_fc_typedef.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/constants/strings/prospect_string.dart';
 import 'package:ventes/core/view/view.dart';
 
-part 'package:ventes/app/resources/views/prospect_detail_form/create/components/_category_dropdown.dart';
+part 'package:ventes/app/resources/views/prospect_detail_form/create/components/_category_selectbar.dart';
 part 'package:ventes/app/resources/views/prospect_detail_form/create/components/_type_dropdown.dart';
 part 'package:ventes/app/resources/views/prospect_detail_form/create/components/_date_picker.dart';
 part 'package:ventes/app/resources/views/prospect_detail_form/create/components/_map_preview.dart';
 
-class ProspectDetailFormCreateView extends View<ProspectDetailFormCreateStateController> {
+class ProspectDetailFormCreateView extends View<Controller> {
   static const String route = "/prospect/detail/create";
   int prospectId;
 
@@ -82,24 +84,24 @@ class ProspectDetailFormCreateView extends View<ProspectDetailFormCreateStateCon
           onRefresh: () async => state.refreshStates(),
           child: Obx(
             () {
-              return Container(
-                width: double.infinity,
-                constraints: BoxConstraints(
-                  minHeight: state.minHeight,
-                ),
-                padding: EdgeInsets.only(
-                  right: RegularSize.m,
-                  left: RegularSize.m,
-                  top: RegularSize.l,
-                ),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(RegularSize.xl),
-                    topRight: Radius.circular(RegularSize.xl),
+              return SingleChildScrollView(
+                child: Container(
+                  width: double.infinity,
+                  constraints: BoxConstraints(
+                    minHeight: state.minHeight,
                   ),
-                ),
-                child: SingleChildScrollView(
+                  padding: EdgeInsets.only(
+                    right: RegularSize.m,
+                    left: RegularSize.m,
+                    top: RegularSize.l,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(RegularSize.xl),
+                      topRight: Radius.circular(RegularSize.xl),
+                    ),
+                  ),
                   child: Form(
                     key: state.formSource.formKey,
                     child: Column(
@@ -118,7 +120,7 @@ class ProspectDetailFormCreateView extends View<ProspectDetailFormCreateStateCon
                         SizedBox(
                           height: RegularSize.m,
                         ),
-                        _CategoryDropdown(),
+                        _CategorySelectbar(),
                         SizedBox(
                           height: RegularSize.m,
                         ),
@@ -136,10 +138,17 @@ class ProspectDetailFormCreateView extends View<ProspectDetailFormCreateStateCon
                           validator: state.formSource.validator.prosdtdesc,
                           controller: state.formSource.prosdtdescTEC,
                         ),
-                        SizedBox(
-                          height: RegularSize.m,
-                        ),
-                        _MapPreview(),
+                        Obx(() => Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                if (state.formSource.isOnSite) ...[
+                                  SizedBox(
+                                    height: RegularSize.m,
+                                  ),
+                                  _MapPreview(),
+                                ],
+                              ],
+                            )),
                         SizedBox(
                           height: RegularSize.m,
                         ),

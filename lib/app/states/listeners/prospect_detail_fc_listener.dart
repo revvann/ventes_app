@@ -28,6 +28,10 @@ class ProspectDetailFormCreateListener extends StateListener with ListenerMixin 
     formSource.prosdttype = type.value;
   }
 
+  void onFollowUpSelected(dynamic key) {
+    formSource.prosdtcategory = key;
+  }
+
   void onMapControllerCreated(GoogleMapController? controller) {
     if (!property.mapsController.isCompleted) {
       property.mapsController.complete(controller);

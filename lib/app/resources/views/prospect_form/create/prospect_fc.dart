@@ -10,13 +10,13 @@ import 'package:ventes/app/models/user_detail_model.dart';
 import 'package:ventes/app/resources/widgets/editor_input.dart';
 import 'package:ventes/app/resources/widgets/icon_input.dart';
 import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
-import 'package:ventes/app/resources/widgets/keyable_selectbar.dart';
 import 'package:ventes/app/resources/widgets/regular_button.dart';
 import 'package:ventes/app/resources/widgets/regular_date_picker.dart';
 import 'package:ventes/app/resources/widgets/regular_input.dart';
 import 'package:ventes/app/resources/widgets/searchable_dropdown.dart';
 import 'package:ventes/app/resources/widgets/top_navigation.dart';
 import 'package:ventes/app/states/controllers/prospect_fc_state_controller.dart';
+import 'package:ventes/app/states/typedefs/prospect_fc_typedef.dart';
 import 'package:ventes/constants/formatters/currency_formatter.dart';
 import 'package:ventes/constants/formatters/range_number_formatter.dart';
 import 'package:ventes/constants/regular_color.dart';
@@ -29,10 +29,9 @@ part 'package:ventes/app/resources/views/prospect_form/create/components/_twin_d
 part 'package:ventes/app/resources/views/prospect_form/create/components/_end_date_picker.dart';
 part 'package:ventes/app/resources/views/prospect_form/create/components/_owner_dropdown.dart';
 part 'package:ventes/app/resources/views/prospect_form/create/components/_customer_dropdown.dart';
-part 'package:ventes/app/resources/views/prospect_form/create/components/_follow_up_selectbar.dart';
 part 'package:ventes/app/resources/views/prospect_form/create/components/_product_list.dart';
 
-class ProspectFormCreateView extends View<ProspectFormCreateStateController> {
+class ProspectFormCreateView extends View<Controller> {
   static const String route = "/prospect/create";
 
   @override
@@ -108,7 +107,7 @@ class ProspectFormCreateView extends View<ProspectFormCreateStateController> {
                         Container(
                           alignment: Alignment.centerLeft,
                           child: Text(
-                            "Prospect Detail",
+                            "Prospect",
                             style: TextStyle(
                               color: RegularColor.primary,
                               fontWeight: FontWeight.bold,
@@ -129,10 +128,6 @@ class ProspectFormCreateView extends View<ProspectFormCreateStateController> {
                           height: RegularSize.m,
                         ),
                         _TwinDatePicker(),
-                        SizedBox(
-                          height: RegularSize.m,
-                        ),
-                        _FollowUpSelectbar(),
                         SizedBox(
                           height: RegularSize.m,
                         ),

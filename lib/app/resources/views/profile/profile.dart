@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:ventes/app/resources/widgets/top_navigation.dart';
 import 'package:ventes/app/states/controllers/profile_state_controller.dart';
+import 'package:ventes/app/states/typedefs/profile_typedef.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/core/view/view.dart';
@@ -13,7 +14,7 @@ part 'package:ventes/app/resources/views/profile/components/_profile_detail.dart
 part 'package:ventes/app/resources/views/profile/components/_profile_item.dart';
 part 'package:ventes/app/resources/views/profile/components/_bp_detail.dart';
 
-class ProfileView extends View<ProfileStateController> {
+class ProfileView extends View<Controller> {
   static const String route = "/profile";
 
   @override

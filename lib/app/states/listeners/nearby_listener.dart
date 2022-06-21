@@ -33,8 +33,14 @@ class NearbyListener extends StateListener with ListenerMixin {
     }
   }
 
-  void onCameraMoveEnd() {
+  void onCameraMoveEnd() async {
     property.cameraMoveType = CameraMoveType.dragged;
+    String? address = await dataSource.fetchAddress(property.markers.first.position.latitude, property.markers.first.position.longitude);
+    List<Marker> markersList = property.markers.toList();
+    markersList[0] = markersList[0].copyWith(
+      infoWindowParam: InfoWindow(title: address ?? "Unknown"),
+    );
+    property.markers = Set.from(markersList);
   }
 
   void onCustomerSelected(Customer customer) {

@@ -16,6 +16,7 @@ class TaskHelper {
   List<Task> errors = [];
   List<Task> success = [];
   List<Task<bool>> confirms = [];
+  List<TaskLoader> loaders = [];
 
   bool taskExists(String taskName) => tasks.firstWhereOrNull((task) => task.name == taskName) != null;
   bool failedExists(String taskName) => faileds.firstWhereOrNull((task) => task.name == taskName) != null;
@@ -35,7 +36,7 @@ class TaskHelper {
       tasks.removeWhere((task) => task.name == taskName);
       if (tasks.isEmpty) {
         Get.close(1);
-        successShow().then((__) => failedShow().then((_) => errorShow()));
+        successShow().then((__) => failedShow().then((_) => errorShow().then((_) => confirmShow())));
       }
     }
   }
@@ -172,4 +173,13 @@ class Task<T> {
   Task<S> copyWith<S>({String? name, String? message, Function(S result)? onFinished, bool snackbar = false}) {
     return Task<S>(name ?? this.name, message: message, onFinished: onFinished, snackbar: snackbar);
   }
+}
+
+class TaskLoader<T> extends Task<T> {
+  TaskLoader(String name, {String? message, Function(T)? onFinished}) : super(name, message: message, onFinished: onFinished, snackbar: false);
+  TaskLoader.fromTask(Task<T> task) : super(task.name, message: task.message, onFinished: task.onFinished, snackbar: false);
+
+  final Rx<bool> _loading = Rx<bool>(false);
+  bool get loading => _loading.value;
+  set loading(bool value) => _loading.value = value;
 }

@@ -3,7 +3,7 @@
 part of 'package:ventes/app/resources/views/dashboard/dashboard.dart';
 
 class _TopPanel extends StatelessWidget {
-  DashboardStateController state = Get.find<DashboardStateController>();
+  DashboardStateController state = Get.find<Controller>();
 
   @override
   Widget build(BuildContext context) {

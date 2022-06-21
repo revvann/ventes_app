@@ -3,7 +3,7 @@
 part of 'package:ventes/app/resources/views/prospect_detail/prospect_detail.dart';
 
 class _FloatingButton extends StatelessWidget {
-  ProspectDetailStateController get state => Get.find<ProspectDetailStateController>();
+  ProspectDetailStateController get state => Get.find<Controller>();
 
   @override
   Widget build(BuildContext context) {
@@ -17,19 +17,26 @@ class _FloatingButton extends StatelessWidget {
       overlayOpacity: 0,
       spacing: RegularSize.s,
       children: [
-        _buildChild('assets/svg/product-list.svg', "Products", state.listener.navigateToProduct),
-        _buildChild(
-          'assets/svg/contact.svg',
-          "Contact",
-          state.listener.navigateToContactPerson,
-        ),
-        _buildChild(
-          'assets/svg/user.svg',
-          "Assigned Users",
-          state.listener.navigateToProspectAssign,
-        ),
+        _buildChild("assets/svg/plus.svg", "Add Detail", state.listener.navigateToProspectDetailForm),
+        _buildChild("assets/svg/edit.svg", "Edit Prospect", state.listener.navigateToProspectUpdateForm),
+        _buildChild("assets/svg/detail.svg", "Detail", showProspectDetail),
       ],
     );
+  }
+
+  void showProspectDetail() {
+    RegularDialog(
+      width: Get.width * 0.9,
+      alignment: Alignment.centerLeft,
+      padding: EdgeInsets.symmetric(
+        vertical: RegularSize.m,
+        horizontal: RegularSize.m,
+      ),
+      child: ProspectDetailDialog(
+        state.dataSource.prospect!,
+        stages: state.dataSource.stages,
+      ),
+    ).show();
   }
 
   SpeedDialChild _buildChild(String icon, String label, [Function()? onTap]) {

@@ -18,7 +18,7 @@ class _Calendar extends StatelessWidget {
   DateTime? initialDate;
   Widget Function(BuildContext, MonthCellDetails)? monthCellBuilder;
 
-  ScheduleStateController get state => Get.find<ScheduleStateController>();
+  ScheduleStateController get state => Get.find<Controller>();
 
   @override
   Widget build(BuildContext context) {

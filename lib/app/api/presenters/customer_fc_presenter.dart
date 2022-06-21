@@ -25,8 +25,12 @@ class CustomerFormCreatePresenter extends RegularPresenter<CustomerCreateContrac
   final TypeService _typeService = Get.find();
   final GmapsService _gmapsService = Get.find();
 
-  Future<Response> _getCustomers() async {
-    return await _customerService.select();
+  Future<Response> _getCustomers([Map<String, dynamic> params = const {}]) async {
+    return await _customerService.select(params);
+  }
+
+  Future<Response> _getBpCustomers([Map<String, dynamic> params = const {}]) async {
+    return await _bpCustomerService.select(params);
   }
 
   Future<Response> _getCustomer(int id) async {
@@ -141,6 +145,44 @@ class CustomerFormCreatePresenter extends RegularPresenter<CustomerCreateContrac
         } else {
           contract.onLoadFailed(NearbyString.fetchFailed);
         }
+      } else {
+        contract.onLoadFailed(NearbyString.fetchFailed);
+      }
+    } catch (e) {
+      contract.onLoadError(e.toString());
+    }
+    contract.onLoadComplete();
+  }
+
+  void fetchNearbyCustomers(int subdistrictid) async {
+    Map data = {};
+    try {
+      Response customerResponse = await _getCustomers({
+        'cstmsubdistrictid': subdistrictid.toString(),
+      });
+
+      if (customerResponse.statusCode == 200) {
+        data['nearbycustomers'] = customerResponse.body;
+        contract.onLoadSuccess(data);
+      } else {
+        contract.onLoadFailed(NearbyString.fetchFailed);
+      }
+    } catch (e) {
+      contract.onLoadError(e.toString());
+    }
+    contract.onLoadComplete();
+  }
+
+  void fetchBpCustomers(int customerid) async {
+    Map data = {};
+    try {
+      Response bpCustomerResponse = await _getBpCustomers({
+        'sbccstmid': customerid.toString(),
+      });
+
+      if (bpCustomerResponse.statusCode == 200) {
+        data['bpcustomers'] = bpCustomerResponse.body;
+        contract.onLoadSuccess(data);
       } else {
         contract.onLoadFailed(NearbyString.fetchFailed);
       }

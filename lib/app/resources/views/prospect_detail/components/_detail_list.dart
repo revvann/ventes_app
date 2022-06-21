@@ -3,7 +3,7 @@
 part of 'package:ventes/app/resources/views/prospect_detail/prospect_detail.dart';
 
 class _DetailList extends StatelessWidget {
-  ProspectDetailStateController state = Get.find<ProspectDetailStateController>();
+  ProspectDetailStateController state = Get.find<Controller>();
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +60,7 @@ class _DetailList extends StatelessWidget {
                         borderRadius: BorderRadius.circular(RegularSize.s),
                       ),
                       child: Text(
-                        _prospectDetail.prospectdttype?.typename ?? "",
+                        _prospectDetail.prospectdtcat?.typename ?? "",
                         style: TextStyle(
                           fontSize: 12,
                           color: Colors.white,
@@ -70,7 +70,7 @@ class _DetailList extends StatelessWidget {
                     PopupMenu(
                       controller: state.property.createPopupController(index),
                       dropdownSettings: DropdownSettings(
-                        width: 100,
+                        width: 150,
                         offset: Offset(10, 5),
                         builder: (controller) => Padding(
                           padding: const EdgeInsets.symmetric(
@@ -124,7 +124,7 @@ class _DetailList extends StatelessWidget {
                   height: RegularSize.m,
                 ),
                 Text(
-                  _prospectDetail.prospectdtdesc ?? "",
+                  _prospectDetail.prospectdttype?.typename ?? "",
                   maxLines: 3,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(

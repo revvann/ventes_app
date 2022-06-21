@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:ventes/app/models/schedule_model.dart';
 import 'package:ventes/app/resources/widgets/schedule_detail.dart';
+import 'package:ventes/app/states/typedefs/schedule_typedef.dart';
 import 'package:ventes/core/view/view.dart';
 import 'package:ventes/app/resources/widgets/regular_appointment_card.dart';
 import 'package:ventes/app/resources/widgets/regular_dialog.dart';
@@ -23,7 +24,7 @@ part 'package:ventes/app/resources/views/schedule/components/_appointment_item.d
 part 'package:ventes/app/resources/views/schedule/components/_calendar.dart';
 part 'package:ventes/app/resources/views/schedule/components/_month_cell.dart';
 
-class ScheduleView extends View<ScheduleStateController> {
+class ScheduleView extends View<Controller> {
   static const String route = "/schedule";
 
   @override

@@ -33,7 +33,6 @@ class ProspectFormCreateFormSource extends StateFormSource with FormSourceMixin 
 
   final Rx<List<Map<String, dynamic>>> _prosproducts = Rx<List<Map<String, dynamic>>>([]);
 
-  final Rx<int?> _prostype = Rx<int?>(null);
   int? prosstatus;
   int? prosstage;
   DBType? prospectproducttaxdefault;
@@ -52,9 +51,6 @@ class ProspectFormCreateFormSource extends StateFormSource with FormSourceMixin 
 
   BpCustomer? get proscustomer => _proscustomer.value;
   set proscustomer(BpCustomer? value) => _proscustomer.value = value;
-
-  int? get prostype => _prostype.value;
-  set prostype(int? value) => _prostype.value = value;
 
   String? get prosstartdateString => prosstartdate == null ? null : formatDate(prosstartdate!);
   String? get prosenddateString => prosenddate == null ? null : formatDate(prosenddate!);
@@ -116,7 +112,6 @@ class ProspectFormCreateFormSource extends StateFormSource with FormSourceMixin 
       'prospectowner': _prosowner.value?.user?.userid,
       'prospectstageid': prosstage,
       'prospectstatusid': prosstatus,
-      'prospecttypeid': prostype,
       'prospectexpclosedate': prosexpenddateString,
       'prospectbpid': proscustomer?.sbcbpid,
       'prospectdescription': prosdesc,

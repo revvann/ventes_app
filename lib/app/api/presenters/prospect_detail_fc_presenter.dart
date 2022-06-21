@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:ventes/app/api/contracts/create_contract.dart';
 import 'package:ventes/app/api/contracts/fetch_data_contract.dart';
 import 'package:ventes/app/api/presenters/regular_presenter.dart';
+import 'package:ventes/app/api/services/gmaps_service.dart';
 import 'package:ventes/app/api/services/prospect_detail_service.dart';
 import 'package:ventes/app/api/services/prospect_service.dart';
 import 'package:ventes/app/api/services/type_service.dart';
@@ -11,6 +12,7 @@ class ProspectDetailFormCreatePresenter extends RegularPresenter<ProspectDetailC
   final TypeService _typeService = Get.find<TypeService>();
   final ProspectDetailService _prospectDetailService = Get.find<ProspectDetailService>();
   final ProspectService _prospectService = Get.find<ProspectService>();
+  final GmapsService _gmapsService = Get.find<GmapsService>();
 
   Future<Response> _getCategories() async {
     return await _typeService.byCode({'typecd': ProspectString.categoryTypeCode});
@@ -24,22 +26,28 @@ class ProspectDetailFormCreatePresenter extends RegularPresenter<ProspectDetailC
     return await _prospectService.show(id);
   }
 
+  Future<Response> _getLocDetail(double latitude, double longitude) async {
+    return await _gmapsService.getDetail(latitude, longitude);
+  }
+
   Future<Response> _storeProspect(Map<String, dynamic> data) async {
     return await _prospectDetailService.store(data);
   }
 
-  void fetchData(int id) async {
+  void fetchData(int id, double latitude, double langitude) async {
     Map data = {};
     try {
       Response categoryResponse = await _getCategories();
       Response typeResponse = await _getTypes();
       Response prospectResponse = await _getProspect(id);
+      Response locResponse = await _getLocDetail(latitude, langitude);
 
-      if (categoryResponse.statusCode == 200 && typeResponse.statusCode == 200 && prospectResponse.statusCode == 200) {
+      if (categoryResponse.statusCode == 200 && typeResponse.statusCode == 200 && prospectResponse.statusCode == 200 && locResponse.statusCode == 200) {
         data = {
           'categories': categoryResponse.body,
           'types': typeResponse.body,
           'prospect': prospectResponse.body,
+          'location': locResponse.body,
         };
         contract.onLoadSuccess(data);
       } else {

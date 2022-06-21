@@ -31,7 +31,7 @@ class _BottomSheetContainer extends StatelessWidget {
     required this.scrollController,
   });
 
-  CustomerFormUpdateStateController state = Get.find<CustomerFormUpdateStateController>();
+  CustomerFormUpdateStateController state = Get.find<Controller>();
   Widget child;
   ScrollController scrollController;
   @override

@@ -3,7 +3,7 @@
 part of 'package:ventes/app/resources/views/prospect_detail/prospect_detail.dart';
 
 class _AppBarMenu extends StatelessWidget {
-  ProspectDetailStateController state = Get.find<ProspectDetailStateController>();
+  ProspectDetailStateController state = Get.find<Controller>();
 
   @override
   Widget build(BuildContext context) {
@@ -21,19 +21,19 @@ class _AppBarMenu extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               MenuItem(
-                title: "Detail",
-                icon: "assets/svg/detail.svg",
-                onTap: showProspectDetail,
+                title: "Contact",
+                icon: 'assets/svg/contact.svg',
+                onTap: state.listener.navigateToContactPerson,
               ),
               MenuItem(
-                title: "Edit",
-                icon: "assets/svg/edit.svg",
-                onTap: state.listener.navigateToProspectUpdateForm,
+                title: "Product",
+                icon: "assets/svg/product-list.svg",
+                onTap: state.listener.navigateToProduct,
               ),
               MenuItem(
-                title: "Add Detail",
-                icon: "assets/svg/plus.svg",
-                onTap: state.listener.navigateToProspectDetailForm,
+                title: "Assigned Users",
+                icon: "assets/svg/user.svg",
+                onTap: state.listener.navigateToProspectAssign,
               ),
             ],
           ),
@@ -55,20 +55,5 @@ class _AppBarMenu extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  void showProspectDetail() {
-    RegularDialog(
-      width: Get.width * 0.9,
-      alignment: Alignment.centerLeft,
-      padding: EdgeInsets.symmetric(
-        vertical: RegularSize.m,
-        horizontal: RegularSize.m,
-      ),
-      child: ProspectDetailDialog(
-        state.dataSource.prospect!,
-        stages: state.dataSource.stages,
-      ),
-    ).show();
   }
 }

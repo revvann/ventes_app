@@ -10,6 +10,7 @@ import 'package:ventes/app/resources/widgets/keyable_selectbox.dart';
 import 'package:ventes/app/resources/widgets/regular_input.dart';
 import 'package:ventes/app/resources/widgets/top_navigation.dart';
 import 'package:ventes/app/states/controllers/customer_fu_state_controller.dart';
+import 'package:ventes/app/states/typedefs/customer_fu_typedef.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/constants/strings/nearby_string.dart';
@@ -19,7 +20,7 @@ part 'package:ventes/app/resources/views/customer_form/update/components/_custom
 part 'package:ventes/app/resources/views/customer_form/update/components/_form.dart';
 part 'package:ventes/app/resources/views/customer_form/update/components/_bottomsheet.dart';
 
-class CustomerFormUpdateView extends View<CustomerFormUpdateStateController> {
+class CustomerFormUpdateView extends View<Controller> {
   static const String route = "/customer/update";
   int customerid;
 

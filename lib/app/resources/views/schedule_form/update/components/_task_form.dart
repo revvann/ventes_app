@@ -2,7 +2,7 @@
 part of 'package:ventes/app/resources/views/schedule_form/update/schedule_fu.dart';
 
 class _TaskForm extends StatelessWidget {
-  ScheduleFormUpdateStateController state = Get.find<ScheduleFormUpdateStateController>();
+  ScheduleFormUpdateStateController state = Get.find<Controller>();
 
   @override
   Widget build(BuildContext context) {

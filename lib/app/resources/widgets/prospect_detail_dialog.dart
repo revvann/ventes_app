@@ -139,11 +139,6 @@ class ProspectDetailDialog extends StatelessWidget {
                   text: prospect.prospectstatus?.typename ?? "-",
                   color: RegularColor.green,
                 ),
-              if (prospect.prospecttype != null)
-                _DetailTag(
-                  text: prospect.prospecttype?.typename ?? "-",
-                  color: RegularColor.cyan,
-                ),
             ],
           ),
         ],

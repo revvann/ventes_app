@@ -5,7 +5,7 @@ part of 'package:ventes/app/resources/views/customer_form/create/customer_fc.dar
 class _CustomerForm extends StatelessWidget {
   _CustomerForm({Key? key}) : super(key: key);
 
-  CustomerFormCreateStateController state = Get.find<CustomerFormCreateStateController>();
+  CustomerFormCreateStateController state = Get.find<Controller>();
 
   @override
   Widget build(BuildContext context) {
@@ -47,12 +47,13 @@ class _CustomerForm extends StatelessWidget {
           SizedBox(
             height: RegularSize.m,
           ),
-          EditorInput(
-            label: "Customer address",
-            hintText: "Enter address",
-            controller: state.formSource.addressTEC,
-            validator: state.formSource.validator.cstmaddress,
-          ),
+          Obx(() {
+            return EditorInput(
+              label: "Customer address",
+              value: state.formSource.cstmaddress ?? state.dataSource.getAddress(),
+              enabled: false,
+            );
+          }),
           SizedBox(
             height: RegularSize.m,
           ),

@@ -23,6 +23,7 @@ class ContactPersonFormCreateFormSource extends StateFormSource with FormSourceM
   );
 
   TextEditingController valueTEC = TextEditingController();
+  TextEditingController nameTEC = TextEditingController();
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
@@ -40,6 +41,12 @@ class ContactPersonFormCreateFormSource extends StateFormSource with FormSourceM
   int? customerid;
 
   @override
+  void init() {
+    super.init();
+    validator.formSource = this;
+  }
+
+  @override
   close() {
     super.close();
     Get.delete<KeyableDropdownController<int, DBType>>(tag: ProspectString.contactTypeCode);
@@ -51,7 +58,12 @@ class ContactPersonFormCreateFormSource extends StateFormSource with FormSourceM
   Map<String, dynamic> toJson() {
     return {
       'contacttypeid': contacttype?.typeid?.toString(),
-      'contactvalueid': isPhone ? contact?.phones?.first.value : valueTEC.text,
+      'contactname': nameTEC.text,
+      'contactvalueid': isPhone
+          ? valueTEC.text.isNotEmpty
+              ? valueTEC.text
+              : contact?.phones?.first.value
+          : valueTEC.text,
       'contactcustomerid': customerid?.toString(),
     };
   }

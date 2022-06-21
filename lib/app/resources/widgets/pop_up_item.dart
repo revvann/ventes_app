@@ -44,11 +44,14 @@ class MenuItem extends StatelessWidget {
                 color: color,
               ),
               SizedBox(width: RegularSize.s),
-              Text(
-                title,
-                style: TextStyle(
-                  color: color,
-                  fontSize: 14,
+              Expanded(
+                child: Text(
+                  title,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: color,
+                    fontSize: 14,
+                  ),
                 ),
               ),
             ],
