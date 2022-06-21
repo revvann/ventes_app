@@ -95,6 +95,7 @@ class NearbyPresenter extends RegularPresenter<NearbyContract> {
     } catch (e) {
       contract.onDeleteError(e.toString());
     }
+    contract.onDeleteComplete();
   }
 
   Future<MapsLoc?> fetchLocationDetail(double latitude, double longitude) async {
