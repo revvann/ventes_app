@@ -8,23 +8,22 @@ import 'package:ventes/app/models/prospect_model.dart';
 import 'package:ventes/app/models/type_model.dart';
 import 'package:ventes/app/resources/widgets/icon_input.dart';
 import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
-import 'package:ventes/app/resources/widgets/keyable_selectbar.dart';
 import 'package:ventes/app/resources/widgets/prospect_card.dart';
 import 'package:ventes/app/resources/widgets/regular_date_picker.dart';
 import 'package:ventes/app/resources/widgets/regular_input.dart';
 import 'package:ventes/app/resources/widgets/top_navigation.dart';
 import 'package:ventes/app/states/controllers/prospect_state_controller.dart';
+import 'package:ventes/app/states/typedefs/prospect_typedef.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/constants/strings/prospect_string.dart';
 import 'package:ventes/core/view/view.dart';
 
-part 'package:ventes/app/resources/views/prospect/components/_follow_up_selectbar.dart';
 part 'package:ventes/app/resources/views/prospect/components/_prospect_list.dart';
 part 'package:ventes/app/resources/views/prospect/components/_status_dropdown.dart';
 part 'package:ventes/app/resources/views/prospect/components/_twin_datepicker.dart';
 
-class ProspectView extends View<ProspectStateController> {
+class ProspectView extends View<Controller> {
   static const String route = "/history";
 
   @override
@@ -69,10 +68,6 @@ class ProspectView extends View<ProspectStateController> {
                         height: RegularSize.m,
                       ),
                       _StatusDropdown(),
-                      SizedBox(
-                        height: RegularSize.m,
-                      ),
-                      _FollowUpSelectBar(),
                       SizedBox(
                         height: RegularSize.m,
                       ),

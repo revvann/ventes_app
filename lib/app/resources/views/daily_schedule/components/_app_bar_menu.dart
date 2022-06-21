@@ -3,7 +3,7 @@
 part of 'package:ventes/app/resources/views/daily_schedule/daily_schedule.dart';
 
 class _AppBarMenu extends StatelessWidget {
-  DailyScheduleStateController state = Get.find<DailyScheduleStateController>();
+  DailyScheduleStateController state = Get.find<Controller>();
 
   @override
   Widget build(BuildContext context) {

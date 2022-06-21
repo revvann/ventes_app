@@ -1,7 +1,7 @@
 part of 'package:ventes/app/resources/views/prospect_assign/prospect_assign.dart';
 
 class _ProspectAssignList extends StatelessWidget {
-  ProspectAssignStateController state = Get.find<ProspectAssignStateController>();
+  ProspectAssignStateController state = Get.find<Controller>();
 
   @override
   Widget build(BuildContext context) {

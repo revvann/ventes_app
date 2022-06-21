@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ventes/app/models/type_model.dart';
 import 'package:ventes/app/resources/widgets/editor_input.dart';
 import 'package:ventes/app/resources/widgets/icon_input.dart';
@@ -12,16 +13,17 @@ import 'package:ventes/app/resources/widgets/regular_date_picker.dart';
 import 'package:ventes/app/resources/widgets/regular_input.dart';
 import 'package:ventes/app/resources/widgets/top_navigation.dart';
 import 'package:ventes/app/states/controllers/prospect_detail_fu_state_controller.dart';
+import 'package:ventes/app/states/typedefs/prospect_detail_fu_typedef.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/constants/strings/prospect_string.dart';
 import 'package:ventes/core/view/view.dart';
 
-part 'package:ventes/app/resources/views/prospect_detail_form/update/components/_category_dropdown.dart';
 part 'package:ventes/app/resources/views/prospect_detail_form/update/components/_type_dropdown.dart';
 part 'package:ventes/app/resources/views/prospect_detail_form/update/components/_date_picker.dart';
+part 'package:ventes/app/resources/views/prospect_detail_form/update/components/_map_preview.dart';
 
-class ProspectDetailFormUpdateView extends View<ProspectDetailFormUpdateStateController> {
+class ProspectDetailFormUpdateView extends View<Controller> {
   static const String route = "/prospect/detail/update";
   int prospectDetailId;
 
@@ -116,7 +118,15 @@ class ProspectDetailFormUpdateView extends View<ProspectDetailFormUpdateStateCon
                         SizedBox(
                           height: RegularSize.m,
                         ),
-                        _CategoryDropdown(),
+                        Obx(
+                          () {
+                            return RegularInput(
+                              label: "Category",
+                              value: state.dataSource.prospectdetail?.prospectdtcat?.typename ?? "-",
+                              enabled: false,
+                            );
+                          },
+                        ),
                         SizedBox(
                           height: RegularSize.m,
                         ),
@@ -134,8 +144,21 @@ class ProspectDetailFormUpdateView extends View<ProspectDetailFormUpdateStateCon
                           validator: state.formSource.validator.prosdtdesc,
                           controller: state.formSource.prosdtdescTEC,
                         ),
-                        SizedBox(
-                          height: RegularSize.m,
+                        Obx(
+                          () => Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              if (state.dataSource.prospectdetail?.prospectdtcat?.typename == "On Site") ...[
+                                _MapPreview(),
+                                SizedBox(
+                                  height: RegularSize.m,
+                                ),
+                              ],
+                              SizedBox(
+                                height: RegularSize.m,
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ),

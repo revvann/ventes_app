@@ -1,7 +1,7 @@
 part of 'package:ventes/app/resources/views/profile/profile.dart';
 
 class _BpDetail extends StatelessWidget {
-  ProfileStateController state = Get.find<ProfileStateController>();
+  ProfileStateController state = Get.find<Controller>();
 
   @override
   Widget build(BuildContext context) {

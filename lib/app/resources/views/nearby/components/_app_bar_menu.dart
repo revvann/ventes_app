@@ -3,7 +3,7 @@
 part of 'package:ventes/app/resources/views/nearby/nearby.dart';
 
 class _AppBarMenu extends StatelessWidget {
-  NearbyStateController state = Get.find<NearbyStateController>();
+  NearbyStateController state = Get.find<Controller>();
 
   @override
   Widget build(BuildContext context) {

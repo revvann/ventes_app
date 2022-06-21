@@ -3,7 +3,7 @@
 part of 'package:ventes/app/resources/views/customer_form/update/customer_fu.dart';
 
 class _CustomerPicture extends StatelessWidget {
-  CustomerFormUpdateStateController state = Get.find<CustomerFormUpdateStateController>();
+  CustomerFormUpdateStateController state = Get.find<Controller>();
 
   @override
   Widget build(BuildContext context) {

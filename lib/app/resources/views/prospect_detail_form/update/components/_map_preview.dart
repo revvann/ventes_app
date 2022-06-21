@@ -1,7 +1,7 @@
-part of 'package:ventes/app/resources/views/prospect_detail_form/create/prospect_detail_fc.dart';
+part of 'package:ventes/app/resources/views/prospect_detail_form/update/prospect_detail_fu.dart';
 
 class _MapPreview extends StatelessWidget {
-  ProspectDetailFormCreateStateController state = Get.find<Controller>();
+  ProspectDetailFormUpdateStateController state = Get.find<Controller>();
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +40,7 @@ class _MapPreview extends StatelessWidget {
         Obx(() {
           return RegularInput(
             label: "Location Link",
-            value: state.formSource.prosdtloc,
+            value: state.dataSource.prospectdetail?.prospectdtloc,
             enabled: false,
           );
         }),

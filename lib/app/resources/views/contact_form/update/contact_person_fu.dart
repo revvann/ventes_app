@@ -9,13 +9,14 @@ import 'package:ventes/app/resources/widgets/regular_input.dart';
 import 'package:ventes/app/resources/widgets/searchable_dropdown.dart';
 import 'package:ventes/app/resources/widgets/top_navigation.dart';
 import 'package:ventes/app/states/controllers/contact_person_fu_state_controller.dart';
+import 'package:ventes/app/states/typedefs/contact_person_fu_typedef.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/constants/strings/prospect_string.dart';
 import 'package:ventes/core/view/view.dart';
 part 'package:ventes/app/resources/views/contact_form/update/components/_contact_dropdown.dart';
 
-class ContactPersonFormUpdateView extends View<ContactPersonFormUpdateStateController> {
+class ContactPersonFormUpdateView extends View<Controller> {
   static const String route = "/contactperson/update";
   int contact;
 
@@ -105,29 +106,35 @@ class ContactPersonFormUpdateView extends View<ContactPersonFormUpdateStateContr
                           );
                         }),
                         SizedBox(height: RegularSize.m),
+                        RegularInput(
+                          label: "Name",
+                          hintText: "Enter name",
+                          controller: state.formSource.nameTEC,
+                          validator: state.formSource.validator.contactname,
+                        ),
+                        SizedBox(height: RegularSize.m),
                         Obx(() {
                           return RegularInput(
-                            label: "Contact Type",
+                            label: "Category",
                             value: state.formSource.contacttype?.typename,
                             enabled: false,
                           );
                         }),
+                        SizedBox(height: RegularSize.m),
                         Obx(() {
                           return Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              if (!state.formSource.isPhone) ...[
-                                SizedBox(height: RegularSize.m),
-                                RegularInput(
-                                  label: "Contact Value",
-                                  hintText: "Enter contact (e.g. email, phone, etc.)",
-                                  controller: state.formSource.valueTEC,
-                                  validator: state.formSource.validator.contactvalue,
-                                ),
-                              ] else ...[
-                                SizedBox(height: RegularSize.m),
+                              if (state.formSource.isPhone) ...[
                                 _ContactDropdown(),
+                                SizedBox(height: RegularSize.xs),
                               ],
+                              RegularInput(
+                                label: state.formSource.isPhone ? "Or Create New" : "Contact Value",
+                                hintText: "Enter contact (e.g. email, phone, etc.)",
+                                controller: state.formSource.valueTEC,
+                                validator: state.formSource.validator.contactvalue,
+                              ),
                             ],
                           );
                         }),

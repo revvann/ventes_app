@@ -3,7 +3,7 @@
 part of 'package:ventes/app/resources/views/product/product.dart';
 
 class _ProductList extends StatelessWidget {
-  ProductStateController state = Get.find<ProductStateController>();
+  ProductStateController state = Get.find<Controller>();
 
   @override
   Widget build(BuildContext context) {

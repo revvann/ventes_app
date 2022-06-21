@@ -8,6 +8,7 @@ import 'package:ventes/app/models/user_detail_model.dart';
 import 'package:ventes/app/resources/widgets/menu_divider.dart';
 import 'package:ventes/app/resources/widgets/pop_up_item.dart';
 import 'package:ventes/app/resources/widgets/popup_button.dart';
+import 'package:ventes/app/states/typedefs/dashboard_typedef.dart';
 import 'package:ventes/constants/styles/behavior_style.dart';
 import 'package:ventes/core/view/view.dart';
 import 'package:ventes/app/resources/widgets/bottom_navigation.dart';
@@ -24,7 +25,7 @@ part 'package:ventes/app/resources/views/dashboard/components/_appbar.dart';
 part 'package:ventes/app/resources/views/dashboard/components/_top_panel.dart';
 part 'package:ventes/app/resources/views/dashboard/components/_user_menu_item.dart';
 
-class DashboardView extends View<DashboardStateController> {
+class DashboardView extends View<Controller> {
   static const route = "/dashboard";
 
   @override

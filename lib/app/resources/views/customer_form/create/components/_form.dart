@@ -5,7 +5,7 @@ part of 'package:ventes/app/resources/views/customer_form/create/customer_fc.dar
 class _CustomerForm extends StatelessWidget {
   _CustomerForm({Key? key}) : super(key: key);
 
-  CustomerFormCreateStateController state = Get.find<CustomerFormCreateStateController>();
+  CustomerFormCreateStateController state = Get.find<Controller>();
 
   @override
   Widget build(BuildContext context) {

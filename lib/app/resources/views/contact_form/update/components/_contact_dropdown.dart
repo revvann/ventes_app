@@ -3,7 +3,7 @@
 part of "package:ventes/app/resources/views/contact_form/update/contact_person_fu.dart";
 
 class _ContactDropdown extends StatelessWidget {
-  ContactPersonFormUpdateStateController state = Get.find<ContactPersonFormUpdateStateController>();
+  ContactPersonFormUpdateStateController state = Get.find<Controller>();
 
   @override
   Widget build(BuildContext context) {

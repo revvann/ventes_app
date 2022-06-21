@@ -3,7 +3,7 @@
 part of 'package:ventes/app/resources/views/customer_form/create/customer_fc.dart';
 
 class _PlacePicker extends StatelessWidget {
-  CustomerFormCreateStateController get state => Get.find<CustomerFormCreateStateController>();
+  CustomerFormCreateStateController get state => Get.find<Controller>();
 
   @override
   Widget build(BuildContext context) {

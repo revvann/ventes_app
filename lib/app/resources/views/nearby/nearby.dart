@@ -11,6 +11,7 @@ import 'package:ventes/app/resources/widgets/pop_up_item.dart';
 import 'package:ventes/app/resources/widgets/popup_button.dart';
 import 'package:ventes/app/resources/widgets/top_navigation.dart';
 import 'package:ventes/app/states/controllers/nearby_state_controller.dart';
+import 'package:ventes/app/states/typedefs/nearby_typedef.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/constants/strings/nearby_string.dart';
@@ -20,7 +21,7 @@ import 'package:ventes/helpers/function_helpers.dart';
 part 'package:ventes/app/resources/views/nearby/components/customer_list.dart';
 part 'package:ventes/app/resources/views/nearby/components/_app_bar_menu.dart';
 
-class NearbyView extends View<NearbyStateController> {
+class NearbyView extends View<Controller> {
   static const String route = "/nearby";
 
   @override

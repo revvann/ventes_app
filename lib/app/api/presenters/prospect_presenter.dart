@@ -28,10 +28,6 @@ class ProspectPresenter extends RegularPresenter<FetchDataContract> {
     return await _typeService.byCode({'typecd': ProspectString.statusTypeCode});
   }
 
-  Future<Response> _getFollowUp() async {
-    return await _typeService.byCode({'typecd': ProspectString.followUpTypeCode});
-  }
-
   Future<Response> _getProspects([Map<String, dynamic> additionParams = const {}]) async {
     UserDetail? userDetail = await findActiveUser();
     Map<String, dynamic> params = {
@@ -45,11 +41,9 @@ class ProspectPresenter extends RegularPresenter<FetchDataContract> {
     Map<String, dynamic> data = {};
     try {
       Response statusses = await _getStatusses();
-      Response followUp = await _getFollowUp();
       Response prospects = await _getProspects();
-      if (statusses.statusCode == 200 && prospects.statusCode == 200 && followUp.statusCode == 200) {
+      if (statusses.statusCode == 200 && prospects.statusCode == 200) {
         data['statusses'] = statusses.body;
-        data['followup'] = followUp.body;
         data['prospects'] = prospects.body;
         contract.onLoadSuccess(data);
       } else {

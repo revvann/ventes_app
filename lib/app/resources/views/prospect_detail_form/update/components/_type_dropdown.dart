@@ -3,7 +3,7 @@
 part of 'package:ventes/app/resources/views/prospect_detail_form/update/prospect_detail_fu.dart';
 
 class _TypeDropdown extends StatelessWidget {
-  ProspectDetailFormUpdateStateController state = Get.find<ProspectDetailFormUpdateStateController>();
+  ProspectDetailFormUpdateStateController state = Get.find<Controller>();
 
   @override
   Widget build(BuildContext context) {

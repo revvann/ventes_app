@@ -5,7 +5,7 @@ part of 'package:ventes/app/resources/views/customer_form/update/customer_fu.dar
 class _CustomerForm extends StatelessWidget {
   _CustomerForm({Key? key}) : super(key: key);
 
-  CustomerFormUpdateStateController state = Get.find<CustomerFormUpdateStateController>();
+  CustomerFormUpdateStateController state = Get.find<Controller>();
 
   @override
   Widget build(BuildContext context) {

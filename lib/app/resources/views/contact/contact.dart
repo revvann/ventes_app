@@ -11,6 +11,7 @@ import 'package:ventes/app/resources/widgets/pop_up_item.dart';
 import 'package:ventes/app/resources/widgets/popup_button.dart';
 import 'package:ventes/app/resources/widgets/top_navigation.dart';
 import 'package:ventes/app/states/controllers/contact_person_state_controller.dart';
+import 'package:ventes/app/states/typedefs/contact_person_typedef.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/constants/strings/prospect_string.dart';
@@ -18,7 +19,7 @@ import 'package:ventes/core/view/view.dart';
 
 part 'package:ventes/app/resources/views/contact/components/_contact_list.dart';
 
-class ContactPersonView extends View<ContactPersonStateController> {
+class ContactPersonView extends View<Controller> {
   static const String route = "/contactperson";
   int customerid;
 

@@ -3,7 +3,7 @@
 part of 'package:ventes/app/resources/views/dashboard/dashboard.dart';
 
 class _AppBar extends StatelessWidget {
-  DashboardStateController get state => Get.find<DashboardStateController>();
+  DashboardStateController get state => Get.find<Controller>();
 
   @override
   Widget build(BuildContext context) {

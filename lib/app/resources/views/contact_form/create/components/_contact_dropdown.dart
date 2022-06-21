@@ -1,7 +1,7 @@
 part of "package:ventes/app/resources/views/contact_form/create/contact_person_fc.dart";
 
 class _ContactDropdown extends StatelessWidget {
-  ContactPersonFormCreateStateController state = Get.find<ContactPersonFormCreateStateController>();
+  ContactPersonFormCreateStateController state = Get.find<Controller>();
 
   @override
   Widget build(BuildContext context) {

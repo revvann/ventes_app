@@ -3,7 +3,7 @@
 part of "package:ventes/app/resources/views/schedule_form/update/schedule_fu.dart";
 
 class _TimezoneDropdown extends StatelessWidget {
-  final ScheduleFormUpdateStateController state = Get.find<ScheduleFormUpdateStateController>();
+  final ScheduleFormUpdateStateController state = Get.find<Controller>();
 
   @override
   Widget build(BuildContext context) {

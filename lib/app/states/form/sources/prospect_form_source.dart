@@ -13,8 +13,6 @@ class ProspectFormSource extends StateFormSource with FormSourceMixin {
   final Rx<DateTime?> _prosenddate = Rx<DateTime?>(null);
   final Rx<DBType?> _prosstatus = Rx<DBType?>(null);
 
-  int? prostype;
-
   DateTime? get prosstartdate => _prosstartdate.value;
   set prosstartdate(DateTime? value) => _prosstartdate.value = value;
 
@@ -40,10 +38,6 @@ class ProspectFormSource extends StateFormSource with FormSourceMixin {
 
     if (prosstatus != null) {
       json['prospectstatusid'] = prosstatus?.typeid.toString();
-    }
-
-    if (prostype != null) {
-      json['prospecttypeid'] = prostype.toString();
     }
     return json;
   }

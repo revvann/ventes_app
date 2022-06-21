@@ -3,7 +3,7 @@
 part of 'package:ventes/app/resources/views/contact/contact.dart';
 
 class _ContactList extends StatelessWidget {
-  ContactPersonStateController state = Get.find<ContactPersonStateController>();
+  ContactPersonStateController state = Get.find<Controller>();
 
   @override
   Widget build(BuildContext context) {
@@ -36,17 +36,33 @@ class _ContactList extends StatelessWidget {
                 ],
               ),
               child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Expanded(
-                    child: Text(
-                      _contact.contactvalueid ?? "Unavailable",
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        color: RegularColor.dark,
-                      ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          _contact.contactname ?? "Unknown",
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: RegularColor.dark,
+                          ),
+                        ),
+                        SizedBox(
+                          height: RegularSize.s,
+                        ),
+                        Text(
+                          _contact.contactvalueid ?? "Unavailable",
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: RegularColor.dark,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                   SizedBox(width: RegularSize.s),
@@ -71,7 +87,7 @@ class _ContactList extends StatelessWidget {
                   PopupMenu(
                     controller: state.property.createPopupController(index),
                     dropdownSettings: DropdownSettings(
-                      width: 100,
+                      width: 150,
                       offset: Offset(10, 5),
                       builder: (controller) => Padding(
                         padding: const EdgeInsets.symmetric(
