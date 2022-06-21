@@ -6,7 +6,6 @@ import 'package:ventes/app/models/type_model.dart';
 import 'package:ventes/app/models/user_detail_model.dart';
 import 'package:ventes/app/states/typedefs/prospect_fu_typedef.dart';
 import 'package:ventes/core/states/state_data_source.dart';
-import 'package:ventes/helpers/task_helper.dart';
 
 class ProspectFormUpdateDataSource extends StateDataSource<ProspectFormUpdatePresenter> with DataSourceMixin implements ProspectUpdateContract {
   final Rx<Map<int, String>> _followUpItems = Rx<Map<int, String>>({});
@@ -31,12 +30,6 @@ class ProspectFormUpdateDataSource extends StateDataSource<ProspectFormUpdatePre
 
   @override
   onLoadSuccess(Map data) {
-    if (data['followup'] != null) {
-      List<DBType> followUpList = data['followup'].map<DBType>((item) => DBType.fromJson(item)).toList();
-      formSource.prostype = followUpList.isEmpty ? null : followUpList.first.typeid!;
-      followUpItems = followUpList.asMap().map((index, item) => MapEntry(item.typeid!, item.typename!));
-    }
-
     if (data['status'] != null) {
       List<DBType> statusList = data['status'].map<DBType>((item) => DBType.fromJson(item)).toList();
       formSource.prosstatus = statusList.isEmpty ? null : statusList.first.typeid!;

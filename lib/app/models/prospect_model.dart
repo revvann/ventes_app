@@ -12,7 +12,6 @@ class Prospect extends Model {
   int? prospectowner;
   int? prospectstageid;
   int? prospectstatusid;
-  int? prospecttypeid;
   String? prospectexpclosedate;
   int? prospectbpid;
   String? prospectdescription;
@@ -21,7 +20,6 @@ class Prospect extends Model {
   UserDetail? prospectowneruser;
   DBType? prospectstage;
   DBType? prospectstatus;
-  DBType? prospecttype;
   BpCustomer? prospectcust;
 
   Prospect({
@@ -33,7 +31,6 @@ class Prospect extends Model {
     this.prospectowner,
     this.prospectstageid,
     this.prospectstatusid,
-    this.prospecttypeid,
     this.prospectexpclosedate,
     this.prospectbpid,
     this.prospectdescription,
@@ -42,7 +39,6 @@ class Prospect extends Model {
     this.prospectowneruser,
     this.prospectstage,
     this.prospectstatus,
-    this.prospecttype,
     this.prospectcust,
     String? createddate,
     String? updateddate,
@@ -66,7 +62,6 @@ class Prospect extends Model {
     prospectowner = json['prospectowner'];
     prospectstageid = json['prospectstageid'];
     prospectstatusid = json['prospectstatusid'];
-    prospecttypeid = json['prospecttypeid'];
     prospectexpclosedate = json['prospectexpclosedate'];
     prospectbpid = json['prospectbpid'];
     prospectdescription = json['prospectdescription'];
@@ -83,10 +78,6 @@ class Prospect extends Model {
 
     if (json['prospectstatus'] != null) {
       prospectstatus = DBType.fromJson(json['prospectstatus']);
-    }
-
-    if (json['prospecttype'] != null) {
-      prospecttype = DBType.fromJson(json['prospecttype']);
     }
 
     if (json['prospectcust'] != null) {
@@ -107,7 +98,6 @@ class Prospect extends Model {
     data['prospectowner'] = prospectowner;
     data['prospectstageid'] = prospectstageid;
     data['prospectstatusid'] = prospectstatusid;
-    data['prospecttypeid'] = prospecttypeid;
     data['prospectexpclosedate'] = prospectexpclosedate;
     data['prospectbpid'] = prospectbpid;
     data['prospectdescription'] = prospectdescription;
@@ -124,10 +114,6 @@ class Prospect extends Model {
 
     if (prospectstatus != null) {
       data['prospectstatus'] = prospectstatus?.toJson();
-    }
-
-    if (prospecttype != null) {
-      data['prospecttype'] = prospecttype?.toJson();
     }
 
     if (prospectcust != null) {

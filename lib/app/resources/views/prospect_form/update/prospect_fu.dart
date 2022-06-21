@@ -8,7 +8,6 @@ import 'package:ventes/app/models/bp_customer_model.dart';
 import 'package:ventes/app/models/user_detail_model.dart';
 import 'package:ventes/app/resources/widgets/editor_input.dart';
 import 'package:ventes/app/resources/widgets/icon_input.dart';
-import 'package:ventes/app/resources/widgets/keyable_selectbar.dart';
 import 'package:ventes/app/resources/widgets/regular_date_picker.dart';
 import 'package:ventes/app/resources/widgets/regular_input.dart';
 import 'package:ventes/app/resources/widgets/searchable_dropdown.dart';
@@ -23,7 +22,6 @@ part 'package:ventes/app/resources/views/prospect_form/update/components/_twin_d
 part 'package:ventes/app/resources/views/prospect_form/update/components/_end_date_picker.dart';
 part 'package:ventes/app/resources/views/prospect_form/update/components/_owner_dropdown.dart';
 part 'package:ventes/app/resources/views/prospect_form/update/components/_customer_dropdown.dart';
-part 'package:ventes/app/resources/views/prospect_form/update/components/_follow_up_selectbar.dart';
 
 class ProspectFormUpdateView extends View<ProspectFormUpdateStateController> {
   static const String route = "/prospect/update";
@@ -117,10 +115,6 @@ class ProspectFormUpdateView extends View<ProspectFormUpdateStateController> {
                           height: RegularSize.m,
                         ),
                         _TwinDatePicker(),
-                        SizedBox(
-                          height: RegularSize.m,
-                        ),
-                        _FollowUpSelectbar(),
                         SizedBox(
                           height: RegularSize.m,
                         ),

@@ -6,6 +6,7 @@ class ContactPerson extends Model {
   int? contactpersonid;
   int? contactcustomerid;
   int? contacttypeid;
+  String? contactname;
   String? contactvalueid;
   Customer? contactcustomer;
   DBType? contacttype;
@@ -15,6 +16,7 @@ class ContactPerson extends Model {
     this.contactcustomerid,
     this.contacttypeid,
     this.contactvalueid,
+    this.contactname,
     this.contactcustomer,
     this.contacttype,
     String? createddate,
@@ -34,6 +36,7 @@ class ContactPerson extends Model {
     contactpersonid = json['contactpersonid'];
     contactcustomerid = json['contactcustomerid'];
     contacttypeid = json['contacttypeid'];
+    contactname = json['contactname'];
     contactvalueid = json['contactvalueid'];
 
     if (json['contactcustomer'] != null) {
@@ -53,6 +56,7 @@ class ContactPerson extends Model {
     data['contactpersonid'] = contactpersonid;
     data['contactcustomerid'] = contactcustomerid;
     data['contacttypeid'] = contacttypeid;
+    data['contactname'] = contactname;
     data['contactvalueid'] = contactvalueid;
 
     if (contactcustomer != null) {

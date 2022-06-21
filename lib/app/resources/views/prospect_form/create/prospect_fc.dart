@@ -29,7 +29,6 @@ part 'package:ventes/app/resources/views/prospect_form/create/components/_twin_d
 part 'package:ventes/app/resources/views/prospect_form/create/components/_end_date_picker.dart';
 part 'package:ventes/app/resources/views/prospect_form/create/components/_owner_dropdown.dart';
 part 'package:ventes/app/resources/views/prospect_form/create/components/_customer_dropdown.dart';
-part 'package:ventes/app/resources/views/prospect_form/create/components/_follow_up_selectbar.dart';
 part 'package:ventes/app/resources/views/prospect_form/create/components/_product_list.dart';
 
 class ProspectFormCreateView extends View<ProspectFormCreateStateController> {
@@ -129,10 +128,6 @@ class ProspectFormCreateView extends View<ProspectFormCreateStateController> {
                           height: RegularSize.m,
                         ),
                         _TwinDatePicker(),
-                        SizedBox(
-                          height: RegularSize.m,
-                        ),
-                        _FollowUpSelectbar(),
                         SizedBox(
                           height: RegularSize.m,
                         ),

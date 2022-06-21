@@ -50,10 +50,6 @@ class ProspectFormCreatePresenter extends RegularPresenter<ProspectCreateContrac
     return await _bpCustomerService.select(params);
   }
 
-  Future<Response> _getFollowUp() async {
-    return await _typeService.byCode({'typecd': ProspectString.followUpTypeCode});
-  }
-
   Future<Response> _getStatus() async {
     return await _typeService.byCode({'typecd': ProspectString.statusTypeCode});
   }
@@ -85,13 +81,11 @@ class ProspectFormCreatePresenter extends RegularPresenter<ProspectCreateContrac
   void fetchData() async {
     Map data = {};
     try {
-      Response followUpResponse = await _getFollowUp();
       Response statusResponse = await _getStatus();
       Response stageResponse = await _getStage();
       Response taxesResponse = await _getTaxes();
 
-      if (followUpResponse.statusCode == 200 && statusResponse.statusCode == 200 && stageResponse.statusCode == 200 && taxesResponse.statusCode == 200) {
-        data['followup'] = followUpResponse.body;
+      if (statusResponse.statusCode == 200 && stageResponse.statusCode == 200 && taxesResponse.statusCode == 200) {
         data['status'] = statusResponse.body;
         data['stage'] = stageResponse.body;
         data['taxes'] = taxesResponse.body;

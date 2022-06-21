@@ -32,10 +32,6 @@ class ProspectFormUpdateListener extends StateListener with ListenerMixin {
     }
   }
 
-  void onFollowUpSelected(dynamic key) {
-    formSource.prostype = key;
-  }
-
   void onOwnerSelected(dynamic data) {
     formSource.prosowner = data.value as UserDetail;
   }
