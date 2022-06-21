@@ -23,6 +23,7 @@ class _PlacePicker extends StatelessWidget {
               markers: state.property.markers,
               myLocationEnabled: true,
               onMapCreated: state.listener.onMapControllerCreated,
+              scrollGesturesEnabled: false,
             );
           }),
         ),

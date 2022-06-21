@@ -7,7 +7,6 @@ import 'package:ventes/app/models/maps_loc.dart';
 import 'package:ventes/app/states/typedefs/nearby_typedef.dart';
 import 'package:ventes/core/states/state_data_source.dart';
 import 'package:ventes/helpers/function_helpers.dart';
-import 'package:ventes/helpers/task_helper.dart';
 
 class NearbyDataSource extends StateDataSource<NearbyPresenter> with DataSourceMixin implements NearbyContract {
   List<BpCustomer> bpCustomers = <BpCustomer>[];
@@ -24,6 +23,12 @@ class NearbyDataSource extends StateDataSource<NearbyPresenter> with DataSourceM
     return bpCustomers.any((element) => element.sbccstmid == customer.cstmid);
   }
 
+  Future<String?> fetchAddress(double latitude, double longitude) async {
+    MapsLoc? mapsLoc = await fetchDetailLoc(latitude, longitude);
+    return mapsLoc?.adresses?.isNotEmpty ?? false ? mapsLoc?.adresses?.first.formattedAddress : "";
+  }
+
+  Future<MapsLoc?> fetchDetailLoc(double latitude, double longitude) => presenter.fetchLocationDetail(latitude, longitude);
   void deleteData(int id) => presenter.deleteData(id);
   void fetchData(LatLng position) => presenter.fetchData(position.latitude, position.longitude);
   void _locationDetailLoaded(Map<String, dynamic> data) {

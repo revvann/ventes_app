@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 import 'package:ventes/app/models/city_model.dart';
@@ -28,7 +29,6 @@ class CustomerFormCreateFormSource extends UpdateFormSource with FormSourceMixin
   TextEditingController latitudeTEC = TextEditingController();
   TextEditingController longitudeTEC = TextEditingController();
   TextEditingController nameTEC = TextEditingController();
-  TextEditingController addressTEC = TextEditingController();
   TextEditingController phoneTEC = TextEditingController();
 
   int? cstmid;
@@ -40,12 +40,15 @@ class CustomerFormCreateFormSource extends UpdateFormSource with FormSourceMixin
   int? subdistrictid;
 
   final Rx<int?> _cstmtypeid = Rx<int?>(null);
+  final Rx<String?> _cstmaddress = Rx<String?>(null);
 
   String get cstmlatitude => latitudeTEC.text;
   String get cstmlongitude => longitudeTEC.text;
   String get cstmname => nameTEC.text;
-  String get cstmaddress => addressTEC.text;
   String get cstmphone => phoneTEC.text;
+
+  String? get cstmaddress => _cstmaddress.value;
+  set cstmaddress(String? value) => _cstmaddress.value = value;
 
   int? get cstmtypeid => _cstmtypeid.value;
 
@@ -64,7 +67,6 @@ class CustomerFormCreateFormSource extends UpdateFormSource with FormSourceMixin
   void close() {
     super.close();
     nameTEC.dispose();
-    addressTEC.dispose();
     phoneTEC.dispose();
     latitudeTEC.dispose();
     longitudeTEC.dispose();
@@ -75,15 +77,24 @@ class CustomerFormCreateFormSource extends UpdateFormSource with FormSourceMixin
   }
 
   @override
-  void prepareFormValues() {
+  void prepareFormValues() async {
     nameTEC.text = dataSource.customer!.cstmname ?? "";
-    addressTEC.text = dataSource.customer!.cstmaddress ?? "";
+    cstmaddress = dataSource.customer!.cstmaddress ?? "";
     phoneTEC.text = dataSource.customer!.cstmphone ?? "";
     cstmtypeid = dataSource.customer!.cstmtypeid;
     provinceid = dataSource.customer!.cstmprovinceid;
     cityid = dataSource.customer!.cstmcityid;
     subdistrictid = dataSource.customer!.cstmsubdistrictid;
     cstmid = dataSource.customer!.cstmid;
+    latitudeTEC.text = dataSource.customer!.cstmlatitude!.toString();
+    longitudeTEC.text = dataSource.customer!.cstmlongitude!.toString();
+
+    if (dataSource.customer?.cstmlatitude != null && dataSource.customer?.cstmlongitude != null) {
+      LatLng latLng = LatLng(dataSource.customer!.cstmlatitude!, dataSource.customer!.cstmlongitude!);
+      GoogleMapController controller = await property.mapsController.future;
+      controller.moveCamera(CameraUpdate.newLatLng(latLng));
+      property.markerLatLng = latLng;
+    }
   }
 
   Future<File> _getImageFileFromAssets(String path) async {
@@ -104,7 +115,7 @@ class CustomerFormCreateFormSource extends UpdateFormSource with FormSourceMixin
       'sbccstmstatusid': sbccstmstatusid?.toString(),
       'cstmid': cstmid?.toString(),
       'cstmname': cstmname,
-      'cstmaddress': cstmaddress,
+      'cstmaddress': cstmaddress ?? dataSource.getAddress(),
       'cstmphone': cstmphone,
       'cstmpostalcode': dataSource.getPostalCodeName(),
       'cstmprovinceid': provinceid.toString(),
@@ -120,16 +131,12 @@ class CustomerFormCreateFormSource extends UpdateFormSource with FormSourceMixin
 
   @override
   void onSubmit() {
-    if (isValid) {
-      Map<String, dynamic> data = toJson();
-      String filename = path.basename(data['sbccstmpic']);
-      data['sbccstmpic'] = MultipartFile(File(data['sbccstmpic']), filename: filename);
+    Map<String, dynamic> data = toJson();
+    String filename = path.basename(data['sbccstmpic']);
+    data['sbccstmpic'] = MultipartFile(File(data['sbccstmpic']), filename: filename);
 
-      FormData formData = FormData(data);
-      dataSource.createCustomer(formData);
-      Get.find<TaskHelper>().loaderPush(property.task);
-    } else {
-      Get.find<TaskHelper>().failedPush(property.task.copyWith(message: NearbyString.formInvalid));
-    }
+    FormData formData = FormData(data);
+    dataSource.createCustomer(formData);
+    Get.find<TaskHelper>().loaderPush(Task('createcustomer'));
   }
 }

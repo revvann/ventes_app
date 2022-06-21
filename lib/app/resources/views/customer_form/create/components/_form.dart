@@ -47,12 +47,13 @@ class _CustomerForm extends StatelessWidget {
           SizedBox(
             height: RegularSize.m,
           ),
-          EditorInput(
-            label: "Customer address",
-            hintText: "Enter address",
-            controller: state.formSource.addressTEC,
-            validator: state.formSource.validator.cstmaddress,
-          ),
+          Obx(() {
+            return EditorInput(
+              label: "Customer address",
+              value: state.formSource.cstmaddress ?? state.dataSource.getAddress(),
+              enabled: false,
+            );
+          }),
           SizedBox(
             height: RegularSize.m,
           ),

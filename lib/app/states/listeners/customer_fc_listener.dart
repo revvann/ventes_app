@@ -70,16 +70,19 @@ class CustomerFormCreateListener extends StateListener with ListenerMixin {
   }
 
   void onSubmitButtonClicked() async {
-    Get.find<TaskHelper>().confirmPush(
-      property.task.copyWith<bool>(
-        message: NearbyString.createCustomerConfirm,
-        onFinished: (res) {
-          if (res) {
-            formSource.onSubmit();
-          }
-        },
-      ),
-    );
+    if (formSource.isValid) {
+      Get.find<TaskHelper>().confirmPush(
+        property.task.copyWith<bool>(
+          message: NearbyString.createCustomerConfirm,
+          onFinished: (res) {
+            if (res) {
+              dataSource.fetchNearbyCustomers(formSource.subdistrictid!);
+              Get.find<TaskHelper>().loaderPush(property.task);
+            }
+          },
+        ),
+      );
+    }
   }
 
   void onLoadDataError(String message) {
@@ -107,7 +110,10 @@ class CustomerFormCreateListener extends StateListener with ListenerMixin {
         }));
   }
 
-  void onComplete() => Get.find<TaskHelper>().loaderPop(property.task.name);
+  void onComplete() {
+    Get.find<TaskHelper>().loaderPop(property.task.name);
+  }
+
   @override
   Future onReady() async {
     property.refresh();
