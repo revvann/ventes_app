@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:ventes/app/models/bp_customer_model.dart';
 import 'package:ventes/app/models/user_detail_model.dart';
+import 'package:ventes/app/resources/widgets/loading_container.dart';
 import 'package:ventes/app/resources/widgets/menu_divider.dart';
 import 'package:ventes/app/resources/widgets/pop_up_item.dart';
 import 'package:ventes/app/resources/widgets/popup_button.dart';
@@ -159,60 +160,67 @@ class DashboardView extends View<Controller> {
                           ],
                         ),
                       ),
+                      SizedBox(
+                        height: RegularSize.m,
+                      ),
                       Obx(() {
-                        return Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            if (state.dataSource.customers.isNotEmpty) ...[
-                              SizedBox(
-                                height: 148,
-                                child: Obx(() {
-                                  return ListView.builder(
-                                    physics: BouncingScrollPhysics(),
-                                    itemCount: state.dataSource.customers.length,
-                                    scrollDirection: Axis.horizontal,
-                                    itemBuilder: (_, index) {
-                                      BpCustomer customer = state.dataSource.customers[index];
-                                      double mRight = 0;
-                                      if (index == 9) {
-                                        mRight = 16;
-                                      }
-                                      return CustomerCard(
-                                        image: NetworkImage(customer.sbccstmpic ?? ""),
-                                        margin: EdgeInsets.only(
-                                          left: 16,
-                                          right: mRight,
-                                          top: 24,
-                                          bottom: 24,
-                                        ),
-                                        width: 250,
-                                        title: customer.sbccstmname,
-                                        type: customer.sbccstm?.cstmtype?.typename ?? "",
-                                        radius: (customer.radius! / 1000).toStringAsFixed(2) + " KM",
-                                      );
-                                    },
-                                  );
-                                }),
-                              ),
-                            ] else ...[
-                              SizedBox(
-                                height: RegularSize.s,
-                              ),
-                              Container(
-                                alignment: Alignment.centerLeft,
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: RegularSize.m,
+                        return LoadingContainer(
+                          isLoading: state.dataSource.customerHandler.onProcess,
+                          width: 50,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              if (state.dataSource.customers.isNotEmpty) ...[
+                                SizedBox(
+                                  height: 148,
+                                  child: Obx(() {
+                                    return ListView.builder(
+                                      physics: BouncingScrollPhysics(),
+                                      itemCount: state.dataSource.customers.length,
+                                      scrollDirection: Axis.horizontal,
+                                      itemBuilder: (_, index) {
+                                        BpCustomer customer = state.dataSource.customers[index];
+                                        double mRight = 0;
+                                        if (index == 9) {
+                                          mRight = 16;
+                                        }
+                                        return CustomerCard(
+                                          image: NetworkImage(customer.sbccstmpic ?? ""),
+                                          margin: EdgeInsets.only(
+                                            left: 16,
+                                            right: mRight,
+                                            top: 24,
+                                            bottom: 24,
+                                          ),
+                                          width: 250,
+                                          title: customer.sbccstmname,
+                                          type: customer.sbccstm?.cstmtype?.typename ?? "",
+                                          radius: (customer.radius! / 1000).toStringAsFixed(2) + " KM",
+                                        );
+                                      },
+                                    );
+                                  }),
                                 ),
-                                child: Text(
-                                  "There is no customer in this area",
-                                  style: TextStyle(
-                                    color: RegularColor.dark,
-                                    fontSize: 16,
+                              ] else ...[
+                                SizedBox(
+                                  height: RegularSize.s,
+                                ),
+                                Container(
+                                  alignment: Alignment.centerLeft,
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: RegularSize.m,
+                                  ),
+                                  child: Text(
+                                    "There is no customer in this area",
+                                    style: TextStyle(
+                                      color: RegularColor.dark,
+                                      fontSize: 16,
+                                    ),
                                   ),
                                 ),
-                              ),
+                              ],
                             ],
-                          ],
+                          ),
                         );
                       }),
                       SizedBox(

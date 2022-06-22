@@ -11,6 +11,7 @@ import 'package:ventes/app/api/services/gmaps_service.dart';
 import 'package:ventes/app/api/services/schedule_service.dart';
 import 'package:ventes/app/api/services/user_service.dart';
 import 'package:ventes/constants/strings/dashboard_string.dart';
+import 'package:ventes/core/api/fetcher.dart';
 import 'package:ventes/helpers/auth_helper.dart';
 import 'package:ventes/helpers/function_helpers.dart';
 
@@ -66,41 +67,27 @@ class DashboardPresenter extends RegularPresenter<DashboardContract> {
     return await _gmapsService.getDetail(position.latitude, position.longitude);
   }
 
-  void fetchData(double latitude, double longitude) async {
-    Map data = {};
-    try {
-      Response customersResponse = await _getCustomers();
-      Response currentPositionResponse = await _getCurrentPosition();
-      Response scheduleResponse = await _getSchedule();
-      Response userResponse = await _getUser();
-      if (customersResponse.statusCode == 200 && currentPositionResponse.statusCode == 200 && scheduleResponse.statusCode == 200 && userResponse.statusCode == 200) {
-        data['customers'] = customersResponse.body;
-        data['currentPosition'] = currentPositionResponse.body;
-        data['scheduleCount'] = scheduleResponse.body['count'];
-        data['user'] = userResponse.body;
-        contract.onLoadSuccess(data);
-      } else {
-        contract.onLoadFailed(DashboardString.fetchFailed);
-      }
-    } catch (e) {
-      contract.onLoadError(e.toString());
-    }
-    contract.onLoadComplete();
-  }
+  SimpleFetcher get logout => SimpleFetcher(responseBuilder: _authService.signOut, failedMessage: "Logout failed");
 
-  void logout() async {
-    Response authResponse = await _authService.signOut();
-    try {
-      if (authResponse.statusCode == 200) {
-        contract.onLogoutSuccess("Logout Success");
-      } else {
-        contract.onLogoutFailed("Logout Failed");
-      }
-    } catch (e) {
-      contract.onLogoutError(e.toString());
-    }
-    contract.onLogoutComplete();
-  }
+  SimpleFetcher<Map<String, dynamic>> get fetchPosition => SimpleFetcher<Map<String, dynamic>>(
+        responseBuilder: _getCurrentPosition,
+        failedMessage: DashboardString.fetchFailed,
+      );
+
+  SimpleFetcher<List> get fetchUser => SimpleFetcher<List>(
+        responseBuilder: _getUser,
+        failedMessage: DashboardString.fetchFailed,
+      );
+
+  SimpleFetcher<List> get fetchCustomers => SimpleFetcher<List>(
+        responseBuilder: _getCustomers,
+        failedMessage: DashboardString.fetchFailed,
+      );
+
+  SimpleFetcher<Map<String, dynamic>> get fetchScheduleCount => SimpleFetcher<Map<String, dynamic>>(
+        responseBuilder: _getSchedule,
+        failedMessage: DashboardString.fetchFailed,
+      );
 }
 
 abstract class DashboardContract implements FetchDataContract, LogoutContract {}

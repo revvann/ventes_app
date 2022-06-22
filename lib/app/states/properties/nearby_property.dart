@@ -71,8 +71,8 @@ class NearbyProperty extends StateProperty with PropertyMixin {
     controller.animateCamera(
       CameraUpdate.newLatLng(LatLng(position.latitude, position.longitude)),
     );
-    dataSource.fetchData(LatLng(position.latitude, position.longitude));
-    Get.find<TaskHelper>().loaderPush(task);
+    dataSource.locationHandler.fetcher.run(position.latitude, position.longitude);
+    dataSource.bpCustomersHandler.fetcher.run();
   }
 
   @override

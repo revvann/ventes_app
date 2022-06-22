@@ -1,4 +1,4 @@
-import 'package:ventes/app/states/data_sources/customer_fc_data_source.dart';
+import 'package:ventes/app/states/data/sources/customer_fc_data_source.dart';
 import 'package:ventes/app/states/controllers/customer_fc_state_controller.dart';
 import 'package:ventes/app/states/listeners/customer_fc_listener.dart';
 import 'package:ventes/app/states/properties/customer_fc_property.dart';

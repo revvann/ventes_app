@@ -7,6 +7,7 @@ import 'package:ventes/app/api/services/prospect_service.dart';
 import 'package:ventes/app/api/services/type_service.dart';
 import 'package:ventes/app/api/services/user_service.dart';
 import 'package:ventes/constants/strings/prospect_string.dart';
+import 'package:ventes/core/api/fetcher.dart';
 import 'package:ventes/helpers/auth_helper.dart';
 
 class ProspectPresenter extends RegularPresenter<FetchDataContract> {
@@ -37,23 +38,29 @@ class ProspectPresenter extends RegularPresenter<FetchDataContract> {
     return await _prospectService.select(params);
   }
 
-  void fetchData() async {
-    Map<String, dynamic> data = {};
-    try {
-      Response statusses = await _getStatusses();
-      Response prospects = await _getProspects();
-      if (statusses.statusCode == 200 && prospects.statusCode == 200) {
-        data['statusses'] = statusses.body;
-        data['prospects'] = prospects.body;
-        contract.onLoadSuccess(data);
-      } else {
-        contract.onLoadFailed(ProspectString.fetchDataFailed);
-      }
-    } catch (e) {
-      contract.onLoadError(e.toString());
-    }
-    contract.onLoadComplete();
-  }
+  SimpleFetcher<List> get fetchStatuses => SimpleFetcher(
+        responseBuilder: _getStatusses,
+        failedMessage: ProspectString.fetchDataFailed,
+      );
+
+  DataFetcher<Function([Map<String, dynamic>?]), List> get fetchProspects => DataFetcher(
+        builder: (handler) {
+          return ([additionParams]) async {
+            handler.onStart();
+            try {
+              Response response = await _getProspects(additionParams ?? {});
+              if (response.statusCode == 200) {
+                handler.onSuccess(response.body);
+              } else {
+                handler.onFailed(ProspectString.fetchDataFailed);
+              }
+            } catch (e) {
+              handler.onError(e.toString());
+            }
+            handler.onComplete();
+          };
+        },
+      );
 
   void fetchProspect(Map<String, dynamic> params) async {
     Map<String, dynamic> data = {};

@@ -3,7 +3,7 @@
 part of 'package:ventes/app/resources/views/dashboard/dashboard.dart';
 
 class _TopPanel extends StatelessWidget {
-  DashboardStateController state = Get.find<Controller>();
+  Controller state = Get.find<Controller>();
 
   @override
   Widget build(BuildContext context) {
@@ -30,48 +30,57 @@ class _TopPanel extends StatelessWidget {
             ),
           ],
         ),
-        child: Column(
-          children: [
-            Obx(() {
-              return Text(
-                state.dataSource.account?.user?.userfullname ?? "",
-                style: TextStyle(
-                  fontSize: 16,
-                  color: RegularColor.dark,
-                  fontWeight: FontWeight.bold,
-                ),
-              );
-            }),
-            SizedBox(
-              height: RegularSize.xs,
-            ),
-            Obx(() {
-              return Text(
-                state.dataSource.currentPosition?.adresses?.first.formattedAddress ?? "",
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  color: RegularColor.dark,
-                  fontSize: 14,
-                ),
-              );
-            }),
-            SizedBox(
-              height: RegularSize.m,
-            ),
-            Row(
+        child: Obx(() {
+          bool currentPositionProcess = state.dataSource.currentPositionHandler.onProcess;
+          bool userProcess = state.dataSource.userHandler.onProcess;
+          bool scheduleCountHandler = state.dataSource.scheduleCountHandler.onProcess;
+          return LoadingContainer(
+            isLoading: currentPositionProcess && userProcess && scheduleCountHandler,
+            width: 40,
+            child: Column(
               children: [
                 Obx(() {
-                  return _TopPanelItem('assets/svg/user.svg', state.dataSource.customers.length.toString(), "Customer");
+                  return Text(
+                    state.dataSource.account?.user?.userfullname ?? "",
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: RegularColor.dark,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  );
                 }),
+                SizedBox(
+                  height: RegularSize.xs,
+                ),
                 Obx(() {
-                  return _TopPanelItem('assets/svg/calendar.svg', state.dataSource.scheduleCount.toString(), "Scheduled");
+                  return Text(
+                    state.dataSource.currentPosition?.adresses?.first.formattedAddress ?? "",
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: RegularColor.dark,
+                      fontSize: 14,
+                    ),
+                  );
                 }),
-                _TopPanelItem('assets/svg/time-check.svg', "3", "Done"),
+                SizedBox(
+                  height: RegularSize.m,
+                ),
+                Row(
+                  children: [
+                    Obx(() {
+                      return _TopPanelItem('assets/svg/user.svg', state.dataSource.customers.length.toString(), "Customer");
+                    }),
+                    Obx(() {
+                      return _TopPanelItem('assets/svg/calendar.svg', state.dataSource.scheduleCount.toString(), "Scheduled");
+                    }),
+                    _TopPanelItem('assets/svg/time-check.svg', "3", "Done"),
+                  ],
+                ),
               ],
             ),
-          ],
-        ),
+          );
+        }),
       ),
     );
   }

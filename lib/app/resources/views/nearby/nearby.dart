@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ventes/app/models/customer_model.dart';
 import 'package:ventes/app/resources/widgets/icon_input.dart';
+import 'package:ventes/app/resources/widgets/loading_container.dart';
 import 'package:ventes/app/resources/widgets/pop_up_item.dart';
 import 'package:ventes/app/resources/widgets/popup_button.dart';
 import 'package:ventes/app/resources/widgets/top_navigation.dart';
@@ -58,31 +59,36 @@ class NearbyView extends View<Controller> {
             horizontal: RegularSize.xl,
           ),
           alignment: Alignment.center,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                padding: EdgeInsets.all(RegularSize.xs),
-                child: SvgPicture.asset(
-                  "assets/svg/marker.svg",
-                  width: RegularSize.m,
-                  color: Colors.white,
-                ),
-              ),
-              Expanded(
-                child: Obx(() {
-                  return Text(
-                    state.dataSource.mapsLoc.adresses?.first.formattedAddress ?? "Unknown",
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
+          child: Obx(() {
+            return LoadingContainer(
+              isLoading: state.dataSource.locationHandler.onProcess,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    padding: EdgeInsets.all(RegularSize.xs),
+                    child: SvgPicture.asset(
+                      "assets/svg/marker.svg",
+                      width: RegularSize.m,
                       color: Colors.white,
-                      fontSize: 14,
                     ),
-                  );
-                }),
+                  ),
+                  Expanded(
+                    child: Obx(() {
+                      return Text(
+                        state.dataSource.mapsLoc.adresses?.first.formattedAddress ?? "Unknown",
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                        ),
+                      );
+                    }),
+                  ),
+                ],
               ),
-            ],
-          ),
+            );
+          }),
         ),
       ).build(context),
       body: SafeArea(

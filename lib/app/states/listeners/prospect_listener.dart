@@ -43,8 +43,7 @@ class ProspectListener extends StateListener with ListenerMixin {
 
   Future onFilterChanged() async {
     Map<String, dynamic> filter = formSource.toJson();
-    dataSource.fetchProspect(params: filter);
-    Get.find<TaskHelper>().loaderPush(property.task);
+    dataSource.prospectsHandler.fetcher.run(filter);
   }
 
   void onProspectClicked() {
@@ -57,15 +56,6 @@ class ProspectListener extends StateListener with ListenerMixin {
     );
   }
 
-  void onLoadFailed(String message) {
-    Get.find<TaskHelper>().failedPush(property.task.copyWith(message: message, snackbar: true));
-  }
-
-  void onLoadError(String message) {
-    Get.find<TaskHelper>().errorPush(property.task.copyWith(message: message));
-  }
-
-  void onComplete() => Get.find<TaskHelper>().loaderPop(property.task.name);
   @override
   Future onReady() async {
     property.refresh();

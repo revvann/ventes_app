@@ -1,4 +1,4 @@
-import 'package:ventes/app/states/data_sources/customer_fu_data_source.dart';
+import 'package:ventes/app/states/data/sources/customer_fu_data_source.dart';
 import 'package:ventes/app/states/controllers/customer_fu_state_controller.dart';
 import 'package:ventes/app/states/form/validators/customer_fu_validator.dart';
 import 'package:ventes/app/states/listeners/customer_fu_listener.dart';

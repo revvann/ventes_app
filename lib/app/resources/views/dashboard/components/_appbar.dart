@@ -89,12 +89,15 @@ class _AppBar extends StatelessWidget {
                   height: RegularSize.xxl,
                   alignment: Alignment.center,
                   child: Obx(() {
-                    return Text(
-                      state.property.shortName ?? "AA",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+                    return LoadingContainer(
+                      isLoading: state.dataSource.userHandler.onProcess,
+                      child: Text(
+                        state.property.shortName ?? "AA",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     );
                   }),

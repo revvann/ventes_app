@@ -1,4 +1,3 @@
-import 'package:get/get.dart';
 import 'package:ventes/app/models/prospect_model.dart';
 import 'package:ventes/constants/strings/prospect_string.dart';
 import 'package:ventes/app/states/typedefs/prospect_typedef.dart';
@@ -10,7 +9,7 @@ class ProspectProperty extends StateProperty with PropertyMixin {
   Task task = Task(ProspectString.taskCode);
 
   void refresh() {
-    dataSource.fetchData();
-    Get.find<TaskHelper>().loaderPush(task);
+    dataSource.prospectsHandler.fetcher.run();
+    dataSource.statusesHandler.fetcher.run();
   }
 }

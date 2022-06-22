@@ -12,6 +12,7 @@ import 'package:ventes/app/api/services/gmaps_service.dart';
 import 'package:ventes/app/api/services/place_service.dart';
 import 'package:ventes/app/api/services/user_service.dart';
 import 'package:ventes/constants/strings/nearby_string.dart';
+import 'package:ventes/core/api/fetcher.dart';
 import 'package:ventes/helpers/auth_helper.dart';
 
 class NearbyPresenter extends RegularPresenter<NearbyContract> {
@@ -54,49 +55,73 @@ class NearbyPresenter extends RegularPresenter<NearbyContract> {
     return null;
   }
 
-  void fetchData(double latitude, double longitude) async {
-    Map data = {};
-    Response locResponse = await _getLocDetail(latitude, longitude);
-    Response bpCustomersResponse = await _getBpCustomers();
-    try {
-      if (locResponse.statusCode == 200 && bpCustomersResponse.statusCode == 200) {
-        data['location'] = locResponse.body;
-        data['bpcustomers'] = bpCustomersResponse.body;
+  DataFetcher<Function(int), String> get delete => DataFetcher(
+        builder: (handler) {
+          return (int id) async {
+            handler.onStart();
+            try {
+              Response response = await _bpCustomerService.destroy(id);
+              if (response.statusCode == 200) {
+                handler.onSuccess(NearbyString.deleteSuccess);
+              } else {
+                handler.onFailed(NearbyString.deleteFailed);
+              }
+            } catch (e) {
+              handler.onError(e.toString());
+            }
+            handler.onComplete();
+          };
+        },
+      );
 
-        MapsLoc location = MapsLoc.fromJson(locResponse.body);
-        String subdistrict =
-            location.adresses!.first.addressComponents!.firstWhere((element) => element.types!.contains('administrative_area_level_3')).longName!.replaceAll(RegExp(r'Kecamatan |Kec '), '');
-        Response subdistrictResponse = await _getSubdistrict(subdistrict);
-        if (subdistrictResponse.statusCode == 200) {
-          Subdistrict subdistrictModel = Subdistrict.fromJson(subdistrictResponse.body);
-          Response customersResponse = await _getCustomers(subdistrictModel.subdistrictid!);
-          if (customersResponse.statusCode == 200) {
-            data['customers'] = customersResponse.body;
-            contract.onLoadSuccess(data);
-          }
-        }
-      } else {
-        contract.onLoadFailed(NearbyString.fetchFailed);
-      }
-    } catch (e) {
-      contract.onLoadError(e.toString());
-    }
-    contract.onLoadComplete();
-  }
+  DataFetcher<Future Function(double, double), Map<String, dynamic>> get fetchLocation => DataFetcher(
+        builder: (handler) {
+          return (double latitude, double longitude) async {
+            handler.onStart();
+            try {
+              Response response = await _getLocDetail(latitude, longitude);
+              if (response.statusCode == 200) {
+                handler.onSuccess(response.body);
+              } else {
+                handler.onFailed(NearbyString.fetchFailed);
+              }
+            } catch (e) {
+              handler.onError(e.toString());
+            }
+            handler.onComplete();
+          };
+        },
+      );
 
-  void deleteData(int id) async {
-    try {
-      Response response = await _bpCustomerService.destroy(id);
-      if (response.statusCode == 200) {
-        contract.onDeleteSuccess(NearbyString.deleteSuccess);
-      } else {
-        contract.onDeleteFailed(NearbyString.deleteFailed);
-      }
-    } catch (e) {
-      contract.onDeleteError(e.toString());
-    }
-    contract.onDeleteComplete();
-  }
+  SimpleFetcher<List> get fetchBpCustomers => SimpleFetcher(
+        responseBuilder: _getBpCustomers,
+        failedMessage: NearbyString.fetchFailed,
+      );
+
+  DataFetcher<Future Function(String), List> get fetchCustomers => DataFetcher(
+        builder: (handler) {
+          return (String subdistrict) async {
+            handler.onStart();
+            try {
+              Response subdistrictResponse = await _getSubdistrict(subdistrict);
+
+              if (subdistrictResponse.statusCode == 200) {
+                Subdistrict subdistrictModel = Subdistrict.fromJson(subdistrictResponse.body);
+                Response customersResponse = await _getCustomers(subdistrictModel.subdistrictid!);
+
+                if (customersResponse.statusCode == 200) {
+                  handler.onSuccess(customersResponse.body);
+                } else {
+                  handler.onFailed(NearbyString.fetchFailed);
+                }
+              }
+            } catch (e) {
+              handler.onError(e.toString());
+            }
+            handler.onComplete();
+          };
+        },
+      );
 
   Future<MapsLoc?> fetchLocationDetail(double latitude, double longitude) async {
     MapsLoc? location;

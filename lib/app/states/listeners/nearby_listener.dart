@@ -109,7 +109,7 @@ class NearbyListener extends StateListener with ListenerMixin {
           if (res) {
             Customer customer = property.selectedCustomer.first;
             BpCustomer bpcustomer = dataSource.bpCustomers.firstWhere((element) => element.sbccstmid == customer.cstmid);
-            dataSource.deleteData(bpcustomer.sbcid!);
+            dataSource.deleteHandler.fetcher.run(bpcustomer.sbcid!);
             Get.find<TaskHelper>().loaderPush(property.task);
           }
         },
@@ -117,31 +117,6 @@ class NearbyListener extends StateListener with ListenerMixin {
     );
   }
 
-  void onLoadDataError(String message) {
-    Get.find<TaskHelper>().errorPush(property.task.copyWith(message: message));
-  }
-
-  void onLoadDataFailed(String message) {
-    Get.find<TaskHelper>().failedPush(property.task.copyWith(message: message, snackbar: true));
-  }
-
-  void onDeleteFailed(String message) {
-    Get.find<TaskHelper>().failedPush(property.task.copyWith(message: message, snackbar: true));
-  }
-
-  void onDeleteSuccess(String message) {
-    Get.find<TaskHelper>().successPush(property.task.copyWith(
-        message: message,
-        onFinished: (res) {
-          Get.find<NearbyStateController>().refreshStates();
-        }));
-  }
-
-  void onDeleteError(String message) {
-    Get.find<TaskHelper>().errorPush(property.task.copyWith(message: message));
-  }
-
-  void onComplete() => Get.find<TaskHelper>().loaderPop(property.task.name);
   @override
   Future onReady() async {
     property.refresh();

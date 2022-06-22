@@ -20,8 +20,7 @@ class DashboardProperty extends StateProperty with PropertyMixin {
         message: DashboardString.confirmLogout,
         onFinished: (res) {
           if (res) {
-            dataSource.logout();
-            Get.find<TaskHelper>().loaderPush(task);
+            dataSource.logoutHandler.fetcher.run();
           }
         },
       ),
