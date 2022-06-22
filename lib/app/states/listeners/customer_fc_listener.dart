@@ -76,42 +76,12 @@ class CustomerFormCreateListener extends StateListener with ListenerMixin {
           message: NearbyString.createCustomerConfirm,
           onFinished: (res) {
             if (res) {
-              dataSource.fetchNearbyCustomers(formSource.subdistrictid!);
-              Get.find<TaskHelper>().loaderPush(property.task);
+              dataSource.nearbyCustomersHandler.fetcher.run(formSource.subdistrictid!);
             }
           },
         ),
       );
     }
-  }
-
-  void onLoadDataError(String message) {
-    Get.find<TaskHelper>().errorPush(property.task.copyWith(message: message));
-  }
-
-  void onLoadDataFailed(String message) {
-    Get.find<TaskHelper>().failedPush(property.task.copyWith(message: message, snackbar: true));
-  }
-
-  void onCreateDataError(String message) {
-    Get.find<TaskHelper>().errorPush(property.task.copyWith(message: message));
-  }
-
-  void onCreateDataFailed(String message) {
-    Get.find<TaskHelper>().failedPush(property.task.copyWith(message: message, snackbar: true));
-  }
-
-  void onCreateDataSuccess(String message) async {
-    Get.find<TaskHelper>().successPush(property.task.copyWith(
-        message: message,
-        onFinished: (res) {
-          Get.find<NearbyStateController>().property.refresh();
-          Get.back(id: NearbyNavigator.id);
-        }));
-  }
-
-  void onComplete() {
-    Get.find<TaskHelper>().loaderPop(property.task.name);
   }
 
   @override

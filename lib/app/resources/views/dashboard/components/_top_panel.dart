@@ -34,8 +34,9 @@ class _TopPanel extends StatelessWidget {
           bool currentPositionProcess = state.dataSource.currentPositionHandler.onProcess;
           bool userProcess = state.dataSource.userHandler.onProcess;
           bool scheduleCountHandler = state.dataSource.scheduleCountHandler.onProcess;
+          bool customerHandler = state.dataSource.customerHandler.onProcess;
           return LoadingContainer(
-            isLoading: currentPositionProcess && userProcess && scheduleCountHandler,
+            isLoading: currentPositionProcess && userProcess && scheduleCountHandler && customerHandler,
             width: 40,
             child: Column(
               children: [

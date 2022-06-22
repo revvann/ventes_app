@@ -15,6 +15,8 @@ import 'package:ventes/app/api/services/place_service.dart';
 import 'package:ventes/app/api/services/type_service.dart';
 import 'package:ventes/app/api/services/user_service.dart';
 import 'package:ventes/constants/strings/nearby_string.dart';
+import 'package:ventes/core/api/fetcher.dart';
+import 'package:ventes/core/api/fetcher.dart';
 import 'package:ventes/helpers/auth_helper.dart';
 
 class CustomerFormCreatePresenter extends RegularPresenter<CustomerCreateContract> {
@@ -66,148 +68,150 @@ class CustomerFormCreatePresenter extends RegularPresenter<CustomerCreateContrac
     return await _typeService.byCode({'typecd': NearbyString.statusTypeCode});
   }
 
-  void fetchData(double latitude, double longitude, [int? cstmid]) async {
-    Map data = {};
-    try {
-      Response userResponse = await _getUser();
-      Response customersResponse = await _getCustomers();
-      Response typeResponse = await _getTypes();
-      Response statusResponse = await _getStatusTypes();
+  SimpleFetcher<Map<String, dynamic>> get fetchUser => SimpleFetcher(responseBuilder: _getUser, failedMessage: NearbyString.fetchFailed);
+  SimpleFetcher<List> get fetchCustomers => SimpleFetcher(responseBuilder: _getCustomers, failedMessage: NearbyString.fetchFailed);
+  SimpleFetcher<List> get fetchTypes => SimpleFetcher(responseBuilder: _getTypes, failedMessage: NearbyString.fetchFailed);
+  SimpleFetcher<List> get fetchStatuses => SimpleFetcher(responseBuilder: _getStatusTypes, failedMessage: NearbyString.fetchFailed);
 
-      if (cstmid != null) {
-        Response customerResponse = await _getCustomer(cstmid);
-        if (customerResponse.statusCode == 200) {
-          Customer customer = Customer.fromJson(customerResponse.body);
-          Response subdistrictResponse = await _getSubdistrict(customer.cstmsubdistrict?.subdistrictname ?? "");
-
-          if (subdistrictResponse.statusCode == 200) {
-            Subdistrict subdistrict = Subdistrict.fromJson(subdistrictResponse.body ?? {});
-            Response cityResponse = await _getCity(subdistrict.subdistrictcityid ?? 0);
-
-            if (cityResponse.statusCode == 200) {
-              City city = City.fromJson(cityResponse.body);
-              Response provinceResponse = await _getProvince(city.cityprovid ?? 0);
-
-              if (provinceResponse.statusCode == 200) {
-                // // add country to customer (mscustomer doesnt have countryid field)
-                customer.cstmcountry = Province.fromJson(provinceResponse.body).provcountry;
-
-                data['places'] = {};
-                data['places']['province'] = provinceResponse.body;
-                data['places']['city'] = cityResponse.body;
-                data['places']['subdistrict'] = subdistrict.toJson();
-                data['customer'] = customer.toJson();
+  DataFetcher<Function(double, double), Map<String, dynamic>> get fetchLocation => DataFetcher(
+        builder: (handler) {
+          return (latitude, longitude) async {
+            handler.onStart();
+            try {
+              Response locResponse = await _getLocDetail(latitude, longitude);
+              if (locResponse.statusCode == 200) {
+                handler.onSuccess(locResponse.body);
+              } else {
+                handler.onFailed(NearbyString.fetchFailed);
               }
+            } catch (e) {
+              handler.onError(e.toString());
             }
-          }
-        }
-      } else {
-        Response locResponse = await _getLocDetail(latitude, longitude);
-        if (locResponse.statusCode == 200) {
-          data['location'] = locResponse.body;
-        }
-      }
-
-      if (customersResponse.statusCode == 200 && typeResponse.statusCode == 200 && statusResponse.statusCode == 200 && userResponse.statusCode == 200) {
-        data['customers'] = customersResponse.body;
-        data['types'] = typeResponse.body;
-        data['statuses'] = statusResponse.body;
-        data['user'] = userResponse.body;
-        contract.onLoadSuccess(data);
-      } else {
-        contract.onLoadFailed(NearbyString.fetchFailed);
-      }
-    } catch (e) {
-      contract.onLoadError(e.toString());
-    }
-    contract.onLoadComplete();
-  }
-
-  void fetchPlaces(String subdistrictSearch) async {
-    Map data = {'places': {}};
-
-    try {
-      Response subdistrictResponse = await _getSubdistrict(subdistrictSearch);
-      if (subdistrictResponse.statusCode == 200) {
-        Subdistrict subdistrict = Subdistrict.fromJson(subdistrictResponse.body ?? {});
-        Response cityResponse = await _getCity(subdistrict.subdistrictcityid ?? 0);
-
-        if (cityResponse.statusCode == 200) {
-          City city = City.fromJson(cityResponse.body);
-          Response provinceResponse = await _getProvince(city.cityprovid ?? 0);
-
-          if (provinceResponse.statusCode == 200) {
-            data['places']['province'] = provinceResponse.body;
-            data['places']['city'] = cityResponse.body;
-            data['places']['subdistrict'] = subdistrict.toJson();
-            contract.onLoadSuccess(data);
-          }
-        } else {
-          contract.onLoadFailed(NearbyString.fetchFailed);
-        }
-      } else {
-        contract.onLoadFailed(NearbyString.fetchFailed);
-      }
-    } catch (e) {
-      contract.onLoadError(e.toString());
-    }
-    contract.onLoadComplete();
-  }
-
-  void fetchNearbyCustomers(int subdistrictid) async {
-    Map data = {};
-    try {
-      Response customerResponse = await _getCustomers({
-        'cstmsubdistrictid': subdistrictid.toString(),
-      });
-
-      if (customerResponse.statusCode == 200) {
-        data['nearbycustomers'] = customerResponse.body;
-        contract.onLoadSuccess(data);
-      } else {
-        contract.onLoadFailed(NearbyString.fetchFailed);
-      }
-    } catch (e) {
-      contract.onLoadError(e.toString());
-    }
-    contract.onLoadComplete();
-  }
-
-  void fetchBpCustomers(int customerid) async {
-    Map data = {};
-    try {
-      Response bpCustomerResponse = await _getBpCustomers({
-        'sbccstmid': customerid.toString(),
-      });
-
-      if (bpCustomerResponse.statusCode == 200) {
-        data['bpcustomers'] = bpCustomerResponse.body;
-        contract.onLoadSuccess(data);
-      } else {
-        contract.onLoadFailed(NearbyString.fetchFailed);
-      }
-    } catch (e) {
-      contract.onLoadError(e.toString());
-    }
-    contract.onLoadComplete();
-  }
-
-  void createCustomer(FormData data) async {
-    try {
-      Response response = await _bpCustomerService.store(
-        data,
-        contentType: "multipart/form-data",
+            handler.onComplete();
+          };
+        },
       );
-      if (response.statusCode == 200) {
-        contract.onCreateSuccess(NearbyString.createSuccess);
-      } else {
-        contract.onCreateFailed(NearbyString.createFailed);
-      }
-    } catch (e) {
-      contract.onCreateError(e.toString());
-    }
-    contract.onCreateComplete();
-  }
+
+  DataFetcher<Function(String), Map<String, dynamic>> get fetchPlaces => DataFetcher(
+        builder: (handler) {
+          return (subdistrictname) async {
+            handler.onStart();
+            try {
+              Map<String, dynamic> data = {};
+              Response subdistrictResponse = await _getSubdistrict(subdistrictname);
+
+              if (subdistrictResponse.statusCode == 200) {
+                Subdistrict subdistrict = Subdistrict.fromJson(subdistrictResponse.body ?? {});
+                Response cityResponse = await _getCity(subdistrict.subdistrictcityid ?? 0);
+
+                if (cityResponse.statusCode == 200) {
+                  City city = City.fromJson(cityResponse.body);
+                  Response provinceResponse = await _getProvince(city.cityprovid ?? 0);
+
+                  if (provinceResponse.statusCode == 200) {
+                    data['province'] = provinceResponse.body;
+                    data['city'] = cityResponse.body;
+                    data['subdistrict'] = subdistrictResponse.body;
+                    handler.onSuccess(data);
+                  } else {
+                    handler.onFailed(NearbyString.fetchFailed);
+                  }
+                } else {
+                  handler.onFailed(NearbyString.fetchFailed);
+                }
+              } else {
+                handler.onFailed(NearbyString.fetchFailed);
+              }
+            } catch (e) {
+              handler.onError(e.toString());
+            }
+            handler.onComplete();
+          };
+        },
+      );
+
+  DataFetcher<Function(int), Map<String, dynamic>> get fetchCustomer => DataFetcher(
+        builder: (handler) {
+          return (cstmid) async {
+            handler.onStart();
+            try {
+              Response response = await _getCustomer(cstmid);
+              if (response.statusCode == 200) {
+                handler.onSuccess(response.body);
+              } else {
+                handler.onFailed(NearbyString.fetchFailed);
+              }
+            } catch (e) {
+              handler.onError(e.toString());
+            }
+            handler.onComplete();
+          };
+        },
+      );
+
+  DataFetcher<Function(int), List> get fetchNearbyCustomers => DataFetcher(
+        builder: (handler) {
+          return (subdistrictid) async {
+            handler.onStart();
+            try {
+              Response customerResponse = await _getCustomers({
+                'cstmsubdistrictid': subdistrictid.toString(),
+              });
+
+              if (customerResponse.statusCode == 200) {
+                handler.onSuccess(customerResponse.body);
+              } else {
+                handler.onFailed(NearbyString.fetchFailed);
+              }
+            } catch (e) {
+              handler.onError(e.toString());
+            }
+            handler.onComplete();
+          };
+        },
+      );
+
+  DataFetcher<Function(int), List> get fetchBpCustomers => DataFetcher(builder: (handler) {
+        return (customerid) async {
+          handler.onStart();
+          try {
+            Response bpCustomerResponse = await _getBpCustomers({
+              'sbccstmid': customerid.toString(),
+            });
+
+            if (bpCustomerResponse.statusCode == 200) {
+              handler.onSuccess(bpCustomerResponse.body);
+            } else {
+              handler.onFailed(NearbyString.fetchFailed);
+            }
+          } catch (e) {
+            handler.onError(e.toString());
+          }
+          handler.onComplete();
+        };
+      });
+
+  DataFetcher<Function(FormData), String> get create => DataFetcher(
+        builder: (handler) {
+          return (data) async {
+            handler.onStart();
+            try {
+              Response response = await _bpCustomerService.store(
+                data,
+                contentType: "multipart/form-data",
+              );
+              if (response.statusCode == 200) {
+                handler.onSuccess(NearbyString.createSuccess);
+              } else {
+                handler.onFailed(NearbyString.createFailed);
+              }
+            } catch (e) {
+              handler.onError(e.toString());
+            }
+            handler.onComplete();
+          };
+        },
+      );
 
   Future<List<Country>> fetchCountries([String? search]) async {
     Map<String, dynamic> params = {

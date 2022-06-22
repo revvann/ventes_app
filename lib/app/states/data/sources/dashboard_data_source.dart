@@ -78,7 +78,7 @@ class DashboardDataSource extends StateDataSource<DashboardPresenter> with DataS
     }
   }
 
-  void _customerSuccess(List data) async {
+  void _customerSuccess(List data) {
     _customersFromList(
       data,
       LatLng(property.position!.latitude, property.position!.longitude),

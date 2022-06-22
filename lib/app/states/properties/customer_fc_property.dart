@@ -57,28 +57,25 @@ class CustomerFormCreateProperty extends StateProperty with PropertyMixin {
     markers = Set.from(markersList);
   }
 
-  void fetchPlacesIds() {
-    dataSource.fetchPlacesIds(dataSource.getSubdistrictName()!);
-    Get.find<TaskHelper>().loaderPush(task);
-  }
-
   void refresh() async {
-    dataSource.fetchData(latitude!, longitude!, cstmid);
-
-    LatLng pos = LatLng(latitude!, longitude!);
-    GoogleMapController controller = await mapsController.future;
-    controller.animateCamera(
-      CameraUpdate.newLatLng(pos),
-    );
-    markerLatLng = pos;
-    Get.find<TaskHelper>().loaderPush(task);
-  }
-
-  @override
-  void ready() {
-    super.ready();
     if (latitude != null && longitude != null) {
-      refresh();
+      dataSource.userHandler.fetcher.run();
+      dataSource.customersHandler.fetcher.run();
+      dataSource.statusesHandler.fetcher.run();
+      dataSource.typesHandler.fetcher.run();
+
+      if (cstmid != null) {
+        dataSource.customerHandler.fetcher.run(cstmid!);
+      } else {
+        dataSource.locationHandler.fetcher.run(latitude!, longitude!);
+      }
+
+      LatLng pos = LatLng(latitude!, longitude!);
+      GoogleMapController controller = await mapsController.future;
+      controller.animateCamera(
+        CameraUpdate.newLatLng(pos),
+      );
+      markerLatLng = pos;
     }
   }
 }

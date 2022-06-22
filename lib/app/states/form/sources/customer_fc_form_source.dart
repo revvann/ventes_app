@@ -136,7 +136,6 @@ class CustomerFormCreateFormSource extends UpdateFormSource with FormSourceMixin
     data['sbccstmpic'] = MultipartFile(File(data['sbccstmpic']), filename: filename);
 
     FormData formData = FormData(data);
-    dataSource.createCustomer(formData);
-    Get.find<TaskHelper>().loaderPush(Task('createcustomer'));
+    dataSource.createHandler.fetcher.run(formData);
   }
 }

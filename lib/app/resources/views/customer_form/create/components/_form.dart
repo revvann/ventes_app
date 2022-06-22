@@ -59,16 +59,6 @@ class _CustomerForm extends StatelessWidget {
           ),
           Obx(() {
             return RegularInput(
-              label: "Customer country",
-              value: state.dataSource.getCountryName() ?? state.dataSource.customer?.cstmcountry?.countryname,
-              enabled: false,
-            );
-          }),
-          SizedBox(
-            height: RegularSize.m,
-          ),
-          Obx(() {
-            return RegularInput(
               label: "Customer province",
               value: state.dataSource.getProvinceName() ?? state.dataSource.customer?.cstmprovince?.provname,
               enabled: false,

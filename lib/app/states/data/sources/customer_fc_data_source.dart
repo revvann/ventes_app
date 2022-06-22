@@ -12,12 +12,38 @@ import 'package:ventes/app/models/province_model.dart';
 import 'package:ventes/app/models/subdistrict_model.dart';
 import 'package:ventes/app/models/type_model.dart';
 import 'package:ventes/app/models/user_detail_model.dart';
+import 'package:ventes/app/states/controllers/nearby_state_controller.dart';
+import 'package:ventes/core/api/fetcher.dart';
+import 'package:ventes/core/api/handler.dart';
 import 'package:ventes/core/states/state_data_source.dart';
 import 'package:ventes/helpers/function_helpers.dart';
 import 'package:ventes/app/states/typedefs/customer_fc_typedef.dart';
 import 'package:ventes/helpers/task_helper.dart';
+import 'package:ventes/routing/navigators/nearby_navigator.dart';
 
 class CustomerFormCreateDataSource extends StateDataSource<CustomerFormCreatePresenter> with DataSourceMixin implements CustomerCreateContract {
+  final String userID = "usrhdr";
+  final String customersID = 'custshdr';
+  final String statusesID = 'stsshdr';
+  final String typesID = 'typshdr';
+  final String locationID = 'locationhdr';
+  final String placesID = 'placeshdr';
+  final String customerID = 'custohdr';
+  final String nearbyCustomersID = 'nearcusthdr';
+  final String bpCustomersID = 'bpcustomerid';
+  final String createID = 'create';
+
+  late DataHandler<Map<String, dynamic>, Function()> userHandler;
+  late DataHandler<List, Function()> customersHandler;
+  late DataHandler<List, Function()> statusesHandler;
+  late DataHandler<List, Function()> typesHandler;
+  late DataHandler<Map<String, dynamic>, Function(double, double)> locationHandler;
+  late DataHandler<Map<String, dynamic>, Function(String)> placesHandler;
+  late DataHandler<Map<String, dynamic>, Function(int)> customerHandler;
+  late DataHandler<List, Function(int)> nearbyCustomersHandler;
+  late DataHandler<List, Function(int)> bpCustomersHandler;
+  late DataHandler<String, Function(FormData)> createHandler;
+
   final _customers = Rx<List<BpCustomer>>([]);
   set customers(List<BpCustomer> value) => _customers.value = value;
   List<BpCustomer> get customers => _customers.value;
@@ -38,7 +64,7 @@ class CustomerFormCreateDataSource extends StateDataSource<CustomerFormCreatePre
   set statuses(Map<int, String> value) => _statuses.value = value;
   Map<int, String> get statuses => _statuses.value;
 
-  void customersFromList(List data, LatLng currentPos) {
+  void _customersFromList(List data, LatLng currentPos) {
     customers = data.map((e) => BpCustomer.fromJson(e)).toList();
     LatLng coords2 = LatLng(currentPos.latitude, currentPos.longitude);
     customers = customers.where((element) {
@@ -130,19 +156,20 @@ class CustomerFormCreateDataSource extends StateDataSource<CustomerFormCreatePre
       formSource.prepareFormValues();
 
       Get.find<TaskHelper>().confirmPush(
-        property.task.copyWith<bool>(
+        Task(
+          nearbyCustomersID,
           message: "${customer.cstmname} already exists. Your customer will add to existing customer",
           onFinished: (res) {
             if (res) {
-              fetchBpCustomers(customer.cstmid!);
-              Get.find<TaskHelper>().loaderPush(property.task);
+              bpCustomersHandler.fetcher.run(customer.cstmid!);
             }
           },
         ),
       );
     } else {
       Get.find<TaskHelper>().confirmPush(
-        property.task.copyWith<bool>(
+        Task(
+          nearbyCustomersID,
           message: "There is no customer with given name or address in your area, this customer will create as new customer",
           onFinished: (res) {
             if (res) {
@@ -159,95 +186,159 @@ class CustomerFormCreateDataSource extends StateDataSource<CustomerFormCreatePre
   Future<List<City>> fetchCities(int provinceId, [String? search]) async => await presenter.fetchCities(provinceId, search);
   Future<List<Subdistrict>> fetchSubdistricts(int cityId, [String? search]) async => await presenter.fetchSubdistricts(cityId, search);
 
-  void fetchData(double latitude, double longitude, int? cstmid) => presenter.fetchData(latitude, longitude, cstmid);
-  void fetchPlacesIds(String subdistrict) => presenter.fetchPlaces(subdistrict);
-  void createCustomer(FormData data) => presenter.createCustomer(data);
-  void fetchNearbyCustomers(int subdistrictid) => presenter.fetchNearbyCustomers(subdistrictid);
-  void fetchBpCustomers(int customerid) => presenter.fetchBpCustomers(customerid);
+  void _showError(String id, String message) {
+    Get.find<TaskHelper>().errorPush(Task(id, message: message));
+  }
+
+  void _showFailed(String id, String message, [bool snackbar = true]) {
+    Get.find<TaskHelper>().failedPush(Task(id, message: message, snackbar: snackbar));
+  }
+
+  void _customersSuccess(List data) {
+    _customersFromList(
+      data,
+      LatLng(property.markers.first.position.latitude, property.markers.first.position.longitude),
+    );
+    property.deployCustomers(customers);
+  }
+
+  void _locationSuccess(Map<String, dynamic> data) {
+    mapsLoc = MapsLoc.fromJson(data);
+    placesHandler.fetcher.run(getSubdistrictName()!);
+  }
+
+  void _placesSuccess(Map<String, dynamic> data) {
+    if (data['province'] != null && data['city'] != null && data['subdistrict'] != null) {
+      formSource.provinceid = Province.fromJson(data['province']).provid;
+      formSource.cityid = City.fromJson(data['city']).cityid;
+      formSource.subdistrictid = Subdistrict.fromJson(data['subdistrict']).subdistrictid;
+
+      if (customer != null) {
+        customer!.cstmcountry = Province.fromJson(data['province']).provcountry;
+      }
+    } else {
+      throw "The selected location is not available";
+    }
+  }
+
+  void _customerSuccess(Map<String, dynamic> data) {
+    customer = Customer.fromJson(data);
+    formSource.prepareFormValues();
+    if (customer?.cstmsubdistrict != null) {
+      placesHandler.fetcher.run(customer!.cstmsubdistrict!.subdistrictname!);
+    }
+  }
+
+  void _nearbyCustomersSuccess(List data) {
+    List<Customer> nearbyCustomers = List<Customer>.from(data.map((e) => Customer.fromJson(e)));
+    checkCustomers(nearbyCustomers);
+  }
+
+  void _bpCustomersSuccess(List data) {
+    List<BpCustomer> bpCustomers = List<BpCustomer>.from(data.map((e) => BpCustomer.fromJson(e)));
+    if (bpCustomers.isEmpty) {
+      formSource.onSubmit();
+    } else {
+      Get.find<TaskHelper>().failedPush(
+        Task(
+          bpCustomersID,
+          message: "Customer already exist in your business partner",
+        ),
+      );
+    }
+  }
+
+  void _createSuccess(String data) {
+    Get.find<TaskHelper>().successPush(
+      Task(
+        createID,
+        message: data,
+        onFinished: (res) {
+          Get.find<NearbyStateController>().refreshStates();
+          Get.back(id: NearbyNavigator.id);
+        },
+      ),
+    );
+  }
+
+  DataHandler<R, F> createDataHandler<R, F extends Function>(String id, DataFetcher<F, R> fetcher, Function(R) onSuccess) {
+    return DataHandler<R, F>(
+      id,
+      fetcher: fetcher,
+      onFailed: (message) => _showFailed(id, message),
+      onError: (message) => _showError(id, message),
+      onSuccess: onSuccess,
+    );
+  }
+
+  @override
+  void init() {
+    super.init();
+
+    userHandler = createDataHandler(userID, presenter.fetchUser, (data) => formSource.sbcbpid = UserDetail.fromJson(data).userdtbpid);
+    customersHandler = createDataHandler(customersID, presenter.fetchCustomers, _customersSuccess);
+    customersHandler = createDataHandler(customersID, presenter.fetchCustomers, _customersSuccess);
+    statusesHandler = createDataHandler(statusesID, presenter.fetchStatuses, (data) => statusesFromList(data));
+    typesHandler = createDataHandler(typesID, presenter.fetchTypes, (data) => typesFromList(data));
+    locationHandler = createDataHandler(locationID, presenter.fetchLocation, _locationSuccess);
+    placesHandler = createDataHandler(placesID, presenter.fetchPlaces, _placesSuccess);
+    customerHandler = createDataHandler(customerID, presenter.fetchCustomer, _customerSuccess);
+
+    nearbyCustomersHandler = DataHandler(
+      nearbyCustomersID,
+      fetcher: presenter.fetchNearbyCustomers,
+      onStart: () => Get.find<TaskHelper>().loaderPush(Task(nearbyCustomersID)),
+      onFailed: (message) => _showFailed(nearbyCustomersID, message, false),
+      onError: (message) => _showError(nearbyCustomersID, message),
+      onComplete: () => Get.find<TaskHelper>().loaderPop(nearbyCustomersID),
+      onSuccess: _nearbyCustomersSuccess,
+    );
+
+    bpCustomersHandler = DataHandler(
+      bpCustomersID,
+      fetcher: presenter.fetchBpCustomers,
+      onStart: () => Get.find<TaskHelper>().loaderPush(Task(bpCustomersID)),
+      onFailed: (message) => _showFailed(bpCustomersID, message, false),
+      onError: (message) => _showError(bpCustomersID, message),
+      onComplete: () => Get.find<TaskHelper>().loaderPop(bpCustomersID),
+      onSuccess: _bpCustomersSuccess,
+    );
+
+    createHandler = DataHandler(
+      createID,
+      fetcher: presenter.create,
+      onStart: () => Get.find<TaskHelper>().loaderPush(Task(createID)),
+      onFailed: (message) => _showFailed(createID, message, false),
+      onError: (message) => _showError(createID, message),
+      onComplete: () => Get.find<TaskHelper>().loaderPop(createID),
+      onSuccess: _createSuccess,
+    );
+  }
 
   @override
   CustomerFormCreatePresenter presenterBuilder() => CustomerFormCreatePresenter();
 
   @override
-  onLoadError(String message) => listener.onLoadDataError(message);
+  onLoadError(String message) {}
 
   @override
-  onLoadFailed(String message) => listener.onLoadDataFailed(message);
+  onLoadFailed(String message) {}
 
   @override
-  onLoadSuccess(Map data) {
-    if (data['customers'] != null) {
-      customersFromList(
-        data['customers'],
-        LatLng(property.markers.first.position.latitude, property.markers.first.position.longitude),
-      );
-      property.deployCustomers(customers);
-    }
-
-    if (data['types'] != null) {
-      typesFromList(data['types']);
-    }
-
-    if (data['statuses'] != null) {
-      statusesFromList(data['statuses']);
-    }
-
-    if (data['user'] != null) {
-      formSource.sbcbpid = UserDetail.fromJson(data['user']).userdtbpid;
-    }
-
-    if (data['location'] != null) {
-      mapsLoc = MapsLoc.fromJson(data['location']);
-      property.fetchPlacesIds();
-    }
-
-    if (data['places'] != null) {
-      Map places = data['places'];
-      if (places['province'] != null && places['city'] != null && places['subdistrict'] != null) {
-        formSource.provinceid = Province.fromJson(places['province']).provid;
-        formSource.cityid = City.fromJson(places['city']).cityid;
-        formSource.subdistrictid = Subdistrict.fromJson(places['subdistrict']).subdistrictid;
-      } else {
-        throw "The selected location is not available";
-      }
-    }
-
-    if (data['customer'] != null) {
-      customer = Customer.fromJson(data['customer']);
-      formSource.prepareFormValues();
-    }
-
-    if (data['nearbycustomers'] != null) {
-      List<Customer> nearbyCustomers = List<Customer>.from(data['nearbycustomers'].map((e) => Customer.fromJson(e)));
-      checkCustomers(nearbyCustomers);
-    }
-
-    if (data['bpcustomers'] != null) {
-      List<BpCustomer> bpCustomers = List<BpCustomer>.from(data['bpcustomers'].map((e) => BpCustomer.fromJson(e)));
-      if (bpCustomers.isEmpty) {
-        formSource.onSubmit();
-      } else {
-        Get.find<TaskHelper>().failedPush(
-          property.task.copyWith(
-            message: "Customer already exist in your business partner",
-          ),
-        );
-      }
-    }
-  }
+  onLoadSuccess(Map data) {}
 
   @override
-  void onCreateError(String message) => listener.onCreateDataError(message);
+  void onCreateError(String message) {}
 
   @override
-  void onCreateFailed(String message) => listener.onCreateDataFailed(message);
+  void onCreateFailed(String message) {}
 
   @override
-  void onCreateSuccess(String message) => listener.onCreateDataSuccess(message);
+  void onCreateSuccess(String message) {}
 
   @override
-  void onCreateComplete() => Get.find<TaskHelper>().loaderPop('createcustomer');
+  void onCreateComplete() {}
 
   @override
-  onLoadComplete() => listener.onComplete();
+  onLoadComplete() {}
 }
