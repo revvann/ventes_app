@@ -89,4 +89,18 @@ class ProspectFormCreateValidator {
 
     return null;
   }
+
+  String? proscustomer(String? value) {
+    if (_formSource.proscustomer == null) {
+      return "Customer is required";
+    }
+    return null;
+  }
+
+  String? prosowner(String? value) {
+    if (_formSource.prosowner == null) {
+      return "Owner is required";
+    }
+    return null;
+  }
 }

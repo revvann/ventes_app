@@ -107,7 +107,7 @@ class ProspectFormUpdateFormSource extends UpdateFormSource with FormSourceMixin
       'prospectname': prosname,
       'prospectstartdate': prosstartdateString,
       'prospectenddate': prosenddateString,
-      'prospectvalue': prosvalue,
+      'prospectvalue': prosvalue?.replaceAll('.', '').replaceAll(',', '.'),
       'prospectowner': _prosowner.value?.user?.userid,
       'prospectstageid': prosstage,
       'prospectstatusid': prosstatus,

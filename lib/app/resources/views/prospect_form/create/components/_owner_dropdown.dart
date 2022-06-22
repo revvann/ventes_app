@@ -16,6 +16,7 @@ class _OwnerDropdown extends StatelessWidget {
           label: "Owner",
           hintText: "Select user",
           value: state.formSource.prosownerString,
+          validator: state.formSource.validator.prosowner,
         );
       }),
       onChange: state.listener.onOwnerSelected,

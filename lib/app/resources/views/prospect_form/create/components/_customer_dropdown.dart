@@ -16,6 +16,7 @@ class _CustomerDropdown extends StatelessWidget {
           label: "Customer",
           hintText: "Select customer",
           value: state.formSource.proscustomerString,
+          validator: state.formSource.validator.proscustomer,
         );
       }),
       onChange: state.listener.onCustomerSelected,

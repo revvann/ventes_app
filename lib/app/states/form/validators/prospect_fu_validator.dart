@@ -17,7 +17,8 @@ class ProspectFormUpdateValidator {
     }
 
     try {
-      double.parse(_formSource.prosvalue!);
+      String value = _formSource.prosvalue!.replaceAll('.', '').replaceAll(',', '.');
+      double.parse(value);
     } catch (e) {
       return "Prospect value must be a number";
     }
