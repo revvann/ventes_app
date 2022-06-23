@@ -6,39 +6,42 @@ import 'package:ventes/app/models/auth_model.dart';
 import 'package:ventes/app/models/schedule_model.dart';
 import 'package:ventes/app/models/type_model.dart';
 import 'package:ventes/app/models/user_detail_model.dart';
+import 'package:ventes/app/states/controllers/daily_schedule_state_controller.dart';
 import 'package:ventes/app/states/typedefs/schedule_fu_typedef.dart';
+import 'package:ventes/constants/strings/schedule_string.dart';
+import 'package:ventes/core/api/handler.dart';
 import 'package:ventes/core/states/state_data_source.dart';
 import 'package:ventes/helpers/auth_helper.dart';
+import 'package:ventes/helpers/function_helpers.dart';
 import 'package:ventes/helpers/task_helper.dart';
+import 'package:ventes/routing/navigators/schedule_navigator.dart';
 
 class ScheduleFormUpdateDataSource extends StateDataSource<ScheduleFormUpdatePresenter> with DataSourceMixin implements ScheduleUpdateContract {
+  final String typesID = 'typshdr';
+  final String scheduleID = 'schehdr';
+  final String updateID = 'updatehdr';
+
+  late DataHandler<List<Map<String, int>>, List, Function()> typesHandler;
+  late DataHandler<Schedule?, Map<String, dynamic>, Function(int)> scheduleHandler;
+  late DataHandler<dynamic, String, Function(Map<String, dynamic>)> updateHandler;
+
   late int scheduleId;
 
-  final Rx<List<Map<String, int>>?> _types = Rx<List<Map<String, int>>?>(null);
-  List<Map<String, int>>? get types => _types.value;
-  set types(List<Map<String, int>>? value) => _types.value = value;
+  List<Map<String, int>> get types => typesHandler.value;
 
-  String typeName(int index) => types?[index].keys.first ?? "";
-  List<String> typeNames() => types?.map((type) => type.keys.first).toList() ?? <String>[];
-  int typeId(int index) => types?[index].values.first ?? 0;
-  List<int> typeIds() => types?.map((type) => type.values.first).toList() ?? <int>[];
+  String? typeName(int index) => types.isNotEmpty ? types[index].keys.first : null;
+  List<String> typeNames() => types.map((type) => type.keys.first).toList();
+  int? typeId(int index) => types.isNotEmpty ? types[index].values.first : null;
+  List<int> typeIds() => types.map((type) => type.values.first).toList();
   int typeIndex(int id) => typeIds().isNotEmpty ? typeIds().indexOf(id) : -1;
 
   final Rx<Schedule?> _schedule = Rx<Schedule?>(null);
   Schedule? get schedule => _schedule.value;
   set schedule(Schedule? value) => _schedule.value = value;
 
-  void insertTypes(List<Map<String, dynamic>> types) {
+  List<Map<String, int>> insertTypes(List types) {
     List<DBType> typeMap = types.map((type) => DBType.fromJson(type)).where((element) => element.typeid == schedule?.schetypeid).toList();
-    this.types = typeMap.map((type) => {type.typename ?? "": type.typeid ?? 0}).toList();
-  }
-
-  void fetchData() {
-    presenter.fetchData(scheduleId);
-  }
-
-  void updateSchedule(Map<String, dynamic> data) {
-    presenter.updateSchedule(data);
+    return typeMap.map((type) => {type.typename ?? "": type.typeid ?? 0}).toList();
   }
 
   Future<UserDetail> get userActive async => (await presenter.findActiveUser())!;
@@ -66,34 +69,59 @@ class ScheduleFormUpdateDataSource extends StateDataSource<ScheduleFormUpdatePre
     return userDetails;
   }
 
+  void _updateSuccess(data) {
+    Get.find<TaskHelper>().successPush(
+      property.task.copyWith(
+        message: ScheduleString.updateSuccess,
+        onFinished: (res) {
+          Get.find<DailyScheduleStateController>().refreshStates();
+          Get.back(id: ScheduleNavigator.id);
+        },
+      ),
+    );
+  }
+
+  @override
+  void init() {
+    super.init();
+    typesHandler = createDataHandler(typesID, presenter.fetchTypes, [], insertTypes);
+    scheduleHandler = createDataHandler(scheduleID, presenter.fetchSchedule, null, Schedule.fromJson, onComplete: formSource.prepareFormValues);
+    updateHandler = DataHandler(
+      updateID,
+      fetcher: presenter.update,
+      initialValue: null,
+      onStart: () => Get.find<TaskHelper>().loaderPush(Task(updateID)),
+      onComplete: () => Get.find<TaskHelper>().loaderPop(updateID),
+      onError: (message) => showError(updateID, message),
+      onFailed: (message) => showFailed(updateID, message),
+      onSuccess: _updateSuccess,
+    );
+  }
+
   @override
   ScheduleFormUpdatePresenter presenterBuilder() => ScheduleFormUpdatePresenter();
 
   @override
-  void onUpdateFailed(String message) => listener.onUpdateDataFailed(message);
+  void onUpdateFailed(String message) {}
 
   @override
-  void onUpdateSuccess(String message) => listener.onUpdateDataSuccess(message);
+  void onUpdateSuccess(String message) {}
 
   @override
-  void onUpdateError(String message) => listener.onUpdateDataError(message);
+  void onUpdateError(String message) {}
 
   @override
-  onLoadError(String message) => listener.onLoadDataError(message);
+  onLoadError(String message) {}
 
   @override
-  onLoadFailed(String message) => listener.onLoadDataFailed(message);
+  onLoadFailed(String message) {}
 
   @override
-  onLoadSuccess(Map data) {
-    schedule = Schedule.fromJson(data['schedule']);
-    insertTypes(List<Map<String, dynamic>>.from(data['types']));
-    formSource.prepareFormValues();
-  }
+  onLoadSuccess(Map data) {}
 
   @override
-  onLoadComplete() => listener.onComplete();
+  onLoadComplete() {}
 
   @override
-  void onUpdateComplete() => listener.onComplete();
+  void onUpdateComplete() {}
 }

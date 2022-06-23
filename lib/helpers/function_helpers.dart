@@ -11,6 +11,9 @@ import 'package:timezone/timezone.dart';
 import 'package:intl/intl.dart';
 import 'package:ventes/constants/views.dart';
 import 'package:ventes/app/states/controllers/bottom_navigation_state_controller.dart';
+import 'package:ventes/core/api/fetcher.dart';
+import 'package:ventes/core/api/handler.dart';
+import 'package:ventes/helpers/task_helper.dart';
 
 MaterialColor createSwatch(Color color) {
   final hslColor = HSLColor.fromColor(color);
@@ -184,4 +187,28 @@ Future<String?> getDeviceId() async {
   var deviceInfo = DeviceInfoPlugin();
   var androidDeviceInfo = await deviceInfo.androidInfo;
   return androidDeviceInfo.androidId;
+}
+
+void showError(String id, String message) {
+  Get.find<TaskHelper>().errorPush(Task(id, message: message));
+}
+
+void showSuccess(String id, String message) {
+  Get.find<TaskHelper>().successPush(Task(id, message: message));
+}
+
+void showFailed(String id, String message, [bool snackbar = true]) {
+  Get.find<TaskHelper>().failedPush(Task(id, message: message, snackbar: snackbar));
+}
+
+DataHandler<D, R, F> createDataHandler<D, R, F extends Function>(String id, DataFetcher<F, R> fetcher, D initialValue, D Function(R) onSuccess, {Function()? onComplete}) {
+  return DataHandler<D, R, F>(
+    id,
+    initialValue: initialValue,
+    fetcher: fetcher,
+    onFailed: (message) => showFailed(id, message),
+    onError: (message) => showError(id, message),
+    onSuccess: onSuccess,
+    onComplete: onComplete,
+  );
 }
