@@ -391,8 +391,7 @@ class ScheduleFormUpdateFormSource extends UpdateFormSource with FormSourceMixin
   void onSubmit() {
     if (isValid()) {
       Map<String, dynamic> data = toJson();
-      Get.find<TaskHelper>().loaderPush(property.task);
-      dataSource.updateSchedule(data);
+      dataSource.updateHandler.fetcher.run(data);
     }
   }
 }

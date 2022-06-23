@@ -5,8 +5,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:ventes/app/models/schedule_guest_model.dart';
+import 'package:ventes/app/models/schedule_model.dart';
 import 'package:ventes/app/models/user_detail_model.dart';
 import 'package:ventes/app/resources/widgets/editor_input.dart';
+import 'package:ventes/app/resources/widgets/handler_container.dart';
 import 'package:ventes/app/resources/widgets/icon_input.dart';
 import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
 import 'package:ventes/app/resources/widgets/regular_checkbox.dart';
@@ -145,15 +147,19 @@ class ScheduleFormUpdateView extends View<Controller> {
                 SizedBox(
                   height: RegularSize.m,
                 ),
-                Obx(() {
-                  return _ScheduletypeSelectbox(
+                HandlerContainer<Function(List<Map<String, int>>)>(
+                  handlers: [
+                    state.dataSource.typesHandler,
+                  ],
+                  width: RegularSize.l,
+                  builder: (data) => _ScheduletypeSelectbox(
                     onSelected: (value) {
                       state.formSource.schetype = value;
                     },
                     activeIndex: state.formSource.schetype,
-                    items: state.dataSource.types != null ? [state.dataSource.typeName(state.formSource.schetype)] : [],
-                  );
-                }),
+                    items: state.dataSource.types.isNotEmpty ? [state.dataSource.typeName(state.formSource.schetype)!] : [],
+                  ),
+                ),
                 SizedBox(
                   height: RegularSize.l,
                 ),
@@ -166,8 +172,13 @@ class ScheduleFormUpdateView extends View<Controller> {
                   ),
                 ),
                 Expanded(
-                  child: Obx(() {
-                    return SingleChildScrollView(
+                  child: HandlerContainer<Function(List<Map<String, int>>, Schedule?)>(
+                    handlers: [
+                      state.dataSource.typesHandler,
+                      state.dataSource.scheduleHandler,
+                    ],
+                    width: RegularSize.xl,
+                    builder: (data, schedule) => SingleChildScrollView(
                       child: Stack(
                         children: [
                           Offstage(
@@ -184,8 +195,8 @@ class ScheduleFormUpdateView extends View<Controller> {
                           ),
                         ],
                       ),
-                    );
-                  }),
+                    ),
+                  ),
                 ),
               ],
             ),

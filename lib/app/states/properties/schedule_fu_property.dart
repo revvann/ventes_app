@@ -33,8 +33,8 @@ class ScheduleFormUpdateProperty extends StateProperty with PropertyMixin {
   }
 
   void refresh() async {
-    dataSource.fetchData();
-    Get.find<TaskHelper>().loaderPush(task);
+    dataSource.typesHandler.fetcher.run();
+    dataSource.scheduleHandler.fetcher.run(dataSource.scheduleId);
   }
 
   void showMapBottomSheet() {
