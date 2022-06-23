@@ -56,10 +56,15 @@ class DashboardPresenter extends RegularPresenter<DashboardContract> {
     return null;
   }
 
-  Future<Response> _getUser() async {
+  Future<Response> _getUsers() async {
     AuthModel? authModel = await Get.find<AuthHelper>().get();
     Map<String, dynamic> params = {'userid': authModel!.userId!.toString()};
     return await _userService.select(params);
+  }
+
+  Future<Response> _getUser() async {
+    AuthModel? authModel = await Get.find<AuthHelper>().get();
+    return await _userService.show(authModel!.accountActive!);
   }
 
   Future<Response> _getCurrentPosition() async {
@@ -69,22 +74,27 @@ class DashboardPresenter extends RegularPresenter<DashboardContract> {
 
   SimpleFetcher get logout => SimpleFetcher(responseBuilder: _authService.signOut, failedMessage: "Logout failed");
 
-  SimpleFetcher<Map<String, dynamic>> get fetchPosition => SimpleFetcher<Map<String, dynamic>>(
+  SimpleFetcher<Map<String, dynamic>> get fetchPosition => SimpleFetcher(
         responseBuilder: _getCurrentPosition,
         failedMessage: DashboardString.fetchFailed,
       );
 
-  SimpleFetcher<List> get fetchUser => SimpleFetcher<List>(
+  SimpleFetcher<List> get fetchUsers => SimpleFetcher(
+        responseBuilder: _getUsers,
+        failedMessage: DashboardString.fetchFailed,
+      );
+
+  SimpleFetcher<Map<String, dynamic>> get fetchUser => SimpleFetcher(
         responseBuilder: _getUser,
         failedMessage: DashboardString.fetchFailed,
       );
 
-  SimpleFetcher<List> get fetchCustomers => SimpleFetcher<List>(
+  SimpleFetcher<List> get fetchCustomers => SimpleFetcher(
         responseBuilder: _getCustomers,
         failedMessage: DashboardString.fetchFailed,
       );
 
-  SimpleFetcher<Map<String, dynamic>> get fetchScheduleCount => SimpleFetcher<Map<String, dynamic>>(
+  SimpleFetcher<Map<String, dynamic>> get fetchScheduleCount => SimpleFetcher(
         responseBuilder: _getSchedule,
         failedMessage: DashboardString.fetchFailed,
       );

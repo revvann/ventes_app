@@ -9,39 +9,37 @@ class _ProspectList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: RegularSize.m),
-      child: Obx(
-        () {
-          return LoadingContainer(
-            isLoading: state.dataSource.prospectsHandler.onProcess,
-            width: RegularSize.xl,
-            child: ListView.builder(
-              physics: NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              itemCount: state.dataSource.prospects.length,
-              itemBuilder: (_, index) {
-                Prospect prospect = state.dataSource.prospects[index];
-                return GestureDetector(
-                  onTap: () {
-                    state.property.selectedProspect = prospect;
-                    state.listener.onProspectClicked();
-                  },
-                  child: ProspectCard(
-                    height: 120,
-                    margin: EdgeInsets.only(
-                      bottom: RegularSize.s,
-                      top: RegularSize.s,
-                    ),
-                    name: prospect.prospectname ?? "",
-                    customer: prospect.prospectcust?.sbccstmname ?? "",
-                    owner: prospect.prospectowneruser?.user?.userfullname ?? "",
-                    status: prospect.prospectstatus?.typename ?? "",
-                    date: prospect.prospectstartdate ?? "",
-                  ),
-                );
+      child: HandlerContainer<Function(List<Prospect>)>(
+        handlers: [
+          state.dataSource.prospectsHandler,
+        ],
+        width: RegularSize.xl,
+        builder: (prospects) => ListView.builder(
+          physics: NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          itemCount: prospects.length,
+          itemBuilder: (_, index) {
+            Prospect prospect = prospects[index];
+            return GestureDetector(
+              onTap: () {
+                state.property.selectedProspect = prospect;
+                state.listener.onProspectClicked();
               },
-            ),
-          );
-        },
+              child: ProspectCard(
+                height: 120,
+                margin: EdgeInsets.only(
+                  bottom: RegularSize.s,
+                  top: RegularSize.s,
+                ),
+                name: prospect.prospectname ?? "",
+                customer: prospect.prospectcust?.sbccstmname ?? "",
+                owner: prospect.prospectowneruser?.user?.userfullname ?? "",
+                status: prospect.prospectstatus?.typename ?? "",
+                date: prospect.prospectstartdate ?? "",
+              ),
+            );
+          },
+        ),
       ),
     );
   }

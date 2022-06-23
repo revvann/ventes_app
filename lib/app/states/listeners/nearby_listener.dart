@@ -14,7 +14,6 @@ import 'package:ventes/core/states/state_listener.dart';
 import 'package:ventes/helpers/function_helpers.dart';
 import 'package:ventes/helpers/task_helper.dart';
 import 'package:ventes/routing/navigators/nearby_navigator.dart';
-import 'package:ventes/app/states/controllers/nearby_state_controller.dart';
 
 class NearbyListener extends StateListener with ListenerMixin {
   void onMapControllerCreated(GoogleMapController controller) {

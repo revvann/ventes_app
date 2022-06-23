@@ -17,7 +17,7 @@ class DashboardListener extends StateListener with ListenerMixin {
   Future onReady() async {
     property.position = await getCurrentPosition();
     dataSource.currentPositionHandler.fetcher.run();
-    dataSource.customerHandler.fetcher.run();
+    dataSource.customersHandler.fetcher.run();
     dataSource.userHandler.fetcher.run();
     dataSource.scheduleCountHandler.fetcher.run();
   }

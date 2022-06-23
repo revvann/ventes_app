@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:ventes/app/models/schedule_model.dart';
+import 'package:ventes/app/resources/widgets/handler_container.dart';
 import 'package:ventes/app/resources/widgets/schedule_detail.dart';
 import 'package:ventes/app/states/typedefs/schedule_typedef.dart';
 import 'package:ventes/core/view/view.dart';

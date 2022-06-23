@@ -20,8 +20,9 @@ class DailyScheduleProperty extends StateProperty with PropertyMixin {
   set selectedAppointment(Schedule? value) => _selectedAppointment.value = value;
 
   void refresh() {
-    dataSource.fetchData(dbFormatDate(date));
-    Get.find<TaskHelper>().loaderPush(task);
+    dataSource.appointmentsHandler.fetcher.run(dbFormatDate(date));
+    dataSource.typesHandler.fetcher.run();
+    dataSource.permissionsHandler.fetcher.run();
   }
 
   Color getAppointmentColor(Schedule appointment) {

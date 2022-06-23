@@ -33,41 +33,27 @@ class CustomerFormCreateDataSource extends StateDataSource<CustomerFormCreatePre
   final String bpCustomersID = 'bpcustomerid';
   final String createID = 'create';
 
-  late DataHandler<Map<String, dynamic>, Function()> userHandler;
-  late DataHandler<List, Function()> customersHandler;
-  late DataHandler<List, Function()> statusesHandler;
-  late DataHandler<List, Function()> typesHandler;
-  late DataHandler<Map<String, dynamic>, Function(double, double)> locationHandler;
-  late DataHandler<Map<String, dynamic>, Function(String)> placesHandler;
-  late DataHandler<Map<String, dynamic>, Function(int)> customerHandler;
-  late DataHandler<List, Function(int)> nearbyCustomersHandler;
-  late DataHandler<List, Function(int)> bpCustomersHandler;
-  late DataHandler<String, Function(FormData)> createHandler;
+  late DataHandler<dynamic, Map<String, dynamic>, Function()> userHandler;
+  late DataHandler<List<BpCustomer>, List, Function()> customersHandler;
+  late DataHandler<Map<int, String>, List, Function()> statusesHandler;
+  late DataHandler<Map<int, String>, List, Function()> typesHandler;
+  late DataHandler<MapsLoc?, Map<String, dynamic>, Function(double, double)> locationHandler;
+  late DataHandler<dynamic, Map<String, dynamic>, Function(String)> placesHandler;
+  late DataHandler<Customer?, Map<String, dynamic>, Function(int)> customerHandler;
+  late DataHandler<dynamic, List, Function(int)> nearbyCustomersHandler;
+  late DataHandler<dynamic, List, Function(int)> bpCustomersHandler;
+  late DataHandler<dynamic, String, Function(FormData)> createHandler;
 
-  final _customers = Rx<List<BpCustomer>>([]);
-  set customers(List<BpCustomer> value) => _customers.value = value;
-  List<BpCustomer> get customers => _customers.value;
+  List<BpCustomer> get customers => customersHandler.value;
+  Customer? get customer => customerHandler.value;
+  MapsLoc? get mapsLoc => locationHandler.value;
+  Map<int, String> get types => typesHandler.value;
+  Map<int, String> get statuses => statusesHandler.value;
 
-  final _customer = Rx<Customer?>(null);
-  set customer(Customer? value) => _customer.value = value;
-  Customer? get customer => _customer.value;
-
-  final _mapsLoc = Rx<MapsLoc?>(null);
-  set mapsLoc(MapsLoc? value) => _mapsLoc.value = value;
-  MapsLoc? get mapsLoc => _mapsLoc.value;
-
-  final _types = Rx<Map<int, String>>({});
-  set types(Map<int, String> value) => _types.value = value;
-  Map<int, String> get types => _types.value;
-
-  final _statuses = Rx<Map<int, String>>({});
-  set statuses(Map<int, String> value) => _statuses.value = value;
-  Map<int, String> get statuses => _statuses.value;
-
-  void _customersFromList(List data, LatLng currentPos) {
-    customers = data.map((e) => BpCustomer.fromJson(e)).toList();
+  List<BpCustomer> _customersFromList(List data, LatLng currentPos) {
+    List<BpCustomer> customers = data.map((e) => BpCustomer.fromJson(e)).toList();
     LatLng coords2 = LatLng(currentPos.latitude, currentPos.longitude);
-    customers = customers.where((element) {
+    return customers.where((element) {
       LatLng coords1 = LatLng(element.sbccstm?.cstmlatitude ?? 0.0, element.sbccstm?.cstmlongitude ?? 0.0);
       double radius = calculateDistance(coords1, coords2);
       element.radius = radius;
@@ -75,22 +61,22 @@ class CustomerFormCreateDataSource extends StateDataSource<CustomerFormCreatePre
     }).toList();
   }
 
-  void typesFromList(List data) {
+  Map<int, String> typesFromList(List data) {
     Map<int, String> typesData = {};
     List<DBType> types = List<DBType>.from(data.map((e) => DBType.fromJson(e)));
     for (var type in types) {
       typesData[type.typeid ?? 0] = type.typename ?? '';
     }
-    this.types = typesData;
+    return typesData;
   }
 
-  void statusesFromList(List data) {
+  Map<int, String> statusesFromList(List data) {
     Map<int, String> statusesData = {};
     List<DBType> statuses = List<DBType>.from(data.map((e) => DBType.fromJson(e)));
     for (var type in statuses) {
       statusesData[type.typeid ?? 0] = type.typename ?? '';
     }
-    this.statuses = statusesData;
+    return statusesData;
   }
 
   String? getCountryName() {
@@ -152,9 +138,6 @@ class CustomerFormCreateDataSource extends StateDataSource<CustomerFormCreatePre
 
     if (nearbyCustomers.isNotEmpty) {
       Customer customer = nearbyCustomers.first;
-      this.customer = customer;
-      formSource.prepareFormValues();
-
       Get.find<TaskHelper>().confirmPush(
         Task(
           nearbyCustomersID,
@@ -194,17 +177,18 @@ class CustomerFormCreateDataSource extends StateDataSource<CustomerFormCreatePre
     Get.find<TaskHelper>().failedPush(Task(id, message: message, snackbar: snackbar));
   }
 
-  void _customersSuccess(List data) {
-    _customersFromList(
+  List<BpCustomer> _customersSuccess(List data) {
+    List<BpCustomer> customers = _customersFromList(
       data,
       LatLng(property.markers.first.position.latitude, property.markers.first.position.longitude),
     );
     property.deployCustomers(customers);
+    return customers;
   }
 
-  void _locationSuccess(Map<String, dynamic> data) {
-    mapsLoc = MapsLoc.fromJson(data);
-    placesHandler.fetcher.run(getSubdistrictName()!);
+  MapsLoc _locationSuccess(Map<String, dynamic> data) {
+    MapsLoc mapsLoc = MapsLoc.fromJson(data);
+    return mapsLoc;
   }
 
   void _placesSuccess(Map<String, dynamic> data) {
@@ -221,9 +205,13 @@ class CustomerFormCreateDataSource extends StateDataSource<CustomerFormCreatePre
     }
   }
 
-  void _customerSuccess(Map<String, dynamic> data) {
-    customer = Customer.fromJson(data);
+  Customer _customerSuccess(Map<String, dynamic> data) {
+    Customer customer = Customer.fromJson(data);
     formSource.prepareFormValues();
+    return customer;
+  }
+
+  void _customerComplete() {
     if (customer?.cstmsubdistrict != null) {
       placesHandler.fetcher.run(customer!.cstmsubdistrict!.subdistrictname!);
     }
@@ -261,13 +249,15 @@ class CustomerFormCreateDataSource extends StateDataSource<CustomerFormCreatePre
     );
   }
 
-  DataHandler<R, F> createDataHandler<R, F extends Function>(String id, DataFetcher<F, R> fetcher, Function(R) onSuccess) {
-    return DataHandler<R, F>(
+  DataHandler<D, R, F> createDataHandler<D, R, F extends Function>(String id, DataFetcher<F, R> fetcher, D initialValue, D Function(R) onSuccess, {Function()? onComplete}) {
+    return DataHandler<D, R, F>(
       id,
+      initialValue: initialValue,
       fetcher: fetcher,
       onFailed: (message) => _showFailed(id, message),
       onError: (message) => _showError(id, message),
       onSuccess: onSuccess,
+      onComplete: onComplete,
     );
   }
 
@@ -275,17 +265,17 @@ class CustomerFormCreateDataSource extends StateDataSource<CustomerFormCreatePre
   void init() {
     super.init();
 
-    userHandler = createDataHandler(userID, presenter.fetchUser, (data) => formSource.sbcbpid = UserDetail.fromJson(data).userdtbpid);
-    customersHandler = createDataHandler(customersID, presenter.fetchCustomers, _customersSuccess);
-    customersHandler = createDataHandler(customersID, presenter.fetchCustomers, _customersSuccess);
-    statusesHandler = createDataHandler(statusesID, presenter.fetchStatuses, (data) => statusesFromList(data));
-    typesHandler = createDataHandler(typesID, presenter.fetchTypes, (data) => typesFromList(data));
-    locationHandler = createDataHandler(locationID, presenter.fetchLocation, _locationSuccess);
-    placesHandler = createDataHandler(placesID, presenter.fetchPlaces, _placesSuccess);
-    customerHandler = createDataHandler(customerID, presenter.fetchCustomer, _customerSuccess);
+    userHandler = createDataHandler(userID, presenter.fetchUser, null, (data) => formSource.sbcbpid = UserDetail.fromJson(data).userdtbpid);
+    customersHandler = createDataHandler(customersID, presenter.fetchCustomers, [], _customersSuccess);
+    statusesHandler = createDataHandler(statusesID, presenter.fetchStatuses, {}, (data) => statusesFromList(data));
+    typesHandler = createDataHandler(typesID, presenter.fetchTypes, {}, (data) => typesFromList(data));
+    locationHandler = createDataHandler(locationID, presenter.fetchLocation, null, _locationSuccess, onComplete: () => placesHandler.fetcher.run(getSubdistrictName()!));
+    placesHandler = createDataHandler(placesID, presenter.fetchPlaces, null, _placesSuccess);
+    customerHandler = createDataHandler(customerID, presenter.fetchCustomer, null, _customerSuccess, onComplete: _customerComplete);
 
     nearbyCustomersHandler = DataHandler(
       nearbyCustomersID,
+      initialValue: null,
       fetcher: presenter.fetchNearbyCustomers,
       onStart: () => Get.find<TaskHelper>().loaderPush(Task(nearbyCustomersID)),
       onFailed: (message) => _showFailed(nearbyCustomersID, message, false),
@@ -296,6 +286,7 @@ class CustomerFormCreateDataSource extends StateDataSource<CustomerFormCreatePre
 
     bpCustomersHandler = DataHandler(
       bpCustomersID,
+      initialValue: null,
       fetcher: presenter.fetchBpCustomers,
       onStart: () => Get.find<TaskHelper>().loaderPush(Task(bpCustomersID)),
       onFailed: (message) => _showFailed(bpCustomersID, message, false),
@@ -306,6 +297,7 @@ class CustomerFormCreateDataSource extends StateDataSource<CustomerFormCreatePre
 
     createHandler = DataHandler(
       createID,
+      initialValue: null,
       fetcher: presenter.create,
       onStart: () => Get.find<TaskHelper>().loaderPush(Task(createID)),
       onFailed: (message) => _showFailed(createID, message, false),

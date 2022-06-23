@@ -67,34 +67,8 @@ class CustomerFormUpdateListener extends StateListener with ListenerMixin {
     );
   }
 
-  void onComplete() => Get.find<TaskHelper>().loaderPop(property.task.name);
   @override
   Future onReady() async {
     property.refresh();
-  }
-
-  void onLoadDataError(String message) {
-    Get.find<TaskHelper>().errorPush(property.task.copyWith(message: message));
-  }
-
-  void onLoadDataFailed(String message) {
-    Get.find<TaskHelper>().failedPush(property.task.copyWith(message: message, snackbar: true));
-  }
-
-  void onUpdateDataError(String message) {
-    Get.find<TaskHelper>().errorPush(property.task.copyWith(message: message));
-  }
-
-  void onUpdateDataFailed(String message) {
-    Get.find<TaskHelper>().failedPush(property.task.copyWith(message: message, snackbar: true));
-  }
-
-  void onUpdateDataSuccess(String message) async {
-    Get.find<TaskHelper>().successPush(property.task.copyWith(
-        message: message,
-        onFinished: (res) {
-          Get.find<NearbyStateController>().property.refresh();
-          Get.back(id: NearbyNavigator.id);
-        }));
   }
 }

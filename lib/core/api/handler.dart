@@ -4,78 +4,71 @@ import 'package:ventes/core/api/fetcher.dart';
 
 ///
 ///type parameter
-/// T => result type parameter, pass to onSuccess
-/// F => fetcher's function type
+/// [R] result type parameter, pass to onSuccess
+/// [F] fetcher's function type
+/// [D] Data type, data to handler
 ///
-class DataHandler<T, F extends Function> implements BaseContract<T> {
+class DataHandler<D, R, F extends Function> implements BaseContract<R, D> {
   DataHandler(
     this.id, {
     required this.fetcher,
-    Function()? onStart,
-    Function(T)? onSuccess,
-    Function(String)? onError,
-    Function(String)? onFailed,
-    Function()? onComplete,
+    required D initialValue,
+    this.onStart,
+    this.onSuccess,
+    this.onError,
+    this.onFailed,
+    this.onComplete,
   }) {
     fetcher.handler = this;
-    this.onStart = startBuilder(onStart);
-    this.onSuccess = successBuilder(onSuccess);
-    this.onFailed = failedBuilder(onFailed);
-    this.onError = errorBuilder(onError);
-    this.onComplete = completeBuilder(onComplete);
+    _data = Rx<D>(initialValue);
   }
 
   String id;
-  DataFetcher<F, T> fetcher;
+  DataFetcher<F, R> fetcher;
+  late Rx<D> _data;
+
+  D get value => _data.value;
 
   final Rx<bool> _onProcess = Rx<bool>(false);
   bool get onProcess => _onProcess.value;
   set onProcess(bool value) => _onProcess.value = value;
 
-  Function() startBuilder(Function()? callback) {
-    return () {
-      onProcess = true;
-      callback?.call();
-    };
+  void start() {
+    onProcess = true;
+    onStart?.call();
   }
 
-  Function(T) successBuilder(Function(T)? callback) {
-    return (param) {
-      callback?.call(param);
-    };
+  void success(R param) {
+    if (onSuccess != null) {
+      _data.value = onSuccess!(param);
+    }
   }
 
-  Function(String) failedBuilder(Function(String)? callback) {
-    return (param) {
-      callback?.call(param);
-    };
+  void failed(String param) {
+    onFailed?.call(param);
   }
 
-  Function(String) errorBuilder(Function(String)? callback) {
-    return (param) {
-      callback?.call(param);
-    };
+  void error(String param) {
+    onError?.call(param);
   }
 
-  Function() completeBuilder(Function()? callback) {
-    return () {
-      callback?.call();
-      onProcess = false;
-    };
+  void complete() {
+    onComplete?.call();
+    onProcess = false;
   }
 
   @override
-  late Function() onComplete;
+  late Function()? onComplete;
 
   @override
-  late Function(String) onError;
+  late Function(String)? onError;
 
   @override
-  late Function(String) onFailed;
+  late Function(String)? onFailed;
 
   @override
-  late Function() onStart;
+  late Function()? onStart;
 
   @override
-  late Function(T) onSuccess;
+  late D Function(R)? onSuccess;
 }

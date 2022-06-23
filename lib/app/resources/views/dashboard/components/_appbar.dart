@@ -88,19 +88,19 @@ class _AppBar extends StatelessWidget {
                   width: RegularSize.xxl,
                   height: RegularSize.xxl,
                   alignment: Alignment.center,
-                  child: Obx(() {
-                    return LoadingContainer(
-                      isLoading: state.dataSource.userHandler.onProcess,
-                      child: Text(
-                        state.property.shortName ?? "AA",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
+                  child: HandlerContainer<Function(UserDetail?)>(
+                    handlers: [
+                      state.dataSource.userHandler,
+                    ],
+                    builder: (user) => Text(
+                      state.property.shortName ?? "AA",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
                       ),
-                    );
-                  }),
+                    ),
+                  ),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: RegularColor.primary,

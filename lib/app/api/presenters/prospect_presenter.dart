@@ -46,18 +46,18 @@ class ProspectPresenter extends RegularPresenter<FetchDataContract> {
   DataFetcher<Function([Map<String, dynamic>?]), List> get fetchProspects => DataFetcher(
         builder: (handler) {
           return ([additionParams]) async {
-            handler.onStart();
+            handler.start();
             try {
               Response response = await _getProspects(additionParams ?? {});
               if (response.statusCode == 200) {
-                handler.onSuccess(response.body);
+                handler.success(response.body);
               } else {
-                handler.onFailed(ProspectString.fetchDataFailed);
+                handler.failed(ProspectString.fetchDataFailed);
               }
             } catch (e) {
-              handler.onError(e.toString());
+              handler.error(e.toString());
             }
-            handler.onComplete();
+            handler.complete();
           };
         },
       );

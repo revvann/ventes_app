@@ -13,16 +13,12 @@ class ProspectDataSource extends StateDataSource<ProspectPresenter> with DataSou
   final String statusesID = "stshdr";
   final String prospectsID = 'prshdr';
 
-  late DataHandler<List, Function()> statusesHandler;
-  late DataHandler<List, Function([Map<String, dynamic>?])> prospectsHandler;
+  late DataHandler<List<KeyableDropdownItem<int, DBType>>, List, Function()> statusesHandler;
+  late DataHandler<List<Prospect>, List, Function([Map<String, dynamic>?])> prospectsHandler;
 
-  final Rx<List<KeyableDropdownItem<int, DBType>>> _statusItems = Rx<List<KeyableDropdownItem<int, DBType>>>([]);
-  set statusItems(List<KeyableDropdownItem<int, DBType>> value) => _statusItems.value = value;
-  List<KeyableDropdownItem<int, DBType>> get statusItems => _statusItems.value;
+  List<KeyableDropdownItem<int, DBType>> get statusItems => statusesHandler.value;
 
-  final Rx<List<Prospect>> _prospects = Rx<List<Prospect>>([]);
-  set prospects(List<Prospect> value) => _prospects.value = value;
-  List<Prospect> get prospects => _prospects.value;
+  List<Prospect> get prospects => prospectsHandler.value;
 
   void _showError(String id, String message) {
     Get.find<TaskHelper>().errorPush(Task(id, message: message));
@@ -32,9 +28,9 @@ class ProspectDataSource extends StateDataSource<ProspectPresenter> with DataSou
     Get.find<TaskHelper>().failedPush(Task(id, message: message, snackbar: snackbar));
   }
 
-  void _statusesSuccess(List data) {
+  List<KeyableDropdownItem<int, DBType>> _statusesSuccess(List data) {
     List<DBType> statusses = List<DBType>.from(data.map((e) => DBType.fromJson(e)));
-    statusItems = statusses
+    return statusses
         .map((e) => KeyableDropdownItem<int, DBType>(
               value: e,
               key: e.typeid!,
@@ -48,6 +44,7 @@ class ProspectDataSource extends StateDataSource<ProspectPresenter> with DataSou
 
     statusesHandler = DataHandler(
       statusesID,
+      initialValue: [],
       fetcher: presenter.fetchStatuses,
       onFailed: (message) => _showFailed(statusesID, message),
       onError: (message) => _showError(statusesID, message),
@@ -56,10 +53,11 @@ class ProspectDataSource extends StateDataSource<ProspectPresenter> with DataSou
 
     prospectsHandler = DataHandler(
       prospectsID,
+      initialValue: [],
       fetcher: presenter.fetchProspects,
       onFailed: (message) => _showFailed(prospectsID, message),
       onError: (message) => _showError(prospectsID, message),
-      onSuccess: (data) => prospects = data.map<Prospect>((e) => Prospect.fromJson(e)).toList(),
+      onSuccess: (data) => data.map<Prospect>((e) => Prospect.fromJson(e)).toList(),
     );
   }
 

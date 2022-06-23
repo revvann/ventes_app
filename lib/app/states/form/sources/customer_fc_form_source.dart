@@ -66,14 +66,14 @@ class CustomerFormCreateFormSource extends UpdateFormSource with FormSourceMixin
   @override
   void close() {
     super.close();
-    nameTEC.dispose();
-    phoneTEC.dispose();
-    latitudeTEC.dispose();
-    longitudeTEC.dispose();
     Get.delete<SearchListController<Country, Country>>();
     Get.delete<SearchListController<Province, Province>>();
     Get.delete<SearchListController<City, City>>();
     Get.delete<SearchListController<Subdistrict, Subdistrict>>();
+    nameTEC.dispose();
+    phoneTEC.dispose();
+    latitudeTEC.dispose();
+    longitudeTEC.dispose();
   }
 
   @override

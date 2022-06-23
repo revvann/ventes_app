@@ -17,20 +17,14 @@ class NearbyDataSource extends StateDataSource<NearbyPresenter> with DataSourceM
   final String customersID = 'custhdr';
   final String deleteID = 'delhdr';
 
-  late DataHandler<Map<String, dynamic>, Future Function(double, double)> locationHandler;
-  late DataHandler<List, Function()> bpCustomersHandler;
-  late DataHandler<List, Future Function(String)> customersHandler;
-  late DataHandler<String, Function(int)> deleteHandler;
+  late DataHandler<MapsLoc?, Map<String, dynamic>, Future Function(double, double)> locationHandler;
+  late DataHandler<List<BpCustomer>, List, Function()> bpCustomersHandler;
+  late DataHandler<List<Customer>, List, Future Function(String)> customersHandler;
+  late DataHandler<dynamic, String, Function(int)> deleteHandler;
 
-  List<BpCustomer> bpCustomers = <BpCustomer>[];
-
-  final _customers = Rx<List<Customer>>([]);
-  set customers(List<Customer> value) => _customers.value = value;
-  List<Customer> get customers => _customers.value;
-
-  final Rx<MapsLoc> _mapsLoc = Rx<MapsLoc>(MapsLoc());
-  set mapsLoc(MapsLoc value) => _mapsLoc.value = value;
-  MapsLoc get mapsLoc => _mapsLoc.value;
+  List<BpCustomer> get bpCustomers => bpCustomersHandler.value;
+  List<Customer> get customers => customersHandler.value;
+  MapsLoc? get mapsLoc => locationHandler.value;
 
   bool bpCustomersHas(Customer customer) {
     return bpCustomers.any((element) => element.sbccstmid == customer.cstmid);
@@ -43,18 +37,13 @@ class NearbyDataSource extends StateDataSource<NearbyPresenter> with DataSourceM
 
   Future<MapsLoc?> fetchDetailLoc(double latitude, double longitude) => presenter.fetchLocationDetail(latitude, longitude);
 
-  void _locationDetailLoaded(Map<String, dynamic> data) {
-    mapsLoc = MapsLoc.fromJson(data);
+  MapsLoc _locationDetailLoaded(Map<String, dynamic> data) {
+    return MapsLoc.fromJson(data);
   }
 
-  void bpCustomersLoaded(List<dynamic> data) {
-    bpCustomers = data.map((e) => BpCustomer.fromJson(e)).toList();
-  }
-
-  void _customersFromList(List data, LatLng currentPos) {
-    customers = data.map((e) => Customer.fromJson(e)).toList();
-    LatLng coords2 = LatLng(currentPos.latitude, currentPos.longitude);
-    customers = customers.map((element) => _mappingBpCustomer(element, coords2)).where(_isCustomerInRange).toList();
+  List<Customer> _customersFromList(List data, LatLng currentPos) {
+    List<Customer> customers = data.map((e) => Customer.fromJson(e)).toList();
+    return customers.map((element) => _mappingBpCustomer(element, currentPos)).where(_isCustomerInRange).toList();
   }
 
   Customer _mappingBpCustomer(Customer element, LatLng currentCoordinates) {
@@ -67,7 +56,7 @@ class NearbyDataSource extends StateDataSource<NearbyPresenter> with DataSourceM
   bool _isCustomerInRange(element) => element.radius != null ? element.radius! <= 100 : false;
 
   String get subdistrictName =>
-      mapsLoc.adresses!.first.addressComponents!.firstWhere((element) => element.types!.contains('administrative_area_level_3')).longName!.replaceAll(RegExp(r'Kecamatan |Kec '), '');
+      mapsLoc?.adresses?.first.addressComponents?.firstWhere((element) => element.types!.contains('administrative_area_level_3')).longName!.replaceAll(RegExp(r'Kecamatan |Kec '), '') ?? "";
 
   void _showError(String id, String message) {
     Get.find<TaskHelper>().errorPush(Task(id, message: message));
@@ -85,17 +74,24 @@ class NearbyDataSource extends StateDataSource<NearbyPresenter> with DataSourceM
         }));
   }
 
-  void _customersSuccess(List data) {
-    _customersFromList(
+  List<Customer> _customersSuccess(List data) {
+    List<Customer> customers = _customersFromList(
       data,
       LatLng(property.markers.first.position.latitude, property.markers.first.position.longitude),
     );
     property.deployCustomers(customers);
+    return customers;
   }
 
-  void _locationSuccess(Map<String, dynamic> data) {
-    _locationDetailLoaded(data);
-    customersHandler.fetcher.run(subdistrictName);
+  MapsLoc _locationSuccess(Map<String, dynamic> data) {
+    MapsLoc mapsloc = _locationDetailLoaded(data);
+    return mapsloc;
+  }
+
+  List<BpCustomer> _bpCustomersSucces(List data) {
+    List<BpCustomer> bpCustomers = List<BpCustomer>.from(data.map((e) => BpCustomer.fromJson(e)));
+    property.deployCustomers(customers);
+    return bpCustomers;
   }
 
   @override
@@ -104,6 +100,7 @@ class NearbyDataSource extends StateDataSource<NearbyPresenter> with DataSourceM
 
     customersHandler = DataHandler(
       customersID,
+      initialValue: [],
       fetcher: presenter.fetchCustomers,
       onFailed: (message) => _showFailed(customersID, message),
       onError: (message) => _showError(customersID, message),
@@ -112,22 +109,26 @@ class NearbyDataSource extends StateDataSource<NearbyPresenter> with DataSourceM
 
     locationHandler = DataHandler(
       locationID,
+      initialValue: null,
       fetcher: presenter.fetchLocation,
       onFailed: (message) => _showFailed(locationID, message),
       onError: (message) => _showError(locationID, message),
       onSuccess: _locationSuccess,
+      onComplete: () => customersHandler.fetcher.run(subdistrictName),
     );
 
     bpCustomersHandler = DataHandler(
       bpCustomersID,
+      initialValue: [],
       fetcher: presenter.fetchBpCustomers,
       onFailed: (message) => _showFailed(bpCustomersID, message),
       onError: (message) => _showError(bpCustomersID, message),
-      onSuccess: (data) => bpCustomers = List<BpCustomer>.from(data.map((e) => BpCustomer.fromJson(e))),
+      onSuccess: _bpCustomersSucces,
     );
 
     deleteHandler = DataHandler(
       deleteID,
+      initialValue: null,
       fetcher: presenter.delete,
       onStart: () => Get.find<TaskHelper>().loaderPush(Task(deleteID)),
       onError: (message) => _showError(deleteID, message),

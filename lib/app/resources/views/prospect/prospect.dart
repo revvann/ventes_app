@@ -6,6 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:ventes/app/models/prospect_model.dart';
 import 'package:ventes/app/models/type_model.dart';
+import 'package:ventes/app/resources/widgets/handler_container.dart';
 import 'package:ventes/app/resources/widgets/icon_input.dart';
 import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
 import 'package:ventes/app/resources/widgets/loading_container.dart';
@@ -68,13 +69,7 @@ class ProspectView extends View<Controller> {
                       SizedBox(
                         height: RegularSize.m,
                       ),
-                      Obx(() {
-                        return LoadingContainer(
-                          isLoading: state.dataSource.statusesHandler.onProcess,
-                          width: RegularSize.l,
-                          child: _StatusDropdown(),
-                        );
-                      }),
+                      _StatusDropdown(),
                       SizedBox(
                         height: RegularSize.m,
                       ),

@@ -19,11 +19,6 @@ class ScheduleProperty extends StateProperty with PropertyMixin {
 
   DateTime initialDate = DateTime.now();
 
-  void refresh() {
-    dataSource.fetchData(dateShown.month);
-    Get.find<TaskHelper>().loaderPush(task);
-  }
-
   @override
   void ready() {
     super.ready();
@@ -34,7 +29,12 @@ class ScheduleProperty extends StateProperty with PropertyMixin {
     initialDate = dateShown;
 
     calendarController.addPropertyChangedListener(listener.onDateShownChanged);
-    refresh();
+  }
+
+  void refresh() {
+    dataSource.appointmentsHandler.fetcher.run(dateShown.month);
+    dataSource.permissionsHandler.fetcher.run();
+    dataSource.typesHandler.fetcher.run();
   }
 
   @override

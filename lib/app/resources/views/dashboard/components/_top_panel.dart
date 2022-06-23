@@ -30,58 +30,49 @@ class _TopPanel extends StatelessWidget {
             ),
           ],
         ),
-        child: Obx(() {
-          bool currentPositionProcess = state.dataSource.currentPositionHandler.onProcess;
-          bool userProcess = state.dataSource.userHandler.onProcess;
-          bool scheduleCountHandler = state.dataSource.scheduleCountHandler.onProcess;
-          bool customerHandler = state.dataSource.customerHandler.onProcess;
-          return LoadingContainer(
-            isLoading: currentPositionProcess && userProcess && scheduleCountHandler && customerHandler,
-            width: 40,
-            child: Column(
-              children: [
-                Obx(() {
-                  return Text(
-                    state.dataSource.account?.user?.userfullname ?? "",
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: RegularColor.dark,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  );
-                }),
-                SizedBox(
-                  height: RegularSize.xs,
+        child: HandlerContainer<Function(MapsLoc?, UserDetail?, int, List<BpCustomer>)>(
+          handlers: [
+            state.dataSource.currentPositionHandler,
+            state.dataSource.userHandler,
+            state.dataSource.scheduleCountHandler,
+            state.dataSource.customersHandler,
+          ],
+          width: 40,
+          builder: (location, user, scheduleCount, customers) => Column(
+            children: [
+              Text(
+                user?.user?.userfullname ?? "",
+                style: TextStyle(
+                  fontSize: 16,
+                  color: RegularColor.dark,
+                  fontWeight: FontWeight.bold,
                 ),
-                Obx(() {
-                  return Text(
-                    state.dataSource.currentPosition?.adresses?.first.formattedAddress ?? "",
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      color: RegularColor.dark,
-                      fontSize: 14,
-                    ),
-                  );
-                }),
-                SizedBox(
-                  height: RegularSize.m,
+              ),
+              SizedBox(
+                height: RegularSize.xs,
+              ),
+              Text(
+                location?.adresses?.first.formattedAddress ?? "",
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: RegularColor.dark,
+                  fontSize: 14,
                 ),
-                Row(
-                  children: [
-                    Obx(() {
-                      return _TopPanelItem('assets/svg/user.svg', state.dataSource.customers.length.toString(), "Customer");
-                    }),
-                    Obx(() {
-                      return _TopPanelItem('assets/svg/calendar.svg', state.dataSource.scheduleCount.toString(), "Scheduled");
-                    }),
-                    _TopPanelItem('assets/svg/time-check.svg', "3", "Done"),
-                  ],
-                ),
-              ],
-            ),
-          );
-        }),
+              ),
+              SizedBox(
+                height: RegularSize.m,
+              ),
+              Row(
+                children: [
+                  _TopPanelItem('assets/svg/user.svg', customers.length.toString(), "Customer"),
+                  _TopPanelItem('assets/svg/calendar.svg', scheduleCount.toString(), "Scheduled"),
+                  _TopPanelItem('assets/svg/time-check.svg', "3", "Done"),
+                ],
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

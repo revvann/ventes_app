@@ -74,8 +74,10 @@ class CustomerFormUpdateProperty extends StateProperty with PropertyMixin {
   }
 
   void refresh() {
-    dataSource.fetchData(customerid ?? 0);
-    Get.find<TaskHelper>().loaderPush(task);
+    dataSource.bpCustomersHandler.fetcher.run();
+    dataSource.typesHandler.fetcher.run();
+    dataSource.statusesHandler.fetcher.run();
+    dataSource.bpCustomerHandler.fetcher.run(customerid ?? 0);
   }
 
   @override

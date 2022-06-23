@@ -59,6 +59,13 @@ class CustomerFormCreateProperty extends StateProperty with PropertyMixin {
 
   void refresh() async {
     if (latitude != null && longitude != null) {
+      LatLng pos = LatLng(latitude!, longitude!);
+      GoogleMapController controller = await mapsController.future;
+      controller.animateCamera(
+        CameraUpdate.newLatLng(pos),
+      );
+      markerLatLng = pos;
+
       dataSource.userHandler.fetcher.run();
       dataSource.customersHandler.fetcher.run();
       dataSource.statusesHandler.fetcher.run();
@@ -69,13 +76,6 @@ class CustomerFormCreateProperty extends StateProperty with PropertyMixin {
       } else {
         dataSource.locationHandler.fetcher.run(latitude!, longitude!);
       }
-
-      LatLng pos = LatLng(latitude!, longitude!);
-      GoogleMapController controller = await mapsController.future;
-      controller.animateCamera(
-        CameraUpdate.newLatLng(pos),
-      );
-      markerLatLng = pos;
     }
   }
 }

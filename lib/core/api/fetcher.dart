@@ -9,8 +9,8 @@ import 'package:ventes/core/api/handler.dart';
 class DataFetcher<T extends Function, R> {
   DataFetcher({required this.builder});
 
-  late DataHandler<R, T> handler;
-  T Function(DataHandler<R, T> handler) builder;
+  late DataHandler<dynamic, R, T> handler;
+  T Function(DataHandler<dynamic, R, T> handler) builder;
   T get run => builder(handler);
 }
 
@@ -26,18 +26,18 @@ class SimpleFetcher<R> extends DataFetcher<Function(), R> {
   }) : super(
           builder: (handler) {
             return () async {
-              handler.onStart();
+              handler.start();
               try {
                 Response response = await responseBuilder();
                 if (response.statusCode == 200) {
-                  handler.onSuccess(response.body);
+                  handler.success(response.body);
                 } else {
-                  handler.onFailed(failedMessage);
+                  handler.failed(failedMessage);
                 }
               } catch (e) {
-                handler.onError(e.toString());
+                handler.error(e.toString());
               }
-              handler.onComplete();
+              handler.complete();
             };
           },
         );

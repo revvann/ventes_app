@@ -1,10 +1,12 @@
 import 'package:get/get.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:ventes/app/models/auth_model.dart';
 import 'package:ventes/app/api/contracts/fetch_data_contract.dart';
 import 'package:ventes/app/api/presenters/regular_presenter.dart';
 import 'package:ventes/app/api/services/type_service.dart';
 import 'package:ventes/constants/strings/regular_string.dart';
 import 'package:ventes/constants/strings/schedule_string.dart';
+import 'package:ventes/core/api/fetcher.dart';
 import 'package:ventes/helpers/auth_helper.dart';
 import 'package:ventes/app/api/services/schedule_service.dart';
 
@@ -37,39 +39,24 @@ class SchedulePresenter extends RegularPresenter<FetchDataContract> {
     return await _typeService.byCode(params);
   }
 
-  void fetchSchedules([int? month]) async {
-    try {
-      Map data = {};
-      Response scheduleResponse = await _getSchedules(month);
-      if (scheduleResponse.statusCode == 200) {
-        data["schedules"] = scheduleResponse.body;
-        contract.onLoadSuccess(data);
-      } else {
-        contract.onLoadFailed(ScheduleString.fetchFailed);
-      }
-    } catch (e) {
-      contract.onLoadError(e.toString());
-    }
-    contract.onLoadComplete();
-  }
-
-  void fetchData([int? scheduleMonth]) async {
-    try {
-      Map data = {};
-      Response scheduleResponse = await _getSchedules(scheduleMonth);
-      Response typesResponse = await _getTypes();
-      Response permissionsResponse = await _getPermissions();
-      if (scheduleResponse.statusCode == 200 && typesResponse.statusCode == 200 && permissionsResponse.statusCode == 200) {
-        data["schedules"] = scheduleResponse.body;
-        data["types"] = typesResponse.body;
-        data["permissions"] = permissionsResponse.body;
-        contract.onLoadSuccess(data);
-      } else {
-        contract.onLoadFailed(ScheduleString.fetchFailed);
-      }
-    } catch (e) {
-      contract.onLoadFailed(e.toString());
-    }
-    contract.onLoadComplete();
-  }
+  SimpleFetcher<List> get fetchTypes => SimpleFetcher(responseBuilder: _getTypes, failedMessage: ScheduleString.fetchFailed);
+  SimpleFetcher<List> get fetchPermission => SimpleFetcher(responseBuilder: _getPermissions, failedMessage: ScheduleString.fetchFailed);
+  DataFetcher<Function([int?]), List> get fetchSchedules => DataFetcher(
+        builder: (handler) {
+          return ([month]) async {
+            handler.start();
+            try {
+              Response scheduleResponse = await _getSchedules(month);
+              if (scheduleResponse.statusCode == 200) {
+                handler.success(scheduleResponse.body);
+              } else {
+                handler.failed(ScheduleString.fetchFailed);
+              }
+            } catch (e) {
+              handler.error(e.toString());
+            }
+            handler.complete();
+          };
+        },
+      );
 }

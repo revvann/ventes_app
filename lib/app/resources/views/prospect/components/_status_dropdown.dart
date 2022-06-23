@@ -9,21 +9,22 @@ class _StatusDropdown extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: RegularSize.m),
-      child: Obx(() {
-        return KeyableDropdown<int, DBType>(
+      child: HandlerContainer<Function(List<KeyableDropdownItem<int, DBType>>)>(
+        handlers: [
+          state.dataSource.statusesHandler,
+        ],
+        builder: (statuses) => KeyableDropdown<int, DBType>(
           controller: state.formSource.statusDropdownController,
-          child: Obx(
-            () {
-              return RegularInput(
-                enabled: false,
-                label: "Status",
-                value: state.formSource.prosstatus?.typename,
-                hintText: "Select status",
-              );
-            },
-          ),
+          child: Obx(() {
+            return RegularInput(
+              enabled: false,
+              label: "Status",
+              value: state.formSource.prosstatus?.typename,
+              hintText: "Select status",
+            );
+          }),
           onChange: state.listener.onStatusSelected,
-          items: state.dataSource.statusItems,
+          items: statuses,
           itemBuilder: (item, isSelected) {
             return Container(
               padding: EdgeInsets.symmetric(
@@ -55,8 +56,8 @@ class _StatusDropdown extends StatelessWidget {
               ),
             );
           },
-        );
-      }),
+        ),
+      ),
     );
   }
 }

@@ -1,7 +1,6 @@
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ventes/app/api/presenters/dashboard_presenter.dart';
-import 'package:ventes/app/models/auth_model.dart';
 import 'package:ventes/app/models/bp_customer_model.dart';
 import 'package:ventes/app/models/maps_loc.dart';
 import 'package:ventes/app/models/user_detail_model.dart';
@@ -15,41 +14,30 @@ import 'package:ventes/helpers/task_helper.dart';
 
 class DashboardDataSource extends StateDataSource<DashboardPresenter> with DataSourceMixin implements DashboardContract {
   final String currentPositionID = "curposhdr";
+  final String usersID = 'usershdr';
   final String userID = 'userhdr';
-  final String customerID = 'cstmhdr';
+  final String customersID = 'cstmhdr';
   final String scheduleCountID = "schcounthdr";
   final String logoutID = 'logouthdr';
 
-  late DataHandler<Map<String, dynamic>, Function()> currentPositionHandler;
-  late DataHandler<List, Function()> userHandler;
-  late DataHandler<List, Function()> customerHandler;
-  late DataHandler<Map<String, dynamic>, Function()> scheduleCountHandler;
-  late DataHandler<dynamic, Function()> logoutHandler;
+  late DataHandler<MapsLoc?, Map<String, dynamic>, Function()> currentPositionHandler;
+  late DataHandler<List<UserDetail>, List, Function()> usersHandler;
+  late DataHandler<UserDetail?, Map<String, dynamic>, Function()> userHandler;
+  late DataHandler<List<BpCustomer>, List, Function()> customersHandler;
+  late DataHandler<int, Map<String, dynamic>, Function()> scheduleCountHandler;
+  late DataHandler<dynamic, dynamic, Function()> logoutHandler;
 
-  final _customers = Rx<List<BpCustomer>>([]);
-  set customers(List<BpCustomer> value) => _customers.value = value;
-  List<BpCustomer> get customers => _customers.value;
+  List<BpCustomer> get customers => customersHandler.value;
+  List<UserDetail> get accounts => usersHandler.value;
+  UserDetail? get account => userHandler.value;
+  int get scheduleCount => scheduleCountHandler.value;
 
-  final _accounts = Rx<List<UserDetail>>([]);
-  set accounts(List<UserDetail> value) => _accounts.value = value;
-  List<UserDetail> get accounts => _accounts.value;
+  MapsLoc? get currentPosition => currentPositionHandler.value;
 
-  final _account = Rx<UserDetail?>(null);
-  set account(UserDetail? value) => _account.value = value;
-  UserDetail? get account => _account.value;
-
-  final _scheduleCount = 0.obs;
-  set scheduleCount(int value) => _scheduleCount.value = value;
-  int get scheduleCount => _scheduleCount.value;
-
-  final _currentPosition = Rx<MapsLoc?>(null);
-  MapsLoc? get currentPosition => _currentPosition.value;
-  set currentPosition(MapsLoc? value) => _currentPosition.value = value;
-
-  void _customersFromList(List data, LatLng currentPos) {
-    customers = data.map((e) => BpCustomer.fromJson(e)).toList();
+  List<BpCustomer> _customersFromList(List data, LatLng currentPos) {
+    List<BpCustomer> customers = data.map((e) => BpCustomer.fromJson(e)).toList();
     LatLng coords2 = LatLng(currentPos.latitude, currentPos.longitude);
-    customers = customers.map((element) => _filterBpCustomer(element, coords2)).where(_isBpCustomer100Meters).toList();
+    return customers.map((element) => _filterBpCustomer(element, coords2)).where(_isBpCustomer100Meters).toList();
   }
 
   BpCustomer _filterBpCustomer(BpCustomer element, LatLng currentCoordinates) {
@@ -69,17 +57,20 @@ class DashboardDataSource extends StateDataSource<DashboardPresenter> with DataS
     Get.find<TaskHelper>().failedPush(Task(id, message: message, snackbar: snackbar));
   }
 
-  void _userSuccess(List data) async {
-    AuthModel? authModel = await Get.find<AuthHelper>().get();
-    if (authModel != null) {
-      accounts = data.map<UserDetail>((e) => UserDetail.fromJson(e)).toList();
-      account = accounts.firstWhere((element) => element.userdtid == authModel.accountActive);
-      accounts.removeWhere((element) => element.userdtid == authModel.accountActive);
-    }
+  List<UserDetail> _usersSuccess(List data) {
+    List<UserDetail> accounts = data.map<UserDetail>((e) => UserDetail.fromJson(e)).toList();
+    accounts.removeWhere((element) => element.userdtid == account?.userdtid);
+    return accounts;
   }
 
-  void _customerSuccess(List data) {
-    _customersFromList(
+  UserDetail _userSuccess(Map<String, dynamic> data) {
+    UserDetail account = UserDetail.fromJson(data);
+    usersHandler.fetcher.run();
+    return account;
+  }
+
+  List<BpCustomer> _customerSuccess(List data) {
+    return _customersFromList(
       data,
       LatLng(property.position!.latitude, property.position!.longitude),
     );
@@ -99,38 +90,52 @@ class DashboardDataSource extends StateDataSource<DashboardPresenter> with DataS
     super.init();
     currentPositionHandler = DataHandler(
       currentPositionID,
+      initialValue: null,
       fetcher: presenter.fetchPosition,
       onError: (message) => _showError(currentPositionID, message),
       onFailed: (message) => _showFailed(currentPositionID, message),
-      onSuccess: (data) => currentPosition = MapsLoc.fromJson(data),
+      onSuccess: (data) => MapsLoc.fromJson(data),
+    );
+
+    usersHandler = DataHandler(
+      usersID,
+      initialValue: [],
+      fetcher: presenter.fetchUsers,
+      onError: (message) => _showError(usersID, message),
+      onFailed: (message) => _showFailed(usersID, message),
+      onSuccess: _usersSuccess,
     );
 
     userHandler = DataHandler(
       userID,
+      initialValue: null,
       fetcher: presenter.fetchUser,
       onError: (message) => _showError(userID, message),
       onFailed: (message) => _showFailed(userID, message),
       onSuccess: _userSuccess,
     );
 
-    customerHandler = DataHandler(
-      customerID,
+    customersHandler = DataHandler(
+      customersID,
+      initialValue: [],
       fetcher: presenter.fetchCustomers,
-      onError: (message) => _showError(customerID, message),
-      onFailed: (message) => _showFailed(customerID, message),
+      onError: (message) => _showError(customersID, message),
+      onFailed: (message) => _showFailed(customersID, message),
       onSuccess: _customerSuccess,
     );
 
     scheduleCountHandler = DataHandler(
       scheduleCountID,
+      initialValue: 0,
       fetcher: presenter.fetchScheduleCount,
       onError: (message) => _showError(scheduleCountID, message),
       onFailed: (message) => _showFailed(scheduleCountID, message),
-      onSuccess: (data) => scheduleCount = data['count'],
+      onSuccess: (data) => data['count'],
     );
 
     logoutHandler = DataHandler(
       logoutID,
+      initialValue: null,
       fetcher: presenter.logout,
       onStart: () => Get.find<TaskHelper>().loaderPush(Task(logoutID)),
       onError: (message) => _showError(logoutID, message),

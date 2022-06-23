@@ -10,7 +10,6 @@ import 'package:ventes/app/models/city_model.dart';
 import 'package:ventes/app/models/country_model.dart';
 import 'package:ventes/app/models/province_model.dart';
 import 'package:ventes/app/models/subdistrict_model.dart';
-import 'package:ventes/app/states/controllers/nearby_state_controller.dart';
 import 'package:ventes/constants/strings/nearby_string.dart';
 import 'package:ventes/core/states/state_listener.dart';
 import 'package:ventes/helpers/task_helper.dart';

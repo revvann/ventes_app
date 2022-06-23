@@ -58,18 +58,18 @@ class NearbyPresenter extends RegularPresenter<NearbyContract> {
   DataFetcher<Function(int), String> get delete => DataFetcher(
         builder: (handler) {
           return (int id) async {
-            handler.onStart();
+            handler.start();
             try {
               Response response = await _bpCustomerService.destroy(id);
               if (response.statusCode == 200) {
-                handler.onSuccess(NearbyString.deleteSuccess);
+                handler.success(NearbyString.deleteSuccess);
               } else {
-                handler.onFailed(NearbyString.deleteFailed);
+                handler.failed(NearbyString.deleteFailed);
               }
             } catch (e) {
-              handler.onError(e.toString());
+              handler.error(e.toString());
             }
-            handler.onComplete();
+            handler.complete();
           };
         },
       );
@@ -77,18 +77,18 @@ class NearbyPresenter extends RegularPresenter<NearbyContract> {
   DataFetcher<Future Function(double, double), Map<String, dynamic>> get fetchLocation => DataFetcher(
         builder: (handler) {
           return (double latitude, double longitude) async {
-            handler.onStart();
+            handler.start();
             try {
               Response response = await _getLocDetail(latitude, longitude);
               if (response.statusCode == 200) {
-                handler.onSuccess(response.body);
+                handler.success(response.body);
               } else {
-                handler.onFailed(NearbyString.fetchFailed);
+                handler.failed(NearbyString.fetchFailed);
               }
             } catch (e) {
-              handler.onError(e.toString());
+              handler.error(e.toString());
             }
-            handler.onComplete();
+            handler.complete();
           };
         },
       );
@@ -101,24 +101,23 @@ class NearbyPresenter extends RegularPresenter<NearbyContract> {
   DataFetcher<Future Function(String), List> get fetchCustomers => DataFetcher(
         builder: (handler) {
           return (String subdistrict) async {
-            handler.onStart();
+            handler.start();
             try {
               Response subdistrictResponse = await _getSubdistrict(subdistrict);
 
               if (subdistrictResponse.statusCode == 200) {
                 Subdistrict subdistrictModel = Subdistrict.fromJson(subdistrictResponse.body);
                 Response customersResponse = await _getCustomers(subdistrictModel.subdistrictid!);
-
                 if (customersResponse.statusCode == 200) {
-                  handler.onSuccess(customersResponse.body);
+                  handler.success(customersResponse.body);
                 } else {
-                  handler.onFailed(NearbyString.fetchFailed);
+                  handler.failed(NearbyString.fetchFailed);
                 }
               }
             } catch (e) {
-              handler.onError(e.toString());
+              handler.error(e.toString());
             }
-            handler.onComplete();
+            handler.complete();
           };
         },
       );

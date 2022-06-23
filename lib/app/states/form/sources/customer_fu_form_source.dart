@@ -142,8 +142,7 @@ class CustomerFormUpdateFormSource extends UpdateFormSource with FormSourceMixin
       }
 
       FormData formData = FormData(data);
-      dataSource.updateCustomer(sbcid!, formData);
-      Get.find<TaskHelper>().loaderPush(property.task);
+      dataSource.updateHandler.fetcher.run(sbcid!, formData);
     } else {
       Get.find<TaskHelper>().failedPush(property.task.copyWith(message: NearbyString.formInvalid));
     }

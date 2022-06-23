@@ -5,7 +5,6 @@ import 'package:ventes/app/resources/views/daily_schedule/daily_schedule.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/app/states/typedefs/schedule_typedef.dart';
 import 'package:ventes/core/states/state_listener.dart';
-import 'package:ventes/helpers/task_helper.dart';
 import 'package:ventes/routing/navigators/schedule_navigator.dart';
 
 class ScheduleListener extends StateListener with ListenerMixin {
@@ -14,8 +13,7 @@ class ScheduleListener extends StateListener with ListenerMixin {
       if (property.calendarController.displayDate != null) {
         property.dateShown = property.calendarController.displayDate!;
       }
-      dataSource.fetchSchedules(property.dateShown.month);
-      Get.find<TaskHelper>().loaderPush(property.task);
+      dataSource.appointmentsHandler.fetcher.run(property.dateShown.month);
     }
   }
 
@@ -53,17 +51,8 @@ class ScheduleListener extends StateListener with ListenerMixin {
     return color;
   }
 
-  void onComplete() => Get.find<TaskHelper>().loaderPop(property.task.name);
   @override
   Future onReady() async {
     property.refresh();
-  }
-
-  onLoadDataFailed(String message) {
-    Get.find<TaskHelper>().failedPush(property.task.copyWith(message: message, snackbar: true));
-  }
-
-  onLoadDataError(String message) {
-    Get.find<TaskHelper>().failedPush(property.task.copyWith(message: message, snackbar: true));
   }
 }

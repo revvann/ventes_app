@@ -16,7 +16,6 @@ import 'package:ventes/app/api/services/type_service.dart';
 import 'package:ventes/app/api/services/user_service.dart';
 import 'package:ventes/constants/strings/nearby_string.dart';
 import 'package:ventes/core/api/fetcher.dart';
-import 'package:ventes/core/api/fetcher.dart';
 import 'package:ventes/helpers/auth_helper.dart';
 
 class CustomerFormCreatePresenter extends RegularPresenter<CustomerCreateContract> {
@@ -76,18 +75,18 @@ class CustomerFormCreatePresenter extends RegularPresenter<CustomerCreateContrac
   DataFetcher<Function(double, double), Map<String, dynamic>> get fetchLocation => DataFetcher(
         builder: (handler) {
           return (latitude, longitude) async {
-            handler.onStart();
-            try {
-              Response locResponse = await _getLocDetail(latitude, longitude);
-              if (locResponse.statusCode == 200) {
-                handler.onSuccess(locResponse.body);
-              } else {
-                handler.onFailed(NearbyString.fetchFailed);
-              }
-            } catch (e) {
-              handler.onError(e.toString());
+            handler.start();
+            // try {
+            Response locResponse = await _getLocDetail(latitude, longitude);
+            if (locResponse.statusCode == 200) {
+              handler.success(locResponse.body);
+            } else {
+              handler.failed(NearbyString.fetchFailed);
             }
-            handler.onComplete();
+            // } catch (e) {
+            //   handler.error(e.toString());
+            // }
+            handler.complete();
           };
         },
       );
@@ -95,7 +94,7 @@ class CustomerFormCreatePresenter extends RegularPresenter<CustomerCreateContrac
   DataFetcher<Function(String), Map<String, dynamic>> get fetchPlaces => DataFetcher(
         builder: (handler) {
           return (subdistrictname) async {
-            handler.onStart();
+            handler.start();
             try {
               Map<String, dynamic> data = {};
               Response subdistrictResponse = await _getSubdistrict(subdistrictname);
@@ -112,20 +111,20 @@ class CustomerFormCreatePresenter extends RegularPresenter<CustomerCreateContrac
                     data['province'] = provinceResponse.body;
                     data['city'] = cityResponse.body;
                     data['subdistrict'] = subdistrictResponse.body;
-                    handler.onSuccess(data);
+                    handler.success(data);
                   } else {
-                    handler.onFailed(NearbyString.fetchFailed);
+                    handler.failed(NearbyString.fetchFailed);
                   }
                 } else {
-                  handler.onFailed(NearbyString.fetchFailed);
+                  handler.failed(NearbyString.fetchFailed);
                 }
               } else {
-                handler.onFailed(NearbyString.fetchFailed);
+                handler.failed(NearbyString.fetchFailed);
               }
             } catch (e) {
-              handler.onError(e.toString());
+              handler.error(e.toString());
             }
-            handler.onComplete();
+            handler.complete();
           };
         },
       );
@@ -133,18 +132,18 @@ class CustomerFormCreatePresenter extends RegularPresenter<CustomerCreateContrac
   DataFetcher<Function(int), Map<String, dynamic>> get fetchCustomer => DataFetcher(
         builder: (handler) {
           return (cstmid) async {
-            handler.onStart();
+            handler.start();
             try {
               Response response = await _getCustomer(cstmid);
               if (response.statusCode == 200) {
-                handler.onSuccess(response.body);
+                handler.success(response.body);
               } else {
-                handler.onFailed(NearbyString.fetchFailed);
+                handler.failed(NearbyString.fetchFailed);
               }
             } catch (e) {
-              handler.onError(e.toString());
+              handler.error(e.toString());
             }
-            handler.onComplete();
+            handler.complete();
           };
         },
       );
@@ -152,63 +151,65 @@ class CustomerFormCreatePresenter extends RegularPresenter<CustomerCreateContrac
   DataFetcher<Function(int), List> get fetchNearbyCustomers => DataFetcher(
         builder: (handler) {
           return (subdistrictid) async {
-            handler.onStart();
+            handler.start();
             try {
               Response customerResponse = await _getCustomers({
                 'cstmsubdistrictid': subdistrictid.toString(),
               });
 
               if (customerResponse.statusCode == 200) {
-                handler.onSuccess(customerResponse.body);
+                handler.success(customerResponse.body);
               } else {
-                handler.onFailed(NearbyString.fetchFailed);
+                handler.failed(NearbyString.fetchFailed);
               }
             } catch (e) {
-              handler.onError(e.toString());
+              handler.error(e.toString());
             }
-            handler.onComplete();
+            handler.complete();
           };
         },
       );
 
   DataFetcher<Function(int), List> get fetchBpCustomers => DataFetcher(builder: (handler) {
         return (customerid) async {
-          handler.onStart();
+          handler.start();
           try {
+            AuthModel? authModel = await Get.find<AuthHelper>().get();
             Response bpCustomerResponse = await _getBpCustomers({
               'sbccstmid': customerid.toString(),
+              'sbcbpid': authModel?.accountActive?.toString(),
             });
 
             if (bpCustomerResponse.statusCode == 200) {
-              handler.onSuccess(bpCustomerResponse.body);
+              handler.success(bpCustomerResponse.body);
             } else {
-              handler.onFailed(NearbyString.fetchFailed);
+              handler.failed(NearbyString.fetchFailed);
             }
           } catch (e) {
-            handler.onError(e.toString());
+            handler.error(e.toString());
           }
-          handler.onComplete();
+          handler.complete();
         };
       });
 
   DataFetcher<Function(FormData), String> get create => DataFetcher(
         builder: (handler) {
           return (data) async {
-            handler.onStart();
+            handler.start();
             try {
               Response response = await _bpCustomerService.store(
                 data,
                 contentType: "multipart/form-data",
               );
               if (response.statusCode == 200) {
-                handler.onSuccess(NearbyString.createSuccess);
+                handler.success(NearbyString.createSuccess);
               } else {
-                handler.onFailed(NearbyString.createFailed);
+                handler.failed(NearbyString.createFailed);
               }
             } catch (e) {
-              handler.onError(e.toString());
+              handler.error(e.toString());
             }
-            handler.onComplete();
+            handler.complete();
           };
         },
       );
