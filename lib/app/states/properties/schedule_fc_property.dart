@@ -34,7 +34,6 @@ class ScheduleFormCreateProperty extends StateProperty with PropertyMixin {
   }
 
   void refresh() async {
-    Get.find<TaskHelper>().loaderPush(task);
     Position pos = await getCurrentPosition();
     mapsController.future.then((controller) {
       controller.animateCamera(
@@ -42,7 +41,7 @@ class ScheduleFormCreateProperty extends StateProperty with PropertyMixin {
       );
     });
     markerLatLng = LatLng(pos.latitude, pos.longitude);
-    dataSource.fetchTypes();
+    dataSource.typesHandler.fetcher.run();
   }
 
   void showMapBottomSheet() {

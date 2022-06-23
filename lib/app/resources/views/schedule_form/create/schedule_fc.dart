@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:ventes/app/models/schedule_guest_model.dart';
 import 'package:ventes/app/models/user_detail_model.dart';
 import 'package:ventes/app/resources/widgets/editor_input.dart';
+import 'package:ventes/app/resources/widgets/handler_container.dart';
 import 'package:ventes/app/resources/widgets/icon_input.dart';
 import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
 import 'package:ventes/app/resources/widgets/regular_checkbox.dart';
@@ -137,15 +138,19 @@ class ScheduleFormCreateView extends View<Controller> {
                 SizedBox(
                   height: RegularSize.m,
                 ),
-                Obx(() {
-                  return _ScheduletypeSelectbox(
+                HandlerContainer<Function(List<Map<String, int>>)>(
+                  handlers: [
+                    state.dataSource.typesHandler,
+                  ],
+                  width: RegularSize.l,
+                  builder: (data) => _ScheduletypeSelectbox(
                     onSelected: (value) {
                       state.formSource.schetype = value;
                     },
                     activeIndex: state.formSource.schetype,
                     items: state.dataSource.typeNames(),
-                  );
-                }),
+                  ),
+                ),
                 SizedBox(
                   height: RegularSize.l,
                 ),
@@ -158,8 +163,12 @@ class ScheduleFormCreateView extends View<Controller> {
                   ),
                 ),
                 Expanded(
-                  child: Obx(() {
-                    return SingleChildScrollView(
+                  child: HandlerContainer<Function(List<Map<String, int>>)>(
+                    handlers: [
+                      state.dataSource.typesHandler,
+                    ],
+                    width: RegularSize.xl,
+                    builder: (data) => SingleChildScrollView(
                       child: Stack(
                         children: [
                           Offstage(
@@ -176,8 +185,8 @@ class ScheduleFormCreateView extends View<Controller> {
                           ),
                         ],
                       ),
-                    );
-                  }),
+                    ),
+                  ),
                 ),
               ],
             ),

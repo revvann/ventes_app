@@ -277,6 +277,9 @@ class ScheduleFormCreateFormSource extends StateFormSource with FormSourceMixin 
   @override
   close() {
     super.close();
+    Get.delete<SearchableDropdownController<UserDetail>>(tag: "DropdownToward");
+    Get.delete<SearchableDropdownController<UserDetail>>(tag: "DropdownGuest");
+    Get.delete<KeyableDropdownController<String, String>>(tag: "DropdownTimezone");
     schenmTEC.dispose();
     schestartdateTEC.dispose();
     scheenddateTEC.dispose();
@@ -284,9 +287,6 @@ class ScheduleFormCreateFormSource extends StateFormSource with FormSourceMixin 
     scheremindTEC.dispose();
     schedescTEC.dispose();
     scheonlinkTEC.dispose();
-    Get.delete<SearchableDropdownController<UserDetail>>(tag: "DropdownToward");
-    Get.delete<SearchableDropdownController<UserDetail>>(tag: "DropdownGuest");
-    Get.delete<KeyableDropdownController<String, String>>(tag: "DropdownTimezone");
   }
 
   @override
@@ -342,7 +342,7 @@ class ScheduleFormCreateFormSource extends StateFormSource with FormSourceMixin 
     if (isValid()) {
       Map<String, dynamic> data = toJson();
       Get.find<TaskHelper>().loaderPush(property.task);
-      dataSource.createSchedule(data);
+      dataSource.createHandler.fetcher.run(data);
     }
   }
 }

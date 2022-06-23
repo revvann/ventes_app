@@ -22,10 +22,6 @@ abstract class StateController<P extends StateProperty?, L extends StateListener
   double get minHeight => _minHeight.value;
   set minHeight(double value) => _minHeight.value = value;
 
-  final _loading = false.obs;
-  bool get loading => _loading.value;
-  set loading(bool value) => _loading.value = value;
-
   late P property;
   late L listener;
   late D dataSource;
@@ -88,7 +84,6 @@ abstract class StateController<P extends StateProperty?, L extends StateListener
 
   @mustCallSuper
   void close() {
-    loading = false;
     dataSource?.close();
     property?.close();
     formSource?.close();

@@ -214,33 +214,6 @@ class ScheduleFormCreateListener extends StateListener with ListenerMixin {
     formSource.scheloc = "https://maps.google.com?q=${position.target.latitude},${position.target.longitude}";
   }
 
-  void onCreateDataFailed(String message) {
-    Get.find<TaskHelper>().failedPush(property.task.copyWith(message: ScheduleString.createFailed));
-  }
-
-  void onCreateDataSuccess(String message) {
-    Get.find<TaskHelper>().successPush(property.task.copyWith(
-        message: ScheduleString.createSuccess,
-        onFinished: (res) async {
-          await property.scheduleNotification();
-          Get.find<DailyScheduleStateController>().property.refresh();
-          Get.back(id: ScheduleNavigator.id);
-        }));
-  }
-
-  void onCreateDataError(String message) {
-    Get.find<TaskHelper>().errorPush(property.task.copyWith(message: ScheduleString.createError));
-  }
-
-  onLoadDataError(String message) {
-    Get.find<TaskHelper>().errorPush(property.task.copyWith(message: ScheduleString.createError));
-  }
-
-  onLoadDataFailed(String message) {
-    Get.find<TaskHelper>().failedPush(property.task.copyWith(message: ScheduleString.createFailed));
-  }
-
-  void onComplete() => Get.find<TaskHelper>().loaderPop(property.task.name);
   @override
   Future onReady() async {
     property.refresh();

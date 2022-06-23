@@ -5,31 +5,30 @@ import 'package:ventes/app/api/presenters/schedule_fc_presenter.dart';
 import 'package:ventes/app/models/auth_model.dart';
 import 'package:ventes/app/models/type_model.dart';
 import 'package:ventes/app/models/user_detail_model.dart';
+import 'package:ventes/app/states/controllers/daily_schedule_state_controller.dart';
 import 'package:ventes/app/states/typedefs/schedule_fc_typedef.dart';
+import 'package:ventes/core/api/handler.dart';
 import 'package:ventes/core/states/state_data_source.dart';
 import 'package:ventes/helpers/auth_helper.dart';
 import 'package:ventes/helpers/task_helper.dart';
+import 'package:ventes/routing/navigators/schedule_navigator.dart';
 
 class ScheduleFormCreateDataSource extends StateDataSource<ScheduleFormCreatePresenter> with DataSourceMixin implements ScheduleCreateContract {
-  final Rx<List<Map<String, int>>?> _types = Rx<List<Map<String, int>>?>(null);
-  List<Map<String, int>>? get types => _types.value;
-  set types(List<Map<String, int>>? value) => _types.value = value;
+  final String typesID = 'typshdr';
+  final String createID = 'createhdr';
 
-  String typeName(int index) => types?[index].keys.first ?? "";
-  List<String> typeNames() => types?.map((type) => type.keys.first).toList() ?? <String>[];
-  int typeId(int index) => types?[index].values.first ?? 0;
+  late DataHandler<List<Map<String, int>>, List, Function()> typesHandler;
+  late DataHandler<dynamic, String, Function(Map<String, dynamic>)> createHandler;
 
-  void insertTypes(List<Map<String, dynamic>> types) {
+  List<Map<String, int>> get types => typesHandler.value;
+
+  String? typeName(int index) => types.isNotEmpty ? types[index].keys.first : null;
+  List<String> typeNames() => types.map((type) => type.keys.first).toList();
+  int? typeId(int index) => types.isNotEmpty ? types[index].values.first : null;
+
+  List<Map<String, int>> insertTypes(List<Map<String, dynamic>> types) {
     List<DBType> typeMap = types.map((type) => DBType.fromJson(type)).toList();
-    this.types = typeMap.map((type) => {type.typename ?? "": type.typeid ?? 0}).toList();
-  }
-
-  void fetchTypes() {
-    presenter.fetchTypes();
-  }
-
-  void createSchedule(Map<String, dynamic> data) {
-    presenter.createSchedule(data);
+    return typeMap.map((type) => {type.typename ?? "": type.typeid ?? 0}).toList();
   }
 
   Future<UserDetail> get userActive async => (await presenter.findActiveUser())!;
@@ -57,32 +56,74 @@ class ScheduleFormCreateDataSource extends StateDataSource<ScheduleFormCreatePre
     return userDetails;
   }
 
+  void _showError(String id, String message) {
+    Get.find<TaskHelper>().errorPush(Task(id, message: message));
+  }
+
+  void _showFailed(String id, String message, [bool snackbar = true]) {
+    Get.find<TaskHelper>().failedPush(Task(id, message: message, snackbar: snackbar));
+  }
+
+  void _createSuccess(String data) {
+    Get.find<TaskHelper>().successPush(
+      property.task.copyWith(
+        message: data,
+        onFinished: (res) async {
+          await property.scheduleNotification();
+          Get.find<DailyScheduleStateController>().refreshStates();
+          Get.back(id: ScheduleNavigator.id);
+        },
+      ),
+    );
+  }
+
+  @override
+  void init() {
+    super.init();
+    typesHandler = DataHandler(
+      typesID,
+      fetcher: presenter.fetchTypes,
+      initialValue: [],
+      onError: (message) => _showError(typesID, message),
+      onFailed: (message) => _showFailed(typesID, message),
+      onSuccess: (data) => insertTypes(List<Map<String, dynamic>>.from(data)),
+    );
+
+    createHandler = DataHandler(
+      createID,
+      fetcher: presenter.create,
+      initialValue: null,
+      onStart: () => Get.find<TaskHelper>().loaderPush(Task(createID)),
+      onComplete: () => Get.find<TaskHelper>().loaderPop(createID),
+      onError: (message) => _showError(createID, message),
+      onFailed: (message) => _showFailed(createID, message),
+      onSuccess: _createSuccess,
+    );
+  }
+
   @override
   ScheduleFormCreatePresenter presenterBuilder() => ScheduleFormCreatePresenter();
 
   @override
-  void onCreateFailed(String message) => listener.onCreateDataFailed(message);
+  void onCreateFailed(String message) {}
 
   @override
-  void onCreateSuccess(String message) => listener.onCreateDataSuccess(message);
+  void onCreateSuccess(String message) {}
 
   @override
-  void onCreateError(String message) => listener.onCreateDataError(message);
+  void onCreateError(String message) {}
 
   @override
-  onLoadError(String message) => listener.onLoadDataError(message);
+  onLoadError(String message) {}
+  @override
+  onLoadFailed(String message) {}
 
   @override
-  onLoadFailed(String message) => listener.onLoadDataFailed(message);
+  onLoadSuccess(Map data) {}
 
   @override
-  onLoadSuccess(Map data) {
-    insertTypes(List<Map<String, dynamic>>.from(data['types']));
-  }
+  void onCreateComplete() {}
 
   @override
-  void onCreateComplete() => listener.onComplete();
-
-  @override
-  onLoadComplete() => listener.onComplete();
+  onLoadComplete() {}
 }
