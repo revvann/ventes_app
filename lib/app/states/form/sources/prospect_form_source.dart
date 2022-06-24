@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:ventes/app/models/type_model.dart';
 import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
@@ -12,6 +13,8 @@ class ProspectFormSource extends StateFormSource with FormSourceMixin {
   final Rx<DateTime?> _prosstartdate = Rx<DateTime?>(null);
   final Rx<DateTime?> _prosenddate = Rx<DateTime?>(null);
   final Rx<DBType?> _prosstatus = Rx<DBType?>(null);
+
+  TextEditingController searchTEC = TextEditingController();
 
   DateTime? get prosstartdate => _prosstartdate.value;
   set prosstartdate(DateTime? value) => _prosstartdate.value = value;
@@ -44,4 +47,10 @@ class ProspectFormSource extends StateFormSource with FormSourceMixin {
 
   @override
   void onSubmit() {}
+
+  @override
+  void close() {
+    super.close();
+    searchTEC.dispose();
+  }
 }

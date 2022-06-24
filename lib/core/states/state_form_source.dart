@@ -16,6 +16,7 @@ abstract class StateFormSource {
 
   @mustCallSuper
   void close() {}
+
   Map<String, dynamic> toJson();
 }
 

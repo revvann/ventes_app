@@ -78,6 +78,7 @@ class ProspectView extends View<Controller> {
                         child: IconInput(
                           icon: "assets/svg/search.svg",
                           hintText: "Search",
+                          controller: state.formSource.searchTEC,
                         ),
                       ),
                       SizedBox(
