@@ -58,6 +58,7 @@ abstract class StateController<P extends StateProperty?, L extends StateListener
     property = propertyBuilder();
     dataSource = dataSourceBuilder();
     formSource = formSourceBuilder();
+    print(formSource.hashCode);
 
     property?.init();
     dataSource?.init();
