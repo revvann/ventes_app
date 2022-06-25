@@ -19,4 +19,7 @@ class ScheduleFormUpdateStateController extends StateController<Property, Listen
 
   @override
   FormSource formSourceBuilder() => FormSource();
+
+  @override
+  bool get isFixedBody => false;
 }
