@@ -21,7 +21,7 @@ import 'package:ventes/app/states/typedefs/customer_fc_typedef.dart';
 import 'package:ventes/helpers/task_helper.dart';
 import 'package:ventes/routing/navigators/nearby_navigator.dart';
 
-class CustomerFormCreateDataSource extends StateDataSource<CustomerFormCreatePresenter> with DataSourceMixin implements CustomerCreateContract {
+class CustomerFormCreateDataSource extends StateDataSource<CustomerFormCreatePresenter> with DataSourceMixin {
   final String userID = "usrhdr";
   final String customersID = 'custshdr';
   final String statusesID = 'stsshdr';

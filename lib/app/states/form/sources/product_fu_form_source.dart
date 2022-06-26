@@ -74,8 +74,7 @@ class ProductFormUpdateFormSource extends UpdateFormSource with FormSourceMixin 
   void onSubmit() {
     if (isValid) {
       Map<String, dynamic> data = toJson();
-      dataSource.updateData(property.productid, data);
-      Get.find<TaskHelper>().loaderPush(property.task);
+      dataSource.updateHandler.fetcher.run(property.productid, data);
     } else {
       Get.find<TaskHelper>().failedPush(property.task.copyWith(message: "Please fill all required fields"));
     }

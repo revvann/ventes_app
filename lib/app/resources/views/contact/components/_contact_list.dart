@@ -7,13 +7,15 @@ class _ContactList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() {
-      return ListView.builder(
+    return HandlerContainer<Function(List<ContactPerson>)>(
+      handlers: [state.dataSource.contactsHandler],
+      width: RegularSize.xl,
+      builder: (contactPersons) => ListView.builder(
         shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),
-        itemCount: state.dataSource.contactPersons.length,
+        itemCount: contactPersons.length,
         itemBuilder: (_, index) {
-          ContactPerson _contact = state.dataSource.contactPersons[index];
+          ContactPerson _contact = contactPersons[index];
           return GestureDetector(
             onTap: () {},
             child: Container(
@@ -132,7 +134,7 @@ class _ContactList extends StatelessWidget {
             ),
           );
         },
-      );
-    });
+      ),
+    );
   }
 }

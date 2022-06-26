@@ -1,13 +1,12 @@
 import 'package:get/get.dart';
-import 'package:ventes/app/api/contracts/create_contract.dart';
-import 'package:ventes/app/api/contracts/fetch_data_contract.dart';
 import 'package:ventes/app/api/presenters/regular_presenter.dart';
 import 'package:ventes/app/api/services/contact_person_service.dart';
 import 'package:ventes/app/api/services/customer_service.dart';
 import 'package:ventes/app/api/services/type_service.dart';
 import 'package:ventes/constants/strings/prospect_string.dart';
+import 'package:ventes/core/api/fetcher.dart';
 
-class ContactPersonFormCreatePresenter extends RegularPresenter<ContactPersonCreateContract> {
+class ContactPersonFormCreatePresenter extends RegularPresenter {
   final TypeService _typeService = Get.find<TypeService>();
   final CustomerService _customerService = Get.find<CustomerService>();
   final ContactPersonService _contactPersonService = Get.find<ContactPersonService>();
@@ -20,39 +19,38 @@ class ContactPersonFormCreatePresenter extends RegularPresenter<ContactPersonCre
     return _typeService.byCode({'typecd': ProspectString.contactTypeCode});
   }
 
-  void fetchData(int id) async {
-    Map<String, dynamic> data = {};
-    try {
-      Response customerResponse = await _getCustomer(id);
-      Response typeResponse = await _getTypes();
-      if (customerResponse.statusCode == 200) {
-        data['customer'] = customerResponse.body;
-        data['types'] = typeResponse.body;
-        contract.onLoadSuccess(data);
-      } else {
-        contract.onLoadFailed(ProspectString.fetchContactFailed);
-      }
-    } catch (e) {
-      contract.onLoadError(e.toString());
-    }
-    contract.onLoadComplete();
-    contract.onLoadComplete();
-  }
+  SimpleFetcher<List> get fetchTypes => SimpleFetcher(responseBuilder: _getTypes);
+  DataFetcher<Function(int), Map<String, dynamic>> get fetchCustomer => DataFetcher(builder: (handler) {
+        return (id) async {
+          handler.start();
+          try {
+            Response response = await _getCustomer(id);
+            if (response.statusCode == 200) {
+              handler.success(response.body);
+            } else {
+              handler.failed(ProspectString.fetchContactFailed);
+            }
+          } catch (e) {
+            handler.error(e.toString());
+          }
+          handler.complete();
+        };
+      });
 
-  void createData(Map<String, dynamic> data) async {
-    try {
-      Response response = await _contactPersonService.store(data);
-      if (response.statusCode == 200) {
-        contract.onCreateSuccess(ProspectString.createContactSuccess);
-      } else {
-        contract.onCreateFailed(ProspectString.createContactFailed);
-      }
-    } catch (e) {
-      contract.onCreateError(e.toString());
-    }
-    contract.onCreateComplete();
-    contract.onCreateComplete();
-  }
+  DataFetcher<Function(Map<String, dynamic>), String> get create => DataFetcher(builder: (handler) {
+        return (data) async {
+          handler.start();
+          try {
+            Response response = await _contactPersonService.store(data);
+            if (response.statusCode == 200) {
+              handler.success(ProspectString.createContactSuccess);
+            } else {
+              handler.failed(ProspectString.createContactFailed);
+            }
+          } catch (e) {
+            handler.error(e.toString());
+          }
+          handler.complete();
+        };
+      });
 }
-
-abstract class ContactPersonCreateContract implements CreateContract, FetchDataContract {}

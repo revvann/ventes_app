@@ -1,12 +1,4 @@
 import 'package:get/get.dart';
-import 'package:ventes/app/models/auth_model.dart';
-import 'package:ventes/app/models/city_model.dart';
-import 'package:ventes/app/models/country_model.dart';
-import 'package:ventes/app/models/customer_model.dart';
-import 'package:ventes/app/models/province_model.dart';
-import 'package:ventes/app/models/subdistrict_model.dart';
-import 'package:ventes/app/api/contracts/create_contract.dart';
-import 'package:ventes/app/api/contracts/fetch_data_contract.dart';
 import 'package:ventes/app/api/presenters/regular_presenter.dart';
 import 'package:ventes/app/api/services/bp_customer_service.dart';
 import 'package:ventes/app/api/services/customer_service.dart';
@@ -14,11 +6,16 @@ import 'package:ventes/app/api/services/gmaps_service.dart';
 import 'package:ventes/app/api/services/place_service.dart';
 import 'package:ventes/app/api/services/type_service.dart';
 import 'package:ventes/app/api/services/user_service.dart';
+import 'package:ventes/app/models/auth_model.dart';
+import 'package:ventes/app/models/city_model.dart';
+import 'package:ventes/app/models/country_model.dart';
+import 'package:ventes/app/models/province_model.dart';
+import 'package:ventes/app/models/subdistrict_model.dart';
 import 'package:ventes/constants/strings/nearby_string.dart';
 import 'package:ventes/core/api/fetcher.dart';
 import 'package:ventes/helpers/auth_helper.dart';
 
-class CustomerFormCreatePresenter extends RegularPresenter<CustomerCreateContract> {
+class CustomerFormCreatePresenter extends RegularPresenter {
   final PlaceService _placeService = Get.find();
   final BpCustomerService _bpCustomerService = Get.find();
   final CustomerService _customerService = Get.find();
@@ -265,5 +262,3 @@ class CustomerFormCreatePresenter extends RegularPresenter<CustomerCreateContrac
     return [];
   }
 }
-
-abstract class CustomerCreateContract implements FetchDataContract, CreateContract {}

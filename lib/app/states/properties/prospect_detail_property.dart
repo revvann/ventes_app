@@ -11,8 +11,9 @@ class ProspectDetailProperty extends StateProperty with PropertyMixin {
   Task task = Task(ProspectString.detailTaskCode);
 
   refresh() {
-    dataSource.fetchData(prospectId);
-    Get.find<TaskHelper>().loaderPush(task);
+    dataSource.stagesHandler.fetcher.run();
+    dataSource.prospectHandler.fetcher.run(prospectId);
+    dataSource.prospectDetailsHandler.fetcher.run(prospectId);
   }
 
   PopupMenuController createPopupController([int id = 0]) {

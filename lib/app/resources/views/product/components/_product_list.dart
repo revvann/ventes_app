@@ -7,13 +7,17 @@ class _ProductList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() {
-      return ListView.builder(
+    return HandlerContainer<Function(List<ProspectProduct>)>(
+      handlers: [
+        state.dataSource.productsHandler,
+      ],
+      width: RegularSize.xl,
+      builder: (products) => ListView.builder(
         shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),
-        itemCount: state.dataSource.products.length,
+        itemCount: products.length,
         itemBuilder: (_, index) {
-          ProspectProduct product = state.dataSource.products[index];
+          ProspectProduct product = products[index];
           String amount = state.property.priceShort(product.prosproductamount ?? 0);
           String price = currencyFormat(product.prosproductprice?.toString().replaceAll(RegExp(r'[.]'), ',') ?? "0");
           return GestureDetector(
@@ -151,8 +155,8 @@ class _ProductList extends StatelessWidget {
             ),
           );
         },
-      );
-    });
+      ),
+    );
   }
 
   void showProductDetail(ProspectProduct product) {

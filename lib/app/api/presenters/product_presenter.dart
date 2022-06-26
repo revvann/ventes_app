@@ -1,12 +1,11 @@
 import 'package:get/get.dart';
-import 'package:ventes/app/api/contracts/delete_contract.dart';
-import 'package:ventes/app/api/contracts/fetch_data_contract.dart';
 import 'package:ventes/app/api/presenters/regular_presenter.dart';
 import 'package:ventes/app/api/services/prospect_product_service.dart';
 import 'package:ventes/app/api/services/prospect_service.dart';
 import 'package:ventes/constants/strings/prospect_string.dart';
+import 'package:ventes/core/api/fetcher.dart';
 
-class ProductPresenter extends RegularPresenter<ProductContract> {
+class ProductPresenter extends RegularPresenter {
   final _prospectService = Get.find<ProspectService>();
   final _prospectProductService = Get.find<ProspectProductService>();
 
@@ -22,56 +21,54 @@ class ProductPresenter extends RegularPresenter<ProductContract> {
     return await _prospectProductService.select(params);
   }
 
-  void fetchData(int prospectid) async {
-    Map<String, dynamic> data = {};
+  DataFetcher<Function(int), Map<String, dynamic>> get fetchProspect => DataFetcher(builder: (handler) {
+        return (id) async {
+          handler.start();
+          try {
+            Response response = await _getProspect(id);
+            if (response.statusCode == 200) {
+              handler.success(response.body);
+            } else {
+              handler.failed(ProspectString.fetchProductFailed);
+            }
+          } catch (e) {
+            handler.error(e.toString());
+          }
+          handler.complete();
+        };
+      });
 
-    try {
-      Response prospectResponse = await _getProspect(prospectid);
-      Response prospectProductResponse = await _getProspectProducts(prospectid);
+  DataFetcher<Function(int, [String]), List> get fetchProducts => DataFetcher(builder: (handler) {
+        return (id, [search = ""]) async {
+          handler.start();
+          try {
+            Response response = await _getProspectProducts(id, search);
+            if (response.statusCode == 200) {
+              handler.success(response.body);
+            } else {
+              handler.failed(ProspectString.fetchProductFailed);
+            }
+          } catch (e) {
+            handler.error(e.toString());
+          }
+          handler.complete();
+        };
+      });
 
-      if (prospectResponse.statusCode == 200 && prospectProductResponse.statusCode == 200) {
-        data['prospect'] = prospectResponse.body;
-        data['prospectproducts'] = prospectProductResponse.body;
-        contract.onLoadSuccess(data);
-      } else {
-        contract.onLoadFailed(ProspectString.fetchProductFailed);
-      }
-    } catch (e) {
-      contract.onLoadError(e.toString());
-    }
-    contract.onLoadComplete();
-  }
-
-  void fetchProducts(int prospectid, String search) async {
-    Map<String, dynamic> data = {};
-
-    try {
-      Response prospectProductResponse = await _getProspectProducts(prospectid, search);
-
-      if (prospectProductResponse.statusCode == 200) {
-        data['prospectproducts'] = prospectProductResponse.body;
-        contract.onLoadSuccess(data);
-      } else {
-        contract.onLoadFailed(ProspectString.fetchProductFailed);
-      }
-    } catch (e) {
-      contract.onLoadError(e.toString());
-    }
-    contract.onLoadComplete();
-  }
-
-  void deleteProduct(int productid) async {
-    try {
-      Response response = await _prospectProductService.destroy(productid);
-      if (response.statusCode == 200) {
-        contract.onDeleteSuccess(ProspectString.deleteProductSuccess);
-      } else {
-        contract.onDeleteFailed(ProspectString.deleteProductFailed);
-      }
-    } catch (e) {
-      contract.onDeleteError(e.toString());
-    }
-  }
+  DataFetcher<Function(int), String> get delete => DataFetcher(builder: (handler) {
+        return (id) async {
+          handler.start();
+          try {
+            Response response = await _prospectProductService.destroy(id);
+            if (response.statusCode == 200) {
+              handler.success(ProspectString.deleteProductSuccess);
+            } else {
+              handler.failed(ProspectString.deleteProductFailed);
+            }
+          } catch (e) {
+            handler.error(e.toString());
+          }
+          handler.complete();
+        };
+      });
 }
-
-abstract class ProductContract implements FetchDataContract, DeleteContract {}

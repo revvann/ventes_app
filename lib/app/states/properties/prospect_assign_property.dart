@@ -13,8 +13,8 @@ class ProspectAssignProperty extends StateProperty with PropertyMixin {
   Task task = Task(ProspectString.prospectAssignTaskCode);
 
   void refresh() {
-    dataSource.fetchData(prospectid);
-    Get.find<TaskHelper>().loaderPush(task);
+    dataSource.prospectHandler.fetcher.run(prospectid);
+    dataSource.prospectAssignHandler.fetcher.run(prospectid);
   }
 
   PopupMenuController createPopupController([int id = 0]) {

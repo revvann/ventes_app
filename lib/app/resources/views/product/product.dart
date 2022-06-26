@@ -6,9 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:ventes/app/models/prospect_model.dart';
 import 'package:ventes/app/models/prospect_product_model.dart';
+import 'package:ventes/app/resources/widgets/handler_container.dart';
 import 'package:ventes/app/resources/widgets/icon_input.dart';
-import 'package:ventes/app/resources/widgets/loader.dart';
 import 'package:ventes/app/resources/widgets/pop_up_item.dart';
 import 'package:ventes/app/resources/widgets/popup_button.dart';
 import 'package:ventes/app/resources/widgets/regular_dialog.dart';
@@ -65,16 +66,19 @@ class ProductView extends View<Controller> {
               horizontal: RegularSize.xl,
             ),
             alignment: Alignment.center,
-            child: Obx(() {
-              return Text(
-                state.dataSource.prospect?.prospectname ?? "",
+            child: HandlerContainer<Function(Prospect?)>(
+              handlers: [
+                state.dataSource.prospectHandler,
+              ],
+              builder: (prospect) => Text(
+                prospect?.prospectname ?? "",
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 14,
                 ),
-              );
-            }),
+              ),
+            ),
           ),
         ),
       ).build(context),
@@ -126,14 +130,7 @@ class ProductView extends View<Controller> {
                       SizedBox(
                         height: RegularSize.m,
                       ),
-                      Obx(
-                        () => state.property.isLoading.value
-                            ? LoaderAnimation(
-                                strokeWidth: 9,
-                                width: 42,
-                              )
-                            : _ProductList(),
-                      ),
+                      _ProductList(),
                     ],
                   ),
                 ),

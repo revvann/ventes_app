@@ -1,14 +1,13 @@
 import 'package:get/get.dart';
-import 'package:ventes/app/api/contracts/create_contract.dart';
-import 'package:ventes/app/api/contracts/fetch_data_contract.dart';
 import 'package:ventes/app/api/presenters/regular_presenter.dart';
 import 'package:ventes/app/api/services/gmaps_service.dart';
 import 'package:ventes/app/api/services/prospect_detail_service.dart';
 import 'package:ventes/app/api/services/prospect_service.dart';
 import 'package:ventes/app/api/services/type_service.dart';
 import 'package:ventes/constants/strings/prospect_string.dart';
+import 'package:ventes/core/api/fetcher.dart';
 
-class ProspectDetailFormCreatePresenter extends RegularPresenter<ProspectDetailCreateContract> {
+class ProspectDetailFormCreatePresenter extends RegularPresenter {
   final TypeService _typeService = Get.find<TypeService>();
   final ProspectDetailService _prospectDetailService = Get.find<ProspectDetailService>();
   final ProspectService _prospectService = Get.find<ProspectService>();
@@ -34,44 +33,60 @@ class ProspectDetailFormCreatePresenter extends RegularPresenter<ProspectDetailC
     return await _prospectDetailService.store(data);
   }
 
-  void fetchData(int id, double latitude, double langitude) async {
-    Map data = {};
-    try {
-      Response categoryResponse = await _getCategories();
-      Response typeResponse = await _getTypes();
-      Response prospectResponse = await _getProspect(id);
-      Response locResponse = await _getLocDetail(latitude, langitude);
-
-      if (categoryResponse.statusCode == 200 && typeResponse.statusCode == 200 && prospectResponse.statusCode == 200 && locResponse.statusCode == 200) {
-        data = {
-          'categories': categoryResponse.body,
-          'types': typeResponse.body,
-          'prospect': prospectResponse.body,
-          'location': locResponse.body,
-        };
-        contract.onLoadSuccess(data);
-      } else {
-        contract.onLoadFailed(ProspectString.fetchDataFailed);
-      }
-    } catch (e) {
-      contract.onLoadError(e.toString());
-    }
-    contract.onLoadComplete();
-  }
-
-  void createData(Map<String, dynamic> data) async {
-    try {
-      Response response = await _storeProspect(data);
-      if (response.statusCode == 200) {
-        contract.onCreateSuccess(ProspectString.createDataSuccess);
-      } else {
-        contract.onCreateFailed(ProspectString.createDataFailed);
-      }
-    } catch (e) {
-      contract.onCreateError(e.toString());
-    }
-    contract.onCreateComplete();
-  }
+  SimpleFetcher<List> get fetchCategories => SimpleFetcher(responseBuilder: _getCategories);
+  SimpleFetcher<List> get fetchTypes => SimpleFetcher(responseBuilder: _getTypes);
+  DataFetcher<Function(int), Map<String, dynamic>> get fetchProspect => DataFetcher(
+        builder: (handler) {
+          return (id) async {
+            handler.start();
+            try {
+              Response response = await _getProspect(id);
+              if (response.statusCode == 200) {
+                handler.success(response.body);
+              } else {
+                handler.failed(ProspectString.fetchDataFailed);
+              }
+            } catch (e) {
+              handler.error(e.toString());
+            }
+            handler.complete();
+          };
+        },
+      );
+  DataFetcher<Function(double, double), Map<String, dynamic>> get fetchLocation => DataFetcher(
+        builder: (handler) {
+          return (latitude, longitude) async {
+            handler.start();
+            try {
+              Response response = await _getLocDetail(latitude, longitude);
+              if (response.statusCode == 200) {
+                handler.success(response.body);
+              } else {
+                handler.failed(ProspectString.fetchDataFailed);
+              }
+            } catch (e) {
+              handler.error(e.toString());
+            }
+            handler.complete();
+          };
+        },
+      );
+  DataFetcher<Function(Map<String, dynamic>), String> get create => DataFetcher(
+        builder: (handler) {
+          return (data) async {
+            handler.start();
+            try {
+              Response response = await _storeProspect(data);
+              if (response.statusCode == 200) {
+                handler.success(ProspectString.createDataSuccess);
+              } else {
+                handler.failed(ProspectString.createDataFailed);
+              }
+            } catch (e) {
+              handler.error(e.toString());
+            }
+            handler.complete();
+          };
+        },
+      );
 }
-
-abstract class ProspectDetailCreateContract implements FetchDataContract, CreateContract {}

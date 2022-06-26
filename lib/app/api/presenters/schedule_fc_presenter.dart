@@ -1,18 +1,16 @@
 import 'package:get/get.dart';
-import 'package:ventes/app/api/contracts/create_contract.dart';
-import 'package:ventes/app/api/contracts/fetch_data_contract.dart';
 import 'package:ventes/app/api/presenters/regular_presenter.dart';
+import 'package:ventes/app/api/services/schedule_service.dart';
 import 'package:ventes/app/api/services/type_service.dart';
+import 'package:ventes/app/api/services/user_service.dart';
+import 'package:ventes/app/models/auth_model.dart';
+import 'package:ventes/app/models/user_detail_model.dart';
 import 'package:ventes/constants/strings/regular_string.dart';
 import 'package:ventes/constants/strings/schedule_string.dart';
 import 'package:ventes/core/api/fetcher.dart';
 import 'package:ventes/helpers/auth_helper.dart';
-import 'package:ventes/app/models/auth_model.dart';
-import 'package:ventes/app/models/user_detail_model.dart';
-import 'package:ventes/app/api/services/schedule_service.dart';
-import 'package:ventes/app/api/services/user_service.dart';
 
-class ScheduleFormCreatePresenter extends RegularPresenter<ScheduleCreateContract> {
+class ScheduleFormCreatePresenter extends RegularPresenter {
   final _userService = Get.find<UserService>();
   final _scheduleService = Get.find<ScheduleService>();
   final _typeService = Get.find<TypeService>();
@@ -71,5 +69,3 @@ class ScheduleFormCreatePresenter extends RegularPresenter<ScheduleCreateContrac
     return null;
   }
 }
-
-abstract class ScheduleCreateContract implements FetchDataContract, CreateContract {}

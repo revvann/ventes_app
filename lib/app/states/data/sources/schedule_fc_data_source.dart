@@ -13,7 +13,7 @@ import 'package:ventes/helpers/auth_helper.dart';
 import 'package:ventes/helpers/task_helper.dart';
 import 'package:ventes/routing/navigators/schedule_navigator.dart';
 
-class ScheduleFormCreateDataSource extends StateDataSource<ScheduleFormCreatePresenter> with DataSourceMixin implements ScheduleCreateContract {
+class ScheduleFormCreateDataSource extends StateDataSource<ScheduleFormCreatePresenter> with DataSourceMixin {
   final String typesID = 'typshdr';
   final String createID = 'createhdr';
 
@@ -66,7 +66,8 @@ class ScheduleFormCreateDataSource extends StateDataSource<ScheduleFormCreatePre
 
   void _createSuccess(String data) {
     Get.find<TaskHelper>().successPush(
-      property.task.copyWith(
+      Task(
+        createID,
         message: data,
         onFinished: (res) async {
           await property.scheduleNotification();
@@ -103,27 +104,4 @@ class ScheduleFormCreateDataSource extends StateDataSource<ScheduleFormCreatePre
 
   @override
   ScheduleFormCreatePresenter presenterBuilder() => ScheduleFormCreatePresenter();
-
-  @override
-  void onCreateFailed(String message) {}
-
-  @override
-  void onCreateSuccess(String message) {}
-
-  @override
-  void onCreateError(String message) {}
-
-  @override
-  onLoadError(String message) {}
-  @override
-  onLoadFailed(String message) {}
-
-  @override
-  onLoadSuccess(Map data) {}
-
-  @override
-  void onCreateComplete() {}
-
-  @override
-  onLoadComplete() {}
 }

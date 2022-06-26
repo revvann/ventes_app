@@ -1,18 +1,17 @@
 import 'package:get/get.dart';
-import 'package:ventes/app/models/auth_model.dart';
-import 'package:ventes/app/models/bp_customer_model.dart';
-import 'package:ventes/app/models/user_detail_model.dart';
-import 'package:ventes/app/api/contracts/create_contract.dart';
-import 'package:ventes/app/api/contracts/fetch_data_contract.dart';
 import 'package:ventes/app/api/presenters/regular_presenter.dart';
 import 'package:ventes/app/api/services/bp_customer_service.dart';
 import 'package:ventes/app/api/services/prospect_service.dart';
 import 'package:ventes/app/api/services/type_service.dart';
 import 'package:ventes/app/api/services/user_service.dart';
+import 'package:ventes/app/models/auth_model.dart';
+import 'package:ventes/app/models/bp_customer_model.dart';
+import 'package:ventes/app/models/user_detail_model.dart';
 import 'package:ventes/constants/strings/prospect_string.dart';
+import 'package:ventes/core/api/fetcher.dart';
 import 'package:ventes/helpers/auth_helper.dart';
 
-class ProspectFormCreatePresenter extends RegularPresenter<ProspectCreateContract> {
+class ProspectFormCreatePresenter extends RegularPresenter {
   final _userService = Get.find<UserService>();
   final _prospectService = Get.find<ProspectService>();
   final _typeService = Get.find<TypeService>();
@@ -78,40 +77,23 @@ class ProspectFormCreatePresenter extends RegularPresenter<ProspectCreateContrac
     return [];
   }
 
-  void fetchData() async {
-    Map data = {};
-    try {
-      Response statusResponse = await _getStatus();
-      Response stageResponse = await _getStage();
-      Response taxesResponse = await _getTaxes();
-
-      if (statusResponse.statusCode == 200 && stageResponse.statusCode == 200 && taxesResponse.statusCode == 200) {
-        data['status'] = statusResponse.body;
-        data['stage'] = stageResponse.body;
-        data['taxes'] = taxesResponse.body;
-        contract.onLoadSuccess(data);
-      } else {
-        contract.onLoadFailed(ProspectString.fetchUsersDataFailed);
-      }
-    } catch (e) {
-      contract.onLoadError(e.toString());
-    }
-    contract.onLoadComplete();
-  }
-
-  void createProspect(Map<String, dynamic> data) async {
-    try {
-      Response response = await _createProspect(data);
-      if (response.statusCode == 200) {
-        contract.onCreateSuccess(ProspectString.createDataSuccess);
-      } else {
-        contract.onCreateFailed(ProspectString.createDataFailed);
-      }
-    } catch (e) {
-      contract.onCreateError(e.toString());
-    }
-    contract.onCreateComplete();
-  }
+  SimpleFetcher<List> get fetchStatuses => SimpleFetcher(responseBuilder: _getStatus, failedMessage: ProspectString.fetchDataFailed);
+  SimpleFetcher<List> get fetchStages => SimpleFetcher(responseBuilder: _getStage, failedMessage: ProspectString.fetchDataFailed);
+  SimpleFetcher<List> get fetchTaxes => SimpleFetcher(responseBuilder: _getTaxes, failedMessage: ProspectString.fetchDataFailed);
+  DataFetcher<Function(Map<String, dynamic>), String> get create => DataFetcher(builder: (handler) {
+        return (data) async {
+          handler.start();
+          try {
+            Response response = await _createProspect(data);
+            if (response.statusCode == 200) {
+              handler.success(ProspectString.createDataSuccess);
+            } else {
+              handler.failed(ProspectString.createDataFailed);
+            }
+          } catch (e) {
+            handler.error(e.toString());
+          }
+          handler.complete();
+        };
+      });
 }
-
-abstract class ProspectCreateContract implements FetchDataContract, CreateContract {}

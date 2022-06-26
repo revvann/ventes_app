@@ -16,7 +16,6 @@ abstract class StateDataSource<T extends RegularPresenter> {
   @mustCallSuper
   init() {
     presenter = presenterBuilder();
-    presenter.contract = this;
   }
 
   @mustCallSuper

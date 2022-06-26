@@ -1,21 +1,19 @@
 import 'package:get/get.dart';
-import 'package:ventes/app/models/auth_model.dart';
-import 'package:ventes/app/models/maps_loc.dart';
-import 'package:ventes/app/models/subdistrict_model.dart';
-import 'package:ventes/app/models/user_detail_model.dart';
-import 'package:ventes/app/api/contracts/delete_contract.dart';
-import 'package:ventes/app/api/contracts/fetch_data_contract.dart';
 import 'package:ventes/app/api/presenters/regular_presenter.dart';
 import 'package:ventes/app/api/services/bp_customer_service.dart';
 import 'package:ventes/app/api/services/customer_service.dart';
 import 'package:ventes/app/api/services/gmaps_service.dart';
 import 'package:ventes/app/api/services/place_service.dart';
 import 'package:ventes/app/api/services/user_service.dart';
+import 'package:ventes/app/models/auth_model.dart';
+import 'package:ventes/app/models/maps_loc.dart';
+import 'package:ventes/app/models/subdistrict_model.dart';
+import 'package:ventes/app/models/user_detail_model.dart';
 import 'package:ventes/constants/strings/nearby_string.dart';
 import 'package:ventes/core/api/fetcher.dart';
 import 'package:ventes/helpers/auth_helper.dart';
 
-class NearbyPresenter extends RegularPresenter<NearbyContract> {
+class NearbyPresenter extends RegularPresenter {
   final GmapsService _gmapsService = Get.find();
   final BpCustomerService _bpCustomerService = Get.find();
   final PlaceService _placeService = Get.find();
@@ -135,5 +133,3 @@ class NearbyPresenter extends RegularPresenter<NearbyContract> {
     return location;
   }
 }
-
-abstract class NearbyContract implements FetchDataContract, DeleteContract {}

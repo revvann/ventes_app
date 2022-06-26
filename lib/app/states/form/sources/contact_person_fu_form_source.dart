@@ -79,8 +79,7 @@ class ContactPersonFormUpdateFormSource extends UpdateFormSource with FormSource
   void onSubmit() {
     if (isValid) {
       Map<String, dynamic> data = toJson();
-      dataSource.updateData(data);
-      Get.find<TaskHelper>().loaderPush(property.task);
+      dataSource.updateHandler.fetcher.run(property.contactid, data);
     } else {
       Get.find<TaskHelper>().failedPush(property.task.copyWith(message: "Form is not valid"));
     }

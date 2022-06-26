@@ -2,57 +2,78 @@ import 'package:get/get.dart';
 import 'package:ventes/app/api/presenters/product_presenter.dart';
 import 'package:ventes/app/models/prospect_model.dart';
 import 'package:ventes/app/models/prospect_product_model.dart';
+import 'package:ventes/app/states/controllers/product_state_controller.dart';
 import 'package:ventes/app/states/typedefs/product_typedef.dart';
+import 'package:ventes/core/api/handler.dart';
 import 'package:ventes/core/states/state_data_source.dart';
+import 'package:ventes/helpers/function_helpers.dart';
 import 'package:ventes/helpers/task_helper.dart';
 
-class ProductDataSource extends StateDataSource<ProductPresenter> with DataSourceMixin implements ProductContract {
-  final _prospect = Rx<Prospect?>(null);
-  Prospect? get prospect => _prospect.value;
-  set prospect(Prospect? prospect) => _prospect.value = prospect;
+class ProductDataSource extends StateDataSource<ProductPresenter> with DataSourceMixin {
+  final String prospectID = 'prospethdr';
+  final String productsID = 'prodshdr';
+  final String deleteID = 'delhdr';
 
-  final _products = Rx<List<ProspectProduct>>([]);
-  List<ProspectProduct> get products => _products.value;
-  set products(List<ProspectProduct> products) => _products.value = products;
+  late DataHandler<Prospect?, Map<String, dynamic>, Function(int)> prospectHandler;
+  late DataHandler<List<ProspectProduct>, List, Function(int, [String])> productsHandler;
+  late DataHandler<dynamic, String, Function(int)> deleteHandler;
 
-  void fetchData(int prospectid) => presenter.fetchData(prospectid);
-  void fetchProducts(int productid, String search) => presenter.fetchProducts(productid, search);
-  void deleteProduct(int productid) => presenter.deleteProduct(productid);
+  Prospect? get prospect => prospectHandler.value;
+  List<ProspectProduct> get products => productsHandler.value;
+
+  void _deleteSuccess(message) {
+    Get.find<TaskHelper>().successPush(
+      Task(
+        deleteID,
+        message: message,
+        onFinished: (res) {
+          Get.find<ProductStateController>().refreshStates();
+        },
+      ),
+    );
+  }
+
+  @override
+  init() {
+    super.init();
+    prospectHandler = createDataHandler(prospectID, presenter.fetchProspect, null, Prospect.fromJson);
+    productsHandler = createDataHandler(productsID, presenter.fetchProducts, [], (data) => data.map<ProspectProduct>((e) => ProspectProduct.fromJson(e)).toList());
+    deleteHandler = DataHandler(
+      deleteID,
+      fetcher: presenter.delete,
+      initialValue: null,
+      onStart: () => Get.find<TaskHelper>().loaderPush(Task(deleteID)),
+      onSuccess: _deleteSuccess,
+      onFailed: (message) => showFailed(deleteID, message, false),
+      onError: (message) => showError(deleteID, message),
+      onComplete: () => Get.find<TaskHelper>().loaderPop(deleteID),
+    );
+  }
 
   @override
   ProductPresenter presenterBuilder() => ProductPresenter();
 
   @override
-  onLoadError(String message) => listener.onLoadError(message);
+  onLoadError(String message) {}
 
   @override
-  onLoadFailed(String message) => listener.onLoadFailed(message);
+  onLoadFailed(String message) {}
 
   @override
-  onLoadSuccess(Map data) {
-    if (data['prospect'] != null) {
-      prospect = Prospect.fromJson(data['prospect']);
-    }
-
-    if (data['prospectproducts'] != null) {
-      products = data['prospectproducts'].map<ProspectProduct>((e) => ProspectProduct.fromJson(e)).toList();
-    }
-
-    property.isLoading.value = false;
-  }
+  onLoadSuccess(Map data) {}
 
   @override
-  void onDeleteError(String message) => listener.onDeleteError(message);
+  void onDeleteError(String message) {}
 
   @override
-  void onDeleteFailed(String message) => listener.onDeleteFailed(message);
+  void onDeleteFailed(String message) {}
 
   @override
-  void onDeleteSuccess(String message) => listener.onDeleteSuccess(message);
+  void onDeleteSuccess(String message) {}
 
   @override
-  void onDeleteComplete() => listener.onComplete();
+  void onDeleteComplete() {}
 
   @override
-  onLoadComplete() => listener.onComplete();
+  onLoadComplete() {}
 }

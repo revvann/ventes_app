@@ -5,12 +5,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:ventes/app/models/bp_customer_model.dart';
 import 'package:ventes/app/models/customer_model.dart';
 import 'package:ventes/app/models/maps_loc.dart';
 import 'package:ventes/app/resources/widgets/handler_container.dart';
 import 'package:ventes/app/resources/widgets/icon_input.dart';
-import 'package:ventes/app/resources/widgets/loading_container.dart';
 import 'package:ventes/app/resources/widgets/pop_up_item.dart';
 import 'package:ventes/app/resources/widgets/popup_button.dart';
 import 'package:ventes/app/resources/widgets/top_navigation.dart';
@@ -22,8 +20,8 @@ import 'package:ventes/constants/strings/nearby_string.dart';
 import 'package:ventes/core/view/view.dart';
 import 'package:ventes/helpers/function_helpers.dart';
 
-part 'package:ventes/app/resources/views/nearby/components/customer_list.dart';
 part 'package:ventes/app/resources/views/nearby/components/_app_bar_menu.dart';
+part 'package:ventes/app/resources/views/nearby/components/customer_list.dart';
 
 class NearbyView extends View<Controller> {
   static const String route = "/nearby";

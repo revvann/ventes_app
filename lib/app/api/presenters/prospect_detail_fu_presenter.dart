@@ -1,14 +1,12 @@
 import 'package:get/get.dart';
-import 'package:ventes/app/api/contracts/update_contract.dart';
-import 'package:ventes/app/api/contracts/fetch_data_contract.dart';
 import 'package:ventes/app/api/presenters/regular_presenter.dart';
 import 'package:ventes/app/api/services/gmaps_service.dart';
 import 'package:ventes/app/api/services/prospect_detail_service.dart';
 import 'package:ventes/app/api/services/type_service.dart';
-import 'package:ventes/app/models/prospect_detail_model.dart';
 import 'package:ventes/constants/strings/prospect_string.dart';
+import 'package:ventes/core/api/fetcher.dart';
 
-class ProspectDetailFormUpdatePresenter extends RegularPresenter<ProspectDetailUpdateContract> {
+class ProspectDetailFormUpdatePresenter extends RegularPresenter {
   final TypeService _typeService = Get.find<TypeService>();
   final ProspectDetailService _prospectDetailService = Get.find<ProspectDetailService>();
   final GmapsService _gmapService = Get.find<GmapsService>();
@@ -29,52 +27,54 @@ class ProspectDetailFormUpdatePresenter extends RegularPresenter<ProspectDetailU
     return await _prospectDetailService.update(id, data);
   }
 
-  void fetchData(int id) async {
-    Map data = {};
-    try {
-      Response typeResponse = await _getTypes();
-      Response prospectDetailResponse = await _getProspectDetail(id);
-
-      if (typeResponse.statusCode == 200 && prospectDetailResponse.statusCode == 200) {
-        data = {
-          'types': typeResponse.body,
-          'prospectdetail': prospectDetailResponse.body,
-        };
-
-        ProspectDetail prospectDetail = ProspectDetail.fromJson(prospectDetailResponse.body);
-        if (prospectDetail.prospectdtlatitude != null && prospectDetail.prospectdtlongitude != null) {
-          Response gmapResponse = await _getLocationDetail(prospectDetail.prospectdtlatitude!, prospectDetail.prospectdtlongitude!);
-          if (gmapResponse.statusCode == 200) {
-            data['locationaddress'] = gmapResponse.body;
-            contract.onLoadSuccess(data);
-          } else {
-            contract.onLoadFailed(ProspectString.fetchDataFailed);
+  SimpleFetcher<List> get fetchTypes => SimpleFetcher(responseBuilder: _getTypes, failedMessage: ProspectString.fetchDataFailed);
+  DataFetcher<Function(int), Map<String, dynamic>> get fetchProspectDetail => DataFetcher(builder: (handler) {
+        return (id) async {
+          handler.start();
+          try {
+            Response response = await _getProspectDetail(id);
+            if (response.statusCode == 200) {
+              handler.success(response.body);
+            } else {
+              handler.failed(ProspectString.fetchDataFailed);
+            }
+          } catch (e) {
+            handler.error(e.toString());
           }
-        } else {
-          contract.onLoadSuccess(data);
-        }
-      } else {
-        contract.onLoadFailed(ProspectString.fetchDataFailed);
-      }
-    } catch (e) {
-      contract.onLoadError(e.toString());
-    }
-    contract.onLoadComplete();
-  }
+          handler.complete();
+        };
+      });
+  DataFetcher<Function(double, double), Map<String, dynamic>> get fetchLocation => DataFetcher(builder: (handler) {
+        return (latitude, longitude) async {
+          handler.start();
+          try {
+            Response response = await _getLocationDetail(latitude, longitude);
+            if (response.statusCode == 200) {
+              handler.success(response.body);
+            } else {
+              handler.failed(ProspectString.fetchDataFailed);
+            }
+          } catch (e) {
+            handler.error(e.toString());
+          }
+          handler.complete();
+        };
+      });
 
-  void updateData(int id, Map<String, dynamic> data) async {
-    try {
-      Response response = await _updateProspect(id, data);
-      if (response.statusCode == 200) {
-        contract.onUpdateSuccess(ProspectString.updateDataSuccess);
-      } else {
-        contract.onUpdateFailed(ProspectString.updateDataFailed);
-      }
-    } catch (e) {
-      contract.onUpdateError(e.toString());
-    }
-    contract.onUpdateComplete();
-  }
+  DataFetcher<Function(int, Map<String, dynamic>), String> get update => DataFetcher(builder: (handler) {
+        return (id, data) async {
+          handler.start();
+          try {
+            Response response = await _updateProspect(id, data);
+            if (response.statusCode == 200) {
+              handler.success(ProspectString.updateDataSuccess);
+            } else {
+              handler.failed(ProspectString.updateDataFailed);
+            }
+          } catch (e) {
+            handler.error(e.toString());
+          }
+          handler.complete();
+        };
+      });
 }
-
-abstract class ProspectDetailUpdateContract implements UpdateContract, FetchDataContract {}

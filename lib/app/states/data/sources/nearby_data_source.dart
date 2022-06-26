@@ -11,7 +11,7 @@ import 'package:ventes/core/states/state_data_source.dart';
 import 'package:ventes/helpers/function_helpers.dart';
 import 'package:ventes/helpers/task_helper.dart';
 
-class NearbyDataSource extends StateDataSource<NearbyPresenter> with DataSourceMixin implements NearbyContract {
+class NearbyDataSource extends StateDataSource<NearbyPresenter> with DataSourceMixin {
   final String locationID = 'lochdr';
   final String bpCustomersID = 'bpcusthdr';
   final String customersID = 'custhdr';
@@ -67,11 +67,9 @@ class NearbyDataSource extends StateDataSource<NearbyPresenter> with DataSourceM
   }
 
   void _deleteSuccess(String message) {
-    Get.find<TaskHelper>().successPush(property.task.copyWith(
-        message: message,
-        onFinished: (res) {
-          Get.find<NearbyStateController>().refreshStates();
-        }));
+    Get.find<TaskHelper>().successPush(Task(deleteID, message: message, onFinished: (res) {
+      Get.find<NearbyStateController>().refreshStates();
+    }));
   }
 
   List<Customer> _customersSuccess(List data) {

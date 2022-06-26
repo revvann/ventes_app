@@ -33,7 +33,6 @@ class ScheduleFormUpdateProperty extends StateProperty with PropertyMixin {
   }
 
   void refresh() async {
-    dataSource.typesHandler.fetcher.run();
     dataSource.scheduleHandler.fetcher.run(dataSource.scheduleId);
   }
 

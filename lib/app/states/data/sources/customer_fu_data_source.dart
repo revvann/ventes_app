@@ -19,7 +19,7 @@ import 'package:ventes/helpers/function_helpers.dart';
 import 'package:ventes/helpers/task_helper.dart';
 import 'package:ventes/routing/navigators/nearby_navigator.dart';
 
-class CustomerFormUpdateDataSource extends StateDataSource<CustomerFormUpdatePresenter> with DataSourceMixin implements CustomerUpdateContract {
+class CustomerFormUpdateDataSource extends StateDataSource<CustomerFormUpdatePresenter> with DataSourceMixin {
   final String bpCustomersID = 'bpcusthdr';
   final String customersID = 'custhdr';
   final String typesID = 'tpshdr';

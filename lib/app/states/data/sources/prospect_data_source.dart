@@ -1,5 +1,4 @@
 import 'package:get/get.dart';
-import 'package:ventes/app/api/contracts/fetch_data_contract.dart';
 import 'package:ventes/app/api/presenters/prospect_presenter.dart';
 import 'package:ventes/app/models/prospect_model.dart';
 import 'package:ventes/app/models/type_model.dart';
@@ -9,7 +8,7 @@ import 'package:ventes/core/api/handler.dart';
 import 'package:ventes/core/states/state_data_source.dart';
 import 'package:ventes/helpers/task_helper.dart';
 
-class ProspectDataSource extends StateDataSource<ProspectPresenter> with DataSourceMixin implements FetchDataContract {
+class ProspectDataSource extends StateDataSource<ProspectPresenter> with DataSourceMixin {
   final String statusesID = "stshdr";
   final String prospectsID = 'prshdr';
 

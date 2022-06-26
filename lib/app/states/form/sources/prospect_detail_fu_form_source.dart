@@ -97,8 +97,7 @@ class ProspectDetailFormUpdateFormSource extends UpdateFormSource with FormSourc
   void onSubmit() {
     if (isValid) {
       Map<String, dynamic> data = toJson();
-      dataSource.updateData(property.prospectDetailId, data);
-      Get.find<TaskHelper>().loaderPush(property.task);
+      dataSource.updateHandler.fetcher.run(property.prospectDetailId, data);
     } else {
       Get.find<TaskHelper>().failedPush(property.task.copyWith(message: "Form invalid, Make sure all fields are filled"));
     }

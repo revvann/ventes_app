@@ -1,6 +1,5 @@
 // ignore_for_file: prefer_const_constructors
 import 'package:get/get.dart';
-import 'package:ventes/app/api/contracts/fetch_data_contract.dart';
 import 'package:ventes/app/api/presenters/schedule_presenter.dart';
 import 'package:ventes/app/models/schedule_model.dart';
 import 'package:ventes/app/models/type_model.dart';
@@ -10,7 +9,7 @@ import 'package:ventes/core/api/handler.dart';
 import 'package:ventes/core/states/state_data_source.dart';
 import 'package:ventes/helpers/task_helper.dart';
 
-class ScheduleDataSource extends StateDataSource<SchedulePresenter> with DataSourceMixin implements FetchDataContract {
+class ScheduleDataSource extends StateDataSource<SchedulePresenter> with DataSourceMixin {
   final String typesID = 'typeshdr';
   final String permissionsID = 'permishdr';
   final String schedulesID = 'scheduhdr';

@@ -1,44 +1,40 @@
-import 'package:get/get.dart';
-import 'package:ventes/app/api/contracts/fetch_data_contract.dart';
 import 'package:ventes/app/api/presenters/prospect_assign_presenter.dart';
 import 'package:ventes/app/models/prospect_assign_model.dart';
 import 'package:ventes/app/models/prospect_model.dart';
 import 'package:ventes/app/states/typedefs/prospect_assign_typedef.dart';
+import 'package:ventes/core/api/handler.dart';
 import 'package:ventes/core/states/state_data_source.dart';
-import 'package:ventes/helpers/task_helper.dart';
+import 'package:ventes/helpers/function_helpers.dart';
 
-class ProspectAssignDataSource extends StateDataSource<ProspectAssignPresenter> with DataSourceMixin implements FetchDataContract {
-  final Rx<List<ProspectAssign>> _prospectAssigns = Rx<List<ProspectAssign>>([]);
+class ProspectAssignDataSource extends StateDataSource<ProspectAssignPresenter> with DataSourceMixin {
+  final String prospectID = 'prosphdr';
+  final String prospectAssignID = 'prosasshdr';
 
-  final _prospect = Rx<Prospect?>(null);
-  Prospect? get prospect => _prospect.value;
-  set prospect(Prospect? prospect) => _prospect.value = prospect;
+  late DataHandler<List<ProspectAssign>, List, Function(int)> prospectAssignHandler;
+  late DataHandler<Prospect?, Map<String, dynamic>, Function(int)> prospectHandler;
 
-  List<ProspectAssign> get prospectAssigns => _prospectAssigns.value;
-  set prospectAssigns(List<ProspectAssign> value) => _prospectAssigns.value = value;
+  Prospect? get prospect => prospectHandler.value;
+  List<ProspectAssign> get prospectAssigns => prospectAssignHandler.value;
 
-  void fetchData(int prospectid) => presenter.fetchData(prospectid);
+  @override
+  void init() {
+    super.init();
+    prospectAssignHandler = createDataHandler(prospectAssignID, presenter.fetchProspectAssign, [], (data) => data.map<ProspectAssign>((e) => ProspectAssign.fromJson(e)).toList());
+    prospectHandler = createDataHandler(prospectID, presenter.fetchProspect, null, Prospect.fromJson);
+  }
 
   @override
   ProspectAssignPresenter presenterBuilder() => ProspectAssignPresenter();
 
   @override
-  onLoadError(String message) => listener.onLoadError(message);
+  onLoadError(String message) {}
 
   @override
-  onLoadFailed(String message) => listener.onLoadFailed(message);
+  onLoadFailed(String message) {}
 
   @override
-  onLoadSuccess(Map data) {
-    if (data['prospect'] != null) {
-      prospect = Prospect.fromJson(data['prospect']);
-    }
-
-    if (data['prospectassigns'] != null) {
-      prospectAssigns = data['prospectassigns'].map<ProspectAssign>((e) => ProspectAssign.fromJson(e)).toList();
-    }
-  }
+  onLoadSuccess(Map data) {}
 
   @override
-  onLoadComplete() => listener.onComplete();
+  onLoadComplete() {}
 }

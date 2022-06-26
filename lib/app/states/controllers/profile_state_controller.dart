@@ -1,4 +1,3 @@
-import 'package:get/get.dart';
 import 'package:ventes/app/states/typedefs/profile_typedef.dart';
 import 'package:ventes/core/states/state_controller.dart';
 

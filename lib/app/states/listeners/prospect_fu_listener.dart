@@ -1,7 +1,6 @@
 import 'package:get/get.dart';
 import 'package:ventes/app/models/bp_customer_model.dart';
 import 'package:ventes/app/models/user_detail_model.dart';
-import 'package:ventes/app/states/controllers/prospect_state_controller.dart';
 import 'package:ventes/constants/strings/prospect_string.dart';
 import 'package:ventes/app/states/typedefs/prospect_fu_typedef.dart';
 import 'package:ventes/core/states/state_listener.dart';
@@ -73,32 +72,6 @@ class ProspectFormUpdateListener extends StateListener with ListenerMixin {
     Get.back(id: ProspectNavigator.id);
   }
 
-  void onDataLoadError(String message) {
-    Get.find<TaskHelper>().errorPush(property.task.copyWith(message: message));
-  }
-
-  void onDataLoadFailed(String message) {
-    Get.find<TaskHelper>().failedPush(property.task.copyWith(message: message, snackbar: true));
-  }
-
-  void onUpdateDataSuccess(String message) {
-    Get.find<TaskHelper>().successPush(property.task.copyWith(
-        message: message,
-        onFinished: (res) {
-          Get.find<ProspectStateController>().property.refresh();
-          Get.back(id: ProspectNavigator.id);
-        }));
-  }
-
-  void onUpdateDataFailed(String message) {
-    Get.find<TaskHelper>().failedPush(property.task.copyWith(message: message, snackbar: true));
-  }
-
-  void onUpdateDataError(String message) {
-    Get.find<TaskHelper>().errorPush(property.task.copyWith(message: message));
-  }
-
-  void onComplete() => Get.find<TaskHelper>().loaderPop(property.task.name);
   @override
   Future onReady() async {
     property.refresh();

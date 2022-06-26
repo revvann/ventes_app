@@ -20,7 +20,7 @@ class ProspectDetailFormUpdateProperty extends StateProperty with PropertyMixin 
   double defaultZoom = 20;
 
   refresh() {
-    dataSource.fetchData(prospectDetailId);
-    Get.find<TaskHelper>().loaderPush(task);
+    dataSource.typesHandler.fetcher.run();
+    dataSource.prospectDetailHandler.fetcher.run(prospectDetailId);
   }
 }

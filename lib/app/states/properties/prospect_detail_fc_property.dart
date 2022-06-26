@@ -23,7 +23,9 @@ class ProspectDetailFormCreateProperty extends StateProperty with PropertyMixin 
 
   refresh() async {
     Position position = await getCurrentPosition();
-    dataSource.fetchData(prospectId, position.latitude, position.longitude);
-    Get.find<TaskHelper>().loaderPush(task);
+    dataSource.categoriesHandler.fetcher.run();
+    dataSource.typesHandler.fetcher.run();
+    dataSource.prospectHandler.fetcher.run(prospectId);
+    dataSource.locationHandler.fetcher.run(position.latitude, position.longitude);
   }
 }

@@ -5,23 +5,24 @@ class _BpDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() {
-      return Column(
+    return HandlerContainer<Function(UserDetail?)>(
+      handlers: [state.dataSource.userDetailHandler],
+      builder: (userDetail) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _ProfileItem(
             title: "Business Name",
-            value: state.dataSource.userDetail?.businesspartner?.bpname ?? "-",
+            value: userDetail?.businesspartner?.bpname ?? "-",
           ),
           SizedBox(height: RegularSize.m),
           _ProfileItem(
             title: "Business Email",
-            value: state.dataSource.userDetail?.businesspartner?.bpemail ?? "-",
+            value: userDetail?.businesspartner?.bpemail ?? "-",
           ),
           SizedBox(height: RegularSize.m),
           _ProfileItem(
             title: "Business Phone",
-            value: state.dataSource.userDetail?.businesspartner?.bpphone ?? "-",
+            value: userDetail?.businesspartner?.bpphone ?? "-",
           ),
           SizedBox(height: RegularSize.m),
           Text(
@@ -39,21 +40,21 @@ class _BpDetail extends StatelessWidget {
             spacing: RegularSize.s,
             runSpacing: RegularSize.s,
             children: [
-              if (state.dataSource.userDetail?.businesspartner?.bptype?.typename != null)
+              if (userDetail?.businesspartner?.bptype?.typename != null)
                 _DetailTag(
-                  text: state.dataSource.userDetail!.businesspartner!.bptype!.typename!,
+                  text: userDetail!.businesspartner!.bptype!.typename!,
                   color: RegularColor.pink,
                 ),
-              if (state.dataSource.userDetail?.usertype?.typename != null)
+              if (userDetail?.usertype?.typename != null)
                 _DetailTag(
-                  text: state.dataSource.userDetail!.usertype!.typename!,
+                  text: userDetail!.usertype!.typename!,
                   color: RegularColor.green,
                 ),
             ],
           ),
         ],
-      );
-    });
+      ),
+    );
   }
 }
 

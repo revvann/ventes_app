@@ -147,18 +147,20 @@ class ScheduleFormUpdateView extends View<Controller> {
                 SizedBox(
                   height: RegularSize.m,
                 ),
-                HandlerContainer<Function(List<Map<String, int>>)>(
+                HandlerContainer<Function(Schedule?)>(
                   handlers: [
-                    state.dataSource.typesHandler,
+                    state.dataSource.scheduleHandler,
                   ],
                   width: RegularSize.l,
-                  builder: (data) => _ScheduletypeSelectbox(
-                    onSelected: (value) {
-                      state.formSource.schetype = value;
-                    },
-                    activeIndex: state.formSource.schetype,
-                    items: state.dataSource.types.isNotEmpty ? [state.dataSource.typeName(state.formSource.schetype)!] : [],
-                  ),
+                  builder: (data) => Obx(() {
+                    return _ScheduletypeSelectbox(
+                      onSelected: (value) {
+                        state.formSource.schetype = value;
+                      },
+                      activeIndex: state.formSource.schetype,
+                      items: state.dataSource.typeName(state.formSource.schetype) != null ? [state.dataSource.typeName(state.formSource.schetype)!] : [],
+                    );
+                  }),
                 ),
                 SizedBox(
                   height: RegularSize.l,
@@ -179,22 +181,24 @@ class ScheduleFormUpdateView extends View<Controller> {
                     ],
                     width: RegularSize.xl,
                     builder: (data, schedule) => SingleChildScrollView(
-                      child: Stack(
-                        children: [
-                          Offstage(
-                            offstage: state.dataSource.typeName(state.formSource.schetype) != "Event",
-                            child: _EventForm(),
-                          ),
-                          Offstage(
-                            offstage: state.dataSource.typeName(state.formSource.schetype) != "Task",
-                            child: _TaskForm(),
-                          ),
-                          Offstage(
-                            offstage: state.dataSource.typeName(state.formSource.schetype) != "Reminder",
-                            child: _ReminderForm(),
-                          ),
-                        ],
-                      ),
+                      child: Obx(() {
+                        return Stack(
+                          children: [
+                            Offstage(
+                              offstage: state.dataSource.typeName(state.formSource.schetype) != "Event",
+                              child: _EventForm(),
+                            ),
+                            Offstage(
+                              offstage: state.dataSource.typeName(state.formSource.schetype) != "Task",
+                              child: _TaskForm(),
+                            ),
+                            Offstage(
+                              offstage: state.dataSource.typeName(state.formSource.schetype) != "Reminder",
+                              child: _ReminderForm(),
+                            ),
+                          ],
+                        );
+                      }),
                     ),
                   ),
                 ),

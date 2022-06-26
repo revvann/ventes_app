@@ -117,8 +117,7 @@ class ProspectDetailFormCreateFormSource extends StateFormSource with FormSource
   void onSubmit() {
     if (isValid) {
       Map<String, dynamic> data = toJson();
-      dataSource.createData(data);
-      Get.find<TaskHelper>().loaderPush(property.task);
+      dataSource.createHandler.fetcher.run(data);
     } else {
       Get.find<TaskHelper>().failedPush(property.task.copyWith(message: "Form invalid, Make sure all fields are filled"));
     }

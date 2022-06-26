@@ -16,7 +16,7 @@ import 'package:ventes/helpers/function_helpers.dart';
 import 'package:ventes/helpers/task_helper.dart';
 import 'package:ventes/routing/navigators/schedule_navigator.dart';
 
-class ScheduleFormUpdateDataSource extends StateDataSource<ScheduleFormUpdatePresenter> with DataSourceMixin implements ScheduleUpdateContract {
+class ScheduleFormUpdateDataSource extends StateDataSource<ScheduleFormUpdatePresenter> with DataSourceMixin {
   final String typesID = 'typshdr';
   final String scheduleID = 'schehdr';
   final String updateID = 'updatehdr';
@@ -35,9 +35,7 @@ class ScheduleFormUpdateDataSource extends StateDataSource<ScheduleFormUpdatePre
   List<int> typeIds() => types.map((type) => type.values.first).toList();
   int typeIndex(int id) => typeIds().isNotEmpty ? typeIds().indexOf(id) : -1;
 
-  final Rx<Schedule?> _schedule = Rx<Schedule?>(null);
-  Schedule? get schedule => _schedule.value;
-  set schedule(Schedule? value) => _schedule.value = value;
+  Schedule? get schedule => scheduleHandler.value;
 
   List<Map<String, int>> insertTypes(List types) {
     List<DBType> typeMap = types.map((type) => DBType.fromJson(type)).where((element) => element.typeid == schedule?.schetypeid).toList();
@@ -71,7 +69,8 @@ class ScheduleFormUpdateDataSource extends StateDataSource<ScheduleFormUpdatePre
 
   void _updateSuccess(data) {
     Get.find<TaskHelper>().successPush(
-      property.task.copyWith(
+      Task(
+        updateID,
         message: ScheduleString.updateSuccess,
         onFinished: (res) {
           Get.find<DailyScheduleStateController>().refreshStates();
@@ -81,11 +80,21 @@ class ScheduleFormUpdateDataSource extends StateDataSource<ScheduleFormUpdatePre
     );
   }
 
+  void _scheduleComplete() {
+    typesHandler.fetcher.run();
+  }
+
   @override
   void init() {
     super.init();
-    typesHandler = createDataHandler(typesID, presenter.fetchTypes, [], insertTypes);
-    scheduleHandler = createDataHandler(scheduleID, presenter.fetchSchedule, null, Schedule.fromJson, onComplete: formSource.prepareFormValues);
+    typesHandler = createDataHandler(
+      typesID,
+      presenter.fetchTypes,
+      [],
+      insertTypes,
+      onComplete: () => formSource.prepareFormValues(),
+    );
+    scheduleHandler = createDataHandler(scheduleID, presenter.fetchSchedule, null, Schedule.fromJson, onComplete: _scheduleComplete);
     updateHandler = DataHandler(
       updateID,
       fetcher: presenter.update,
@@ -100,28 +109,4 @@ class ScheduleFormUpdateDataSource extends StateDataSource<ScheduleFormUpdatePre
 
   @override
   ScheduleFormUpdatePresenter presenterBuilder() => ScheduleFormUpdatePresenter();
-
-  @override
-  void onUpdateFailed(String message) {}
-
-  @override
-  void onUpdateSuccess(String message) {}
-
-  @override
-  void onUpdateError(String message) {}
-
-  @override
-  onLoadError(String message) {}
-
-  @override
-  onLoadFailed(String message) {}
-
-  @override
-  onLoadSuccess(Map data) {}
-
-  @override
-  onLoadComplete() {}
-
-  @override
-  void onUpdateComplete() {}
 }

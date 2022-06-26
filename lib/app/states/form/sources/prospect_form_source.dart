@@ -49,8 +49,9 @@ class ProspectFormSource extends StateFormSource with FormSourceMixin {
   void onSubmit() {}
 
   @override
-  void close() {
-    super.close();
-    searchTEC.dispose();
+  void init() {
+    super.init();
+    searchTEC.clear();
+    statusDropdownController.reset();
   }
 }

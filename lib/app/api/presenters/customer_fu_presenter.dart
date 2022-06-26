@@ -1,4 +1,10 @@
 import 'package:get/get.dart';
+import 'package:ventes/app/api/presenters/regular_presenter.dart';
+import 'package:ventes/app/api/services/bp_customer_service.dart';
+import 'package:ventes/app/api/services/customer_service.dart';
+import 'package:ventes/app/api/services/place_service.dart';
+import 'package:ventes/app/api/services/type_service.dart';
+import 'package:ventes/app/api/services/user_service.dart';
 import 'package:ventes/app/models/auth_model.dart';
 import 'package:ventes/app/models/bp_customer_model.dart';
 import 'package:ventes/app/models/city_model.dart';
@@ -6,19 +12,11 @@ import 'package:ventes/app/models/country_model.dart';
 import 'package:ventes/app/models/province_model.dart';
 import 'package:ventes/app/models/subdistrict_model.dart';
 import 'package:ventes/app/models/user_detail_model.dart';
-import 'package:ventes/app/api/contracts/fetch_data_contract.dart';
-import 'package:ventes/app/api/contracts/update_contract.dart';
-import 'package:ventes/app/api/presenters/regular_presenter.dart';
-import 'package:ventes/app/api/services/bp_customer_service.dart';
-import 'package:ventes/app/api/services/customer_service.dart';
-import 'package:ventes/app/api/services/place_service.dart';
-import 'package:ventes/app/api/services/type_service.dart';
-import 'package:ventes/app/api/services/user_service.dart';
 import 'package:ventes/constants/strings/nearby_string.dart';
 import 'package:ventes/core/api/fetcher.dart';
 import 'package:ventes/helpers/auth_helper.dart';
 
-class CustomerFormUpdatePresenter extends RegularPresenter<CustomerUpdateContract> {
+class CustomerFormUpdatePresenter extends RegularPresenter {
   final PlaceService _placeService = Get.find<PlaceService>();
   final BpCustomerService _bpCustomerService = Get.find<BpCustomerService>();
   final CustomerService _customerService = Get.find<CustomerService>();
@@ -190,5 +188,3 @@ class CustomerFormUpdatePresenter extends RegularPresenter<CustomerUpdateContrac
     return [];
   }
 }
-
-abstract class CustomerUpdateContract implements FetchDataContract, UpdateContract {}

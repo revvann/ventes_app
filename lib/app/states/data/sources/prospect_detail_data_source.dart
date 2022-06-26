@@ -3,62 +3,76 @@ import 'package:ventes/app/api/presenters/prospect_detail_presenter.dart';
 import 'package:ventes/app/models/prospect_detail_model.dart';
 import 'package:ventes/app/models/prospect_model.dart';
 import 'package:ventes/app/models/type_model.dart';
+import 'package:ventes/app/states/controllers/prospect_detail_state_controller.dart';
 import 'package:ventes/app/states/typedefs/prospect_detail_typedef.dart';
+import 'package:ventes/core/api/handler.dart';
 import 'package:ventes/core/states/state_data_source.dart';
+import 'package:ventes/helpers/function_helpers.dart';
 import 'package:ventes/helpers/task_helper.dart';
 
-class ProspectDetailDataSource extends StateDataSource<ProspectDetailPresenter> with DataSourceMixin implements ProspectDetailContract {
-  final _prospect = Rx<Prospect?>(null);
-  Prospect? get prospect => _prospect.value;
-  set prospect(Prospect? value) => _prospect.value = value;
+class ProspectDetailDataSource extends StateDataSource<ProspectDetailPresenter> with DataSourceMixin {
+  final String stagesID = 'stgshdr';
+  final String prospectID = 'prospecthdr';
+  final String prospectDetailsID = 'prosdtlshdr';
+  final String deleteID = 'deltehdr';
 
-  final _prospectDetails = Rx<List<ProspectDetail>>([]);
-  List<ProspectDetail> get prospectDetails => _prospectDetails.value;
-  set prospectDetails(List<ProspectDetail> value) => _prospectDetails.value = value;
+  late DataHandler<List<DBType>, List, Function()> stagesHandler;
+  late DataHandler<Prospect?, Map<String, dynamic>, Function(int)> prospectHandler;
+  late DataHandler<List<ProspectDetail>, List, Function(int)> prospectDetailsHandler;
+  late DataHandler<dynamic, String, Function(int)> deleteHandler;
 
-  final _stages = Rx<List<DBType>>([]);
-  List<DBType> get stages => _stages.value;
-  set stages(List<DBType> value) => _stages.value = value;
+  Prospect? get prospect => prospectHandler.value;
+  List<ProspectDetail> get prospectDetails => prospectDetailsHandler.value;
+  List<DBType> get stages => stagesHandler.value;
 
-  void fetchData(int prospectid) => presenter.fetchData(prospectid);
-  void deleteData(int detailid) => presenter.deleteData(detailid);
+  void _deleteSuccess(message) {
+    Get.find<TaskHelper>().successPush(Task(deleteID, message: message, onFinished: (res) {
+      Get.find<ProspectDetailStateController>().refreshStates();
+    }));
+  }
+
+  @override
+  void init() {
+    super.init();
+    stagesHandler = createDataHandler(stagesID, presenter.fetchStages, [], (data) => data.map<DBType>((json) => DBType.fromJson(json)).toList());
+    prospectHandler = createDataHandler(prospectID, presenter.fetchProspect, null, (data) => Prospect.fromJson(data));
+    prospectDetailsHandler = createDataHandler(prospectDetailsID, presenter.fetchProspectDetails, [], (data) => data.map<ProspectDetail>((json) => ProspectDetail.fromJson(json)).toList());
+    deleteHandler = DataHandler(
+      deleteID,
+      fetcher: presenter.delete,
+      initialValue: null,
+      onStart: () => Get.find<TaskHelper>().loaderPush(Task(deleteID)),
+      onSuccess: _deleteSuccess,
+      onFailed: (message) => Get.find<TaskHelper>().failedPush(Task(deleteID, message: message)),
+      onError: (message) => Get.find<TaskHelper>().errorPush(Task(deleteID, message: message)),
+      onComplete: () => Get.find<TaskHelper>().loaderPop(deleteID),
+    );
+  }
 
   @override
   ProspectDetailPresenter presenterBuilder() => ProspectDetailPresenter();
 
   @override
-  onLoadError(String message) => listener.onLoadError(message);
+  onLoadError(String message) {}
 
   @override
-  onLoadFailed(String message) => listener.onLoadFailed(message);
+  onLoadFailed(String message) {}
 
   @override
-  onLoadSuccess(Map data) {
-    if (data['prospect'] != null) {
-      prospect = Prospect.fromJson(data['prospect']);
-    }
-
-    if (data['prospectdetails'] != null) {
-      prospectDetails = data['prospectdetails'].map<ProspectDetail>((json) => ProspectDetail.fromJson(json)).toList();
-    }
-
-    if (data['stages'] != null) {
-      stages = data['stages'].map<DBType>((json) => DBType.fromJson(json)).toList();
-    }
-  }
+  onLoadSuccess(Map data) {}
 
   @override
-  void onDeleteError(String message) => listener.onDeleteError(message);
+  void onDeleteError(String message) {}
 
   @override
-  void onDeleteFailed(String message) => listener.onDeleteFailed(message);
+  void onDeleteFailed(String message) {}
 
   @override
-  void onDeleteSuccess(String message) => listener.onDeleteSuccess(message);
+  void onDeleteSuccess(String message) {}
 
   @override
-  void onDeleteComplete() => listener.onComplete();
+  void onDeleteComplete() {}
 
   @override
-  onLoadComplete() => listener.onComplete();
+  onLoadComplete() {}
 }

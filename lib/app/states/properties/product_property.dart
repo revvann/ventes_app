@@ -21,13 +21,12 @@ class ProductProperty extends StateProperty with PropertyMixin {
   late int prospectid;
 
   void refresh() {
-    dataSource.fetchData(prospectid);
-    Get.find<TaskHelper>().loaderPush(task);
+    dataSource.prospectHandler.fetcher.run(prospectid);
+    dataSource.productsHandler.fetcher.run(prospectid);
   }
 
   void searchProducts() {
-    isLoading.value = true;
-    dataSource.fetchProducts(prospectid, lastSearch);
+    dataSource.productsHandler.fetcher.run(prospectid, lastSearch);
   }
 
   void onSearchChanged() {

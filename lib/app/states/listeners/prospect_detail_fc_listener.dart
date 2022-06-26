@@ -51,32 +51,6 @@ class ProspectDetailFormCreateListener extends StateListener with ListenerMixin 
     );
   }
 
-  void onLoadFailed(String message) {
-    Get.find<TaskHelper>().failedPush(property.task.copyWith(message: message, snackbar: true));
-  }
-
-  void onLoadError(String message) {
-    Get.find<TaskHelper>().errorPush(property.task.copyWith(message: message));
-  }
-
-  void onCreateDataSuccess(String message) {
-    Get.find<TaskHelper>().successPush(property.task.copyWith(
-        message: message,
-        onFinished: (res) {
-          Get.find<ProspectDetailStateController>().property.refresh();
-          Get.back(id: ProspectNavigator.id);
-        }));
-  }
-
-  void onCreateDataFailed(String message) {
-    Get.find<TaskHelper>().failedPush(property.task.copyWith(message: message, snackbar: true));
-  }
-
-  void onCreateDataError(String message) {
-    Get.find<TaskHelper>().errorPush(property.task.copyWith(message: message));
-  }
-
-  void onComplete() => Get.find<TaskHelper>().loaderPop(property.task.name);
   @override
   Future onReady() async {
     property.refresh();

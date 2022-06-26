@@ -30,43 +30,13 @@ class ProductListener extends StateListener with ListenerMixin {
         message: ProspectString.deleteProductConfirm,
         onFinished: (res) {
           if (res) {
-            dataSource.deleteProduct(productid);
-            Get.find<TaskHelper>().loaderPush(property.task);
+            dataSource.deleteHandler.fetcher.run(productid);
           }
         },
       ),
     );
   }
 
-  void onLoadFailed(String message) {
-    Get.find<TaskHelper>().failedPush(property.task.copyWith(message: message, snackbar: true));
-
-    property.isLoading.value = false;
-  }
-
-  void onLoadError(String message) {
-    Get.find<TaskHelper>().errorPush(property.task.copyWith(message: message));
-
-    property.isLoading.value = false;
-  }
-
-  void onDeleteFailed(String message) {
-    Get.find<TaskHelper>().failedPush(property.task.copyWith(message: message, snackbar: true));
-  }
-
-  void onDeleteSuccess(String message) {
-    Get.find<TaskHelper>().successPush(property.task.copyWith(
-        message: message,
-        onFinished: (res) {
-          Get.find<ProductStateController>().refreshStates();
-        }));
-  }
-
-  void onDeleteError(String message) {
-    Get.find<TaskHelper>().errorPush(property.task.copyWith(message: message));
-  }
-
-  void onComplete() => Get.find<TaskHelper>().loaderPop(property.task.name);
   @override
   Future onReady() async {
     property.refresh();

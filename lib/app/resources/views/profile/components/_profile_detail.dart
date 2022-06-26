@@ -5,26 +5,27 @@ class _ProfileDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() {
-      return Column(
+    return HandlerContainer<Function(UserDetail?)>(
+      handlers: [state.dataSource.userDetailHandler],
+      builder: (userDetail) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _ProfileItem(
             title: "Full Name",
-            value: state.dataSource.userDetail?.user?.userfullname ?? "",
+            value: userDetail?.user?.userfullname ?? "",
           ),
           SizedBox(height: RegularSize.m),
           _ProfileItem(
             title: "Email",
-            value: state.dataSource.userDetail?.user?.useremail ?? "",
+            value: userDetail?.user?.useremail ?? "",
           ),
           SizedBox(height: RegularSize.m),
           _ProfileItem(
             title: "Phone",
-            value: state.dataSource.userDetail?.user?.userphone ?? "",
+            value: userDetail?.user?.userphone ?? "",
           ),
         ],
-      );
-    });
+      ),
+    );
   }
 }

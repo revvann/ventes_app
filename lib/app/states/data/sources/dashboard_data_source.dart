@@ -12,7 +12,7 @@ import 'package:ventes/helpers/function_helpers.dart';
 import 'package:ventes/app/states/typedefs/dashboard_typedef.dart';
 import 'package:ventes/helpers/task_helper.dart';
 
-class DashboardDataSource extends StateDataSource<DashboardPresenter> with DataSourceMixin implements DashboardContract {
+class DashboardDataSource extends StateDataSource<DashboardPresenter> with DataSourceMixin {
   final String currentPositionID = "curposhdr";
   final String usersID = 'usershdr';
   final String userID = 'userhdr';
@@ -82,7 +82,7 @@ class DashboardDataSource extends StateDataSource<DashboardPresenter> with DataS
   }
 
   void _logoutSuccess(String message) {
-    Get.find<TaskHelper>().successPush(property.task.copyWith(snackbar: true, message: message, onFinished: _logout));
+    Get.find<TaskHelper>().successPush(Task(logoutID, snackbar: true, message: message, onFinished: _logout));
   }
 
   @override

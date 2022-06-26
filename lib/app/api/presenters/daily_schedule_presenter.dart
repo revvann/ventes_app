@@ -1,16 +1,14 @@
 import 'package:get/get.dart';
-import 'package:ventes/app/models/auth_model.dart';
-import 'package:ventes/app/api/contracts/delete_contract.dart';
-import 'package:ventes/app/api/contracts/fetch_data_contract.dart';
 import 'package:ventes/app/api/presenters/regular_presenter.dart';
+import 'package:ventes/app/api/services/schedule_service.dart';
 import 'package:ventes/app/api/services/type_service.dart';
+import 'package:ventes/app/models/auth_model.dart';
 import 'package:ventes/constants/strings/regular_string.dart';
 import 'package:ventes/constants/strings/schedule_string.dart';
 import 'package:ventes/core/api/fetcher.dart';
 import 'package:ventes/helpers/auth_helper.dart';
-import 'package:ventes/app/api/services/schedule_service.dart';
 
-class DailySchedulePresenter extends RegularPresenter<DailyScheduleContract> {
+class DailySchedulePresenter extends RegularPresenter {
   final TypeService _typeService = Get.find<TypeService>();
   final _scheduleService = Get.find<ScheduleService>();
 
@@ -79,5 +77,3 @@ class DailySchedulePresenter extends RegularPresenter<DailyScheduleContract> {
         },
       );
 }
-
-abstract class DailyScheduleContract implements FetchDataContract, DeleteContract {}

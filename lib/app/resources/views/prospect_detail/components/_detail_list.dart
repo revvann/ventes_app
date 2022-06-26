@@ -7,13 +7,15 @@ class _DetailList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() {
-      return ListView.builder(
+    return HandlerContainer<Function(List<ProspectDetail>)>(
+      handlers: [state.dataSource.prospectDetailsHandler],
+      width: RegularSize.xl,
+      builder: (prospectDetails) => ListView.builder(
         shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),
-        itemCount: state.dataSource.prospectDetails.length,
+        itemCount: prospectDetails.length,
         itemBuilder: (_, index) {
-          ProspectDetail _prospectDetail = state.dataSource.prospectDetails[index];
+          ProspectDetail _prospectDetail = prospectDetails[index];
           return Container(
             padding: EdgeInsets.symmetric(
               vertical: RegularSize.m,
@@ -136,8 +138,8 @@ class _DetailList extends StatelessWidget {
             ),
           );
         },
-      );
-    });
+      ),
+    );
   }
 
   void showProspectDetail(ProspectDetail detail) {

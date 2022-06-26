@@ -13,8 +13,8 @@ class ContactPersonProperty extends StateProperty with PropertyMixin {
   Task task = Task(ProspectString.contactPersonTaskCode);
 
   void refresh() {
-    dataSource.fetchData(customerid);
-    Get.find<TaskHelper>().loaderPush(task);
+    dataSource.bpCustomerHandler.fetcher.run(customerid);
+    dataSource.contactsHandler.fetcher.run(customerid);
   }
 
   PopupMenuController createPopupController([int id = 0]) {

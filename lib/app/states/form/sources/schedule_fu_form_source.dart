@@ -13,7 +13,6 @@ import 'package:ventes/app/resources/widgets/searchable_dropdown.dart';
 import 'package:ventes/app/states/typedefs/schedule_fu_typedef.dart';
 import 'package:ventes/core/states/update_form_source.dart';
 import 'package:ventes/helpers/function_helpers.dart';
-import 'package:ventes/helpers/task_helper.dart';
 
 class ScheduleFormUpdateFormSource extends UpdateFormSource with FormSourceMixin {
   Validator validator = Validator();
@@ -294,6 +293,7 @@ class ScheduleFormUpdateFormSource extends UpdateFormSource with FormSourceMixin
       scheid = schedule.scheid ?? -1;
       schenm = schedule.schenm ?? "";
       schetype = dataSource.typeIndex(schedule.schetypeid ?? 0);
+      dataSource.types;
       schestartdate = dbParseDate(schedule.schestartdate!);
       scheenddate = dbParseDate(schedule.scheenddate ?? schedule.schestartdate!);
       schestarttime = !(schedule.scheallday ?? false) ? parseTime(schedule.schestarttime!) : null;

@@ -9,7 +9,7 @@ import 'package:ventes/core/api/handler.dart';
 import 'package:ventes/core/states/state_data_source.dart';
 import 'package:ventes/helpers/task_helper.dart';
 
-class DailyScheduleDataSource extends StateDataSource<DailySchedulePresenter> with DataSourceMixin implements DailyScheduleContract {
+class DailyScheduleDataSource extends StateDataSource<DailySchedulePresenter> with DataSourceMixin {
   final String typesID = 'typeshdr';
   final String permissionsID = 'permishdr';
   final String schedulesID = 'scheduhdr';

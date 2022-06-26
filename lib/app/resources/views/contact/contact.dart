@@ -6,7 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:ventes/app/models/bp_customer_model.dart';
 import 'package:ventes/app/models/contact_person_model.dart';
+import 'package:ventes/app/resources/widgets/handler_container.dart';
 import 'package:ventes/app/resources/widgets/pop_up_item.dart';
 import 'package:ventes/app/resources/widgets/popup_button.dart';
 import 'package:ventes/app/resources/widgets/top_navigation.dart';
@@ -61,16 +63,17 @@ class ContactPersonView extends View<Controller> {
               horizontal: RegularSize.xl,
             ),
             alignment: Alignment.center,
-            child: Obx(() {
-              return Text(
-                state.dataSource.bpcustomer?.sbccstmname ?? "",
+            child: HandlerContainer<Function(BpCustomer?)>(
+              handlers: [state.dataSource.bpCustomerHandler],
+              builder: (bpcustomer) => Text(
+                bpcustomer?.sbccstmname ?? "",
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 14,
                 ),
-              );
-            }),
+              ),
+            ),
           ),
         ),
       ).build(context),

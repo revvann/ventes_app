@@ -1,3 +1,1 @@
-abstract class RegularPresenter<T> {
-  late T contract;
-}
+abstract class RegularPresenter {}
