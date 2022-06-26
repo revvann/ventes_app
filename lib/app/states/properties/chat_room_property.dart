@@ -21,6 +21,7 @@ class ChatRoomProperty extends StateProperty with PropertyMixin {
     Map<String, dynamic> options = optionsBuilder.build();
 
     _socket = io.io(RegularString.chatServer, options);
+    _socket!.connect();
     _socket!.onConnect(listener.onSocketConnect);
     _socket!.onConnectError(listener.onSocketConnectError);
     _socket!.onDisconnect(listener.onSocketDisconnect);
@@ -51,6 +52,7 @@ class ChatRoomProperty extends StateProperty with PropertyMixin {
   void close() {
     super.close();
     if (_socket != null) _socket!.dispose();
+    messageTEC.dispose();
   }
 }
 

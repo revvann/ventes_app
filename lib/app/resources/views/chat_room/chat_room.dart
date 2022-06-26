@@ -5,6 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:grouped_list/grouped_list.dart';
+import 'package:ventes/app/models/user_detail_model.dart';
+import 'package:ventes/app/resources/widgets/handler_container.dart';
 import 'package:ventes/app/resources/widgets/top_navigation.dart';
 import 'package:ventes/app/states/properties/chat_room_property.dart';
 import 'package:ventes/app/states/typedefs/chat_room_typedef.dart';
@@ -54,12 +56,17 @@ class ChatRoomView extends View<Controller> {
             horizontal: RegularSize.xl,
           ),
           alignment: Alignment.center,
-          child: Text(
-            "Elliot Harvey",
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 14,
+          child: HandlerContainer<Function(UserDetail?)>(
+            handlers: [
+              state.dataSource.userDetailHandler,
+            ],
+            builder: (userDetail) => Text(
+              userDetail?.user?.userfullname ?? "Unknown",
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 14,
+              ),
             ),
           ),
         ),
@@ -104,7 +111,10 @@ class ChatRoomView extends View<Controller> {
                 ),
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(RegularSize.m),
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(RegularSize.xl),
+                    topRight: Radius.circular(RegularSize.xl),
+                  ),
                   boxShadow: [
                     BoxShadow(
                       offset: Offset(0, 4),

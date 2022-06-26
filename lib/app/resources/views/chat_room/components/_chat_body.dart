@@ -18,7 +18,7 @@ class _ChatBody extends StatelessWidget {
           vertical: RegularSize.s,
         ),
         decoration: BoxDecoration(
-            color: isMe ? RegularColor.green : RegularColor.gray.withOpacity(0.5),
+            color: isMe ? RegularColor.primary : RegularColor.gray.withOpacity(0.3),
             borderRadius: BorderRadius.only(
               topLeft: isMe ? Radius.circular(RegularSize.s) : Radius.zero,
               topRight: Radius.circular(RegularSize.s),
