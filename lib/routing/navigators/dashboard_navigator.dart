@@ -2,6 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ventes/app/resources/views/chat_home/chat_home.dart';
+import 'package:ventes/app/resources/views/chat_room/chat_room.dart';
+import 'package:ventes/app/states/controllers/chat_home_state_controller.dart';
+import 'package:ventes/app/states/controllers/chat_room_state_controller.dart';
 import 'package:ventes/core/routing/page_route.dart';
 import 'package:ventes/app/states/controllers/dashboard_state_controller.dart';
 import 'package:ventes/app/resources/views/dashboard/dashboard.dart';
@@ -24,6 +28,22 @@ class DashboardNavigator extends ViewNavigator {
               bindings: [
                 BindingsBuilder(() {
                   Get.put(DashboardStateController());
+                })
+              ],
+            ),
+        ChatHomeView.route: (args) => ViewRoute(
+              page: () => ChatHomeView(),
+              bindings: [
+                BindingsBuilder(() {
+                  Get.put(ChatHomeStateController());
+                })
+              ],
+            ),
+        ChatRoomView.route: (args) => ViewRoute(
+              page: () => ChatRoomView(),
+              bindings: [
+                BindingsBuilder(() {
+                  Get.put(ChatRoomStateController());
                 })
               ],
             ),

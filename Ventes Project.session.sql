@@ -164,3 +164,7 @@ values (
         now(),
         true
     );
+select *
+from msuser;
+update msuser
+set userdeviceid = null;

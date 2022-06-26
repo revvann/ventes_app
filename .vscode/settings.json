@@ -19,6 +19,16 @@
             "database": "ventes",
             "username": "hsm01_postgres",
             "password": "P@ssw0rd"
+        },
+        {
+            "previewLimit": 50,
+            "server": "/var/run/postgresql",
+            "port": 5432,
+            "driver": "PostgreSQL",
+            "name": "home",
+            "database": "ventes",
+            "username": "revan",
+            "password": "revan1853"
         }
     ]
 }

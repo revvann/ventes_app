@@ -5,4 +5,8 @@ class DashboardString {
   static String confirmLogout = "Are you sure you want to logout?";
 
   static String dashboardTag = "dashboard";
+
+  static String chatHomeTag = "chathome";
+  static String chatAppBarTitle = 'Chat';
+  static String chatRoomTag = "chatroom";
 }

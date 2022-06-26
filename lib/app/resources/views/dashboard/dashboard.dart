@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:ventes/app/models/bp_customer_model.dart';
 import 'package:ventes/app/models/maps_loc.dart';
 import 'package:ventes/app/models/user_detail_model.dart';
+import 'package:ventes/app/resources/views/chat_home/chat_home.dart';
 import 'package:ventes/app/resources/widgets/bottom_navigation.dart';
 import 'package:ventes/app/resources/widgets/customer_card.dart';
 import 'package:ventes/app/resources/widgets/handler_container.dart';
@@ -21,6 +22,7 @@ import 'package:ventes/constants/views.dart';
 import 'package:ventes/core/view/view.dart';
 import 'package:ventes/helpers/function_helpers.dart';
 import 'package:ventes/helpers/task_helper.dart';
+import 'package:ventes/routing/navigators/dashboard_navigator.dart';
 
 part 'package:ventes/app/resources/views/dashboard/components/_appbar.dart';
 part 'package:ventes/app/resources/views/dashboard/components/_menu_item.dart';
@@ -107,9 +109,9 @@ class DashboardView extends View<Controller> {
                               children: [
                                 _MenuItem(
                                   color: RegularColor.pink,
-                                  icon: "assets/svg/daily-visit.svg",
-                                  text: "Daily Visit",
-                                  onTap: () {},
+                                  icon: "assets/svg/chat.svg",
+                                  text: "Chat",
+                                  onTap: () => Get.toNamed(ChatHomeView.route, id: DashboardNavigator.id),
                                 ),
                                 SizedBox(
                                   width: RegularSize.s,
