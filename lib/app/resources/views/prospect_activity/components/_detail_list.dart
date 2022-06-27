@@ -42,7 +42,7 @@ class _DetailList extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      formatDate(dbParseDate(_prospectActivity.prospectdtdate!)),
+                      formatDate(dbParseDate(_prospectActivity.prospectactivitydate!)),
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
@@ -62,7 +62,7 @@ class _DetailList extends StatelessWidget {
                         borderRadius: BorderRadius.circular(RegularSize.s),
                       ),
                       child: Text(
-                        _prospectActivity.prospectdtcat?.typename ?? "",
+                        _prospectActivity.prospectactivitycat?.typename ?? "",
                         style: TextStyle(
                           fontSize: 12,
                           color: Colors.white,
@@ -86,12 +86,12 @@ class _DetailList extends StatelessWidget {
                               MenuItem(
                                 title: "Edit",
                                 icon: "assets/svg/edit.svg",
-                                onTap: () => state.listener.onProspectActivityClicked(_prospectActivity.prospectdtid!),
+                                onTap: () => state.listener.onProspectActivityClicked(_prospectActivity.prospectactivityid!),
                               ),
                               MenuItem(
                                 title: "Delete",
                                 icon: "assets/svg/delete.svg",
-                                onTap: () => state.listener.deleteDetail(_prospectActivity.prospectdtid!),
+                                onTap: () => state.listener.deleteDetail(_prospectActivity.prospectactivityid!),
                               ),
                               MenuItem(
                                 title: "Detail",
@@ -126,7 +126,7 @@ class _DetailList extends StatelessWidget {
                   height: RegularSize.m,
                 ),
                 Text(
-                  _prospectActivity.prospectdttype?.typename ?? "",
+                  _prospectActivity.prospectactivitytype?.typename ?? "",
                   maxLines: 3,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(

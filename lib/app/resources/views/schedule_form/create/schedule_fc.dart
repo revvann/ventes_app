@@ -53,6 +53,16 @@ part 'package:ventes/app/resources/views/schedule_form/create/components/_twinti
 
 class ScheduleFormCreateView extends View<Controller> {
   static const String route = "/schedule/create";
+  DateTime? startDate;
+  int? refTypeId;
+
+  ScheduleFormCreateView({this.startDate, this.refTypeId});
+
+  @override
+  void onBuild(state) {
+    state.formSource.schestartdate = startDate;
+    state.formSource.schereftypeid = refTypeId;
+  }
 
   @override
   Widget buildWidget(BuildContext context, state) {

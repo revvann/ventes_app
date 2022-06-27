@@ -18,6 +18,7 @@ class ProspectString {
   static String prospectAssignTaskCode = 'prospectassign';
 
   static String statusTypeCode = 'prstatus';
+  static String scheduleRefTypeCode = 'scheref';
   static String followUpTypeCode = 'prfoll';
   static String stageTypeCode = 'prstage';
   static String categoryTypeCode = 'prcat';

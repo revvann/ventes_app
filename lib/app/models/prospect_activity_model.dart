@@ -3,32 +3,32 @@ import 'package:ventes/app/models/type_model.dart';
 import 'package:ventes/core/api/model.dart';
 
 class ProspectActivity extends Model {
-  int? prospectdtid;
-  int? prospectdtprospectid;
-  int? prospectdtcatid;
-  int? prospectdttypeid;
-  String? prospectdtdate;
-  String? prospectdtdesc;
-  double? prospectdtlatitude;
-  double? prospectdtlongitude;
-  String? prospectdtloc;
-  Prospect? prospectdtprospect;
-  DBType? prospectdtcat;
-  DBType? prospectdttype;
+  int? prospectactivityid;
+  int? prospectactivityprospectid;
+  int? prospectactivitycatid;
+  int? prospectactivitytypeid;
+  String? prospectactivitydate;
+  String? prospectactivitydesc;
+  double? prospectactivitylatitude;
+  double? prospectactivitylongitude;
+  String? prospectactivityloc;
+  Prospect? prospectactivityprospect;
+  DBType? prospectactivitycat;
+  DBType? prospectactivitytype;
 
   ProspectActivity({
-    this.prospectdtid,
-    this.prospectdtprospectid,
-    this.prospectdtcatid,
-    this.prospectdttypeid,
-    this.prospectdtdate,
-    this.prospectdtdesc,
-    this.prospectdtlatitude,
-    this.prospectdtlongitude,
-    this.prospectdtloc,
-    this.prospectdtprospect,
-    this.prospectdtcat,
-    this.prospectdttype,
+    this.prospectactivityid,
+    this.prospectactivityprospectid,
+    this.prospectactivitycatid,
+    this.prospectactivitytypeid,
+    this.prospectactivitydate,
+    this.prospectactivitydesc,
+    this.prospectactivitylatitude,
+    this.prospectactivitylongitude,
+    this.prospectactivityloc,
+    this.prospectactivityprospect,
+    this.prospectactivitycat,
+    this.prospectactivitytype,
     String? createddate,
     String? updateddate,
     int? createdby,
@@ -43,26 +43,26 @@ class ProspectActivity extends Model {
         );
 
   ProspectActivity.fromJson(Map<String, dynamic> json) {
-    prospectdtid = json['prospectdtid'];
-    prospectdtprospectid = json['prospectdtprospectid'];
-    prospectdtcatid = json['prospectdtcatid'];
-    prospectdttypeid = json['prospectdttypeid'];
-    prospectdtdate = json['prospectdtdate'];
-    prospectdtdesc = json['prospectdtdesc'];
-    prospectdtlatitude = json['prospectdtlatitude'];
-    prospectdtlongitude = json['prospectdtlongitude'];
-    prospectdtloc = json['prospectdtloc'];
+    prospectactivityid = json['prospectactivityid'];
+    prospectactivityprospectid = json['prospectactivityprospectid'];
+    prospectactivitycatid = json['prospectactivitycatid'];
+    prospectactivitytypeid = json['prospectactivitytypeid'];
+    prospectactivitydate = json['prospectactivitydate'];
+    prospectactivitydesc = json['prospectactivitydesc'];
+    prospectactivitylatitude = json['prospectactivitylatitude'];
+    prospectactivitylongitude = json['prospectactivitylongitude'];
+    prospectactivityloc = json['prospectactivityloc'];
 
-    if (json['prospectdtprospect'] != null) {
-      prospectdtprospect = Prospect.fromJson(json['prospectdtprospect']);
+    if (json['prospectactivityprospect'] != null) {
+      prospectactivityprospect = Prospect.fromJson(json['prospectactivityprospect']);
     }
 
-    if (json['prospectdtcat'] != null) {
-      prospectdtcat = DBType.fromJson(json['prospectdtcat']);
+    if (json['prospectactivitycat'] != null) {
+      prospectactivitycat = DBType.fromJson(json['prospectactivitycat']);
     }
 
-    if (json['prospectdttype'] != null) {
-      prospectdttype = DBType.fromJson(json['prospectdttype']);
+    if (json['prospectactivitytype'] != null) {
+      prospectactivitytype = DBType.fromJson(json['prospectactivitytype']);
     }
 
     super.fromJson(json);
@@ -71,26 +71,26 @@ class ProspectActivity extends Model {
   @override
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = super.toJson();
-    data['prospectdtid'] = prospectdtid;
-    data['prospectdtprospectid'] = prospectdtprospectid;
-    data['prospectdtcatid'] = prospectdtcatid;
-    data['prospectdttypeid'] = prospectdttypeid;
-    data['prospectdtdate'] = prospectdtdate;
-    data['prospectdtdesc'] = prospectdtdesc;
-    data['prospectdtlatitude'] = prospectdtlatitude;
-    data['prospectdtlongitude'] = prospectdtlongitude;
-    data['prospectdtloc'] = prospectdtloc;
+    data['prospectactivityid'] = prospectactivityid;
+    data['prospectactivityprospectid'] = prospectactivityprospectid;
+    data['prospectactivitycatid'] = prospectactivitycatid;
+    data['prospectactivitytypeid'] = prospectactivitytypeid;
+    data['prospectactivitydate'] = prospectactivitydate;
+    data['prospectactivitydesc'] = prospectactivitydesc;
+    data['prospectactivitylatitude'] = prospectactivitylatitude;
+    data['prospectactivitylongitude'] = prospectactivitylongitude;
+    data['prospectactivityloc'] = prospectactivityloc;
 
-    if (prospectdtprospect != null) {
-      data['prospectdtprospect'] = prospectdtprospect?.toJson();
+    if (prospectactivityprospect != null) {
+      data['prospectactivityprospect'] = prospectactivityprospect?.toJson();
     }
 
-    if (prospectdtcat != null) {
-      data['prospectdtcat'] = prospectdtcat?.toJson();
+    if (prospectactivitycat != null) {
+      data['prospectactivitycat'] = prospectactivitycat?.toJson();
     }
 
-    if (prospectdttype != null) {
-      data['prospectdttype'] = prospectdttype?.toJson();
+    if (prospectactivitytype != null) {
+      data['prospectactivitytype'] = prospectactivitytype?.toJson();
     }
 
     return data;

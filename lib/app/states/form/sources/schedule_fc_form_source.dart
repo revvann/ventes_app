@@ -37,6 +37,7 @@ class ScheduleFormCreateFormSource extends StateFormSource with FormSourceMixin 
   SearchableDropdownController<UserDetail> towardDropdownController = Get.put(SearchableDropdownController<UserDetail>(), tag: "DropdownToward");
   KeyableDropdownController<String, String> timezoneDropdownController = Get.put(KeyableDropdownController<String, String>(), tag: "DropdownTimezone");
 
+  int? schereftypeid;
   String _scheonlink = "";
   String _scheloc = "";
   bool _scheprivate = false;
@@ -262,7 +263,7 @@ class ScheduleFormCreateFormSource extends StateFormSource with FormSourceMixin 
   }
 
   void setStartTimeList() {
-    DateTime date = DateTime.now();
+    DateTime date = schestartdate;
     schestarttimeDC.items = createTimeList();
     scheendtimeDC.items = createTimeList(date.hour, date.minute);
     schestarttimeDC.value = schestarttimeDC.items.first['value'];
@@ -328,6 +329,7 @@ class ScheduleFormCreateFormSource extends StateFormSource with FormSourceMixin 
   Map<String, dynamic> toJson() {
     return {
       "schenm": schenm,
+      "schereftypeid": schereftypeid.toString(),
       "schestartdate": formatDate(schestartdate),
       "scheenddate": isEvent ? formatDate(scheenddate) : null,
       "schestarttime": _schestarttime.value != null ? formatTime(_schestarttime.value!) : null,

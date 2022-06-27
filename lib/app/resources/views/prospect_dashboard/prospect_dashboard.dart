@@ -101,6 +101,7 @@ class ProspectDashboardView extends View<Controller> {
                     ),
                     SizedBox(height: RegularSize.m),
                     _DetailList(),
+                    SizedBox(height: RegularSize.m),
                     Container(
                       alignment: Alignment.centerLeft,
                       child: Text(

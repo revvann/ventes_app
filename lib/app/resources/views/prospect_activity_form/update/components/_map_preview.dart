@@ -40,7 +40,7 @@ class _MapPreview extends StatelessWidget {
         Obx(() {
           return RegularInput(
             label: "Location Link",
-            value: state.dataSource.prospectactivity?.prospectdtloc,
+            value: state.dataSource.prospectactivity?.prospectactivityloc,
             enabled: false,
           );
         }),

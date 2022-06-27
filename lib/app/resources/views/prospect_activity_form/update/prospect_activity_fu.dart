@@ -122,7 +122,7 @@ class ProspectActivityFormUpdateView extends View<Controller> {
                           () {
                             return RegularInput(
                               label: "Category",
-                              value: state.dataSource.prospectactivity?.prospectdtcat?.typename ?? "-",
+                              value: state.dataSource.prospectactivity?.prospectactivitycat?.typename ?? "-",
                               enabled: false,
                             );
                           },
@@ -148,7 +148,7 @@ class ProspectActivityFormUpdateView extends View<Controller> {
                           () => Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              if (state.dataSource.prospectactivity?.prospectdtcat?.typename == "On Site") ...[
+                              if (state.dataSource.prospectactivity?.prospectactivitycat?.typename == "On Site") ...[
                                 _MapPreview(),
                                 SizedBox(
                                   height: RegularSize.m,

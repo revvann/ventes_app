@@ -23,6 +23,7 @@ import 'package:ventes/constants/strings/prospect_string.dart';
 import 'package:ventes/core/view/view.dart';
 import 'package:ventes/helpers/function_helpers.dart';
 
+part 'package:ventes/app/resources/views/prospect_activity/components/_app_bar_menu.dart';
 part 'package:ventes/app/resources/views/prospect_activity/components/_detail_dialog.dart';
 part 'package:ventes/app/resources/views/prospect_activity/components/_detail_list.dart';
 
@@ -62,6 +63,10 @@ class ProspectActivityView extends View<Controller> {
           ),
           onTap: state.listener.goBack,
         ),
+        actions: [
+          _AppBarMenu(),
+          SizedBox(width: RegularSize.s),
+        ],
         below: GestureDetector(
           onTap: showDetailDialog,
           child: Container(

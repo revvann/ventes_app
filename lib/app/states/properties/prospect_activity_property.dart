@@ -6,12 +6,15 @@ import 'package:ventes/core/states/state_property.dart';
 import 'package:ventes/helpers/task_helper.dart';
 
 class ProspectActivityProperty extends StateProperty with PropertyMixin {
+  PopupMenuController menuController = Get.put(PopupMenuController(), tag: "prospectactivitypopup");
+
   late int prospectId;
   Set<String> popupControllers = {};
   Task task = Task(ProspectString.detailTaskCode);
 
   refresh() {
     dataSource.stagesHandler.fetcher.run();
+    dataSource.scheduleRefTypesHandler.fetcher.run();
     dataSource.prospectHandler.fetcher.run(prospectId);
     dataSource.prospectActivitiesHandler.fetcher.run(prospectId);
   }

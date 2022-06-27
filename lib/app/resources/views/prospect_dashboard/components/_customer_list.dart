@@ -37,10 +37,11 @@ class _CustomerList extends StatelessWidget {
                     SizedBox(
                       height: RegularSize.s,
                     ),
-                    Row(
+                    Wrap(
+                      runSpacing: RegularSize.s,
+                      spacing: RegularSize.s,
                       children: [
                         _Tag(bpCustomer?.sbccstmstatus?.typename ?? "Unknown", RegularColor.purple),
-                        SizedBox(width: RegularSize.s),
                         _Tag(bpCustomer?.sbccstm?.cstmtype?.typename ?? "Unknown", RegularColor.green),
                       ],
                     ),

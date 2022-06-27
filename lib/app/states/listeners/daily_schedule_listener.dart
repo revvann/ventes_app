@@ -17,7 +17,13 @@ class DailyScheduleListener extends StateListener with ListenerMixin {
   }
 
   void onAddButtonClick() {
-    Get.toNamed(ScheduleFormCreateView.route, id: ScheduleNavigator.id);
+    Get.toNamed(
+      ScheduleFormCreateView.route,
+      id: ScheduleNavigator.id,
+      arguments: {
+        'startDate': property.date,
+      },
+    );
   }
 
   Color onFindAppointmentColor(Schedule appointment) {

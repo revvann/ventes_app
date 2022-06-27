@@ -19,6 +19,10 @@ class ProspectActivityPresenter extends RegularPresenter {
     return _typeService.byCode({'typecd': ProspectString.stageTypeCode});
   }
 
+  Future<Response> _getScheduleRefTypes() {
+    return _typeService.byCode({'typecd': ProspectString.scheduleRefTypeCode});
+  }
+
   Future<Response> _getProspectActivity(Map<String, dynamic> data) {
     return _prospectActivityService.select(data);
   }
@@ -28,6 +32,7 @@ class ProspectActivityPresenter extends RegularPresenter {
         failedMessage: ProspectString.fetchDataFailed,
       );
 
+  SimpleFetcher<List> get fetchScheduleRefTypes => SimpleFetcher(responseBuilder: _getScheduleRefTypes, failedMessage: ProspectString.fetchDataFailed);
   DataFetcher<Function(int), Map<String, dynamic>> get fetchProspect => DataFetcher(
         builder: (handler) {
           return (id) async {
@@ -53,7 +58,7 @@ class ProspectActivityPresenter extends RegularPresenter {
             handler.start();
             try {
               Map<String, dynamic> detailParams = {
-                'prospectdtprospectid': id.toString(),
+                'prospectactivityprospectid': id.toString(),
               };
               Response response = await _getProspectActivity(detailParams);
               if (response.statusCode == 200) {

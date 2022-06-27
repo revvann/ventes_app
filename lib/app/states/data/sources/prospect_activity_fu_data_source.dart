@@ -50,8 +50,8 @@ class ProspectActivityFormUpdateDataSource extends StateDataSource<ProspectActiv
   void _prospectActivityComplete() {
     formSource.prepareFormValues();
 
-    double? latitude = prospectactivity?.prospectdtlatitude;
-    double? longitude = prospectactivity?.prospectdtlongitude;
+    double? latitude = prospectactivity?.prospectactivitylatitude;
+    double? longitude = prospectactivity?.prospectactivitylongitude;
     if (latitude != null && longitude != null) {
       locationHandler.fetcher.run(latitude, longitude);
     }

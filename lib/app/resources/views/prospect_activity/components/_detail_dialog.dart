@@ -5,7 +5,7 @@ class _DetailDialog extends StatelessWidget {
 
   _DetailDialog(this.detail);
 
-  String? get date => detail.prospectdtdate != null ? detail.prospectdtdate! : null;
+  String? get date => detail.prospectactivitydate != null ? detail.prospectactivitydate! : null;
 
   @override
   Widget build(BuildContext context) {
@@ -28,12 +28,12 @@ class _DetailDialog extends StatelessWidget {
         ),
         _DetailItem(
           title: "Description",
-          value: detail.prospectdtdesc ?? '-',
+          value: detail.prospectactivitydesc ?? '-',
         ),
         SizedBox(
           height: RegularSize.s,
         ),
-        if (detail.prospectdtloc != null) ...[
+        if (detail.prospectactivityloc != null) ...[
           Text(
             "Location Link",
             style: TextStyle(
@@ -47,7 +47,7 @@ class _DetailDialog extends StatelessWidget {
           ),
           RichText(
             text: TextSpan(
-              text: detail.prospectdtloc ?? '-',
+              text: detail.prospectactivityloc ?? '-',
               style: TextStyle(
                 fontSize: 14,
                 color: RegularColor.dark,
@@ -59,7 +59,7 @@ class _DetailDialog extends StatelessWidget {
                   style: TextStyle(
                     color: RegularColor.primary,
                   ),
-                  recognizer: CopyGestureRecognizer(detail.prospectdtloc!),
+                  recognizer: CopyGestureRecognizer(detail.prospectactivityloc!),
                 ),
               ],
             ),
@@ -83,14 +83,14 @@ class _DetailDialog extends StatelessWidget {
           spacing: RegularSize.s,
           runSpacing: RegularSize.s,
           children: [
-            if (detail.prospectdtcat != null)
+            if (detail.prospectactivitycat != null)
               _DetailTag(
-                text: detail.prospectdtcat?.typename ?? "",
+                text: detail.prospectactivitycat?.typename ?? "",
                 color: RegularColor.cyan,
               ),
-            if (detail.prospectdttype != null)
+            if (detail.prospectactivitytype != null)
               _DetailTag(
-                text: detail.prospectdttype?.typename ?? "",
+                text: detail.prospectactivitytype?.typename ?? "",
                 color: RegularColor.red,
               ),
           ],

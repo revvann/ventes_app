@@ -52,7 +52,7 @@ where userdtbpid = (
 select *
 from msuserdt
 where userid = 8;
-TRUNCATE trprospectdt RESTART IDENTITY;
+TRUNCATE trprospectactivity RESTART IDENTITY;
 TRUNCATE msproduct RESTART IDENTITY;
 TRUNCATE trprospectproduct RESTART IDENTITY;
 SELECT *

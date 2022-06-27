@@ -97,19 +97,19 @@ class ProspectActivityFormCreateFormSource extends StateFormSource with FormSour
   @override
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {
-      'prospectdtprospectid': prospect?.prospectid?.toString(),
-      'prospectdtdesc': prosdtdescTEC.text,
-      'prospectdtdate': dbFormatDate(date!),
-      'prospectdtcatid': prosdtcategory?.toString(),
-      'prospectdttypeid': prosdttype?.typeid.toString(),
+      'prospectactivityprospectid': prospect?.prospectid?.toString(),
+      'prospectactivitydesc': prosdtdescTEC.text,
+      'prospectactivitydate': dbFormatDate(date!),
+      'prospectactivitycatid': prosdtcategory?.toString(),
+      'prospectactivitytypeid': prosdttype?.typeid.toString(),
     };
 
     if (isOnSite) {
       json = {
         ...json,
-        'prospectdtloc': prosdtloc,
-        'prospectdtlatitude': prosdtlat.toString(),
-        'prospectdtlongitude': prosdtlong.toString(),
+        'prospectactivityloc': prosdtloc,
+        'prospectactivitylatitude': prosdtlat.toString(),
+        'prospectactivitylongitude': prosdtlong.toString(),
       };
     }
 

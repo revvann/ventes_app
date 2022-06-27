@@ -61,14 +61,14 @@ class ProspectActivityFormUpdateFormSource extends UpdateFormSource with FormSou
 
   @override
   void prepareFormValues() async {
-    prosdtdescTEC.text = dataSource.prospectactivity!.prospectdtdesc ?? "";
-    date = dbParseDate(dataSource.prospectactivity!.prospectdtdate!);
-    prosdttype = dataSource.prospectactivity!.prospectdttype;
+    prosdtdescTEC.text = dataSource.prospectactivity!.prospectactivitydesc ?? "";
+    date = dbParseDate(dataSource.prospectactivity!.prospectactivitydate!);
+    prosdttype = dataSource.prospectactivity!.prospectactivitytype;
     typeDropdownController.selectedKeys = [prosdttype!.typeid!];
 
-    if (dataSource.prospectactivity?.prospectdtlatitude != null && dataSource.prospectactivity?.prospectdtlongitude != null) {
-      double latitude = dataSource.prospectactivity!.prospectdtlatitude!;
-      double longitude = dataSource.prospectactivity!.prospectdtlongitude!;
+    if (dataSource.prospectactivity?.prospectactivitylatitude != null && dataSource.prospectactivity?.prospectactivitylongitude != null) {
+      double latitude = dataSource.prospectactivity!.prospectactivitylatitude!;
+      double longitude = dataSource.prospectactivity!.prospectactivitylongitude!;
       LatLng latLng = LatLng(latitude, longitude);
 
       GoogleMapController controller = await property.mapsController.future;
@@ -87,9 +87,9 @@ class ProspectActivityFormUpdateFormSource extends UpdateFormSource with FormSou
   @override
   Map<String, dynamic> toJson() {
     return {
-      'prospectdtdesc': prosdtdescTEC.text,
-      'prospectdtdate': dbFormatDate(date!),
-      'prospectdttypeid': prosdttype?.typeid.toString(),
+      'prospectactivitydesc': prosdtdescTEC.text,
+      'prospectactivitydate': dbFormatDate(date!),
+      'prospectactivitytypeid': prosdttype?.typeid.toString(),
     };
   }
 

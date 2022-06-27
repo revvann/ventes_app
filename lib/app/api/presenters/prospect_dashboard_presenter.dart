@@ -117,7 +117,7 @@ class ProspectDashboardPresenter extends RegularPresenter {
           handler.start();
           try {
             Map<String, dynamic> params = {
-              'prospectdtprospectid': prospectid.toString(),
+              'prospectactivityprospectid': prospectid.toString(),
             };
             Response response = await _getProspectActivity(params);
             if (response.statusCode == 200) {

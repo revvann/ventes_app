@@ -15,7 +15,9 @@ class ProspectActivityDataSource extends StateDataSource<ProspectActivityPresent
   final String prospectID = 'prospecthdr';
   final String prospectActivitiesID = 'prosdtlshdr';
   final String deleteID = 'deltehdr';
+  final String scheduleRefID = 'scherefhdr';
 
+  late DataHandler<List<DBType>, List, Function()> scheduleRefTypesHandler;
   late DataHandler<List<DBType>, List, Function()> stagesHandler;
   late DataHandler<Prospect?, Map<String, dynamic>, Function(int)> prospectHandler;
   late DataHandler<List<ProspectActivity>, List, Function(int)> prospectActivitiesHandler;
@@ -24,6 +26,8 @@ class ProspectActivityDataSource extends StateDataSource<ProspectActivityPresent
   Prospect? get prospect => prospectHandler.value;
   List<ProspectActivity> get prospectActivities => prospectActivitiesHandler.value;
   List<DBType> get stages => stagesHandler.value;
+  List<DBType> get scheduleRefTypes => stagesHandler.value;
+  DBType? get activityRefType => scheduleRefTypes.firstWhereOrNull((element) => element.typename == "Prospect Activity");
 
   void _deleteSuccess(message) {
     Get.find<TaskHelper>().successPush(Task(deleteID, message: message, onFinished: (res) {
@@ -34,6 +38,7 @@ class ProspectActivityDataSource extends StateDataSource<ProspectActivityPresent
   @override
   void init() {
     super.init();
+    scheduleRefTypesHandler = createDataHandler(stagesID, presenter.fetchScheduleRefTypes, [], (data) => data.map<DBType>((json) => DBType.fromJson(json)).toList());
     stagesHandler = createDataHandler(stagesID, presenter.fetchStages, [], (data) => data.map<DBType>((json) => DBType.fromJson(json)).toList());
     prospectHandler = createDataHandler(prospectID, presenter.fetchProspect, null, (data) => Prospect.fromJson(data));
     prospectActivitiesHandler =
