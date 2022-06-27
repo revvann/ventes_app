@@ -38,6 +38,7 @@ class ProspectActivityListener extends StateListener with ListenerMixin {
         id: ScheduleNavigator.id,
         arguments: {
           'refTypeId': refType.typeid,
+          'refId': property.prospectId,
         },
       );
     }

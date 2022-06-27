@@ -39,6 +39,7 @@ class ScheduleNavigator extends ViewNavigator {
               page: () => ScheduleFormCreateView(
                 startDate: args?['startDate'],
                 refTypeId: args?['refTypeId'],
+                refId: args?['refId'],
               ),
               binding: BindingsBuilder(() {
                 Get.lazyPut(() => ScheduleFormCreateStateController());

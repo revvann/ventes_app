@@ -55,13 +55,15 @@ class ScheduleFormCreateView extends View<Controller> {
   static const String route = "/schedule/create";
   DateTime? startDate;
   int? refTypeId;
+  int? refId;
 
-  ScheduleFormCreateView({this.startDate, this.refTypeId});
+  ScheduleFormCreateView({this.startDate, this.refTypeId, this.refId});
 
   @override
   void onBuild(state) {
     state.formSource.schestartdate = startDate;
     state.formSource.schereftypeid = refTypeId;
+    state.formSource.refId = refId;
   }
 
   @override

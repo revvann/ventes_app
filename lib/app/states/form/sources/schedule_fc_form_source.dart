@@ -38,6 +38,7 @@ class ScheduleFormCreateFormSource extends StateFormSource with FormSourceMixin 
   KeyableDropdownController<String, String> timezoneDropdownController = Get.put(KeyableDropdownController<String, String>(), tag: "DropdownTimezone");
 
   int? schereftypeid;
+  int? refId;
   String _scheonlink = "";
   String _scheloc = "";
   bool _scheprivate = false;
