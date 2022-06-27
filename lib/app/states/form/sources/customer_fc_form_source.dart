@@ -8,11 +8,6 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
-import 'package:ventes/app/models/city_model.dart';
-import 'package:ventes/app/models/country_model.dart';
-import 'package:ventes/app/models/province_model.dart';
-import 'package:ventes/app/models/subdistrict_model.dart';
-import 'package:ventes/app/resources/widgets/search_list.dart';
 import 'package:ventes/app/states/typedefs/customer_fc_typedef.dart';
 import 'package:ventes/constants/strings/nearby_string.dart';
 import 'package:ventes/core/states/update_form_source.dart';
@@ -56,6 +51,11 @@ class CustomerFormCreateFormSource extends UpdateFormSource with FormSourceMixin
   @override
   ready() async {
     super.ready();
+    nameTEC.clear();
+    phoneTEC.clear();
+    latitudeTEC.clear();
+    longitudeTEC.clear();
+
     picture = await _getImageFileFromAssets(NearbyString.defaultImage);
 
     latitudeTEC.text = property.latitude!.toString();
@@ -65,10 +65,6 @@ class CustomerFormCreateFormSource extends UpdateFormSource with FormSourceMixin
   @override
   void close() {
     super.close();
-    Get.delete<SearchListController<Country, Country>>();
-    Get.delete<SearchListController<Province, Province>>();
-    Get.delete<SearchListController<City, City>>();
-    Get.delete<SearchListController<Subdistrict, Subdistrict>>();
     nameTEC.dispose();
     phoneTEC.dispose();
     latitudeTEC.dispose();

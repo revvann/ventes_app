@@ -4,11 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:path/path.dart' as path;
-import 'package:ventes/app/models/city_model.dart';
-import 'package:ventes/app/models/country_model.dart';
-import 'package:ventes/app/models/province_model.dart';
-import 'package:ventes/app/models/subdistrict_model.dart';
-import 'package:ventes/app/resources/widgets/search_list.dart';
 import 'package:ventes/app/states/typedefs/customer_fu_typedef.dart';
 import 'package:ventes/constants/strings/nearby_string.dart';
 import 'package:ventes/core/states/update_form_source.dart';
@@ -17,11 +12,6 @@ import 'package:ventes/helpers/task_helper.dart';
 
 class CustomerFormUpdateFormSource extends UpdateFormSource with FormSourceMixin {
   Validator validator = Validator();
-
-  SearchListController<Country, Country> countrySearchListController = Get.put(SearchListController<Country, Country>());
-  SearchListController<Province, Province> provinceSearchListController = Get.put(SearchListController<Province, Province>());
-  SearchListController<City, City> citySearchListController = Get.put(SearchListController<City, City>());
-  SearchListController<Subdistrict, Subdistrict> subdistrictSearchListController = Get.put(SearchListController<Subdistrict, Subdistrict>());
 
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   Rx<Image> defaultPicture = Image.asset('assets/' + NearbyString.defaultImage).obs;
@@ -46,17 +36,17 @@ class CustomerFormUpdateFormSource extends UpdateFormSource with FormSourceMixin
   String get cstmaddress => addressTEC.text;
   String get cstmphone => phoneTEC.text;
   String get cstmpostalcode => postalCodeTEC.text;
-  String? get cstmcoutryid => countrySearchListController.selectedItem?.countryid.toString();
-  String? get cstmprovinceid => provinceSearchListController.selectedItem?.provid.toString();
-  String? get cstmcityid => citySearchListController.selectedItem?.cityid.toString();
-  String? get cstmsubdistrictid => subdistrictSearchListController.selectedItem?.subdistrictid.toString();
-
-  Country? get country => countrySearchListController.selectedItem;
-  Province? get province => provinceSearchListController.selectedItem;
-  City? get city => citySearchListController.selectedItem;
-  Subdistrict? get subdistrict => subdistrictSearchListController.selectedItem;
 
   set cstmtypeid(int? value) => _cstmtypeid.value = value;
+
+  @override
+  void ready() {
+    super.ready();
+    nameTEC.clear();
+    addressTEC.clear();
+    phoneTEC.clear();
+    postalCodeTEC.clear();
+  }
 
   @override
   void close() {
@@ -65,10 +55,6 @@ class CustomerFormUpdateFormSource extends UpdateFormSource with FormSourceMixin
     addressTEC.dispose();
     phoneTEC.dispose();
     postalCodeTEC.dispose();
-    Get.delete<SearchListController<Country, Country>>();
-    Get.delete<SearchListController<Province, Province>>();
-    Get.delete<SearchListController<City, City>>();
-    Get.delete<SearchListController<Subdistrict, Subdistrict>>();
   }
 
   @override
@@ -89,22 +75,6 @@ class CustomerFormUpdateFormSource extends UpdateFormSource with FormSourceMixin
 
       if (dataSource.bpCustomer!.sbccstmpic != null) {
         defaultPicture.value = Image.network(dataSource.bpCustomer!.sbccstmpic!);
-      }
-
-      if (dataSource.bpCustomer!.sbccstm!.cstmcountry != null) {
-        countrySearchListController.selectedItem = dataSource.bpCustomer!.sbccstm!.cstmcountry!;
-      }
-
-      if (dataSource.bpCustomer!.sbccstm!.cstmprovince != null) {
-        provinceSearchListController.selectedItem = dataSource.bpCustomer!.sbccstm!.cstmprovince!;
-      }
-
-      if (dataSource.bpCustomer!.sbccstm!.cstmcity != null) {
-        citySearchListController.selectedItem = dataSource.bpCustomer!.sbccstm!.cstmcity!;
-      }
-
-      if (dataSource.bpCustomer!.sbccstm!.cstmsubdistrict != null) {
-        subdistrictSearchListController.selectedItem = dataSource.bpCustomer!.sbccstm!.cstmsubdistrict!;
       }
     }
   }

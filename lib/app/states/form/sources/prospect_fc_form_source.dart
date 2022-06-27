@@ -77,6 +77,21 @@ class ProspectFormCreateFormSource extends StateFormSource with FormSourceMixin 
   @override
   ready() async {
     super.ready();
+    for (var element in prosproducts) {
+      element['nameTEC'].dispose();
+      element['priceTEC'].dispose();
+      element['qtyTEC'].dispose();
+      element['discTEC'].dispose();
+      element['taxTEC'].dispose();
+    }
+    prosproducts = [];
+
+    prosnameTEC.clear();
+    prosvalueTEC.clear();
+    prosdescTEC.clear();
+    ownerDropdownController.reset();
+    customerDropdownController.reset();
+
     int accountId = Get.find<AuthHelper>().accountActive.val!;
     List<UserDetail> userDetails = await dataSource.fetchUser("");
     prosowner = userDetails.firstWhereOrNull((element) => element.userdtid == accountId);

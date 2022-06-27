@@ -38,11 +38,19 @@ class ContactPersonFormUpdateFormSource extends UpdateFormSource with FormSource
     validator.formSource = this;
   }
 
+  void ready() {
+    super.ready();
+    contactDropdownController.reset();
+    valueTEC.clear();
+    nameTEC.clear();
+  }
+
   @override
   close() {
     super.close();
     Get.delete<SearchableDropdownController<Contact>>(tag: ProspectString.localContactCode);
-    valueTEC.clear();
+    valueTEC.dispose();
+    nameTEC.dispose();
   }
 
   @override

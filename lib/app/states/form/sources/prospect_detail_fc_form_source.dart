@@ -59,6 +59,9 @@ class ProspectDetailFormCreateFormSource extends StateFormSource with FormSource
   @override
   ready() async {
     super.ready();
+    prosdtdescTEC.clear();
+    typeDropdownController.reset();
+
     date = DateTime.now();
 
     Position pos = await getCurrentPosition();

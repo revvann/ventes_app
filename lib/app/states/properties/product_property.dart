@@ -58,6 +58,7 @@ class ProductProperty extends StateProperty with PropertyMixin {
   @override
   void ready() {
     super.ready();
+    searchTEC.clear();
     searchTEC.addListener(onSearchChanged);
   }
 
@@ -68,5 +69,6 @@ class ProductProperty extends StateProperty with PropertyMixin {
     for (var element in popupControllers) {
       Get.delete<PopupMenuController>(tag: element);
     }
+    searchTEC.dispose();
   }
 }

@@ -94,7 +94,6 @@ abstract class StateController<P extends StateProperty?, L extends StateListener
       ready();
     };
     SchedulerBinding.instance?.addPostFrameCallback(onPostFrame!);
-    close();
     init();
     update([tag]);
   }

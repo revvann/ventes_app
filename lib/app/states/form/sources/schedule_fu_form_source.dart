@@ -350,6 +350,17 @@ class ScheduleFormUpdateFormSource extends UpdateFormSource with FormSourceMixin
   @override
   ready() async {
     super.ready();
+    schenmTEC.clear();
+    schestartdateTEC.clear();
+    scheenddateTEC.clear();
+    schelocTEC.clear();
+    scheremindTEC.clear();
+    schedescTEC.clear();
+    scheonlinkTEC.clear();
+    guestDropdownController.reset();
+    towardDropdownController.reset();
+    timezoneDropdownController.reset();
+
     setStartTimeList();
 
     scheremindTEC.text = "0";

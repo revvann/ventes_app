@@ -47,11 +47,21 @@ class ContactPersonFormCreateFormSource extends StateFormSource with FormSourceM
   }
 
   @override
+  void ready() {
+    super.ready();
+    typeDropdownController.reset();
+    contactDropdownController.reset();
+    valueTEC.clear();
+    nameTEC.clear();
+  }
+
+  @override
   close() {
     super.close();
     Get.delete<KeyableDropdownController<int, DBType>>(tag: ProspectString.contactTypeCode);
     Get.delete<SearchableDropdownController<Contact>>(tag: ProspectString.localContactCode);
     valueTEC.dispose();
+    nameTEC.dispose();
   }
 
   @override

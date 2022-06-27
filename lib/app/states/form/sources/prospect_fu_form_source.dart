@@ -3,8 +3,8 @@ import 'package:get/get.dart';
 import 'package:ventes/app/models/bp_customer_model.dart';
 import 'package:ventes/app/models/user_detail_model.dart';
 import 'package:ventes/app/resources/widgets/searchable_dropdown.dart';
-import 'package:ventes/constants/formatters/currency_formatter.dart';
 import 'package:ventes/app/states/typedefs/prospect_fu_typedef.dart';
+import 'package:ventes/constants/formatters/currency_formatter.dart';
 import 'package:ventes/core/states/update_form_source.dart';
 import 'package:ventes/helpers/function_helpers.dart';
 import 'package:ventes/helpers/task_helper.dart';
@@ -12,8 +12,8 @@ import 'package:ventes/helpers/task_helper.dart';
 class ProspectFormUpdateFormSource extends UpdateFormSource with FormSourceMixin {
   Validator validator = Validator();
 
-  SearchableDropdownController<UserDetail> ownerDropdownController = Get.put(SearchableDropdownController<UserDetail>());
-  SearchableDropdownController<BpCustomer> customerDropdownController = Get.put(SearchableDropdownController<BpCustomer>());
+  SearchableDropdownController<UserDetail> ownerDropdownController = Get.put(SearchableDropdownController<UserDetail>(), tag: 'ownerdropdown');
+  SearchableDropdownController<BpCustomer> customerDropdownController = Get.put(SearchableDropdownController<BpCustomer>(), tag: 'customerDropdown');
 
   final prosvaluemask = CurrencyInputFormatter();
 
@@ -65,13 +65,23 @@ class ProspectFormUpdateFormSource extends UpdateFormSource with FormSourceMixin
   }
 
   @override
+  void ready() {
+    super.ready();
+    prosnameTEC.clear();
+    prosvalueTEC.clear();
+    prosdescTEC.clear();
+    ownerDropdownController.reset();
+    customerDropdownController.reset();
+  }
+
+  @override
   void close() {
     super.close();
     prosnameTEC.dispose();
     prosvalueTEC.dispose();
     prosdescTEC.dispose();
-    Get.delete<SearchableDropdownController<UserDetail>>();
-    Get.delete<SearchableDropdownController<BpCustomer>>();
+    Get.delete<SearchableDropdownController<UserDetail>>(tag: 'ownerdropdown');
+    Get.delete<SearchableDropdownController<BpCustomer>>(tag: 'customerDropdown');
   }
 
   @override

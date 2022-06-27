@@ -37,6 +37,28 @@ class ProductFormUpdateFormSource extends UpdateFormSource with FormSourceMixin 
   String get prosproducttaxstring => taxTEC.text;
 
   @override
+  void ready() {
+    super.ready();
+    nameTEC.clear();
+    priceTEC.clear();
+    qtyTEC.clear();
+    discTEC.clear();
+    taxTEC.clear();
+    taxDropdownController.reset();
+  }
+
+  @override
+  void close() {
+    super.close();
+    nameTEC.dispose();
+    priceTEC.dispose();
+    qtyTEC.dispose();
+    discTEC.dispose();
+    taxTEC.dispose();
+    Get.delete<KeyableDropdownController<int, DBType>>(tag: ProspectString.taxDropdownTag);
+  }
+
+  @override
   void prepareFormValues() {
     nameTEC.text = dataSource.product?.prosproductproduct?.productname ?? "";
     priceTEC.text = currencyFormat(dataSource.product?.prosproductprice?.toString().replaceAll('.', ',') ?? "");

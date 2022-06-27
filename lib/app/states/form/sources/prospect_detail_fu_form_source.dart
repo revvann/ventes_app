@@ -44,6 +44,9 @@ class ProspectDetailFormUpdateFormSource extends UpdateFormSource with FormSourc
   @override
   ready() {
     super.ready();
+    prosdtdescTEC.clear();
+    typeDropdownController.reset();
+
     date = DateTime.now();
   }
 
@@ -53,9 +56,6 @@ class ProspectDetailFormUpdateFormSource extends UpdateFormSource with FormSourc
     prosdtdescTEC.dispose();
     Get.delete<KeyableDropdownController<int, DBType>>(
       tag: ProspectString.categoryDropdownTag,
-    );
-    Get.delete<KeyableDropdownController<int, DBType>>(
-      tag: ProspectString.detailTypeCode,
     );
   }
 

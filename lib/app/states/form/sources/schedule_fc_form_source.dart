@@ -12,7 +12,6 @@ import 'package:ventes/app/resources/widgets/searchable_dropdown.dart';
 import 'package:ventes/app/states/typedefs/schedule_fc_typedef.dart';
 import 'package:ventes/core/states/state_form_source.dart';
 import 'package:ventes/helpers/function_helpers.dart';
-import 'package:ventes/helpers/task_helper.dart';
 
 class ScheduleFormCreateFormSource extends StateFormSource with FormSourceMixin {
   Validator validator = Validator();
@@ -298,6 +297,17 @@ class ScheduleFormCreateFormSource extends StateFormSource with FormSourceMixin 
   @override
   ready() async {
     super.ready();
+    schenmTEC.clear();
+    schestartdateTEC.clear();
+    scheenddateTEC.clear();
+    schelocTEC.clear();
+    scheremindTEC.clear();
+    schedescTEC.clear();
+    scheonlinkTEC.clear();
+    guestDropdownController.reset();
+    towardDropdownController.reset();
+    timezoneDropdownController.reset();
+
     setStartTimeList();
 
     scheremindTEC.text = "0";
