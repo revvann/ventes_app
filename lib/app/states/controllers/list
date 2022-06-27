@@ -13,9 +13,9 @@ drwxrwxr-x 7 revan revan 4096 Jun 18 22:54 ../
 -rw-rw-r-- 1 revan revan 1088 Jun 19 13:38 product_fu_state_controller.dart
 -rw-rw-r-- 1 revan revan  909 Jun 19 13:38 product_state_controller.dart
 -rw-rw-r-- 1 revan revan  963 Jun 19 13:38 prospect_assign_state_controller.dart
--rw-rw-r-- 1 revan revan 1167 Jun 19 13:38 prospect_detail_fc_state_controller.dart
--rw-rw-r-- 1 revan revan 1167 Jun 19 13:38 prospect_detail_fu_state_controller.dart
--rw-rw-r-- 1 revan revan  955 Jun 19 13:38 prospect_detail_state_controller.dart
+-rw-rw-r-- 1 revan revan 1167 Jun 19 13:38 prospect_activity_fc_state_controller.dart
+-rw-rw-r-- 1 revan revan 1167 Jun 19 13:38 prospect_activity_fu_state_controller.dart
+-rw-rw-r-- 1 revan revan  955 Jun 19 13:38 prospect_activity_state_controller.dart
 -rw-rw-r-- 1 revan revan 1059 Jun 19 13:38 prospect_fc_state_controller.dart
 -rw-rw-r-- 1 revan revan 1059 Jun 19 13:38 prospect_fu_state_controller.dart
 -rw-rw-r-- 1 revan revan  911 Jun 19 13:38 prospect_state_controller.dart

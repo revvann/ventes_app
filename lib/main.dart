@@ -9,7 +9,7 @@ import 'package:ventes/app/api/services/customer_service.dart';
 import 'package:ventes/app/api/services/gmaps_service.dart';
 import 'package:ventes/app/api/services/place_service.dart';
 import 'package:ventes/app/api/services/prospect_assign_service.dart';
-import 'package:ventes/app/api/services/prospect_detail_service.dart';
+import 'package:ventes/app/api/services/prospect_activity_service.dart';
 import 'package:ventes/app/api/services/prospect_product_service.dart';
 import 'package:ventes/app/api/services/prospect_service.dart';
 import 'package:ventes/app/api/services/schedule_service.dart';
@@ -41,7 +41,7 @@ void main() async {
   Get.lazyPut(() => ScheduleService(), fenix: true);
   Get.lazyPut(() => TypeService(), fenix: true);
   Get.lazyPut(() => UserService(), fenix: true);
-  Get.lazyPut(() => ProspectDetailService(), fenix: true);
+  Get.lazyPut(() => ProspectActivityService(), fenix: true);
   Get.lazyPut(() => ProspectProductService(), fenix: true);
   Get.lazyPut(() => ContactPersonService(), fenix: true);
   Get.lazyPut(() => ProspectAssignService(), fenix: true);

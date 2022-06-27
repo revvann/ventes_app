@@ -8,9 +8,10 @@ import 'package:ventes/app/resources/views/contact_form/update/contact_person_fu
 import 'package:ventes/app/resources/views/product/product.dart';
 import 'package:ventes/app/resources/views/product_form/update/product_fu.dart';
 import 'package:ventes/app/resources/views/prospect_assign/prospect_assign.dart';
-import 'package:ventes/app/resources/views/prospect_detail/prospect_detail.dart';
-import 'package:ventes/app/resources/views/prospect_detail_form/create/prospect_detail_fc.dart';
-import 'package:ventes/app/resources/views/prospect_detail_form/update/prospect_detail_fu.dart';
+import 'package:ventes/app/resources/views/prospect_dashboard/prospect_dashboard.dart';
+import 'package:ventes/app/resources/views/prospect_activity/prospect_activity.dart';
+import 'package:ventes/app/resources/views/prospect_activity_form/create/prospect_activity_fc.dart';
+import 'package:ventes/app/resources/views/prospect_activity_form/update/prospect_activity_fu.dart';
 import 'package:ventes/app/resources/views/prospect_form/create/prospect_fc.dart';
 import 'package:ventes/app/resources/views/prospect_form/update/prospect_fu.dart';
 import 'package:ventes/app/states/controllers/contact_person_fc_state_controller.dart';
@@ -19,9 +20,10 @@ import 'package:ventes/app/states/controllers/contact_person_state_controller.da
 import 'package:ventes/app/states/controllers/product_fu_state_controller.dart';
 import 'package:ventes/app/states/controllers/product_state_controller.dart';
 import 'package:ventes/app/states/controllers/prospect_assign_state_controller.dart';
-import 'package:ventes/app/states/controllers/prospect_detail_fc_state_controller.dart';
-import 'package:ventes/app/states/controllers/prospect_detail_fu_state_controller.dart';
-import 'package:ventes/app/states/controllers/prospect_detail_state_controller.dart';
+import 'package:ventes/app/states/controllers/prospect_dashboard_state_controller.dart';
+import 'package:ventes/app/states/controllers/prospect_activity_fc_state_controller.dart';
+import 'package:ventes/app/states/controllers/prospect_activity_fu_state_controller.dart';
+import 'package:ventes/app/states/controllers/prospect_activity_state_controller.dart';
 import 'package:ventes/app/states/controllers/prospect_fc_state_controller.dart';
 import 'package:ventes/app/states/controllers/prospect_fu_state_controller.dart';
 import 'package:ventes/app/states/controllers/prospect_state_controller.dart';
@@ -56,22 +58,22 @@ class ProspectNavigator extends ViewNavigator {
                 Get.put(ProspectFormUpdateStateController());
               }),
             ),
-        ProspectDetailView.route: (args) => ViewRoute(
-              page: () => ProspectDetailView(args!['prospect']),
+        ProspectActivityView.route: (args) => ViewRoute(
+              page: () => ProspectActivityView(args!['prospect']),
               binding: BindingsBuilder(() {
-                Get.put(ProspectDetailStateController());
+                Get.put(ProspectActivityStateController());
               }),
             ),
-        ProspectDetailFormCreateView.route: (args) => ViewRoute(
-              page: () => ProspectDetailFormCreateView(args!['prospect']),
+        ProspectActivityFormCreateView.route: (args) => ViewRoute(
+              page: () => ProspectActivityFormCreateView(args!['prospect']),
               binding: BindingsBuilder(() {
-                Get.put(ProspectDetailFormCreateStateController());
+                Get.put(ProspectActivityFormCreateStateController());
               }),
             ),
-        ProspectDetailFormUpdateView.route: (args) => ViewRoute(
-              page: () => ProspectDetailFormUpdateView(args!['prospectdetail']),
+        ProspectActivityFormUpdateView.route: (args) => ViewRoute(
+              page: () => ProspectActivityFormUpdateView(args!['prospectactivity']),
               binding: BindingsBuilder(() {
-                Get.put(ProspectDetailFormUpdateStateController());
+                Get.put(ProspectActivityFormUpdateStateController());
               }),
             ),
         ContactPersonView.route: (args) => ViewRoute(
@@ -108,6 +110,12 @@ class ProspectNavigator extends ViewNavigator {
               page: () => ProspectAssignView(args!['prospect']),
               binding: BindingsBuilder(() {
                 Get.put(ProspectAssignStateController());
+              }),
+            ),
+        ProspectDashboardView.route: (args) => ViewRoute(
+              page: () => ProspectDashboardView(args!['prospect']),
+              binding: BindingsBuilder(() {
+                Get.put(ProspectDashboardStateController());
               }),
             ),
       };

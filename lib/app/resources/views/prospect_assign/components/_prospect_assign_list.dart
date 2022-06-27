@@ -60,7 +60,7 @@ class _ProspectAssignList extends StatelessWidget {
                                 MenuItem(
                                   title: "Detail",
                                   icon: "assets/svg/detail.svg",
-                                  onTap: () => showProspectDetail(prospectAssign),
+                                  onTap: () => showProspectActivity(prospectAssign),
                                 )
                               ],
                             ),
@@ -92,7 +92,7 @@ class _ProspectAssignList extends StatelessWidget {
     });
   }
 
-  void showProspectDetail(ProspectAssign prospectAssign) {
+  void showProspectActivity(ProspectAssign prospectAssign) {
     RegularDialog(
       width: Get.width * 0.9,
       alignment: Alignment.centerLeft,

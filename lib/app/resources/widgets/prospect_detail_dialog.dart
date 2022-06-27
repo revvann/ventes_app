@@ -6,11 +6,11 @@ import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/helpers/function_helpers.dart';
 
-class ProspectDetailDialog extends StatelessWidget {
+class ProspectActivityDialog extends StatelessWidget {
   Prospect prospect;
   List<DBType> stages;
 
-  ProspectDetailDialog(
+  ProspectActivityDialog(
     this.prospect, {
     this.stages = const [],
   });

@@ -4,7 +4,8 @@ class ProspectString {
   static String submitButtonText = "Save";
 
   static String taskCode = 'prospect';
-  static String detailTaskCode = 'prospectdetail';
+  static String prospectDashboardTaskCode = 'prospectdashboard';
+  static String detailTaskCode = 'prospectactivity';
   static String productTaskCode = 'product';
   static String formCreateTaskCode = 'createprospect';
   static String formUpdateTaskCode = 'updateprospect';
@@ -47,8 +48,8 @@ class ProspectString {
   static String deleteContactFailed = "Failed to delete contact";
   static String deleteProductSuccess = "Product deleted successfully";
   static String deleteProductFailed = "Failed to delete product";
-  static String deleteProspectDetailSuccess = "ProspectDetail deleted successfully";
-  static String deleteProspectDetailFailed = "Failed to delete prospect detail";
+  static String deleteProspectActivitySuccess = "ProspectActivity deleted successfully";
+  static String deleteProspectActivityFailed = "Failed to delete prospect detail";
 
   static String updateContactConfirm = "Are you sure you want to update this contact?";
   static String createContactConfirm = "Are you sure you want to create this contact?";
@@ -69,6 +70,7 @@ class ProspectString {
   static String taxDropdownTag = "tax";
 
   static String prospectTag = "prospect";
+  static String prospectDashboardTag = "prospectdashboard";
   static String contactTag = "contact";
   static String productTag = "product";
   static String detailTag = "detail";
