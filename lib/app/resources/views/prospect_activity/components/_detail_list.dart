@@ -8,14 +8,14 @@ class _DetailList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return HandlerContainer<Function(List<ProspectActivity>)>(
-      handlers: [state.dataSource.prospectActivitysHandler],
+      handlers: [state.dataSource.prospectActivitiesHandler],
       width: RegularSize.xl,
-      builder: (prospectActivitys) => ListView.builder(
+      builder: (prospectActivities) => ListView.builder(
         shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),
-        itemCount: prospectActivitys.length,
+        itemCount: prospectActivities.length,
         itemBuilder: (_, index) {
-          ProspectActivity _prospectActivity = prospectActivitys[index];
+          ProspectActivity _prospectActivity = prospectActivities[index];
           return Container(
             padding: EdgeInsets.symmetric(
               vertical: RegularSize.m,

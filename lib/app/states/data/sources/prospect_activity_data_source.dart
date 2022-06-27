@@ -13,16 +13,16 @@ import 'package:ventes/helpers/task_helper.dart';
 class ProspectActivityDataSource extends StateDataSource<ProspectActivityPresenter> with DataSourceMixin {
   final String stagesID = 'stgshdr';
   final String prospectID = 'prospecthdr';
-  final String prospectActivitysID = 'prosdtlshdr';
+  final String prospectActivitiesID = 'prosdtlshdr';
   final String deleteID = 'deltehdr';
 
   late DataHandler<List<DBType>, List, Function()> stagesHandler;
   late DataHandler<Prospect?, Map<String, dynamic>, Function(int)> prospectHandler;
-  late DataHandler<List<ProspectActivity>, List, Function(int)> prospectActivitysHandler;
+  late DataHandler<List<ProspectActivity>, List, Function(int)> prospectActivitiesHandler;
   late DataHandler<dynamic, String, Function(int)> deleteHandler;
 
   Prospect? get prospect => prospectHandler.value;
-  List<ProspectActivity> get prospectActivitys => prospectActivitysHandler.value;
+  List<ProspectActivity> get prospectActivities => prospectActivitiesHandler.value;
   List<DBType> get stages => stagesHandler.value;
 
   void _deleteSuccess(message) {
@@ -36,7 +36,8 @@ class ProspectActivityDataSource extends StateDataSource<ProspectActivityPresent
     super.init();
     stagesHandler = createDataHandler(stagesID, presenter.fetchStages, [], (data) => data.map<DBType>((json) => DBType.fromJson(json)).toList());
     prospectHandler = createDataHandler(prospectID, presenter.fetchProspect, null, (data) => Prospect.fromJson(data));
-    prospectActivitysHandler = createDataHandler(prospectActivitysID, presenter.fetchProspectActivitys, [], (data) => data.map<ProspectActivity>((json) => ProspectActivity.fromJson(json)).toList());
+    prospectActivitiesHandler =
+        createDataHandler(prospectActivitiesID, presenter.fetchProspectActivities, [], (data) => data.map<ProspectActivity>((json) => ProspectActivity.fromJson(json)).toList());
     deleteHandler = DataHandler(
       deleteID,
       fetcher: presenter.delete,

@@ -47,7 +47,7 @@ class ProspectActivityPresenter extends RegularPresenter {
         },
       );
 
-  DataFetcher<Function(int), List> get fetchProspectActivitys => DataFetcher(
+  DataFetcher<Function(int), List> get fetchProspectActivities => DataFetcher(
         builder: (handler) {
           return (id) async {
             handler.start();

@@ -25,7 +25,7 @@ class _StatPanel extends StatelessWidget {
               Obx(() {
                 return _HorizontalStatCard(
                   height: 75,
-                  value: state.dataSource.prospectActivitys.length.toString(),
+                  value: state.dataSource.prospectActivities.length.toString(),
                   text: "Activity",
                   icon: "assets/svg/activity-check.svg",
                   color: RegularColor.indigo,

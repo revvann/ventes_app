@@ -29,7 +29,7 @@ class ProspectDashboardDataSource extends StateDataSource<ProspectDashboardPrese
   UserDetail? get userDetail => userHandler.value;
   BpCustomer? get bpCustomer => bpCustomerHandler.value;
   List<ProspectProduct> get products => productsHandler.value;
-  List<ProspectActivity> get prospectActivitys => detailsHandler.value;
+  List<ProspectActivity> get prospectActivities => detailsHandler.value;
   List<ProspectAssign> get assignUsers => assignUsersHandler.value;
 
   void _prospectComplete() {

@@ -114,7 +114,7 @@ class ProspectActivityView extends View<Controller> {
                       Container(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          "Prospect Activitys",
+                          "Prospect Activities",
                           style: TextStyle(
                             color: RegularColor.primary,
                             fontWeight: FontWeight.bold,

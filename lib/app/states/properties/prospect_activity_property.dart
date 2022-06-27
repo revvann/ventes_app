@@ -13,7 +13,7 @@ class ProspectActivityProperty extends StateProperty with PropertyMixin {
   refresh() {
     dataSource.stagesHandler.fetcher.run();
     dataSource.prospectHandler.fetcher.run(prospectId);
-    dataSource.prospectActivitysHandler.fetcher.run(prospectId);
+    dataSource.prospectActivitiesHandler.fetcher.run(prospectId);
   }
 
   PopupMenuController createPopupController([int id = 0]) {
