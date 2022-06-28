@@ -32,6 +32,7 @@ class ScheduleFormCreateDataSource extends StateDataSource<ScheduleFormCreatePre
   List<Map<String, int>> get types => typesHandler.value;
   DBType? get refType => refTypeHandler.value;
   ProspectActivity? get prospectActivity => createActivityRefHandler.value;
+  Prospect? get prospect => prospectHandler.value;
 
   String? typeName(int index) => types.isNotEmpty ? types[index].keys.first : null;
   List<String> typeNames() => types.map((type) => type.keys.first).toList();
@@ -82,7 +83,6 @@ class ScheduleFormCreateDataSource extends StateDataSource<ScheduleFormCreatePre
         message: data,
         onFinished: (res) async {
           await property.scheduleNotification();
-          Get.find<DailyScheduleStateController>().refreshStates();
           Get.back(id: ScheduleNavigator.id);
         },
       ),
@@ -98,6 +98,7 @@ class ScheduleFormCreateDataSource extends StateDataSource<ScheduleFormCreatePre
 
   void _createActivityComplete() {
     if (prospectActivity != null) {
+      Get.find<TaskHelper>().successPush(Task(createActivityRefID, message: "Reference created successfully", snackbar: true));
       formSource.scherefid = prospectActivity?.prospectactivityid;
       Map<String, dynamic> data = formSource.toJson();
       createHandler.fetcher.run(data);

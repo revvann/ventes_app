@@ -333,8 +333,8 @@ class ScheduleFormCreateFormSource extends StateFormSource with FormSourceMixin 
   Map<String, dynamic> toJson() {
     return {
       "schenm": schenm,
-      "schereftypeid": schereftypeid.toString(),
-      "scherefid": scherefid.toString(),
+      "schereftypeid": schereftypeid,
+      "scherefid": scherefid,
       "schestartdate": formatDate(schestartdate),
       "scheenddate": isEvent ? formatDate(scheenddate) : null,
       "schestarttime": _schestarttime.value != null ? formatTime(_schestarttime.value!) : null,
@@ -357,9 +357,9 @@ class ScheduleFormCreateFormSource extends StateFormSource with FormSourceMixin 
   @override
   void onSubmit() {
     if (isValid()) {
-      if (scherefid != null && property.refData != null) {
+      if (schereftypeid != null && property.refData != null) {
         if (dataSource.refType?.typename == "Prospect Activity") {
-          reference &= ProspectActivity.fromJson(property.refData!);
+          reference = ProspectActivity.fromJson(property.refData!);
           ProspectActivity prospectActivity = reference as ProspectActivity;
           prospectActivity.prospectactivitydate = dbFormatDate(schestartdate);
 

@@ -10,6 +10,7 @@ import 'package:ventes/app/resources/widgets/editor_input.dart';
 import 'package:ventes/app/resources/widgets/handler_container.dart';
 import 'package:ventes/app/resources/widgets/icon_input.dart';
 import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
+import 'package:ventes/app/resources/widgets/prospect_card.dart';
 import 'package:ventes/app/resources/widgets/regular_checkbox.dart';
 import 'package:ventes/app/resources/widgets/regular_date_picker.dart';
 import 'package:ventes/app/resources/widgets/regular_dropdown.dart';
@@ -58,7 +59,7 @@ class ScheduleFormCreateView extends View<Controller> {
   int? refId;
   Map<String, dynamic>? refData;
 
-  ScheduleFormCreateView({this.startDate, this.refTypeId, this.refId});
+  ScheduleFormCreateView({this.startDate, this.refTypeId, this.refId, this.refData});
 
   @override
   void onBuild(state) {
@@ -74,7 +75,6 @@ class ScheduleFormCreateView extends View<Controller> {
       statusBarColor: RegularColor.primary,
     ));
     return Scaffold(
-      resizeToAvoidBottomInset: false,
       backgroundColor: RegularColor.primary,
       extendBodyBehindAppBar: true,
       appBar: TopNavigation(
@@ -166,7 +166,69 @@ class ScheduleFormCreateView extends View<Controller> {
                   ),
                 ),
                 SizedBox(
-                  height: RegularSize.l,
+                  height: RegularSize.m,
+                ),
+                if (state.formSource.schereftypeid != null)
+                  Obx(() {
+                    return Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Obx(() {
+                              return Text(
+                                state.property.referenceLabel,
+                                style: TextStyle(
+                                  color: RegularColor.primary,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 12,
+                                ),
+                              );
+                            }),
+                            SizedBox(
+                              height: RegularSize.l,
+                              child: TextButton(
+                                onPressed: state.listener.onHideClick,
+                                child: Obx(() {
+                                  return Text(
+                                    state.property.toggleReferenceText,
+                                    style: TextStyle(
+                                      color: RegularColor.gray,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 12,
+                                    ),
+                                  );
+                                }),
+                                style: TextButton.styleFrom(
+                                  padding: EdgeInsets.zero,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: RegularSize.xs,
+                        ),
+                        if (state.dataSource.refType?.typename == "Prospect Activity" && state.dataSource.prospect != null && state.property.hideReferenceField)
+                          ProspectCard(
+                            height: 100,
+                            margin: EdgeInsets.only(
+                              bottom: RegularSize.s,
+                              top: RegularSize.s,
+                            ),
+                            name: state.dataSource.prospect?.prospectname ?? "",
+                            customer: state.dataSource.prospect?.prospectcust?.sbccstmname ?? "",
+                            owner: state.dataSource.prospect?.prospectowneruser?.user?.userfullname ?? "",
+                            status: state.dataSource.prospect?.prospectstatus?.typename ?? "",
+                            date: state.dataSource.prospect?.prospectstartdate ?? "",
+                          ),
+                      ],
+                    );
+                  }),
+                SizedBox(
+                  height: RegularSize.m,
                 ),
                 Text(
                   "More Options",

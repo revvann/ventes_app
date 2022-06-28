@@ -10,6 +10,12 @@ import 'package:ventes/helpers/function_helpers.dart';
 import 'package:ventes/helpers/task_helper.dart';
 
 class ScheduleFormCreateListener extends StateListener with ListenerMixin {
+  void onHideClick() {
+    property.hideReferenceField = !property.hideReferenceField;
+    property.toggleLabel();
+    property.toggleText();
+  }
+
   void onLocationChanged() {
     formSource.schelocquiet = formSource.schelocTEC.text;
   }

@@ -23,6 +23,32 @@ class ScheduleFormCreateProperty extends StateProperty with PropertyMixin {
 
   Task task = Task(ScheduleString.createScheduleTaskCode);
 
+  final _hideReferenceField = Rx<bool>(false);
+  bool get hideReferenceField => _hideReferenceField.value;
+  set hideReferenceField(bool value) => _hideReferenceField.value = value;
+
+  final _toggleReferenceText = Rx<String>("show");
+  String get toggleReferenceText => _toggleReferenceText.value;
+  set toggleReferenceText(String value) => _toggleReferenceText.value = value;
+  void toggleText() {
+    if (hideReferenceField) {
+      toggleReferenceText = "hide";
+    } else {
+      toggleReferenceText = "show";
+    }
+  }
+
+  final _referenceLabel = Rx<String>("Reference...");
+  String get referenceLabel => _referenceLabel.value;
+  set referenceLabel(String value) => _referenceLabel.value = value;
+  void toggleLabel() {
+    if (hideReferenceField) {
+      referenceLabel = "Reference";
+    } else {
+      referenceLabel = "Reference...";
+    }
+  }
+
   Set<Marker> get markers => _markers.value;
   set markers(Set<Marker> value) => _markers.value = value;
   set markerLatLng(LatLng latlng) {

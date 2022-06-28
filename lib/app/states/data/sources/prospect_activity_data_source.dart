@@ -26,7 +26,7 @@ class ProspectActivityDataSource extends StateDataSource<ProspectActivityPresent
   Prospect? get prospect => prospectHandler.value;
   List<ProspectActivity> get prospectActivities => prospectActivitiesHandler.value;
   List<DBType> get stages => stagesHandler.value;
-  List<DBType> get scheduleRefTypes => stagesHandler.value;
+  List<DBType> get scheduleRefTypes => scheduleRefTypesHandler.value;
   DBType? get activityRefType => scheduleRefTypes.firstWhereOrNull((element) => element.typename == "Prospect Activity");
 
   void _deleteSuccess(message) {
@@ -35,14 +35,19 @@ class ProspectActivityDataSource extends StateDataSource<ProspectActivityPresent
     }));
   }
 
+  List<ProspectActivity> _prospectActivitiesComplete(data) {
+    List<ProspectActivity> activities = data.map<ProspectActivity>((json) => ProspectActivity.fromJson(json)).toList();
+    activities.removeWhere((element) => dbParseDate(element.prospectactivitydate!).isAfter(DateTime.now()));
+    return activities;
+  }
+
   @override
   void init() {
     super.init();
     scheduleRefTypesHandler = createDataHandler(scheduleRefID, presenter.fetchScheduleRefTypes, [], (data) => data.map<DBType>((json) => DBType.fromJson(json)).toList());
     stagesHandler = createDataHandler(stagesID, presenter.fetchStages, [], (data) => data.map<DBType>((json) => DBType.fromJson(json)).toList());
     prospectHandler = createDataHandler(prospectID, presenter.fetchProspect, null, (data) => Prospect.fromJson(data));
-    prospectActivitiesHandler =
-        createDataHandler(prospectActivitiesID, presenter.fetchProspectActivities, [], (data) => data.map<ProspectActivity>((json) => ProspectActivity.fromJson(json)).toList());
+    prospectActivitiesHandler = createDataHandler(prospectActivitiesID, presenter.fetchProspectActivities, [], _prospectActivitiesComplete);
     deleteHandler = DataHandler(
       deleteID,
       fetcher: presenter.delete,
@@ -57,28 +62,4 @@ class ProspectActivityDataSource extends StateDataSource<ProspectActivityPresent
 
   @override
   ProspectActivityPresenter presenterBuilder() => ProspectActivityPresenter();
-
-  @override
-  onLoadError(String message) {}
-
-  @override
-  onLoadFailed(String message) {}
-
-  @override
-  onLoadSuccess(Map data) {}
-
-  @override
-  void onDeleteError(String message) {}
-
-  @override
-  void onDeleteFailed(String message) {}
-
-  @override
-  void onDeleteSuccess(String message) {}
-
-  @override
-  void onDeleteComplete() {}
-
-  @override
-  onLoadComplete() {}
 }

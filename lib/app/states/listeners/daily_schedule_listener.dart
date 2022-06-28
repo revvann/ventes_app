@@ -39,6 +39,7 @@ class DailyScheduleListener extends StateListener with ListenerMixin {
   }
 
   void onEditButtonClick() {
+    property.popupMenuController.toggleDropdown(close: true);
     Get.toNamed(ScheduleFormUpdateView.route, id: ScheduleNavigator.id, arguments: {
       'scheduleId': property.selectedAppointment?.scheid,
     });
@@ -49,6 +50,7 @@ class DailyScheduleListener extends StateListener with ListenerMixin {
   }
 
   void deleteSchedule() {
+    property.popupMenuController.toggleDropdown(close: true);
     Get.find<TaskHelper>().confirmPush(
       property.task.copyWith<bool>(
         message: ScheduleString.deleteScheduleConfirm,

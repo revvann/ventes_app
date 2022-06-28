@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ventes/app/models/schedule_model.dart';
+import 'package:ventes/app/resources/widgets/popup_button.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/strings/schedule_string.dart';
 import 'package:ventes/core/states/state_property.dart';
@@ -10,6 +11,7 @@ import 'package:ventes/app/states/typedefs/daily_schedule_typedef.dart';
 
 class DailyScheduleProperty extends StateProperty with PropertyMixin {
   Task task = Task(ScheduleString.dailyScheduleTaskCode);
+  PopupMenuController popupMenuController = Get.put(PopupMenuController(), tag: "SchedulePopup");
 
   final Rx<DateTime> _date = Rx<DateTime>(DateTime.now());
   DateTime get date => _date.value;
@@ -35,5 +37,10 @@ class DailyScheduleProperty extends StateProperty with PropertyMixin {
       color = RegularColor.cyan;
     }
     return color;
+  }
+
+  void close() {
+    super.close();
+    Get.delete<PopupMenuController>(tag: "SchedulePopup");
   }
 }

@@ -10,7 +10,7 @@ class _AppBarMenu extends StatelessWidget {
     return Obx(() {
       return state.property.selectedAppointment != null
           ? PopupMenu(
-              controller: Get.put(PopupMenuController(), tag: "SchedulePopup"),
+              controller: state.property.popupMenuController,
               dropdownSettings: DropdownSettings(
                 width: 150,
                 builder: (controller) => Padding(

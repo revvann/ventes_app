@@ -15,26 +15,32 @@ class ProspectDashboardDataSource extends StateDataSource<ProspectDashboardPrese
   final String userID = 'userhdr';
   final String bpCustomerID = 'bpcusthdr';
   final String productsID = 'productshdr';
-  final String detailsID = 'detailshdr';
+  final String activitiesID = 'detailshdr';
   final String assignUsersID = 'assignhdr';
 
   late DataHandler<Prospect?, Map<String, dynamic>, Function(int)> prospectHandler;
   late DataHandler<UserDetail?, Map<String, dynamic>, Function(int)> userHandler;
   late DataHandler<BpCustomer?, Map<String, dynamic>, Function(int)> bpCustomerHandler;
   late DataHandler<List<ProspectProduct>, List, Function(int)> productsHandler;
-  late DataHandler<List<ProspectActivity>, List, Function(int)> detailsHandler;
+  late DataHandler<List<ProspectActivity>, List, Function(int)> activitiesHandler;
   late DataHandler<List<ProspectAssign>, List, Function(int)> assignUsersHandler;
 
   Prospect? get prospect => prospectHandler.value;
   UserDetail? get userDetail => userHandler.value;
   BpCustomer? get bpCustomer => bpCustomerHandler.value;
   List<ProspectProduct> get products => productsHandler.value;
-  List<ProspectActivity> get prospectActivities => detailsHandler.value;
+  List<ProspectActivity> get prospectActivities => activitiesHandler.value;
   List<ProspectAssign> get assignUsers => assignUsersHandler.value;
 
   void _prospectComplete() {
     if (prospect?.prospectowner != null) userHandler.fetcher.run(prospect!.prospectowner!);
     if (prospect?.prospectcustid != null) bpCustomerHandler.fetcher.run(prospect!.prospectcustid!);
+  }
+
+  List<ProspectActivity> _prospectActivitiesSuccess(data) {
+    List<ProspectActivity> activities = data.map<ProspectActivity>((json) => ProspectActivity.fromJson(json)).toList();
+    activities.removeWhere((element) => dbParseDate(element.prospectactivitydate!).isAfter(DateTime.now()));
+    return activities;
   }
 
   @override
@@ -44,7 +50,7 @@ class ProspectDashboardDataSource extends StateDataSource<ProspectDashboardPrese
     userHandler = createDataHandler(prospectID, presenter.fetchUser, null, UserDetail.fromJson);
     bpCustomerHandler = createDataHandler(prospectID, presenter.fetchBpCustomer, null, BpCustomer.fromJson);
     productsHandler = createDataHandler(productsID, presenter.fetchProducts, [], (data) => data.map((e) => ProspectProduct.fromJson(e)).toList());
-    detailsHandler = createDataHandler(detailsID, presenter.fetchDetails, [], (data) => data.map((e) => ProspectActivity.fromJson(e)).toList());
+    activitiesHandler = createDataHandler(activitiesID, presenter.fetchDetails, [], _prospectActivitiesSuccess);
     assignUsersHandler = createDataHandler(assignUsersID, presenter.fetchAssignedUsers, [], (data) => data.map((e) => ProspectAssign.fromJson(e)).toList());
   }
 

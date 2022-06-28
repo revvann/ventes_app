@@ -14,7 +14,7 @@ class ProspectDashboardListener extends StateListener with ListenerMixin {
     dataSource.prospectHandler.fetcher.run(property.prospectid);
     dataSource.assignUsersHandler.fetcher.run(property.prospectid);
     dataSource.productsHandler.fetcher.run(property.prospectid);
-    dataSource.detailsHandler.fetcher.run(property.prospectid);
+    dataSource.activitiesHandler.fetcher.run(property.prospectid);
   }
 
   void navigateToProspectAssign() async {
