@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "334711722504",
+    "project_id": "ventes-app-2d102",
+    "storage_bucket": "ventes-app-2d102.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:334711722504:android:9e04d955d3ac8e5cdaf7bd",
+        "android_client_info": {
+          "package_name": "com.example.ventes"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "334711722504-j2s2ig0h8eokucth45pf4vf1ekds8nc7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.ventes",
+            "certificate_hash": "694009b9e05231723a0ebc30245013b105e20fa3"
+          }
+        },
+        {
+          "client_id": "334711722504-oqbnaa60krd5q14grr9ca1in6jdsv55o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC2ip9iOsiOzYqSAiFFHMkRcl7mUaMG4BI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "334711722504-oqbnaa60krd5q14grr9ca1in6jdsv55o.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

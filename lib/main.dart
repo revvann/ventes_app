@@ -1,20 +1,26 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:ventes/app/api/services/auth_service.dart';
 import 'package:ventes/app/api/services/bp_customer_service.dart';
 import 'package:ventes/app/api/services/contact_person_service.dart';
 import 'package:ventes/app/api/services/customer_service.dart';
 import 'package:ventes/app/api/services/gmaps_service.dart';
 import 'package:ventes/app/api/services/place_service.dart';
-import 'package:ventes/app/api/services/prospect_assign_service.dart';
 import 'package:ventes/app/api/services/prospect_activity_service.dart';
+import 'package:ventes/app/api/services/prospect_assign_service.dart';
 import 'package:ventes/app/api/services/prospect_product_service.dart';
 import 'package:ventes/app/api/services/prospect_service.dart';
 import 'package:ventes/app/api/services/schedule_service.dart';
 import 'package:ventes/app/api/services/type_service.dart';
 import 'package:ventes/app/api/services/user_service.dart';
+import 'package:ventes/app/resources/views/splash_screen.dart';
 import 'package:ventes/app/states/controllers/keyboard_state_controller.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/helpers/auth_helper.dart';
@@ -22,13 +28,13 @@ import 'package:ventes/helpers/function_helpers.dart';
 import 'package:ventes/helpers/notification_helper.dart';
 import 'package:ventes/helpers/task_helper.dart';
 import 'package:ventes/routing/routes/routes.dart';
-import 'package:ventes/app/api/services/auth_service.dart';
-import 'package:ventes/app/resources/views/splash_screen.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:timezone/data/latest.dart' as tz;
 
 void main() async {
   tz.initializeTimeZones();
+
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+
   runApp(const MyApp());
   Intl.defaultLocale = 'en_ID';
   Get.lazyPut(() => AuthService(), fenix: true);
