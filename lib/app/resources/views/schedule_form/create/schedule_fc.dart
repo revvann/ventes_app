@@ -56,6 +56,7 @@ class ScheduleFormCreateView extends View<Controller> {
   DateTime? startDate;
   int? refTypeId;
   int? refId;
+  Map<String, dynamic>? refData;
 
   ScheduleFormCreateView({this.startDate, this.refTypeId, this.refId});
 
@@ -63,7 +64,8 @@ class ScheduleFormCreateView extends View<Controller> {
   void onBuild(state) {
     state.formSource.schestartdate = startDate;
     state.formSource.schereftypeid = refTypeId;
-    state.formSource.refId = refId;
+    state.formSource.scherefid = refId;
+    state.property.refData = refData;
   }
 
   @override

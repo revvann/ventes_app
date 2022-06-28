@@ -38,7 +38,7 @@ class ProspectActivityDataSource extends StateDataSource<ProspectActivityPresent
   @override
   void init() {
     super.init();
-    scheduleRefTypesHandler = createDataHandler(stagesID, presenter.fetchScheduleRefTypes, [], (data) => data.map<DBType>((json) => DBType.fromJson(json)).toList());
+    scheduleRefTypesHandler = createDataHandler(scheduleRefID, presenter.fetchScheduleRefTypes, [], (data) => data.map<DBType>((json) => DBType.fromJson(json)).toList());
     stagesHandler = createDataHandler(stagesID, presenter.fetchStages, [], (data) => data.map<DBType>((json) => DBType.fromJson(json)).toList());
     prospectHandler = createDataHandler(prospectID, presenter.fetchProspect, null, (data) => Prospect.fromJson(data));
     prospectActivitiesHandler =

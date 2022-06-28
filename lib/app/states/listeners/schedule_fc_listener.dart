@@ -3,13 +3,11 @@ import 'dart:async';
 import 'package:get/get.dart';
 import 'package:ventes/app/models/schedule_guest_model.dart';
 import 'package:ventes/app/models/user_detail_model.dart';
-import 'package:ventes/app/states/controllers/daily_schedule_state_controller.dart';
-import 'package:ventes/constants/strings/schedule_string.dart';
 import 'package:ventes/app/states/typedefs/schedule_fc_typedef.dart';
+import 'package:ventes/constants/strings/schedule_string.dart';
 import 'package:ventes/core/states/state_listener.dart';
 import 'package:ventes/helpers/function_helpers.dart';
 import 'package:ventes/helpers/task_helper.dart';
-import 'package:ventes/routing/navigators/schedule_navigator.dart';
 
 class ScheduleFormCreateListener extends StateListener with ListenerMixin {
   void onLocationChanged() {

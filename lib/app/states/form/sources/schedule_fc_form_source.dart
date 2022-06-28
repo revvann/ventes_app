@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:get/get.dart';
+import 'package:ventes/app/models/prospect_activity_model.dart';
 import 'package:ventes/app/models/schedule_guest_model.dart';
 import 'package:ventes/app/models/user_detail_model.dart';
 import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
@@ -37,8 +38,10 @@ class ScheduleFormCreateFormSource extends StateFormSource with FormSourceMixin 
   SearchableDropdownController<UserDetail> towardDropdownController = Get.put(SearchableDropdownController<UserDetail>(), tag: "DropdownToward");
   KeyableDropdownController<String, String> timezoneDropdownController = Get.put(KeyableDropdownController<String, String>(), tag: "DropdownTimezone");
 
+  dynamic reference;
   int? schereftypeid;
-  int? refId;
+  int? scherefid;
+
   String _scheonlink = "";
   String _scheloc = "";
   bool _scheprivate = false;
@@ -331,6 +334,7 @@ class ScheduleFormCreateFormSource extends StateFormSource with FormSourceMixin 
     return {
       "schenm": schenm,
       "schereftypeid": schereftypeid.toString(),
+      "scherefid": scherefid.toString(),
       "schestartdate": formatDate(schestartdate),
       "scheenddate": isEvent ? formatDate(scheenddate) : null,
       "schestarttime": _schestarttime.value != null ? formatTime(_schestarttime.value!) : null,
@@ -353,8 +357,18 @@ class ScheduleFormCreateFormSource extends StateFormSource with FormSourceMixin 
   @override
   void onSubmit() {
     if (isValid()) {
-      Map<String, dynamic> data = toJson();
-      dataSource.createHandler.fetcher.run(data);
+      if (scherefid != null && property.refData != null) {
+        if (dataSource.refType?.typename == "Prospect Activity") {
+          reference &= ProspectActivity.fromJson(property.refData!);
+          ProspectActivity prospectActivity = reference as ProspectActivity;
+          prospectActivity.prospectactivitydate = dbFormatDate(schestartdate);
+
+          dataSource.createActivityRefHandler.fetcher.run(prospectActivity.toJson());
+        }
+      } else {
+        Map<String, dynamic> data = toJson();
+        dataSource.createHandler.fetcher.run(data);
+      }
     }
   }
 }

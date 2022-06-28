@@ -17,6 +17,7 @@ import 'package:ventes/helpers/task_helper.dart';
 class ScheduleFormCreateProperty extends StateProperty with PropertyMixin {
   final Completer<GoogleMapController> mapsController = Completer();
   CameraPosition currentPos = CameraPosition(target: LatLng(0, 0), zoom: 14.4764);
+  Map<String, dynamic>? refData = {};
 
   final Rx<Set<Marker>> _markers = Rx<Set<Marker>>({});
 
@@ -42,6 +43,9 @@ class ScheduleFormCreateProperty extends StateProperty with PropertyMixin {
     });
     markerLatLng = LatLng(pos.latitude, pos.longitude);
     dataSource.typesHandler.fetcher.run();
+    if (formSource.schereftypeid != null) {
+      dataSource.refTypeHandler.fetcher.run(formSource.schereftypeid!);
+    }
   }
 
   void showMapBottomSheet() {

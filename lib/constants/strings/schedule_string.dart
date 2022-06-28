@@ -58,4 +58,5 @@ class ScheduleString {
   static const scheduleUpdateTag = "updateschedule";
 
   static const permissionTypeCode = "scp";
+  static const refTypeCode = 'scheref';
 }
