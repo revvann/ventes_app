@@ -1,6 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide MenuItem;
 import 'package:get/get.dart';
 import 'package:ventes/app/resources/views/customer_form/create/customer_fc.dart';
 import 'package:ventes/app/resources/views/customer_form/update/customer_fu.dart';

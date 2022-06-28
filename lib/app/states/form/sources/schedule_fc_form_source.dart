@@ -1,7 +1,7 @@
 // ignore_for_file: unnecessary_getters_setters, prefer_const_constructors
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide MenuItem;
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:get/get.dart';
 import 'package:ventes/app/models/prospect_activity_model.dart';

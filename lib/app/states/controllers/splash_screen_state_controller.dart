@@ -1,6 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide MenuItem;
 import 'package:get/get.dart';
 import 'package:ventes/app/resources/views/started_page.dart';
 import 'package:ventes/helpers/function_helpers.dart';

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide MenuItem;
 import 'package:ventes/app/resources/widgets/regular_input.dart';
 
 class EditorInput extends StatelessWidget {

@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide MenuItem;
 import 'package:get/get.dart';
 import 'package:ventes/app/resources/widgets/popup_button.dart';
 import 'package:ventes/constants/strings/prospect_string.dart';

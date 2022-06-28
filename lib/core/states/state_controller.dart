@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide MenuItem;
 import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
 import 'package:ventes/core/states/state_data_source.dart';
@@ -93,7 +93,7 @@ abstract class StateController<P extends StateProperty?, L extends StateListener
     onPostFrame ??= (_) {
       ready();
     };
-    SchedulerBinding.instance?.addPostFrameCallback(onPostFrame!);
+    SchedulerBinding.instance.addPostFrameCallback(onPostFrame!);
     init();
     update([tag]);
   }

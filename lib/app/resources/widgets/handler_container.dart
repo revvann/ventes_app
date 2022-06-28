@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide MenuItem;
 import 'package:get/get.dart';
 import 'package:ventes/app/resources/widgets/loading_container.dart';
 import 'package:ventes/core/api/handler.dart';

@@ -2,7 +2,7 @@
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide MenuItem;
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -23,6 +23,7 @@ import 'package:ventes/app/api/services/user_service.dart';
 import 'package:ventes/app/resources/views/splash_screen.dart';
 import 'package:ventes/app/states/controllers/keyboard_state_controller.dart';
 import 'package:ventes/constants/regular_color.dart';
+import 'package:ventes/firebase_options.dart';
 import 'package:ventes/helpers/auth_helper.dart';
 import 'package:ventes/helpers/function_helpers.dart';
 import 'package:ventes/helpers/notification_helper.dart';
@@ -33,7 +34,23 @@ void main() async {
   tz.initializeTimeZones();
 
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.android,
+  );
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
+  NotificationSettings settings = await messaging.requestPermission(
+    alert: true,
+    announcement: false,
+    badge: true,
+    carPlay: false,
+    criticalAlert: false,
+    provisional: false,
+    sound: true,
+  );
+  print('User Granted Permission: ${settings.authorizationStatus}');
+  FirebaseMessaging.onMessage.listen((event) {
+    print("message: data => ${event.data}");
+  });
 
   runApp(const MyApp());
   Intl.defaultLocale = 'en_ID';

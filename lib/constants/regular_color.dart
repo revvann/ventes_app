@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide MenuItem;
 
 class RegularColor {
   static const primary = Color(0xFF0C3B2E);
