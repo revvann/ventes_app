@@ -8,13 +8,13 @@ import 'package:ventes/constants/regular_size.dart';
 class MenuItem extends StatelessWidget {
   Function()? onTap;
   String title;
-  String icon;
+  String? icon;
   Color color;
 
   MenuItem({
     this.onTap,
     required this.title,
-    required this.icon,
+    this.icon,
     this.color = RegularColor.dark,
   });
 
@@ -38,12 +38,14 @@ class MenuItem extends StatelessWidget {
           ),
           child: Row(
             children: [
-              SvgPicture.asset(
-                icon,
-                width: RegularSize.m,
-                color: color,
-              ),
-              SizedBox(width: RegularSize.s),
+              if (icon != null) ...[
+                SvgPicture.asset(
+                  icon!,
+                  width: RegularSize.m,
+                  color: color,
+                ),
+                SizedBox(width: RegularSize.s),
+              ],
               Expanded(
                 child: Text(
                   title,

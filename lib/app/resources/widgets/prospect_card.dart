@@ -1,6 +1,11 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'dart:math';
+
 import 'package:flutter/material.dart' hide MenuItem;
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:ventes/app/resources/widgets/pop_up_item.dart';
+import 'package:ventes/app/resources/widgets/popup_button.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 
@@ -15,6 +20,9 @@ class ProspectCard extends StatelessWidget {
     required this.status,
     required this.owner,
     required this.date,
+    this.usePopup = true,
+    this.popupController,
+    this.popupItems = const [],
   }) : super(key: key);
   EdgeInsets? margin;
   double width;
@@ -24,6 +32,9 @@ class ProspectCard extends StatelessWidget {
   String owner;
   String status;
   String date;
+  PopupMenuController? popupController;
+  bool usePopup;
+  List<MenuItem> popupItems;
 
   @override
   Widget build(BuildContext context) {
@@ -99,26 +110,67 @@ class ProspectCard extends StatelessWidget {
                       SizedBox(
                         width: RegularSize.xs,
                       ),
-                      Container(
-                        margin: EdgeInsets.only(
-                          top: RegularSize.xs,
-                        ),
-                        padding: EdgeInsets.symmetric(
-                          horizontal: RegularSize.s,
-                          vertical: RegularSize.xs,
-                        ),
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          color: RegularColor.green,
-                          borderRadius: BorderRadius.circular(RegularSize.s),
-                        ),
-                        child: Text(
-                          status,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 12,
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                            margin: EdgeInsets.only(
+                              top: RegularSize.xs,
+                            ),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: RegularSize.s,
+                              vertical: RegularSize.xs,
+                            ),
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              color: RegularColor.green,
+                              borderRadius: BorderRadius.circular(RegularSize.s),
+                            ),
+                            child: Text(
+                              status,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                              ),
+                            ),
                           ),
-                        ),
+                          if (usePopup)
+                            PopupMenu(
+                              controller: popupController!,
+                              dropdownSettings: DropdownSettings(
+                                width: 150,
+                                offset: Offset(10, 5),
+                                builder: (controller) => Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: RegularSize.s,
+                                    horizontal: RegularSize.s,
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: popupItems,
+                                  ),
+                                ),
+                              ),
+                              child: Container(
+                                width: 20,
+                                height: 20,
+                                margin: EdgeInsets.only(
+                                  left: RegularSize.s,
+                                ),
+                                padding: EdgeInsets.all(RegularSize.xs),
+                                alignment: Alignment.center,
+                                child: Transform.rotate(
+                                  angle: pi / 2,
+                                  child: SvgPicture.asset(
+                                    "assets/svg/menu-dots.svg",
+                                    color: RegularColor.dark,
+                                    width: RegularSize.m,
+                                  ),
+                                ),
+                              ),
+                            ),
+                        ],
                       ),
                     ],
                   ),

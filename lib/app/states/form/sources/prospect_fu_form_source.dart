@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart' hide MenuItem;
 import 'package:get/get.dart';
 import 'package:ventes/app/models/bp_customer_model.dart';
+import 'package:ventes/app/models/type_model.dart';
 import 'package:ventes/app/models/user_detail_model.dart';
+import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
 import 'package:ventes/app/resources/widgets/searchable_dropdown.dart';
 import 'package:ventes/app/states/typedefs/prospect_fu_typedef.dart';
 import 'package:ventes/constants/formatters/currency_formatter.dart';
+import 'package:ventes/constants/strings/prospect_string.dart';
 import 'package:ventes/core/states/update_form_source.dart';
 import 'package:ventes/helpers/function_helpers.dart';
 import 'package:ventes/helpers/task_helper.dart';
@@ -14,6 +17,14 @@ class ProspectFormUpdateFormSource extends UpdateFormSource with FormSourceMixin
 
   SearchableDropdownController<UserDetail> ownerDropdownController = Get.put(SearchableDropdownController<UserDetail>(), tag: 'ownerdropdown');
   SearchableDropdownController<BpCustomer> customerDropdownController = Get.put(SearchableDropdownController<BpCustomer>(), tag: 'customerDropdown');
+  KeyableDropdownController<int, DBType> stageDropdownController = Get.put(
+    KeyableDropdownController<int, DBType>(),
+    tag: ProspectString.stageTag + "prospectfu",
+  );
+  KeyableDropdownController<int, DBType> statusDropdownController = Get.put(
+    KeyableDropdownController<int, DBType>(),
+    tag: ProspectString.statusTag + "prospectfu",
+  );
 
   final prosvaluemask = CurrencyInputFormatter();
 
@@ -29,8 +40,13 @@ class ProspectFormUpdateFormSource extends UpdateFormSource with FormSourceMixin
   final Rx<UserDetail?> _prosowner = Rx<UserDetail?>(null);
   final Rx<BpCustomer?> _proscustomer = Rx<BpCustomer?>(null);
 
-  int? prosstatus;
-  int? prosstage;
+  final Rx<DBType?> _prosstatus = Rx<DBType?>(null);
+  final Rx<DBType?> _prosstage = Rx<DBType?>(null);
+
+  DBType? get prosstatus => _prosstatus.value;
+  set prosstatus(DBType? value) => _prosstatus.value = value;
+  DBType? get prosstage => _prosstage.value;
+  set prosstage(DBType? value) => _prosstage.value = value;
 
   DateTime? get prosstartdate => _prosstartdate.value;
   set prosstartdate(DateTime? value) => _prosstartdate.value = value;
@@ -104,8 +120,8 @@ class ProspectFormUpdateFormSource extends UpdateFormSource with FormSourceMixin
 
     prosowner = dataSource.prospect?.prospectowneruser;
     proscustomer = dataSource.prospect?.prospectcust;
-    prosstatus = dataSource.prospect?.prospectstatusid;
-    prosstage = dataSource.prospect?.prospectstageid;
+    prosstatus = dataSource.prospect?.prospectstatus;
+    prosstage = dataSource.prospect?.prospectstage;
 
     ownerDropdownController.selectedKeys = prosowner != null ? [prosowner!] : [];
     customerDropdownController.selectedKeys = proscustomer != null ? [proscustomer!] : [];
@@ -119,8 +135,8 @@ class ProspectFormUpdateFormSource extends UpdateFormSource with FormSourceMixin
       'prospectenddate': prosenddateString,
       'prospectvalue': prosvalue?.replaceAll('.', '').replaceAll(',', '.'),
       'prospectowner': _prosowner.value?.user?.userid,
-      'prospectstageid': prosstage,
-      'prospectstatusid': prosstatus,
+      'prospectstageid': prosstage?.typeid,
+      'prospectstatusid': prosstatus?.typeid,
       'prospectexpclosedate': prosexpenddateString,
       'prospectbpid': proscustomer?.sbcbpid,
       'prospectdescription': prosdesc,

@@ -213,6 +213,7 @@ class ScheduleFormCreateView extends View<Controller> {
                         ),
                         if (state.dataSource.refType?.typename == "Prospect Activity" && state.dataSource.prospect != null && state.property.hideReferenceField)
                           ProspectCard(
+                            usePopup: false,
                             height: 100,
                             margin: EdgeInsets.only(
                               bottom: RegularSize.s,

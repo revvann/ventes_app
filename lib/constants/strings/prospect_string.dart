@@ -83,4 +83,6 @@ class ProspectString {
   static String detailCreateTag = "detailcreate";
   static String detailUpdateTag = "detailupdate";
   static String prospectAssignTag = 'prospectassign';
+  static String statusTag = "status";
+  static String stageTag = "stage";
 }

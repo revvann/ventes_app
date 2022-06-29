@@ -5,9 +5,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:ventes/app/models/bp_customer_model.dart';
+import 'package:ventes/app/models/type_model.dart';
 import 'package:ventes/app/models/user_detail_model.dart';
 import 'package:ventes/app/resources/widgets/editor_input.dart';
 import 'package:ventes/app/resources/widgets/icon_input.dart';
+import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
 import 'package:ventes/app/resources/widgets/regular_date_picker.dart';
 import 'package:ventes/app/resources/widgets/regular_input.dart';
 import 'package:ventes/app/resources/widgets/searchable_dropdown.dart';
@@ -23,6 +25,8 @@ part 'package:ventes/app/resources/views/prospect_form/update/components/_twin_d
 part 'package:ventes/app/resources/views/prospect_form/update/components/_end_date_picker.dart';
 part 'package:ventes/app/resources/views/prospect_form/update/components/_owner_dropdown.dart';
 part 'package:ventes/app/resources/views/prospect_form/update/components/_customer_dropdown.dart';
+part 'package:ventes/app/resources/views/prospect_form/update/components/_stage_dropdown.dart';
+part 'package:ventes/app/resources/views/prospect_form/update/components/_status_dropdown.dart';
 
 class ProspectFormUpdateView extends View<Controller> {
   static const String route = "/prospect/update";
@@ -137,6 +141,14 @@ class ProspectFormUpdateView extends View<Controller> {
                           height: RegularSize.m,
                         ),
                         _OwnerDropdown(),
+                        SizedBox(
+                          height: RegularSize.m,
+                        ),
+                        _StatusDropdown(),
+                        SizedBox(
+                          height: RegularSize.m,
+                        ),
+                        _StageDropdown(),
                         SizedBox(
                           height: RegularSize.m,
                         ),

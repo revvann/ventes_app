@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:ventes/app/models/bp_customer_model.dart';
+import 'package:ventes/app/models/type_model.dart';
 import 'package:ventes/app/models/user_detail_model.dart';
 import 'package:ventes/constants/strings/prospect_string.dart';
 import 'package:ventes/app/states/typedefs/prospect_fu_typedef.dart';
@@ -33,6 +34,14 @@ class ProspectFormUpdateListener extends StateListener with ListenerMixin {
 
   void onOwnerSelected(dynamic data) {
     formSource.prosowner = data.value as UserDetail;
+  }
+
+  void onStageSelected(dynamic data) {
+    formSource.prosstage = data.value as DBType;
+  }
+
+  void onStatusSelected(dynamic data) {
+    formSource.prosstatus = data.value as DBType;
   }
 
   bool onOwnerCompared(selectedItem, item) {

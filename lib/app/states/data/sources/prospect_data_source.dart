@@ -11,11 +11,15 @@ import 'package:ventes/helpers/task_helper.dart';
 class ProspectDataSource extends StateDataSource<ProspectPresenter> with DataSourceMixin {
   final String statusesID = "stshdr";
   final String prospectsID = 'prshdr';
+  final String prospectUpdateID = 'prosupdatehdr';
 
   late DataHandler<List<KeyableDropdownItem<int, DBType>>, List, Function()> statusesHandler;
   late DataHandler<List<Prospect>, List, Function([Map<String, dynamic>?])> prospectsHandler;
+  late DataHandler<dynamic, String, Function(int, Map<String, dynamic>)> prospectUpdateHandler;
 
   List<KeyableDropdownItem<int, DBType>> get statusItems => statusesHandler.value;
+  DBType? get closeWonStatus => statusItems.firstWhereOrNull((e) => e.value.typename == "Closed Won")?.value;
+  DBType? get closeLoseStatus => statusItems.firstWhereOrNull((e) => e.value.typename == "Closed Lose")?.value;
 
   List<Prospect> get prospects => prospectsHandler.value;
 
@@ -57,6 +61,17 @@ class ProspectDataSource extends StateDataSource<ProspectPresenter> with DataSou
       onFailed: (message) => _showFailed(prospectsID, message),
       onError: (message) => _showError(prospectsID, message),
       onSuccess: (data) => data.map<Prospect>((e) => Prospect.fromJson(e)).toList(),
+    );
+
+    prospectUpdateHandler = DataHandler(
+      prospectUpdateID,
+      initialValue: null,
+      fetcher: presenter.updateProspect,
+      onStart: () => Get.find<TaskHelper>().loaderPush(Task(prospectUpdateID)),
+      onComplete: () => Get.find<TaskHelper>().loaderPop(prospectUpdateID),
+      onFailed: (message) => _showFailed(prospectUpdateID, message, false),
+      onError: (message) => _showError(prospectUpdateID, message),
+      onSuccess: (message) => Get.find<TaskHelper>().successPush(Task(prospectUpdateID, message: message, onFinished: (res) => Get.find<Controller>().refreshStates())),
     );
   }
 

@@ -60,4 +60,23 @@ class ProspectPresenter extends RegularPresenter {
           };
         },
       );
+
+  DataFetcher<Function(int, Map<String, dynamic>), String> get updateProspect => DataFetcher(
+        builder: (handler) {
+          return (id, data) async {
+            handler.start();
+            try {
+              Response response = await _prospectService.update(id, data);
+              if (response.statusCode == 200) {
+                handler.success(ProspectString.updateDataSuccess);
+              } else {
+                handler.failed(ProspectString.updateDataFailed);
+              }
+            } catch (e) {
+              handler.error(e.toString());
+            }
+            handler.complete();
+          };
+        },
+      );
 }

@@ -36,6 +36,24 @@ class _ProspectList extends StatelessWidget {
                 owner: prospect.prospectowneruser?.user?.userfullname ?? "",
                 status: prospect.prospectstatus?.typename ?? "",
                 date: prospect.prospectstartdate ?? "",
+                popupController: state.property.createPopupController(index),
+                popupItems: [
+                  MenuItem(
+                    title: "Edit",
+                    icon: "assets/svg/edit.svg",
+                    onTap: () => state.listener.navigateToProspectUpdateForm(prospect.prospectid!),
+                  ),
+                  MenuItem(
+                    title: "Closed Win",
+                    color: RegularColor.green,
+                    onTap: () => state.listener.onCloseWonClicked(prospect.prospectid!),
+                  ),
+                  MenuItem(
+                    title: "Closed Lose",
+                    color: RegularColor.red,
+                    onTap: () => state.listener.onCloseLoseClicked(prospect.prospectid!),
+                  ),
+                ],
               ),
             );
           },
