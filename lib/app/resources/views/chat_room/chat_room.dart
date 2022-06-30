@@ -131,15 +131,12 @@ class ChatRoomView extends View<Controller> {
                         controller: state.property.messageTEC,
                       ),
                     ),
-                    GestureDetector(
-                      onTap: state.listener.onSend,
-                      child: Container(
-                        padding: EdgeInsets.all(RegularSize.s),
-                        child: SvgPicture.asset(
-                          'assets/svg/send.svg',
-                          color: RegularColor.gray,
-                          width: RegularSize.l,
-                        ),
+                    Container(
+                      padding: EdgeInsets.all(RegularSize.s),
+                      child: SvgPicture.asset(
+                        'assets/svg/send.svg',
+                        color: RegularColor.gray,
+                        width: RegularSize.l,
                       ),
                     ),
                   ],

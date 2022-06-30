@@ -25,10 +25,6 @@ class ChatRoomListener extends StateListener with ListenerMixin {
     print("socket: $data");
   }
 
-  void onSend() {
-    property.sendMessage();
-  }
-
   @override
   Future onReady() async {
     dataSource.userDetailHandler.fetcher.run();

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:ventes/app/resources/widgets/popup_button.dart';
@@ -31,6 +32,11 @@ class DashboardProperty extends StateProperty with PropertyMixin {
   void close() {
     super.close();
     Get.delete<PopupMenuController>(tag: "dashboardPopup");
+  }
+
+  @override
+  void init() {
+    super.init();
   }
 }
 

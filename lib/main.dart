@@ -1,7 +1,6 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart' hide MenuItem;
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
@@ -23,21 +22,31 @@ import 'package:ventes/app/api/services/user_service.dart';
 import 'package:ventes/app/resources/views/splash_screen.dart';
 import 'package:ventes/app/states/controllers/keyboard_state_controller.dart';
 import 'package:ventes/constants/regular_color.dart';
-import 'package:ventes/firebase_options.dart';
 import 'package:ventes/helpers/auth_helper.dart';
 import 'package:ventes/helpers/function_helpers.dart';
 import 'package:ventes/helpers/notification_helper.dart';
 import 'package:ventes/helpers/task_helper.dart';
 import 'package:ventes/routing/routes/routes.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'firebase_options.dart';
+
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp();
+
+  print("Handling a background message: ${message.messageId}");
+}
 
 void main() async {
   tz.initializeTimeZones();
 
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.android,
+    options: DefaultFirebaseOptions.currentPlatform,
   );
+
   FirebaseMessaging messaging = FirebaseMessaging.instance;
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
   NotificationSettings settings = await messaging.requestPermission(
     alert: true,
     announcement: false,
@@ -47,10 +56,18 @@ void main() async {
     provisional: false,
     sound: true,
   );
-  print('User Granted Permission: ${settings.authorizationStatus}');
-  FirebaseMessaging.onMessage.listen((event) {
-    print("message: data => ${event.data}");
+
+  print('User granted permission: ${settings.authorizationStatus}');
+
+  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    print('Got a message whilst in the foreground!');
+    print('Message data: ${message.data}');
+
+    if (message.notification != null) {
+      print('Message also contained a notification: ${message.notification}');
+    }
   });
+  await FirebaseMessaging.instance.subscribeToTopic('round');
 
   runApp(const MyApp());
   Intl.defaultLocale = 'en_ID';

@@ -37,6 +37,13 @@
             {
               "client_id": "334711722504-oqbnaa60krd5q14grr9ca1in6jdsv55o.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "334711722504-bhfjbq9k4ke0vf2gg1dd0ecbejrq0jag.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.ventes"
+              }
             }
           ]
         }

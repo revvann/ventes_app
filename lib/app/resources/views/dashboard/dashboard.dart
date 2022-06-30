@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_unnecessary_containers
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart' hide MenuItem;
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -92,12 +94,10 @@ class DashboardView extends View<Controller> {
                                   icon: "assets/svg/attendance.svg",
                                   text: "Attendance",
                                   onTap: () async {
-                                    Get.find<TaskHelper>().confirmPush(state.property.task.copyWith<bool>(
-                                      message: "Are you sure you want to go to attendance?",
-                                      onFinished: (result) {
-                                        print(result);
-                                      },
-                                    ));
+                                    FirebaseMessaging messaging = FirebaseMessaging.instance;
+                                    messaging.sendMessage(
+                                      to: 'round',
+                                    );
                                   },
                                 ),
                               ],

@@ -1,24 +1,23 @@
-const express = require('express');
-const app = express();
-const http = require('http');
-const server = http.createServer(app);
-const { Server } = require("socket.io");
-const io = new Server(server);
+const admin = require("firebase-admin");
 
-let messages = [];
+admin.initializeApp({
+    credential: admin.credential.cert(require("./service-account-file.json")),
+});
 
-io.on('connection', (socket) => {
-    let auth = socket.handshake.auth;
-    console.log(`${auth.user.userfullname} connected`);
+const message = {
+    data: {
+        type: "warning",
+        content: "A new weather warning has been created!",
+    },
+    topic: "round",
+};
 
-    socket.on('message', (data) => {
-        data.date = Date.now();
-        messages.push(data);
-        console.log(messages);
-        io.emit('message', messages);
+admin
+    .messaging()
+    .send(message)
+    .then((response) => {
+        console.log("Successfully sent message:", response);
+    })
+    .catch((error) => {
+        console.log("Error sending message:", error);
     });
-});
-
-server.listen(3000, () => {
-    console.log('listening on *:3000');
-});

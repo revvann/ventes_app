@@ -15,7 +15,7 @@ class ChatRoomDataSource extends StateDataSource<ChatRoomPresenter> with DataSou
   UserDetail? get userDetail => userDetailHandler.value;
 
   UserDetail _userDetailSuccess(data) {
-    Get.find<TaskHelper>().successPush(Task(userDetailID, message: "you are connected", onFinished: (res) => property.connectSocket()));
+    Get.find<TaskHelper>().successPush(Task(userDetailID, message: "you are connected"));
     return UserDetail.fromJson(data);
   }
 
