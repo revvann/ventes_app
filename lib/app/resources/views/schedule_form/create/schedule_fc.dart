@@ -24,8 +24,8 @@ import 'package:ventes/app/states/typedefs/schedule_fc_typedef.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/constants/strings/schedule_string.dart';
+import 'package:ventes/constants/views.dart';
 import 'package:ventes/core/view/view.dart';
-import 'package:ventes/routing/navigators/schedule_navigator.dart';
 
 part 'package:ventes/app/resources/views/schedule_form/create/components/_addmember_checkbox.dart';
 part 'package:ventes/app/resources/views/schedule_form/create/components/_allday_checkbox.dart';
@@ -91,7 +91,7 @@ class ScheduleFormCreateView extends View<Controller> {
             ),
           ),
           onTap: () {
-            Get.back(id: ScheduleNavigator.id);
+            Get.back(id: Views.schedule.index);
           },
         ),
         actions: [

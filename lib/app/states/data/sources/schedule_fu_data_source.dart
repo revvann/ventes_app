@@ -9,12 +9,12 @@ import 'package:ventes/app/models/user_detail_model.dart';
 import 'package:ventes/app/states/controllers/daily_schedule_state_controller.dart';
 import 'package:ventes/app/states/typedefs/schedule_fu_typedef.dart';
 import 'package:ventes/constants/strings/schedule_string.dart';
+import 'package:ventes/constants/views.dart';
 import 'package:ventes/core/api/handler.dart';
 import 'package:ventes/core/states/state_data_source.dart';
 import 'package:ventes/helpers/auth_helper.dart';
 import 'package:ventes/helpers/function_helpers.dart';
 import 'package:ventes/helpers/task_helper.dart';
-import 'package:ventes/routing/navigators/schedule_navigator.dart';
 
 class ScheduleFormUpdateDataSource extends StateDataSource<ScheduleFormUpdatePresenter> with DataSourceMixin {
   final String typesID = 'typshdr';
@@ -74,7 +74,7 @@ class ScheduleFormUpdateDataSource extends StateDataSource<ScheduleFormUpdatePre
         message: ScheduleString.updateSuccess,
         onFinished: (res) {
           Get.find<DailyScheduleStateController>().refreshStates();
-          Get.back(id: ScheduleNavigator.id);
+          Get.back(id: Views.schedule.index);
         },
       ),
     );

@@ -5,8 +5,8 @@ import 'package:ventes/app/resources/views/prospect_form/create/prospect_fc.dart
 import 'package:ventes/app/resources/views/prospect_form/update/prospect_fu.dart';
 import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
 import 'package:ventes/app/states/typedefs/prospect_typedef.dart';
+import 'package:ventes/constants/views.dart';
 import 'package:ventes/core/states/state_listener.dart';
-import 'package:ventes/routing/navigators/prospect_navigator.dart';
 
 class ProspectListener extends StateListener with ListenerMixin {
   void onDateStartSelected(DateTime? value) {
@@ -24,7 +24,7 @@ class ProspectListener extends StateListener with ListenerMixin {
   void navigateToProspectUpdateForm(int id) {
     Get.toNamed(
       ProspectFormUpdateView.route,
-      id: ProspectNavigator.id,
+      id: Views.prospect.index,
       arguments: {
         'prospect': id,
       },
@@ -66,7 +66,7 @@ class ProspectListener extends StateListener with ListenerMixin {
   }
 
   void onAddButtonClicked() {
-    Get.toNamed(ProspectFormCreateView.route, id: ProspectNavigator.id);
+    Get.toNamed(ProspectFormCreateView.route, id: Views.prospect.index);
   }
 
   Future onFilterChanged() async {
@@ -77,7 +77,7 @@ class ProspectListener extends StateListener with ListenerMixin {
   void onProspectClicked() {
     Get.toNamed(
       ProspectDashboardView.route,
-      id: ProspectNavigator.id,
+      id: Views.prospect.index,
       arguments: {
         'prospect': property.selectedProspect?.prospectid,
       },

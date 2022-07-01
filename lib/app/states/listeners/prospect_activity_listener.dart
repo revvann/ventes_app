@@ -9,18 +9,16 @@ import 'package:ventes/constants/strings/prospect_string.dart';
 import 'package:ventes/constants/views.dart';
 import 'package:ventes/core/states/state_listener.dart';
 import 'package:ventes/helpers/task_helper.dart';
-import 'package:ventes/routing/navigators/prospect_navigator.dart';
-import 'package:ventes/routing/navigators/schedule_navigator.dart';
 
 class ProspectActivityListener extends StateListener with ListenerMixin {
   void goBack() {
-    Get.back(id: ProspectNavigator.id);
+    Get.back(id: Views.prospect.index);
   }
 
   void navigateToProspectActivityForm() {
     Get.toNamed(
       ProspectActivityFormCreateView.route,
-      id: ProspectNavigator.id,
+      id: Views.prospect.index,
       arguments: {
         'prospect': property.prospectId,
       },
@@ -34,7 +32,7 @@ class ProspectActivityListener extends StateListener with ListenerMixin {
       Get.find<BottomNavigationStateController>().currentIndex = Views.schedule;
       Get.toNamed(
         ScheduleFormCreateView.route,
-        id: ScheduleNavigator.id,
+        id: Views.schedule.index,
         arguments: {
           'refTypeId': refType.typeid,
           'refData': {
@@ -48,7 +46,7 @@ class ProspectActivityListener extends StateListener with ListenerMixin {
   void onProspectActivityClicked(int id) {
     Get.toNamed(
       ProspectActivityFormUpdateView.route,
-      id: ProspectNavigator.id,
+      id: Views.prospect.index,
       arguments: {
         'prospectactivity': id,
       },

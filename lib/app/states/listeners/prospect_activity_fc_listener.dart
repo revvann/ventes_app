@@ -2,17 +2,16 @@ import 'dart:async';
 
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:ventes/app/states/controllers/prospect_activity_state_controller.dart';
-import 'package:ventes/constants/strings/prospect_string.dart';
 import 'package:ventes/app/states/typedefs/prospect_activity_fc_typedef.dart';
+import 'package:ventes/constants/strings/prospect_string.dart';
+import 'package:ventes/constants/views.dart';
 import 'package:ventes/core/states/state_listener.dart';
 import 'package:ventes/helpers/task_helper.dart';
-import 'package:ventes/routing/navigators/prospect_navigator.dart';
 
 class ProspectActivityFormCreateListener extends StateListener with ListenerMixin {
   void goBack() {
     Get.back(
-      id: ProspectNavigator.id,
+      id: Views.prospect.index,
     );
   }
 

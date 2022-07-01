@@ -6,11 +6,11 @@ import 'package:ventes/app/models/type_model.dart';
 import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
 import 'package:ventes/app/states/controllers/prospect_activity_state_controller.dart';
 import 'package:ventes/app/states/typedefs/prospect_activity_fc_typedef.dart';
+import 'package:ventes/constants/views.dart';
 import 'package:ventes/core/api/handler.dart';
 import 'package:ventes/core/states/state_data_source.dart';
 import 'package:ventes/helpers/function_helpers.dart';
 import 'package:ventes/helpers/task_helper.dart';
-import 'package:ventes/routing/navigators/prospect_navigator.dart';
 
 class ProspectActivityFormCreateDataSource extends StateDataSource<ProspectActivityFormCreatePresenter> with DataSourceMixin {
   final String categoriesID = 'cathdr';
@@ -51,7 +51,7 @@ class ProspectActivityFormCreateDataSource extends StateDataSource<ProspectActiv
         message: message,
         onFinished: (res) {
           Get.find<ProspectActivityStateController>().refreshStates();
-          Get.back(id: ProspectNavigator.id);
+          Get.back(id: Views.prospect.index);
         },
       ),
     );

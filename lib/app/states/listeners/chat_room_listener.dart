@@ -1,11 +1,11 @@
 import 'package:get/get.dart';
 import 'package:ventes/app/states/typedefs/chat_room_typedef.dart';
+import 'package:ventes/constants/views.dart';
 import 'package:ventes/core/states/state_listener.dart';
-import 'package:ventes/routing/navigators/dashboard_navigator.dart';
 
 class ChatRoomListener extends StateListener with ListenerMixin {
   void goBack() {
-    Get.back(id: DashboardNavigator.id);
+    Get.back(id: Views.dashboard.index);
   }
 
   void onSocketConnect(data) {

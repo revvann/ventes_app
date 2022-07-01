@@ -32,7 +32,6 @@ import 'package:ventes/core/routing/page_route.dart';
 import 'package:ventes/core/view/view_navigator.dart';
 
 class ProspectNavigator extends ViewNavigator {
-  static const id = 4;
   ProspectNavigator({required GlobalKey<NavigatorState> navigatorKey}) : super(navigatorKey: navigatorKey);
 
   @override

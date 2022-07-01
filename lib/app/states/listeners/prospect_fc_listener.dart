@@ -4,12 +4,11 @@ import 'package:ventes/app/models/bp_customer_model.dart';
 import 'package:ventes/app/models/type_model.dart';
 import 'package:ventes/app/models/user_detail_model.dart';
 import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
-import 'package:ventes/app/states/controllers/prospect_state_controller.dart';
-import 'package:ventes/constants/strings/prospect_string.dart';
 import 'package:ventes/app/states/typedefs/prospect_fc_typedef.dart';
+import 'package:ventes/constants/strings/prospect_string.dart';
+import 'package:ventes/constants/views.dart';
 import 'package:ventes/core/states/state_listener.dart';
 import 'package:ventes/helpers/task_helper.dart';
-import 'package:ventes/routing/navigators/prospect_navigator.dart';
 
 class ProspectFormCreateListener extends StateListener with ListenerMixin {
   void onDateStartSelected(DateTime? value) {
@@ -106,7 +105,7 @@ class ProspectFormCreateListener extends StateListener with ListenerMixin {
   }
 
   void goBack() {
-    Get.back(id: ProspectNavigator.id);
+    Get.back(id: Views.prospect.index);
   }
 
   @override

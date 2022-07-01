@@ -14,7 +14,6 @@ import 'package:ventes/app/resources/views/schedule_form/create/schedule_fc.dart
 import 'package:ventes/core/view/view_navigator.dart';
 
 class ScheduleNavigator extends ViewNavigator {
-  static const id = 3;
   ScheduleNavigator({required GlobalKey<NavigatorState> navigatorKey}) : super(navigatorKey: navigatorKey);
   @override
   String get initialRoute => ScheduleView.route;

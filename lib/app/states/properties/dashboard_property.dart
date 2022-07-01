@@ -1,12 +1,11 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:ventes/app/resources/widgets/popup_button.dart';
+import 'package:ventes/app/states/typedefs/dashboard_typedef.dart';
 import 'package:ventes/constants/strings/dashboard_string.dart';
 import 'package:ventes/core/states/state_property.dart';
 import 'package:ventes/helpers/function_helpers.dart';
 import 'package:ventes/helpers/task_helper.dart';
-import 'package:ventes/app/states/typedefs/dashboard_typedef.dart';
 
 class DashboardProperty extends StateProperty with PropertyMixin {
   Position? position;

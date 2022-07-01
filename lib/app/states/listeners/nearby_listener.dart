@@ -10,10 +10,10 @@ import 'package:ventes/app/resources/views/customer_form/update/customer_fu.dart
 import 'package:ventes/app/states/properties/nearby_property.dart';
 import 'package:ventes/app/states/typedefs/nearby_typedef.dart';
 import 'package:ventes/constants/strings/nearby_string.dart';
+import 'package:ventes/constants/views.dart';
 import 'package:ventes/core/states/state_listener.dart';
 import 'package:ventes/helpers/function_helpers.dart';
 import 'package:ventes/helpers/task_helper.dart';
-import 'package:ventes/routing/navigators/nearby_navigator.dart';
 
 class NearbyListener extends StateListener with ListenerMixin {
   void onMapControllerCreated(GoogleMapController controller) {
@@ -65,7 +65,7 @@ class NearbyListener extends StateListener with ListenerMixin {
       if (radius < 100) {
         Get.toNamed(
           CustomerFormCreateView.route,
-          id: NearbyNavigator.id,
+          id: Views.nearby.index,
           arguments: {
             'latitude': property.markers.first.position.latitude,
             'longitude': property.markers.first.position.longitude,
@@ -89,7 +89,7 @@ class NearbyListener extends StateListener with ListenerMixin {
       if (radius < 100) {
         Get.toNamed(
           CustomerFormUpdateView.route,
-          id: NearbyNavigator.id,
+          id: Views.nearby.index,
           arguments: {
             'bpcustomer': bpcustomer.sbcid,
           },

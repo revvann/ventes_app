@@ -1,6 +1,5 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_unnecessary_containers
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart' hide MenuItem;
 import 'package:flutter_svg/flutter_svg.dart';
@@ -23,8 +22,6 @@ import 'package:ventes/constants/styles/behavior_style.dart';
 import 'package:ventes/constants/views.dart';
 import 'package:ventes/core/view/view.dart';
 import 'package:ventes/helpers/function_helpers.dart';
-import 'package:ventes/helpers/task_helper.dart';
-import 'package:ventes/routing/navigators/dashboard_navigator.dart';
 
 part 'package:ventes/app/resources/views/dashboard/components/_appbar.dart';
 part 'package:ventes/app/resources/views/dashboard/components/_menu_item.dart';
@@ -111,7 +108,7 @@ class DashboardView extends View<Controller> {
                                   color: RegularColor.pink,
                                   icon: "assets/svg/chat.svg",
                                   text: "Chat",
-                                  onTap: () => Get.toNamed(ChatHomeView.route, id: DashboardNavigator.id),
+                                  onTap: () => Get.toNamed(ChatHomeView.route, id: Views.dashboard.index),
                                 ),
                                 SizedBox(
                                   width: RegularSize.s,

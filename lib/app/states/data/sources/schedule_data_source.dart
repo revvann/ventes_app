@@ -70,16 +70,4 @@ class ScheduleDataSource extends StateDataSource<SchedulePresenter> with DataSou
 
   @override
   SchedulePresenter presenterBuilder() => SchedulePresenter();
-
-  @override
-  onLoadFailed(String message) {}
-
-  @override
-  onLoadSuccess(Map data) {}
-
-  @override
-  onLoadError(String message) {}
-
-  @override
-  onLoadComplete() {}
 }

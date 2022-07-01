@@ -8,7 +8,6 @@ import 'package:ventes/core/routing/page_route.dart';
 import 'package:ventes/core/view/view_navigator.dart';
 
 class ProfileNavigator extends ViewNavigator {
-  static const id = 5;
   ProfileNavigator({required GlobalKey<NavigatorState> navigatorKey}) : super(navigatorKey: navigatorKey);
 
   @override

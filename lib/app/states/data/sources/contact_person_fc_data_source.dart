@@ -3,13 +3,13 @@ import 'package:ventes/app/api/presenters/contact_person_fc_presenter.dart';
 import 'package:ventes/app/models/customer_model.dart';
 import 'package:ventes/app/models/type_model.dart';
 import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
+import 'package:ventes/app/states/controllers/contact_person_state_controller.dart';
+import 'package:ventes/app/states/typedefs/contact_person_fc_typedef.dart';
+import 'package:ventes/constants/views.dart';
 import 'package:ventes/core/api/handler.dart';
 import 'package:ventes/core/states/state_data_source.dart';
 import 'package:ventes/helpers/function_helpers.dart';
 import 'package:ventes/helpers/task_helper.dart';
-import 'package:ventes/app/states/typedefs/contact_person_fc_typedef.dart';
-import 'package:ventes/routing/navigators/prospect_navigator.dart';
-import 'package:ventes/app/states/controllers/contact_person_state_controller.dart';
 
 class ContactPersonFormCreateDataSource extends StateDataSource<ContactPersonFormCreatePresenter> with DataSourceMixin {
   final String typesID = 'typeshdr';
@@ -32,7 +32,7 @@ class ContactPersonFormCreateDataSource extends StateDataSource<ContactPersonFor
   void _createSuccess(message) {
     Get.find<TaskHelper>().successPush(Task(createID, message: message, onFinished: (res) {
       Get.find<ContactPersonStateController>().property.refresh();
-      Get.back(id: ProspectNavigator.id);
+      Get.back(id: Views.prospect.index);
     }));
   }
 

@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart' hide MenuItem;
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
@@ -19,35 +20,46 @@ import 'package:ventes/app/api/services/prospect_service.dart';
 import 'package:ventes/app/api/services/schedule_service.dart';
 import 'package:ventes/app/api/services/type_service.dart';
 import 'package:ventes/app/api/services/user_service.dart';
+import 'package:ventes/app/resources/views/dashboard/dashboard.dart';
+import 'package:ventes/app/resources/views/nearby/nearby.dart';
 import 'package:ventes/app/resources/views/splash_screen.dart';
 import 'package:ventes/app/states/controllers/keyboard_state_controller.dart';
 import 'package:ventes/constants/regular_color.dart';
+import 'package:ventes/constants/views.dart';
 import 'package:ventes/helpers/auth_helper.dart';
 import 'package:ventes/helpers/function_helpers.dart';
 import 'package:ventes/helpers/notification_helper.dart';
 import 'package:ventes/helpers/task_helper.dart';
+import 'package:ventes/routing/route_pack.dart';
 import 'package:ventes/routing/routes/routes.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
+
 import 'firebase_options.dart';
 
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  await Firebase.initializeApp();
-
-  print("Handling a background message: ${message.messageId}");
+Future<void> backgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 }
 
-void main() async {
-  tz.initializeTimeZones();
+void goToViewFromNotification(RemoteMessage message) {
+  int menu = int.parse(message.data['menu']);
+  String route = message.data['route'];
+  Map<String, dynamic>? arguments = message.data['arguments'];
+  Get.find<Rx<RoutePack>>().value = RoutePack(Views.values[menu], route, arguments: arguments);
+}
 
+Future initFirebase() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  FirebaseMessaging.onBackgroundMessage(backgroundHandler);
+  FirebaseMessaging.onMessageOpenedApp.listen(goToViewFromNotification);
 
-  FirebaseMessaging messaging = FirebaseMessaging.instance;
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-
-  NotificationSettings settings = await messaging.requestPermission(
+  await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+    alert: true,
+    badge: true,
+    sound: true,
+  );
+  await FirebaseMessaging.instance.requestPermission(
     alert: true,
     announcement: false,
     badge: true,
@@ -57,22 +69,15 @@ void main() async {
     sound: true,
   );
 
-  print('User granted permission: ${settings.authorizationStatus}');
-
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-    print('Got a message whilst in the foreground!');
-    print('Message data: ${message.data}');
-
-    if (message.notification != null) {
-      print('Message also contained a notification: ${message.notification}');
-    }
+    Get.find<NotificationHelper>().showNotification(title: message.notification?.title, body: message.notification?.body);
   });
-  await FirebaseMessaging.instance.subscribeToTopic('round');
+}
 
-  runApp(const MyApp());
-  Intl.defaultLocale = 'en_ID';
+void initServices() {
   Get.lazyPut(() => AuthService(), fenix: true);
   Get.lazyPut(() => AuthService(), fenix: true);
+  Get.lazyPut(() => UserService(), fenix: true);
   Get.lazyPut(() => BpCustomerService(), fenix: true);
   Get.lazyPut(() => CustomerService(), fenix: true);
   Get.lazyPut(() => GmapsService(), fenix: true);
@@ -80,7 +85,6 @@ void main() async {
   Get.lazyPut(() => ProspectService(), fenix: true);
   Get.lazyPut(() => ScheduleService(), fenix: true);
   Get.lazyPut(() => TypeService(), fenix: true);
-  Get.lazyPut(() => UserService(), fenix: true);
   Get.lazyPut(() => ProspectActivityService(), fenix: true);
   Get.lazyPut(() => ProspectProductService(), fenix: true);
   Get.lazyPut(() => ContactPersonService(), fenix: true);
@@ -90,6 +94,19 @@ void main() async {
   Get.lazyPut(() => AuthHelper(), fenix: true);
   Get.lazyPut(() => NotificationHelper(), fenix: true);
   Get.lazyPut(() => TaskHelper(), fenix: true);
+}
+
+void main() async {
+  Rx<RoutePack> routePack = Rx<RoutePack>(RoutePack(Views.dashboard, DashboardView.route));
+  Get.put(routePack);
+
+  initServices();
+  tz.initializeTimeZones();
+
+  await initFirebase();
+
+  runApp(const MyApp());
+  Intl.defaultLocale = 'en_ID';
 }
 
 class MyApp extends StatelessWidget {

@@ -8,13 +8,13 @@ import 'package:image_picker/image_picker.dart';
 import 'package:ventes/app/states/properties/nearby_property.dart';
 import 'package:ventes/app/states/typedefs/customer_fu_typedef.dart';
 import 'package:ventes/constants/strings/nearby_string.dart';
+import 'package:ventes/constants/views.dart';
 import 'package:ventes/core/states/state_listener.dart';
 import 'package:ventes/helpers/task_helper.dart';
-import 'package:ventes/routing/navigators/nearby_navigator.dart';
 
 class CustomerFormUpdateListener extends StateListener with ListenerMixin {
   void goBack() {
-    Get.back(id: NearbyNavigator.id);
+    Get.back(id: Views.nearby.index);
   }
 
   void onTypeSelected(int type) {

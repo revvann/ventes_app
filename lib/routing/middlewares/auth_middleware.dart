@@ -2,11 +2,10 @@
 
 import 'package:flutter/material.dart' hide MenuItem;
 import 'package:get/get.dart';
-import 'package:ventes/helpers/auth_helper.dart';
 import 'package:ventes/app/resources/views/dashboard/dashboard.dart';
 import 'package:ventes/app/resources/views/signin/signin.dart';
 import 'package:ventes/app/resources/views/started_page.dart';
-import 'package:ventes/helpers/function_helpers.dart';
+import 'package:ventes/helpers/auth_helper.dart';
 
 class AuthMiddleware extends GetMiddleware {
   @override

@@ -5,7 +5,7 @@ select table_name,
     column_default,
     is_nullable
 from INFORMATION_SCHEMA.COLUMNS
-where table_name in ('stbpcustomer', 'mscustomer')
+where table_name in ('msuser')
 order by table_name,
     ordinal_position;
 -- select column_name,

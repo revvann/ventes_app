@@ -6,11 +6,22 @@ import 'package:get/get.dart';
 import 'package:timezone/timezone.dart';
 
 class NotificationHelper extends GetxController {
-  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+  late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+  late AndroidNotificationChannel channel;
 
   @override
-  void onInit() {
+  void onInit() async {
     super.onInit();
+    channel = AndroidNotificationChannel(
+      'ventes',
+      'High Importance Notifications',
+      description: 'This channel is used for important notifications.',
+      importance: Importance.high,
+    );
+    flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
+    await flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()?.createNotificationChannel(channel);
+
     AndroidInitializationSettings initializationSettingsAndroid = AndroidInitializationSettings('logo');
     var initSetttings = InitializationSettings(android: initializationSettingsAndroid);
     flutterLocalNotificationsPlugin.initialize(initSetttings, onSelectNotification: onSelectNotification);

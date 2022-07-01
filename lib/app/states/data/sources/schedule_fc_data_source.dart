@@ -7,14 +7,13 @@ import 'package:ventes/app/models/prospect_activity_model.dart';
 import 'package:ventes/app/models/prospect_model.dart';
 import 'package:ventes/app/models/type_model.dart';
 import 'package:ventes/app/models/user_detail_model.dart';
-import 'package:ventes/app/states/controllers/daily_schedule_state_controller.dart';
 import 'package:ventes/app/states/typedefs/schedule_fc_typedef.dart';
+import 'package:ventes/constants/views.dart';
 import 'package:ventes/core/api/handler.dart';
 import 'package:ventes/core/states/state_data_source.dart';
 import 'package:ventes/helpers/auth_helper.dart';
 import 'package:ventes/helpers/function_helpers.dart';
 import 'package:ventes/helpers/task_helper.dart';
-import 'package:ventes/routing/navigators/schedule_navigator.dart';
 
 class ScheduleFormCreateDataSource extends StateDataSource<ScheduleFormCreatePresenter> with DataSourceMixin {
   final String typesID = 'typshdr';
@@ -83,7 +82,7 @@ class ScheduleFormCreateDataSource extends StateDataSource<ScheduleFormCreatePre
         message: data,
         onFinished: (res) async {
           await property.scheduleNotification();
-          Get.back(id: ScheduleNavigator.id);
+          Get.back(id: Views.schedule.index);
         },
       ),
     );

@@ -6,20 +6,20 @@ import 'package:ventes/app/resources/views/schedule_form/create/schedule_fc.dart
 import 'package:ventes/app/resources/views/schedule_form/update/schedule_fu.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/strings/schedule_string.dart';
+import 'package:ventes/constants/views.dart';
 import 'package:ventes/core/states/state_listener.dart';
 import 'package:ventes/helpers/task_helper.dart';
-import 'package:ventes/routing/navigators/schedule_navigator.dart';
 import 'package:ventes/app/states/typedefs/daily_schedule_typedef.dart';
 
 class DailyScheduleListener extends StateListener with ListenerMixin {
   void onArrowBackClick() {
-    Get.back(id: ScheduleNavigator.id);
+    Get.back(id: Views.schedule.index);
   }
 
   void onAddButtonClick() {
     Get.toNamed(
       ScheduleFormCreateView.route,
-      id: ScheduleNavigator.id,
+      id: Views.schedule.index,
       arguments: {
         'startDate': property.date,
       },
@@ -40,7 +40,7 @@ class DailyScheduleListener extends StateListener with ListenerMixin {
 
   void onEditButtonClick() {
     property.popupMenuController.toggleDropdown(close: true);
-    Get.toNamed(ScheduleFormUpdateView.route, id: ScheduleNavigator.id, arguments: {
+    Get.toNamed(ScheduleFormUpdateView.route, id: Views.schedule.index, arguments: {
       'scheduleId': property.selectedAppointment?.scheid,
     });
   }

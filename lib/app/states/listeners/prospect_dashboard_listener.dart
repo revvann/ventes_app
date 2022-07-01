@@ -1,12 +1,12 @@
 import 'package:get/get.dart';
 import 'package:ventes/app/resources/views/contact/contact.dart';
 import 'package:ventes/app/resources/views/product/product.dart';
-import 'package:ventes/app/resources/views/prospect_assign/prospect_assign.dart';
 import 'package:ventes/app/resources/views/prospect_activity/prospect_activity.dart';
+import 'package:ventes/app/resources/views/prospect_assign/prospect_assign.dart';
 import 'package:ventes/app/resources/views/prospect_form/update/prospect_fu.dart';
 import 'package:ventes/app/states/typedefs/prospect_dashboard_typedef.dart';
+import 'package:ventes/constants/views.dart';
 import 'package:ventes/core/states/state_listener.dart';
-import 'package:ventes/routing/navigators/prospect_navigator.dart';
 
 class ProspectDashboardListener extends StateListener with ListenerMixin {
   @override
@@ -21,7 +21,7 @@ class ProspectDashboardListener extends StateListener with ListenerMixin {
     await property.menuController.toggleDropdown(close: true);
     Get.toNamed(
       ProspectAssignView.route,
-      id: ProspectNavigator.id,
+      id: Views.prospect.index,
       arguments: {
         'prospect': property.prospectid,
       },
@@ -32,7 +32,7 @@ class ProspectDashboardListener extends StateListener with ListenerMixin {
     await property.menuController.toggleDropdown(close: true);
     Get.toNamed(
       ProductView.route,
-      id: ProspectNavigator.id,
+      id: Views.prospect.index,
       arguments: {
         'prospect': property.prospectid,
       },
@@ -41,7 +41,7 @@ class ProspectDashboardListener extends StateListener with ListenerMixin {
 
   void navigateToContactPerson() async {
     await property.menuController.toggleDropdown(close: true);
-    Get.toNamed(ContactPersonView.route, id: ProspectNavigator.id, arguments: {
+    Get.toNamed(ContactPersonView.route, id: Views.prospect.index, arguments: {
       'customer': dataSource.prospect?.prospectcust?.sbccstmid,
     });
   }
@@ -50,7 +50,7 @@ class ProspectDashboardListener extends StateListener with ListenerMixin {
     await property.menuController.toggleDropdown(close: true);
     Get.toNamed(
       ProspectActivityView.route,
-      id: ProspectNavigator.id,
+      id: Views.prospect.index,
       arguments: {
         'prospect': property.prospectid,
       },
@@ -60,7 +60,7 @@ class ProspectDashboardListener extends StateListener with ListenerMixin {
   void navigateToProspectUpdateForm() {
     Get.toNamed(
       ProspectFormUpdateView.route,
-      id: ProspectNavigator.id,
+      id: Views.prospect.index,
       arguments: {
         'prospect': property.prospectid,
       },
@@ -68,6 +68,6 @@ class ProspectDashboardListener extends StateListener with ListenerMixin {
   }
 
   void goBack() {
-    Get.back(id: ProspectNavigator.id);
+    Get.back(id: Views.prospect.index);
   }
 }

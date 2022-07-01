@@ -10,7 +10,6 @@ import 'package:ventes/app/resources/widgets/editor_input.dart';
 import 'package:ventes/app/resources/widgets/icon_input.dart';
 import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
 import 'package:ventes/app/resources/widgets/keyable_selectbar.dart';
-import 'package:ventes/app/resources/widgets/regular_button.dart';
 import 'package:ventes/app/resources/widgets/regular_date_picker.dart';
 import 'package:ventes/app/resources/widgets/regular_input.dart';
 import 'package:ventes/app/resources/widgets/top_navigation.dart';
@@ -22,9 +21,9 @@ import 'package:ventes/constants/strings/prospect_string.dart';
 import 'package:ventes/core/view/view.dart';
 
 part 'package:ventes/app/resources/views/prospect_activity_form/create/components/_category_selectbar.dart';
-part 'package:ventes/app/resources/views/prospect_activity_form/create/components/_type_dropdown.dart';
 part 'package:ventes/app/resources/views/prospect_activity_form/create/components/_date_picker.dart';
 part 'package:ventes/app/resources/views/prospect_activity_form/create/components/_map_preview.dart';
+part 'package:ventes/app/resources/views/prospect_activity_form/create/components/_type_dropdown.dart';
 
 class ProspectActivityFormCreateView extends View<Controller> {
   static const String route = "/prospect/detail/create";

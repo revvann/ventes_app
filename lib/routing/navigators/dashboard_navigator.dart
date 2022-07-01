@@ -12,7 +12,6 @@ import 'package:ventes/app/resources/views/dashboard/dashboard.dart';
 import 'package:ventes/core/view/view_navigator.dart';
 
 class DashboardNavigator extends ViewNavigator {
-  static int get id => 1;
   DashboardNavigator({required GlobalKey<NavigatorState> navigatorKey})
       : super(
           navigatorKey: navigatorKey,

@@ -12,7 +12,6 @@ import 'package:ventes/app/resources/views/nearby/nearby.dart';
 import 'package:ventes/core/view/view_navigator.dart';
 
 class NearbyNavigator extends ViewNavigator {
-  static const id = 2;
   NearbyNavigator({required GlobalKey<NavigatorState> navigatorKey}) : super(navigatorKey: navigatorKey);
 
   @override

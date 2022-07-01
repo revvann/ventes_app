@@ -13,13 +13,13 @@ import 'package:ventes/app/models/subdistrict_model.dart';
 import 'package:ventes/app/models/type_model.dart';
 import 'package:ventes/app/models/user_detail_model.dart';
 import 'package:ventes/app/states/controllers/nearby_state_controller.dart';
+import 'package:ventes/app/states/typedefs/customer_fc_typedef.dart';
+import 'package:ventes/constants/views.dart';
 import 'package:ventes/core/api/fetcher.dart';
 import 'package:ventes/core/api/handler.dart';
 import 'package:ventes/core/states/state_data_source.dart';
 import 'package:ventes/helpers/function_helpers.dart';
-import 'package:ventes/app/states/typedefs/customer_fc_typedef.dart';
 import 'package:ventes/helpers/task_helper.dart';
-import 'package:ventes/routing/navigators/nearby_navigator.dart';
 
 class CustomerFormCreateDataSource extends StateDataSource<CustomerFormCreatePresenter> with DataSourceMixin {
   final String userID = "usrhdr";
@@ -243,7 +243,7 @@ class CustomerFormCreateDataSource extends StateDataSource<CustomerFormCreatePre
         message: data,
         onFinished: (res) {
           Get.find<NearbyStateController>().refreshStates();
-          Get.back(id: NearbyNavigator.id);
+          Get.back(id: Views.nearby.index);
         },
       ),
     );
