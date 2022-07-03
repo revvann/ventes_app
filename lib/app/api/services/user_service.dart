@@ -18,4 +18,11 @@ class UserService extends Service {
       'userfcmtoken': token,
     });
   }
+
+  Future<Response> setSocketId(String? socketid) async {
+    int? id = Get.find<AuthHelper>().userId.val;
+    return await update(id!, {
+      'usersocketid': socketid,
+    });
+  }
 }
