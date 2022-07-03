@@ -304,7 +304,7 @@ class Utils {
     Map<String, dynamic> options = optionsBuilder.build();
 
     Socket socket = io(RegularString.chatServer, options);
-    socket.onConnect(onSocketConnect);
+    socket.onConnect((data) => onSocketConnect(data, socket.id));
     socket.onConnectError(onSocketConnectError);
     socket.onDisconnect(onSocketDisconnect);
 
@@ -312,9 +312,8 @@ class Utils {
     Get.lazyPut<Socket>(() => socket, fenix: true);
   }
 
-  static void onSocketConnect(data) {
-    print("Socket");
-    print(data.runtimeType);
+  static void onSocketConnect(data, socketid) {
+    Get.find<UserService>().setSocketId(socketid);
   }
 
   static void onSocketConnectError(data) {
