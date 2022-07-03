@@ -1,7 +1,7 @@
 import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/material.dart' hide MenuItem;
 import 'package:get/get.dart';
-import 'package:ventes/app/models/type_model.dart';
+import 'package:ventes/app/api/models/type_model.dart';
 import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
 import 'package:ventes/app/resources/widgets/searchable_dropdown.dart';
 import 'package:ventes/constants/strings/prospect_string.dart';

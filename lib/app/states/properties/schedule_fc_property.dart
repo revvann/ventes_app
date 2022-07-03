@@ -10,7 +10,7 @@ import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/constants/strings/schedule_string.dart';
 import 'package:ventes/app/states/typedefs/schedule_fc_typedef.dart';
 import 'package:ventes/core/states/state_property.dart';
-import 'package:ventes/helpers/function_helpers.dart';
+import 'package:ventes/utils/utils.dart';
 import 'package:ventes/helpers/notification_helper.dart';
 import 'package:ventes/helpers/task_helper.dart';
 
@@ -61,7 +61,7 @@ class ScheduleFormCreateProperty extends StateProperty with PropertyMixin {
   }
 
   void refresh() async {
-    Position pos = await getCurrentPosition();
+    Position pos = await Utils.getCurrentPosition();
     mapsController.future.then((controller) {
       controller.animateCamera(
         CameraUpdate.newLatLng(LatLng(pos.latitude, pos.longitude)),

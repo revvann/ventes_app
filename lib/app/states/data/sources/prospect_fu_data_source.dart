@@ -1,16 +1,16 @@
 import 'package:get/get.dart';
 import 'package:ventes/app/api/presenters/prospect_fu_presenter.dart';
-import 'package:ventes/app/models/bp_customer_model.dart';
-import 'package:ventes/app/models/prospect_model.dart';
-import 'package:ventes/app/models/type_model.dart';
-import 'package:ventes/app/models/user_detail_model.dart';
+import 'package:ventes/app/api/models/bp_customer_model.dart';
+import 'package:ventes/app/api/models/prospect_model.dart';
+import 'package:ventes/app/api/models/type_model.dart';
+import 'package:ventes/app/api/models/user_detail_model.dart';
 import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
 import 'package:ventes/app/states/controllers/prospect_state_controller.dart';
 import 'package:ventes/app/states/typedefs/prospect_fu_typedef.dart';
 import 'package:ventes/constants/views.dart';
 import 'package:ventes/core/api/handler.dart';
 import 'package:ventes/core/states/state_data_source.dart';
-import 'package:ventes/helpers/function_helpers.dart';
+import 'package:ventes/utils/utils.dart';
 import 'package:ventes/helpers/task_helper.dart';
 
 class ProspectFormUpdateDataSource extends StateDataSource<ProspectFormUpdatePresenter> with DataSourceMixin {
@@ -58,9 +58,9 @@ class ProspectFormUpdateDataSource extends StateDataSource<ProspectFormUpdatePre
   @override
   void init() {
     super.init();
-    stagesHandler = createDataHandler(stagesID, presenter.fetchStage, [], _stagesSuccess);
-    statusesHandler = createDataHandler(statusesID, presenter.fetchStatuses, [], _statusesSuccess);
-    prospectHandler = createDataHandler(prospectID, presenter.fetchProspect, null, Prospect.fromJson, onComplete: () => formSource.prepareFormValues());
+    stagesHandler = Utils.createDataHandler(stagesID, presenter.fetchStage, [], _stagesSuccess);
+    statusesHandler = Utils.createDataHandler(statusesID, presenter.fetchStatuses, [], _statusesSuccess);
+    prospectHandler = Utils.createDataHandler(prospectID, presenter.fetchProspect, null, Prospect.fromJson, onComplete: () => formSource.prepareFormValues());
     updateHandler = DataHandler(
       updateID,
       fetcher: presenter.update,

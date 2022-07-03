@@ -4,15 +4,15 @@ import 'dart:convert';
 import 'package:flutter/material.dart' hide MenuItem;
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:get/get.dart';
-import 'package:ventes/app/models/prospect_activity_model.dart';
-import 'package:ventes/app/models/schedule_guest_model.dart';
-import 'package:ventes/app/models/user_detail_model.dart';
+import 'package:ventes/app/api/models/prospect_activity_model.dart';
+import 'package:ventes/app/api/models/schedule_guest_model.dart';
+import 'package:ventes/app/api/models/user_detail_model.dart';
 import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
 import 'package:ventes/app/resources/widgets/regular_dropdown.dart';
 import 'package:ventes/app/resources/widgets/searchable_dropdown.dart';
 import 'package:ventes/app/states/typedefs/schedule_fc_typedef.dart';
 import 'package:ventes/core/states/state_form_source.dart';
-import 'package:ventes/helpers/function_helpers.dart';
+import 'package:ventes/utils/utils.dart';
 
 class ScheduleFormCreateFormSource extends StateFormSource with FormSourceMixin {
   Validator validator = Validator();
@@ -70,7 +70,7 @@ class ScheduleFormCreateFormSource extends StateFormSource with FormSourceMixin 
   DateTime get schestartdate => _schestartdate.value;
   set schestartdate(DateTime? value) {
     if (value != null) {
-      schestartdateTEC.text = formatDate(value);
+      schestartdateTEC.text = Utils.formatDate(value);
       _schestartdate.value = value;
     }
   }
@@ -79,7 +79,7 @@ class ScheduleFormCreateFormSource extends StateFormSource with FormSourceMixin 
   set scheenddate(DateTime? value) {
     if (value != null) {
       _scheenddate.value = value;
-      scheenddateTEC.text = formatDate(value);
+      scheenddateTEC.text = Utils.formatDate(value);
     }
   }
 
@@ -89,7 +89,7 @@ class ScheduleFormCreateFormSource extends StateFormSource with FormSourceMixin 
       schestarttimeDC.value = null;
       _schestarttime.value = null;
     } else {
-      schestarttimeDC.value = formatTime(value);
+      schestarttimeDC.value = Utils.formatTime(value);
       _schestarttime.value = value;
     }
   }
@@ -103,8 +103,8 @@ class ScheduleFormCreateFormSource extends StateFormSource with FormSourceMixin 
     if (value == null) {
       scheendtimeDC.value = null;
     } else {
-      scheendtimeDC.items = createTimeList(value.hour, value.minute);
-      scheendtimeDC.value = formatTime(value);
+      scheendtimeDC.items = Utils.createTimeList(value.hour, value.minute);
+      scheendtimeDC.value = Utils.formatTime(value);
     }
     _scheendtime.value = value;
   }
@@ -268,8 +268,8 @@ class ScheduleFormCreateFormSource extends StateFormSource with FormSourceMixin 
 
   void setStartTimeList() {
     DateTime date = schestartdate;
-    schestarttimeDC.items = createTimeList();
-    scheendtimeDC.items = createTimeList(date.hour, date.minute);
+    schestarttimeDC.items = Utils.createTimeList();
+    scheendtimeDC.items = Utils.createTimeList(date.hour, date.minute);
     schestarttimeDC.value = schestarttimeDC.items.first['value'];
     scheendtimeDC.value = scheendtimeDC.items.first['value'];
 
@@ -323,7 +323,7 @@ class ScheduleFormCreateFormSource extends StateFormSource with FormSourceMixin 
     towardDropdownController.selectedKeys = userDefault != null ? [userDefault!] : [];
     schetoward = userDefault;
 
-    timezones = getTimezoneList().map<KeyableDropdownItem<String, String>>((e) => KeyableDropdownItem<String, String>(key: e['value']!, value: e['text']!)).toList();
+    timezones = Utils.getTimezoneList().map<KeyableDropdownItem<String, String>>((e) => KeyableDropdownItem<String, String>(key: e['value']!, value: e['text']!)).toList();
     String currentTimeZone = await FlutterNativeTimezone.getLocalTimezone();
     timezoneDropdownController.selectedKeys = [currentTimeZone];
     schetz = currentTimeZone;
@@ -335,10 +335,10 @@ class ScheduleFormCreateFormSource extends StateFormSource with FormSourceMixin 
       "schenm": schenm,
       "schereftypeid": schereftypeid,
       "scherefid": scherefid,
-      "schestartdate": formatDate(schestartdate),
-      "scheenddate": isEvent ? formatDate(scheenddate) : null,
-      "schestarttime": _schestarttime.value != null ? formatTime(_schestarttime.value!) : null,
-      "scheendtime": isEvent ? (_scheendtime.value != null ? formatTime(_scheendtime.value!) : null) : null,
+      "schestartdate": Utils.formatDate(schestartdate),
+      "scheenddate": isEvent ? Utils.formatDate(scheenddate) : null,
+      "schestarttime": _schestarttime.value != null ? Utils.formatTime(_schestarttime.value!) : null,
+      "scheendtime": isEvent ? (_scheendtime.value != null ? Utils.formatTime(_scheendtime.value!) : null) : null,
       "scheloc": isEvent ? scheloc : null,
       "scheremind": isEvent ? scheremind : null,
       "schedesc": !isReminder ? schedesc : null,
@@ -361,7 +361,7 @@ class ScheduleFormCreateFormSource extends StateFormSource with FormSourceMixin 
         if (dataSource.refType?.typename == "Prospect Activity") {
           reference = ProspectActivity.fromJson(property.refData!);
           ProspectActivity prospectActivity = reference as ProspectActivity;
-          prospectActivity.prospectactivitydate = dbFormatDate(schestartdate);
+          prospectActivity.prospectactivitydate = Utils.dbDateFormat(schestartdate);
 
           dataSource.createActivityRefHandler.fetcher.run(prospectActivity.toJson());
         }

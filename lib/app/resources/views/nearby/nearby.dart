@@ -5,8 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:ventes/app/models/customer_model.dart';
-import 'package:ventes/app/models/maps_loc.dart';
+import 'package:ventes/app/api/models/customer_model.dart';
+import 'package:ventes/app/api/models/maps_loc.dart';
 import 'package:ventes/app/resources/widgets/handler_container.dart';
 import 'package:ventes/app/resources/widgets/icon_input.dart';
 import 'package:ventes/app/resources/widgets/pop_up_item.dart';
@@ -18,7 +18,7 @@ import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/constants/strings/nearby_string.dart';
 import 'package:ventes/core/view/view.dart';
-import 'package:ventes/helpers/function_helpers.dart';
+import 'package:ventes/utils/utils.dart';
 
 part 'package:ventes/app/resources/views/nearby/components/_app_bar_menu.dart';
 part 'package:ventes/app/resources/views/nearby/components/customer_list.dart';
@@ -49,7 +49,7 @@ class NearbyView extends View<Controller> {
               color: Colors.white,
             ),
           ),
-          onTap: backToDashboard,
+          onTap: Utils.backToDashboard,
         ),
         actions: [
           _AppBarMenu(),

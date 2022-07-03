@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:ventes/app/models/type_model.dart';
+import 'package:ventes/app/api/models/type_model.dart';
 import 'package:ventes/app/resources/views/prospect_dashboard/prospect_dashboard.dart';
 import 'package:ventes/app/resources/views/prospect_form/create/prospect_fc.dart';
 import 'package:ventes/app/resources/views/prospect_form/update/prospect_fu.dart';

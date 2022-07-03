@@ -9,7 +9,7 @@ class _DetailDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String formattedDate = date != null ? formatDate(dbParseDate(date!)) : "";
+    String formattedDate = date != null ? Utils.formatDate(Utils.dbParseDate(date!)) : "";
 
     return Column(
       mainAxisSize: MainAxisSize.min,

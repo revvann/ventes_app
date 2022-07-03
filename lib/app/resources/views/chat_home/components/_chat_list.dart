@@ -20,7 +20,7 @@ class _ChatList extends StatelessWidget {
         itemBuilder: (_, index) {
           UserDetail user = users[index];
           return GestureDetector(
-            onTap: state.listener.navigateToRoom,
+            onTap: () => state.listener.navigateToRoom(user.userid),
             child: _ChatItem(name: user.user?.userfullname ?? "Unknown"),
           );
         },

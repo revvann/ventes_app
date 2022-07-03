@@ -1,13 +1,13 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart' hide MenuItem;
-import 'package:ventes/app/models/schedule_guest_model.dart';
-import 'package:ventes/app/models/schedule_model.dart';
-import 'package:ventes/app/models/type_model.dart';
+import 'package:ventes/app/api/models/schedule_guest_model.dart';
+import 'package:ventes/app/api/models/schedule_model.dart';
+import 'package:ventes/app/api/models/type_model.dart';
 import 'package:ventes/constants/gestures/copy_gesture_recognizer.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
-import 'package:ventes/helpers/function_helpers.dart';
+import 'package:ventes/utils/utils.dart';
 
 class ScheduleDetail extends StatelessWidget {
   Schedule schedule;
@@ -22,10 +22,10 @@ class ScheduleDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String formattedStartDate = startDate != null ? formatDate(dbParseDate(startDate!)) : "";
-    String formattedEndDate = endDate != null ? formatDate(dbParseDate(endDate!)) : "";
-    String formattedStartTime = startTime != null ? formatTime(parseTime(startTime!)) : "";
-    String formattedEndTime = endTime != null ? formatTime(parseTime(endTime!)) : "";
+    String formattedStartDate = startDate != null ? Utils.formatDate(Utils.dbParseDate(startDate!)) : "";
+    String formattedEndDate = endDate != null ? Utils.formatDate(Utils.dbParseDate(endDate!)) : "";
+    String formattedStartTime = startTime != null ? Utils.formatTime(Utils.parseTime(startTime!)) : "";
+    String formattedEndTime = endTime != null ? Utils.formatTime(Utils.parseTime(endTime!)) : "";
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -382,7 +382,7 @@ class _GuestListItem extends StatelessWidget {
             height: 40,
             alignment: Alignment.center,
             child: Text(
-              getInitials(guest?.scheuser?.userfullname ?? ""),
+              Utils.getInitials(guest?.scheuser?.userfullname ?? ""),
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,

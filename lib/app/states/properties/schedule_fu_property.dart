@@ -10,7 +10,7 @@ import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/constants/strings/schedule_string.dart';
 import 'package:ventes/app/states/typedefs/schedule_fu_typedef.dart';
 import 'package:ventes/core/states/state_property.dart';
-import 'package:ventes/helpers/function_helpers.dart';
+import 'package:ventes/utils/utils.dart';
 import 'package:ventes/helpers/task_helper.dart';
 
 class ScheduleFormUpdateProperty extends StateProperty with PropertyMixin {
@@ -108,7 +108,7 @@ class ScheduleFormUpdateProperty extends StateProperty with PropertyMixin {
   @override
   void ready() async {
     super.ready();
-    Position pos = await getCurrentPosition();
+    Position pos = await Utils.getCurrentPosition();
     GoogleMapController controller = await mapsController.future;
     controller.animateCamera(
       CameraUpdate.newLatLng(LatLng(pos.latitude, pos.longitude)),

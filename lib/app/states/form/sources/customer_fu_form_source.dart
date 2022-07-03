@@ -7,7 +7,7 @@ import 'package:path/path.dart' as path;
 import 'package:ventes/app/states/typedefs/customer_fu_typedef.dart';
 import 'package:ventes/constants/strings/nearby_string.dart';
 import 'package:ventes/core/states/update_form_source.dart';
-import 'package:ventes/helpers/function_helpers.dart';
+import 'package:ventes/utils/utils.dart';
 import 'package:ventes/helpers/task_helper.dart';
 
 class CustomerFormUpdateFormSource extends UpdateFormSource with FormSourceMixin {
@@ -99,7 +99,7 @@ class CustomerFormUpdateFormSource extends UpdateFormSource with FormSourceMixin
     double newLng = double.tryParse(cstmlongitude) ?? 0.0;
     LatLng newPos = LatLng(newLat, newLng);
 
-    double radius = calculateDistance(property.markers.first.position, newPos);
+    double radius = Utils.calculateDistance(property.markers.first.position, newPos);
     bool inRange = radius <= 100;
 
     if (isValid && inRange) {

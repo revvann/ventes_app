@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart' hide MenuItem;
 import 'package:get/get.dart';
-import 'package:ventes/app/models/schedule_model.dart';
+import 'package:ventes/app/api/models/schedule_model.dart';
 import 'package:ventes/app/resources/views/daily_schedule/daily_schedule.dart';
 import 'package:ventes/app/states/typedefs/schedule_typedef.dart';
 import 'package:ventes/constants/regular_color.dart';

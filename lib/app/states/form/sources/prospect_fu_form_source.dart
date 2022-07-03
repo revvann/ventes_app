@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart' hide MenuItem;
 import 'package:get/get.dart';
-import 'package:ventes/app/models/bp_customer_model.dart';
-import 'package:ventes/app/models/type_model.dart';
-import 'package:ventes/app/models/user_detail_model.dart';
+import 'package:ventes/app/api/models/bp_customer_model.dart';
+import 'package:ventes/app/api/models/type_model.dart';
+import 'package:ventes/app/api/models/user_detail_model.dart';
 import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
 import 'package:ventes/app/resources/widgets/searchable_dropdown.dart';
 import 'package:ventes/app/states/typedefs/prospect_fu_typedef.dart';
 import 'package:ventes/constants/formatters/currency_formatter.dart';
 import 'package:ventes/constants/strings/prospect_string.dart';
 import 'package:ventes/core/states/update_form_source.dart';
-import 'package:ventes/helpers/function_helpers.dart';
+import 'package:ventes/utils/utils.dart';
 import 'package:ventes/helpers/task_helper.dart';
 
 class ProspectFormUpdateFormSource extends UpdateFormSource with FormSourceMixin {
@@ -63,9 +63,9 @@ class ProspectFormUpdateFormSource extends UpdateFormSource with FormSourceMixin
   BpCustomer? get proscustomer => _proscustomer.value;
   set proscustomer(BpCustomer? value) => _proscustomer.value = value;
 
-  String? get prosstartdateString => prosstartdate == null ? null : formatDate(prosstartdate!);
-  String? get prosenddateString => prosenddate == null ? null : formatDate(prosenddate!);
-  String? get prosexpenddateString => prosexpenddate == null ? null : formatDate(prosexpenddate!);
+  String? get prosstartdateString => prosstartdate == null ? null : Utils.formatDate(prosstartdate!);
+  String? get prosenddateString => prosenddate == null ? null : Utils.formatDate(prosenddate!);
+  String? get prosexpenddateString => prosexpenddate == null ? null : Utils.formatDate(prosexpenddate!);
   String? get prosname => prosnameTEC.text.isBlank ?? true ? null : prosnameTEC.text;
   String? get prosvalue => prosvalueTEC.text.isBlank ?? true ? null : prosvalueTEC.text.replaceAll(RegExp(r'[,.]'), '.');
   String? get prosdesc => prosdescTEC.text.isBlank ?? true ? null : prosdescTEC.text;
@@ -103,19 +103,19 @@ class ProspectFormUpdateFormSource extends UpdateFormSource with FormSourceMixin
   @override
   prepareFormValues() {
     prosnameTEC.text = dataSource.prospect?.prospectname ?? "";
-    prosvalueTEC.text = currencyFormat(dataSource.prospect?.prospectvalue.toString() ?? "");
+    prosvalueTEC.text = Utils.currencyFormat(dataSource.prospect?.prospectvalue.toString() ?? "");
     prosdescTEC.text = dataSource.prospect?.prospectdescription ?? "";
 
     if (dataSource.prospect?.prospectstartdate != null) {
-      prosstartdate = dbParseDate(dataSource.prospect!.prospectstartdate!);
+      prosstartdate = Utils.dbParseDate(dataSource.prospect!.prospectstartdate!);
     }
 
     if (dataSource.prospect?.prospectenddate != null) {
-      prosenddate = dbParseDate(dataSource.prospect!.prospectenddate!);
+      prosenddate = Utils.dbParseDate(dataSource.prospect!.prospectenddate!);
     }
 
     if (dataSource.prospect?.prospectexpclosedate != null) {
-      prosexpenddate = dbParseDate(dataSource.prospect!.prospectexpclosedate!);
+      prosexpenddate = Utils.dbParseDate(dataSource.prospect!.prospectexpclosedate!);
     }
 
     prosowner = dataSource.prospect?.prospectowneruser;

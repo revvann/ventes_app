@@ -12,4 +12,14 @@ class AuthModel {
     this.password,
     this.username,
   });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'userId': userId,
+      'jwtToken': jwtToken,
+      'accountActive': accountActive,
+      'password': password,
+      'username': username,
+    };
+  }
 }

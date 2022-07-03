@@ -3,22 +3,22 @@ import 'dart:async';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ventes/app/api/presenters/customer_fc_presenter.dart';
-import 'package:ventes/app/models/bp_customer_model.dart';
-import 'package:ventes/app/models/city_model.dart';
-import 'package:ventes/app/models/country_model.dart';
-import 'package:ventes/app/models/customer_model.dart';
-import 'package:ventes/app/models/maps_loc.dart';
-import 'package:ventes/app/models/province_model.dart';
-import 'package:ventes/app/models/subdistrict_model.dart';
-import 'package:ventes/app/models/type_model.dart';
-import 'package:ventes/app/models/user_detail_model.dart';
+import 'package:ventes/app/api/models/bp_customer_model.dart';
+import 'package:ventes/app/api/models/city_model.dart';
+import 'package:ventes/app/api/models/country_model.dart';
+import 'package:ventes/app/api/models/customer_model.dart';
+import 'package:ventes/app/api/models/maps_loc.dart';
+import 'package:ventes/app/api/models/province_model.dart';
+import 'package:ventes/app/api/models/subdistrict_model.dart';
+import 'package:ventes/app/api/models/type_model.dart';
+import 'package:ventes/app/api/models/user_detail_model.dart';
 import 'package:ventes/app/states/controllers/nearby_state_controller.dart';
 import 'package:ventes/app/states/typedefs/customer_fc_typedef.dart';
 import 'package:ventes/constants/views.dart';
 import 'package:ventes/core/api/fetcher.dart';
 import 'package:ventes/core/api/handler.dart';
 import 'package:ventes/core/states/state_data_source.dart';
-import 'package:ventes/helpers/function_helpers.dart';
+import 'package:ventes/utils/utils.dart';
 import 'package:ventes/helpers/task_helper.dart';
 
 class CustomerFormCreateDataSource extends StateDataSource<CustomerFormCreatePresenter> with DataSourceMixin {
@@ -55,7 +55,7 @@ class CustomerFormCreateDataSource extends StateDataSource<CustomerFormCreatePre
     LatLng coords2 = LatLng(currentPos.latitude, currentPos.longitude);
     return customers.where((element) {
       LatLng coords1 = LatLng(element.sbccstm?.cstmlatitude ?? 0.0, element.sbccstm?.cstmlongitude ?? 0.0);
-      double radius = calculateDistance(coords1, coords2);
+      double radius = Utils.calculateDistance(coords1, coords2);
       element.radius = radius;
       return radius <= 100;
     }).toList();
@@ -131,7 +131,7 @@ class CustomerFormCreateDataSource extends StateDataSource<CustomerFormCreatePre
     LatLng currentPos = LatLng(property.latitude!, property.longitude!);
     nearbyCustomers = nearbyCustomers.where((element) {
       LatLng coords1 = LatLng(element.cstmlatitude ?? 0.0, element.cstmlongitude ?? 0.0);
-      double radius = calculateDistance(coords1, currentPos);
+      double radius = Utils.calculateDistance(coords1, currentPos);
       element.radius = radius;
       return radius <= 100 && (element.cstmname?.toLowerCase() == formSource.cstmname.toLowerCase() || element.cstmaddress?.toLowerCase() == formSource.cstmaddress?.toLowerCase());
     }).toList();
@@ -168,14 +168,6 @@ class CustomerFormCreateDataSource extends StateDataSource<CustomerFormCreatePre
   Future<List<Province>> fetchProvinces(int countryId, [String? search]) async => await presenter.fetchProvinces(countryId, search);
   Future<List<City>> fetchCities(int provinceId, [String? search]) async => await presenter.fetchCities(provinceId, search);
   Future<List<Subdistrict>> fetchSubdistricts(int cityId, [String? search]) async => await presenter.fetchSubdistricts(cityId, search);
-
-  void _showError(String id, String message) {
-    Get.find<TaskHelper>().errorPush(Task(id, message: message));
-  }
-
-  void _showFailed(String id, String message, [bool snackbar = true]) {
-    Get.find<TaskHelper>().failedPush(Task(id, message: message, snackbar: snackbar));
-  }
 
   List<BpCustomer> _customersSuccess(List data) {
     List<BpCustomer> customers = _customersFromList(
@@ -249,37 +241,25 @@ class CustomerFormCreateDataSource extends StateDataSource<CustomerFormCreatePre
     );
   }
 
-  DataHandler<D, R, F> createDataHandler<D, R, F extends Function>(String id, DataFetcher<F, R> fetcher, D initialValue, D Function(R) onSuccess, {Function()? onComplete}) {
-    return DataHandler<D, R, F>(
-      id,
-      initialValue: initialValue,
-      fetcher: fetcher,
-      onFailed: (message) => _showFailed(id, message),
-      onError: (message) => _showError(id, message),
-      onSuccess: onSuccess,
-      onComplete: onComplete,
-    );
-  }
-
   @override
   void init() {
     super.init();
 
-    userHandler = createDataHandler(userID, presenter.fetchUser, null, (data) => formSource.sbcbpid = UserDetail.fromJson(data).userdtbpid);
-    customersHandler = createDataHandler(customersID, presenter.fetchCustomers, [], _customersSuccess);
-    statusesHandler = createDataHandler(statusesID, presenter.fetchStatuses, {}, (data) => statusesFromList(data));
-    typesHandler = createDataHandler(typesID, presenter.fetchTypes, {}, (data) => typesFromList(data));
-    locationHandler = createDataHandler(locationID, presenter.fetchLocation, null, _locationSuccess, onComplete: () => placesHandler.fetcher.run(getSubdistrictName()!));
-    placesHandler = createDataHandler(placesID, presenter.fetchPlaces, null, _placesSuccess);
-    customerHandler = createDataHandler(customerID, presenter.fetchCustomer, null, _customerSuccess, onComplete: _customerComplete);
+    userHandler = Utils.createDataHandler(userID, presenter.fetchUser, null, (data) => formSource.sbcbpid = UserDetail.fromJson(data).userdtbpid);
+    customersHandler = Utils.createDataHandler(customersID, presenter.fetchCustomers, [], _customersSuccess);
+    statusesHandler = Utils.createDataHandler(statusesID, presenter.fetchStatuses, {}, (data) => statusesFromList(data));
+    typesHandler = Utils.createDataHandler(typesID, presenter.fetchTypes, {}, (data) => typesFromList(data));
+    locationHandler = Utils.createDataHandler(locationID, presenter.fetchLocation, null, _locationSuccess, onComplete: () => placesHandler.fetcher.run(getSubdistrictName()!));
+    placesHandler = Utils.createDataHandler(placesID, presenter.fetchPlaces, null, _placesSuccess);
+    customerHandler = Utils.createDataHandler(customerID, presenter.fetchCustomer, null, _customerSuccess, onComplete: _customerComplete);
 
     nearbyCustomersHandler = DataHandler(
       nearbyCustomersID,
       initialValue: null,
       fetcher: presenter.fetchNearbyCustomers,
       onStart: () => Get.find<TaskHelper>().loaderPush(Task(nearbyCustomersID)),
-      onFailed: (message) => _showFailed(nearbyCustomersID, message, false),
-      onError: (message) => _showError(nearbyCustomersID, message),
+      onFailed: (message) => Utils.showFailed(nearbyCustomersID, message, false),
+      onError: (message) => Utils.showError(nearbyCustomersID, message),
       onComplete: () => Get.find<TaskHelper>().loaderPop(nearbyCustomersID),
       onSuccess: _nearbyCustomersSuccess,
     );
@@ -289,8 +269,8 @@ class CustomerFormCreateDataSource extends StateDataSource<CustomerFormCreatePre
       initialValue: null,
       fetcher: presenter.fetchBpCustomers,
       onStart: () => Get.find<TaskHelper>().loaderPush(Task(bpCustomersID)),
-      onFailed: (message) => _showFailed(bpCustomersID, message, false),
-      onError: (message) => _showError(bpCustomersID, message),
+      onFailed: (message) => Utils.showFailed(bpCustomersID, message, false),
+      onError: (message) => Utils.showError(bpCustomersID, message),
       onComplete: () => Get.find<TaskHelper>().loaderPop(bpCustomersID),
       onSuccess: _bpCustomersSuccess,
     );
@@ -300,8 +280,8 @@ class CustomerFormCreateDataSource extends StateDataSource<CustomerFormCreatePre
       initialValue: null,
       fetcher: presenter.create,
       onStart: () => Get.find<TaskHelper>().loaderPush(Task(createID)),
-      onFailed: (message) => _showFailed(createID, message, false),
-      onError: (message) => _showError(createID, message),
+      onFailed: (message) => Utils.showFailed(createID, message, false),
+      onError: (message) => Utils.showError(createID, message),
       onComplete: () => Get.find<TaskHelper>().loaderPop(createID),
       onSuccess: _createSuccess,
     );

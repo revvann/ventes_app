@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:ventes/app/models/type_model.dart';
+import 'package:ventes/app/api/models/type_model.dart';
 import 'package:ventes/app/resources/views/prospect_activity_form/create/prospect_activity_fc.dart';
 import 'package:ventes/app/resources/views/prospect_activity_form/update/prospect_activity_fu.dart';
 import 'package:ventes/app/resources/views/schedule_form/create/schedule_fc.dart';

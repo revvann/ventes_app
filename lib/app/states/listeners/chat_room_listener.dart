@@ -8,25 +8,12 @@ class ChatRoomListener extends StateListener with ListenerMixin {
     Get.back(id: Views.dashboard.index);
   }
 
-  void onSocketConnect(data) {
-    printSocket("Connected");
-  }
-
-  void onSocketConnectError(data) {
-    printSocket("An error was accured");
-    print(data);
-  }
-
-  void onSocketDisconnect(data) {
-    printSocket("You're disconnected");
-  }
-
-  void printSocket(dynamic data) {
-    print("socket: $data");
+  void sendMessage() {
+    property.socket.emit('message', "this is message from me");
   }
 
   @override
   Future onReady() async {
-    dataSource.userDetailHandler.fetcher.run();
+    dataSource.userDetailHandler.fetcher.run(property.userid!);
   }
 }

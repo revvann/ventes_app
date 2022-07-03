@@ -5,7 +5,7 @@ import 'package:flutter/material.dart' hide MenuItem;
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:ventes/app/models/type_model.dart';
+import 'package:ventes/app/api/models/type_model.dart';
 import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
 import 'package:ventes/app/resources/widgets/regular_input.dart';
 import 'package:ventes/app/resources/widgets/searchable_dropdown.dart';

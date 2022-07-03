@@ -3,7 +3,7 @@
 import 'package:get/get.dart';
 import 'package:ventes/constants/strings/regular_string.dart';
 import 'package:ventes/helpers/auth_helper.dart';
-import 'package:ventes/app/models/auth_model.dart';
+import 'package:ventes/app/api/models/auth_model.dart';
 
 class Service extends GetConnect {
   String get api => '';

@@ -1,13 +1,13 @@
 import 'package:get/get.dart';
 import 'package:ventes/app/api/presenters/prospect_activity_presenter.dart';
-import 'package:ventes/app/models/prospect_activity_model.dart';
-import 'package:ventes/app/models/prospect_model.dart';
-import 'package:ventes/app/models/type_model.dart';
+import 'package:ventes/app/api/models/prospect_activity_model.dart';
+import 'package:ventes/app/api/models/prospect_model.dart';
+import 'package:ventes/app/api/models/type_model.dart';
 import 'package:ventes/app/states/controllers/prospect_activity_state_controller.dart';
 import 'package:ventes/app/states/typedefs/prospect_activity_typedef.dart';
 import 'package:ventes/core/api/handler.dart';
 import 'package:ventes/core/states/state_data_source.dart';
-import 'package:ventes/helpers/function_helpers.dart';
+import 'package:ventes/utils/utils.dart';
 import 'package:ventes/helpers/task_helper.dart';
 
 class ProspectActivityDataSource extends StateDataSource<ProspectActivityPresenter> with DataSourceMixin {
@@ -37,17 +37,17 @@ class ProspectActivityDataSource extends StateDataSource<ProspectActivityPresent
 
   List<ProspectActivity> _prospectActivitiesComplete(data) {
     List<ProspectActivity> activities = data.map<ProspectActivity>((json) => ProspectActivity.fromJson(json)).toList();
-    activities.removeWhere((element) => dbParseDate(element.prospectactivitydate!).isAfter(DateTime.now()));
+    activities.removeWhere((element) => Utils.dbParseDate(element.prospectactivitydate!).isAfter(DateTime.now()));
     return activities;
   }
 
   @override
   void init() {
     super.init();
-    scheduleRefTypesHandler = createDataHandler(scheduleRefID, presenter.fetchScheduleRefTypes, [], (data) => data.map<DBType>((json) => DBType.fromJson(json)).toList());
-    stagesHandler = createDataHandler(stagesID, presenter.fetchStages, [], (data) => data.map<DBType>((json) => DBType.fromJson(json)).toList());
-    prospectHandler = createDataHandler(prospectID, presenter.fetchProspect, null, (data) => Prospect.fromJson(data));
-    prospectActivitiesHandler = createDataHandler(prospectActivitiesID, presenter.fetchProspectActivities, [], _prospectActivitiesComplete);
+    scheduleRefTypesHandler = Utils.createDataHandler(scheduleRefID, presenter.fetchScheduleRefTypes, [], (data) => data.map<DBType>((json) => DBType.fromJson(json)).toList());
+    stagesHandler = Utils.createDataHandler(stagesID, presenter.fetchStages, [], (data) => data.map<DBType>((json) => DBType.fromJson(json)).toList());
+    prospectHandler = Utils.createDataHandler(prospectID, presenter.fetchProspect, null, (data) => Prospect.fromJson(data));
+    prospectActivitiesHandler = Utils.createDataHandler(prospectActivitiesID, presenter.fetchProspectActivities, [], _prospectActivitiesComplete);
     deleteHandler = DataHandler(
       deleteID,
       fetcher: presenter.delete,

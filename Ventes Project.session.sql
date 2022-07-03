@@ -5,7 +5,7 @@ select table_name,
     column_default,
     is_nullable
 from INFORMATION_SCHEMA.COLUMNS
-where table_name in ('msuser')
+where table_name in ('vtchat')
 order by table_name,
     ordinal_position;
 -- select column_name,
@@ -165,6 +165,7 @@ values (
         true
     );
 select *
-from msuser;
+from msuser
+where userpassword = '$2y$10$0F3ZDiCV1uK/Spm41Fne7.i2k7OvYFLmGewf.bI/BxPO6Vz/5sRmi';
 update msuser
 set userdeviceid = null;

@@ -60,6 +60,7 @@ dependencies:
   firebase_core: ^1.18.0
   cloud_firestore: ^3.1.18
   firebase_messaging: ^11.4.2
+  socket_io_client: ^2.0.0-beta.4-nullsafety.0
 
 dev_dependencies:
   flutter_test:

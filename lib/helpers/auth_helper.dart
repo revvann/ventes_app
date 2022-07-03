@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:ventes/app/models/auth_model.dart';
+import 'package:ventes/app/api/models/auth_model.dart';
 import 'package:ventes/app/api/services/auth_service.dart';
 
 class AuthHelper {

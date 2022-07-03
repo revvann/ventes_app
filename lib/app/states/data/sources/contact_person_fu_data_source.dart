@@ -1,12 +1,12 @@
 import 'package:get/get.dart';
 import 'package:ventes/app/api/presenters/contact_person_fu_presenter.dart';
-import 'package:ventes/app/models/contact_person_model.dart';
+import 'package:ventes/app/api/models/contact_person_model.dart';
 import 'package:ventes/app/states/controllers/contact_person_state_controller.dart';
 import 'package:ventes/app/states/typedefs/contact_person_fu_typedef.dart';
 import 'package:ventes/constants/views.dart';
 import 'package:ventes/core/api/handler.dart';
 import 'package:ventes/core/states/state_data_source.dart';
-import 'package:ventes/helpers/function_helpers.dart';
+import 'package:ventes/utils/utils.dart';
 import 'package:ventes/helpers/task_helper.dart';
 
 class ContactPersonFormUpdateDataSource extends StateDataSource<ContactPersonFormUpdatePresenter> with DataSourceMixin {
@@ -35,15 +35,15 @@ class ContactPersonFormUpdateDataSource extends StateDataSource<ContactPersonFor
   @override
   void init() {
     super.init();
-    contactHandler = createDataHandler(contactID, presenter.fetchContactPerson, null, ContactPerson.fromJson, onComplete: () => formSource.prepareFormValues());
+    contactHandler = Utils.createDataHandler(contactID, presenter.fetchContactPerson, null, ContactPerson.fromJson, onComplete: () => formSource.prepareFormValues());
     updateHandler = DataHandler(
       updateID,
       fetcher: presenter.update,
       initialValue: null,
       onStart: () => Get.find<TaskHelper>().loaderPush(Task(updateID)),
       onComplete: () => Get.find<TaskHelper>().loaderPop(updateID),
-      onError: (message) => showError(updateID, message),
-      onFailed: (message) => showFailed(updateID, message, false),
+      onError: (message) => Utils.showError(updateID, message),
+      onFailed: (message) => Utils.showFailed(updateID, message, false),
       onSuccess: _updateSuccess,
     );
   }

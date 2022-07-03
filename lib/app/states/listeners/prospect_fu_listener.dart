@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
-import 'package:ventes/app/models/bp_customer_model.dart';
-import 'package:ventes/app/models/type_model.dart';
-import 'package:ventes/app/models/user_detail_model.dart';
+import 'package:ventes/app/api/models/bp_customer_model.dart';
+import 'package:ventes/app/api/models/type_model.dart';
+import 'package:ventes/app/api/models/user_detail_model.dart';
 import 'package:ventes/app/states/typedefs/prospect_fu_typedef.dart';
 import 'package:ventes/constants/strings/prospect_string.dart';
 import 'package:ventes/constants/views.dart';

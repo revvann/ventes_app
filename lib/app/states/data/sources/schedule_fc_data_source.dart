@@ -2,17 +2,17 @@ import 'dart:async';
 
 import 'package:get/get.dart';
 import 'package:ventes/app/api/presenters/schedule_fc_presenter.dart';
-import 'package:ventes/app/models/auth_model.dart';
-import 'package:ventes/app/models/prospect_activity_model.dart';
-import 'package:ventes/app/models/prospect_model.dart';
-import 'package:ventes/app/models/type_model.dart';
-import 'package:ventes/app/models/user_detail_model.dart';
+import 'package:ventes/app/api/models/auth_model.dart';
+import 'package:ventes/app/api/models/prospect_activity_model.dart';
+import 'package:ventes/app/api/models/prospect_model.dart';
+import 'package:ventes/app/api/models/type_model.dart';
+import 'package:ventes/app/api/models/user_detail_model.dart';
 import 'package:ventes/app/states/typedefs/schedule_fc_typedef.dart';
 import 'package:ventes/constants/views.dart';
 import 'package:ventes/core/api/handler.dart';
 import 'package:ventes/core/states/state_data_source.dart';
 import 'package:ventes/helpers/auth_helper.dart';
-import 'package:ventes/helpers/function_helpers.dart';
+import 'package:ventes/utils/utils.dart';
 import 'package:ventes/helpers/task_helper.dart';
 
 class ScheduleFormCreateDataSource extends StateDataSource<ScheduleFormCreatePresenter> with DataSourceMixin {
@@ -67,14 +67,6 @@ class ScheduleFormCreateDataSource extends StateDataSource<ScheduleFormCreatePre
     return userDetails;
   }
 
-  void _showError(String id, String message) {
-    Get.find<TaskHelper>().errorPush(Task(id, message: message));
-  }
-
-  void _showFailed(String id, String message, [bool snackbar = true]) {
-    Get.find<TaskHelper>().failedPush(Task(id, message: message, snackbar: snackbar));
-  }
-
   void _createSuccess(String data) {
     Get.find<TaskHelper>().successPush(
       Task(
@@ -112,8 +104,8 @@ class ScheduleFormCreateDataSource extends StateDataSource<ScheduleFormCreatePre
       typesID,
       fetcher: presenter.fetchTypes,
       initialValue: [],
-      onError: (message) => _showError(typesID, message),
-      onFailed: (message) => _showFailed(typesID, message),
+      onError: (message) => Utils.showError(typesID, message),
+      onFailed: (message) => Utils.showFailed(typesID, message),
       onSuccess: (data) => insertTypes(List<Map<String, dynamic>>.from(data)),
     );
 
@@ -123,21 +115,21 @@ class ScheduleFormCreateDataSource extends StateDataSource<ScheduleFormCreatePre
       initialValue: null,
       onStart: () => Get.find<TaskHelper>().loaderPush(Task(createID)),
       onComplete: () => Get.find<TaskHelper>().loaderPop(createID),
-      onError: (message) => _showError(createID, message),
-      onFailed: (message) => _showFailed(createID, message),
+      onError: (message) => Utils.showError(createID, message),
+      onFailed: (message) => Utils.showFailed(createID, message),
       onSuccess: _createSuccess,
     );
 
-    refTypeHandler = createDataHandler(refTypeID, presenter.fetchRefType, null, DBType.fromJson, onComplete: _refTypeComplete);
-    prospectHandler = createDataHandler(prospectID, presenter.fetchRefFromProspect, null, Prospect.fromJson);
+    refTypeHandler = Utils.createDataHandler(refTypeID, presenter.fetchRefType, null, DBType.fromJson, onComplete: _refTypeComplete);
+    prospectHandler = Utils.createDataHandler(prospectID, presenter.fetchRefFromProspect, null, Prospect.fromJson);
     createActivityRefHandler = DataHandler(
       createActivityRefID,
       fetcher: presenter.createRefFromActivity,
       initialValue: null,
       onStart: () => Get.find<TaskHelper>().loaderPush(Task(createActivityRefID)),
-      onFailed: (message) => _showFailed(createActivityRefID, message, false),
+      onFailed: (message) => Utils.showFailed(createActivityRefID, message, false),
       onSuccess: ProspectActivity.fromJson,
-      onError: (message) => _showError(createActivityRefID, message),
+      onError: (message) => Utils.showError(createActivityRefID, message),
       onComplete: _createActivityComplete,
     );
   }

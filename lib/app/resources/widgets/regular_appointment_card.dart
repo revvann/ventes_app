@@ -2,10 +2,10 @@
 
 import 'package:flutter/material.dart' hide MenuItem;
 import 'package:syncfusion_flutter_calendar/calendar.dart';
-import 'package:ventes/app/models/schedule_model.dart';
+import 'package:ventes/app/api/models/schedule_model.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
-import 'package:ventes/helpers/function_helpers.dart';
+import 'package:ventes/utils/utils.dart';
 
 class RegularAppointmentCard extends StatelessWidget {
   RegularAppointmentCard({
@@ -18,8 +18,8 @@ class RegularAppointmentCard extends StatelessWidget {
   bool isSelected;
 
   bool isSmall() {
-    int start = parseTime(schedule.schestarttime ?? "00:00:00").millisecondsSinceEpoch;
-    int end = parseTime(schedule.scheendtime ?? "00:00:00").millisecondsSinceEpoch;
+    int start = Utils.parseTime(schedule.schestarttime ?? "00:00:00").millisecondsSinceEpoch;
+    int end = Utils.parseTime(schedule.scheendtime ?? "00:00:00").millisecondsSinceEpoch;
     return (end - start) <= 15 * 60 * 1000;
   }
 
@@ -54,7 +54,7 @@ class RegularAppointmentCard extends StatelessWidget {
                 children: [
                   if (schedule.schestarttime != null)
                     TextSpan(
-                      text: formatTime12(parseTime(schedule.schestarttime!)),
+                      text: Utils.formatTime12(Utils.parseTime(schedule.schestarttime!)),
                     ),
                   if (schedule.scheendtime != null)
                     TextSpan(
@@ -62,7 +62,7 @@ class RegularAppointmentCard extends StatelessWidget {
                     ),
                   if (schedule.scheendtime != null)
                     TextSpan(
-                      text: formatTime12(parseTime(schedule.scheendtime!)),
+                      text: Utils.formatTime12(Utils.parseTime(schedule.scheendtime!)),
                     ),
                 ],
               ),
@@ -91,17 +91,17 @@ class RegularCalendarDataSource extends CalendarDataSource<Schedule> {
     if (date != null && time != null) {
       switch (type) {
         case CalendarDataSourceType.monthly:
-          return dbParseDate(date);
+          return Utils.dbParseDate(date);
         case CalendarDataSourceType.daily:
-          DateTime _time = parseTime(time);
+          DateTime _time = Utils.parseTime(time);
           return DateTime(this.date!.year, this.date!.month, this.date!.day, _time.hour, _time.minute);
         default:
-          return dbParseDate(date);
+          return Utils.dbParseDate(date);
       }
     }
 
     if (isAllDay(index)) {
-      return dbParseDate(date!);
+      return Utils.dbParseDate(date!);
     }
 
     return DateTime(0);
@@ -114,12 +114,12 @@ class RegularCalendarDataSource extends CalendarDataSource<Schedule> {
     if (date != null && time != null) {
       switch (type) {
         case CalendarDataSourceType.monthly:
-          return dbParseDate(date);
+          return Utils.dbParseDate(date);
         case CalendarDataSourceType.daily:
-          DateTime _time = parseTime(time);
+          DateTime _time = Utils.parseTime(time);
           return DateTime(this.date!.year, this.date!.month, this.date!.day, _time.hour, _time.minute);
         default:
-          return dbParseDate(date);
+          return Utils.dbParseDate(date);
       }
     }
 

@@ -39,7 +39,7 @@ class DashboardNavigator extends ViewNavigator {
               ],
             ),
         ChatRoomView.route: (args) => ViewRoute(
-              page: () => ChatRoomView(),
+              page: () => ChatRoomView(args!['user']),
               bindings: [
                 BindingsBuilder(() {
                   Get.put(ChatRoomStateController());

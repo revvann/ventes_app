@@ -19,7 +19,7 @@ class _ProductList extends StatelessWidget {
         itemBuilder: (_, index) {
           ProspectProduct product = products[index];
           String amount = state.property.priceShort(product.prosproductamount ?? 0);
-          String price = currencyFormat(product.prosproductprice?.toString().replaceAll(RegExp(r'[.]'), ',') ?? "0");
+          String price = Utils.currencyFormat(product.prosproductprice?.toString().replaceAll(RegExp(r'[.]'), ',') ?? "0");
           return GestureDetector(
             onTap: () {},
             child: Container(
@@ -160,7 +160,7 @@ class _ProductList extends StatelessWidget {
   }
 
   void showProductDetail(ProspectProduct product) {
-    String price = currencyFormat(product.prosproductprice?.toString().replaceAll(RegExp(r'[.]'), ',') ?? "0");
+    String price = Utils.currencyFormat(product.prosproductprice?.toString().replaceAll(RegExp(r'[.]'), ',') ?? "0");
     RegularDialog(
       width: Get.width * 0.9,
       alignment: Alignment.centerLeft,
@@ -209,7 +209,7 @@ class _ProductList extends StatelessWidget {
             SizedBox(
               height: RegularSize.m,
             ),
-            _DetailItem(title: "Amount", value: currencyFormat(product.prosproductamount?.toString().replaceAll('.', ',') ?? "0")),
+            _DetailItem(title: "Amount", value: Utils.currencyFormat(product.prosproductamount?.toString().replaceAll('.', ',') ?? "0")),
             SizedBox(
               height: RegularSize.m,
             ),
@@ -221,7 +221,7 @@ class _ProductList extends StatelessWidget {
             SizedBox(
               height: RegularSize.m,
             ),
-            _DetailItem(title: "Tax Total", value: currencyFormat(product.prosproducttax?.toString().replaceAll(RegExp(r'[.]'), ',') ?? "0")),
+            _DetailItem(title: "Tax Total", value: Utils.currencyFormat(product.prosproducttax?.toString().replaceAll(RegExp(r'[.]'), ',') ?? "0")),
           ],
         ),
       ),

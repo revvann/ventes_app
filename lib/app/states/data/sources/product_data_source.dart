@@ -1,12 +1,12 @@
 import 'package:get/get.dart';
 import 'package:ventes/app/api/presenters/product_presenter.dart';
-import 'package:ventes/app/models/prospect_model.dart';
-import 'package:ventes/app/models/prospect_product_model.dart';
+import 'package:ventes/app/api/models/prospect_model.dart';
+import 'package:ventes/app/api/models/prospect_product_model.dart';
 import 'package:ventes/app/states/controllers/product_state_controller.dart';
 import 'package:ventes/app/states/typedefs/product_typedef.dart';
 import 'package:ventes/core/api/handler.dart';
 import 'package:ventes/core/states/state_data_source.dart';
-import 'package:ventes/helpers/function_helpers.dart';
+import 'package:ventes/utils/utils.dart';
 import 'package:ventes/helpers/task_helper.dart';
 
 class ProductDataSource extends StateDataSource<ProductPresenter> with DataSourceMixin {
@@ -36,16 +36,16 @@ class ProductDataSource extends StateDataSource<ProductPresenter> with DataSourc
   @override
   init() {
     super.init();
-    prospectHandler = createDataHandler(prospectID, presenter.fetchProspect, null, Prospect.fromJson);
-    productsHandler = createDataHandler(productsID, presenter.fetchProducts, [], (data) => data.map<ProspectProduct>((e) => ProspectProduct.fromJson(e)).toList());
+    prospectHandler = Utils.createDataHandler(prospectID, presenter.fetchProspect, null, Prospect.fromJson);
+    productsHandler = Utils.createDataHandler(productsID, presenter.fetchProducts, [], (data) => data.map<ProspectProduct>((e) => ProspectProduct.fromJson(e)).toList());
     deleteHandler = DataHandler(
       deleteID,
       fetcher: presenter.delete,
       initialValue: null,
       onStart: () => Get.find<TaskHelper>().loaderPush(Task(deleteID)),
       onSuccess: _deleteSuccess,
-      onFailed: (message) => showFailed(deleteID, message, false),
-      onError: (message) => showError(deleteID, message),
+      onFailed: (message) => Utils.showFailed(deleteID, message, false),
+      onError: (message) => Utils.showError(deleteID, message),
       onComplete: () => Get.find<TaskHelper>().loaderPop(deleteID),
     );
   }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart' hide MenuItem;
 import 'package:get/get.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
-import 'package:ventes/app/models/schedule_model.dart';
+import 'package:ventes/app/api/models/schedule_model.dart';
 import 'package:ventes/app/resources/views/schedule_form/create/schedule_fc.dart';
 import 'package:ventes/app/resources/views/schedule_form/update/schedule_fu.dart';
 import 'package:ventes/constants/regular_color.dart';

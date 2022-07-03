@@ -4,7 +4,7 @@ import 'package:flutter/material.dart' hide MenuItem;
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:ventes/app/api/contracts/update_contract.dart';
-import 'package:ventes/app/models/user_model.dart';
+import 'package:ventes/app/api/models/user_model.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/constants/strings/signin_string.dart';
@@ -15,7 +15,7 @@ import 'package:ventes/app/resources/widgets/regular_bottom_sheet.dart';
 import 'package:ventes/app/resources/widgets/regular_button.dart';
 import 'package:ventes/app/resources/widgets/regular_dialog.dart';
 import 'package:ventes/app/resources/widgets/regular_input.dart';
-import 'package:ventes/helpers/function_helpers.dart';
+import 'package:ventes/utils/utils.dart';
 import 'package:ventes/helpers/task_helper.dart';
 
 part 'package:ventes/app/resources/views/signin/components/_username_input.dart';
@@ -204,7 +204,7 @@ class SigninView extends GetView<SigninStateController> implements AuthContract,
   void onAuthSuccess(Map data) async {
     controller.dataSource.isLoading = false;
     User user = User.fromJson(data['user']);
-    String deviceid = (await getDeviceId())!;
+    String deviceid = (await Utils.getDeviceId())!;
     if (user.userdeviceid == null) {
       controller.dataSource.attachDevice(data['userid'], deviceid);
       Get.find<TaskHelper>().loaderPush(Task(SigninString.taskCode));

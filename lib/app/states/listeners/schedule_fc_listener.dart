@@ -1,12 +1,12 @@
 import 'dart:async';
 
 import 'package:get/get.dart';
-import 'package:ventes/app/models/schedule_guest_model.dart';
-import 'package:ventes/app/models/user_detail_model.dart';
+import 'package:ventes/app/api/models/schedule_guest_model.dart';
+import 'package:ventes/app/api/models/user_detail_model.dart';
 import 'package:ventes/app/states/typedefs/schedule_fc_typedef.dart';
 import 'package:ventes/constants/strings/schedule_string.dart';
 import 'package:ventes/core/states/state_listener.dart';
-import 'package:ventes/helpers/function_helpers.dart';
+import 'package:ventes/utils/utils.dart';
 import 'package:ventes/helpers/task_helper.dart';
 
 class ScheduleFormCreateListener extends StateListener with ListenerMixin {
@@ -34,10 +34,10 @@ class ScheduleFormCreateListener extends StateListener with ListenerMixin {
       formSource.schestarttimeDC.enabled = true;
       formSource.scheendtimeDC.enabled = true;
       if (formSource.schestarttime != null) {
-        formSource.schestarttimeDC.value = formatTime(formSource.schestarttime!);
+        formSource.schestarttimeDC.value = Utils.formatTime(formSource.schestarttime!);
       }
       if (formSource.scheendtime != null) {
-        formSource.scheendtimeDC.value = formatTime(formSource.scheendtime!);
+        formSource.scheendtimeDC.value = Utils.formatTime(formSource.scheendtime!);
       }
     }
     formSource.scheallday = value;
@@ -75,7 +75,7 @@ class ScheduleFormCreateListener extends StateListener with ListenerMixin {
 
   void onTimeStartSelected(String? value) {
     if (value != null) {
-      DateTime time = parseTime(value);
+      DateTime time = Utils.parseTime(value);
       if (formSource.schestarttime != null) {
         DateTime _dateStart = formSource.schestarttime!.subtract(Duration(
           hours: formSource.schestarttime!.hour,
@@ -103,7 +103,7 @@ class ScheduleFormCreateListener extends StateListener with ListenerMixin {
 
   void onTimeEndSelected(String? value) {
     if (value != null) {
-      DateTime time = parseTime(value);
+      DateTime time = Utils.parseTime(value);
       if (formSource.scheendtime != null) {
         DateTime _dateEnd = formSource.scheendtime!.subtract(Duration(
           hours: formSource.scheendtime!.hour,

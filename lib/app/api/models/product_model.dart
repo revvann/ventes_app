@@ -1,4 +1,4 @@
-import 'package:ventes/app/models/business_partner_model.dart';
+import 'package:ventes/app/api/models/business_partner_model.dart';
 import 'package:ventes/core/api/model.dart';
 
 class Product extends Model {

@@ -9,7 +9,7 @@ class _AppointmentItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      MaterialColor colors = createSwatch(onFindColor(appointment));
+      MaterialColor colors = Utils.createSwatch(onFindColor(appointment));
 
       return Container(
         padding: EdgeInsets.symmetric(

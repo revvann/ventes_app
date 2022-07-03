@@ -6,7 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
-import 'package:ventes/app/models/schedule_model.dart';
+import 'package:ventes/app/api/models/schedule_model.dart';
 import 'package:ventes/app/resources/widgets/regular_appointment_card.dart';
 import 'package:ventes/app/resources/widgets/regular_dialog.dart';
 import 'package:ventes/app/resources/widgets/regular_outlined_button.dart';
@@ -18,7 +18,7 @@ import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/constants/strings/schedule_string.dart';
 import 'package:ventes/core/view/view.dart';
-import 'package:ventes/helpers/function_helpers.dart';
+import 'package:ventes/utils/utils.dart';
 
 part 'package:ventes/app/resources/views/schedule/components/_appointment_item.dart';
 part 'package:ventes/app/resources/views/schedule/components/_calendar.dart';
@@ -49,7 +49,7 @@ class ScheduleView extends View<Controller> {
               color: Colors.white,
             ),
           ),
-          onTap: backToDashboard,
+          onTap: Utils.backToDashboard,
         ),
         actions: [
           GestureDetector(

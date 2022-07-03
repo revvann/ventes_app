@@ -3,7 +3,7 @@ import 'package:ventes/app/api/contracts/auth_contract.dart';
 import 'package:ventes/app/api/contracts/update_contract.dart';
 import 'package:ventes/app/api/services/user_service.dart';
 import 'package:ventes/helpers/auth_helper.dart';
-import 'package:ventes/app/models/auth_model.dart';
+import 'package:ventes/app/api/models/auth_model.dart';
 import 'package:ventes/app/api/services/auth_service.dart';
 
 class AuthPresenter {

@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:grouped_list/grouped_list.dart';
-import 'package:ventes/app/models/user_detail_model.dart';
+import 'package:ventes/app/api/models/user_detail_model.dart';
 import 'package:ventes/app/resources/widgets/handler_container.dart';
 import 'package:ventes/app/resources/widgets/top_navigation.dart';
 import 'package:ventes/app/states/properties/chat_room_property.dart';
@@ -14,7 +14,7 @@ import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/constants/strings/dashboard_string.dart';
 import 'package:ventes/core/view/view.dart';
-import 'package:ventes/helpers/function_helpers.dart';
+import 'package:ventes/utils/utils.dart';
 
 part 'package:ventes/app/resources/views/chat_room/components/_chat_body.dart';
 part 'package:ventes/app/resources/views/chat_room/components/_chat_header.dart';
@@ -22,9 +22,14 @@ part 'package:ventes/app/resources/views/chat_room/components/_chat_input.dart';
 
 class ChatRoomView extends View<Controller> {
   static const String route = "/chatroom";
+  int id;
+
+  ChatRoomView(this.id);
 
   @override
-  void onBuild(state) {}
+  void onBuild(state) {
+    state.property.userid = id;
+  }
 
   @override
   Widget buildWidget(BuildContext context, state) {
@@ -94,7 +99,7 @@ class ChatRoomView extends View<Controller> {
                     padding: EdgeInsets.symmetric(horizontal: RegularSize.s),
                     elements: state.property.chats,
                     groupBy: (chat) => DateTime(chat.date.year, chat.date.month, chat.date.day),
-                    groupHeaderBuilder: (Chat chat) => _ChatHeader(formatDate(chat.date)),
+                    groupHeaderBuilder: (Chat chat) => _ChatHeader(Utils.formatDate(chat.date)),
                     itemBuilder: (_, chat) {
                       return _ChatBody(chat.message, isMe: chat.deviceid == state.dataSource.userDetail?.user?.userdeviceid);
                     },

@@ -1,5 +1,5 @@
 import 'package:flutter/services.dart';
-import 'package:ventes/helpers/function_helpers.dart';
+import 'package:ventes/utils/utils.dart';
 
 class CurrencyInputFormatter extends TextInputFormatter {
   @override
@@ -10,7 +10,7 @@ class CurrencyInputFormatter extends TextInputFormatter {
     if (newValue.selection.baseOffset == 0) {
       return newValue;
     }
-    final newText = currencyFormat(newValue.text);
+    final newText = Utils.currencyFormat(newValue.text);
     return newValue.copyWith(
       text: newText,
       selection: TextSelection.collapsed(offset: newText.length),

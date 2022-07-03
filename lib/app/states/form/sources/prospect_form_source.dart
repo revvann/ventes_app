@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:ventes/app/models/type_model.dart';
+import 'package:ventes/app/api/models/type_model.dart';
 import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
 import 'package:ventes/app/states/typedefs/prospect_typedef.dart';
 import 'package:ventes/constants/strings/prospect_string.dart';
 import 'package:ventes/core/states/state_form_source.dart';
-import 'package:ventes/helpers/function_helpers.dart';
+import 'package:ventes/utils/utils.dart';
 
 class ProspectFormSource extends StateFormSource with FormSourceMixin {
   KeyableDropdownController<int, DBType> statusDropdownController = Get.put(KeyableDropdownController<int, DBType>(), tag: ProspectString.statusDropdownTag);
@@ -25,8 +25,8 @@ class ProspectFormSource extends StateFormSource with FormSourceMixin {
   DBType? get prosstatus => _prosstatus.value;
   set prosstatus(DBType? value) => _prosstatus.value = value;
 
-  String? get prosstartdateString => prosstartdate == null ? null : formatDate(prosstartdate!);
-  String? get prosenddateString => prosenddate == null ? null : formatDate(prosenddate!);
+  String? get prosstartdateString => prosstartdate == null ? null : Utils.formatDate(prosstartdate!);
+  String? get prosenddateString => prosenddate == null ? null : Utils.formatDate(prosenddate!);
 
   @override
   Map<String, dynamic> toJson() {

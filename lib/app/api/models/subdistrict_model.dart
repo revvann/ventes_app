@@ -1,4 +1,4 @@
-import 'package:ventes/app/models/city_model.dart';
+import 'package:ventes/app/api/models/city_model.dart';
 import 'package:ventes/core/api/model.dart';
 
 class Subdistrict extends Model {

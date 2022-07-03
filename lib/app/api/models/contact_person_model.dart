@@ -1,5 +1,5 @@
-import 'package:ventes/app/models/customer_model.dart';
-import 'package:ventes/app/models/type_model.dart';
+import 'package:ventes/app/api/models/customer_model.dart';
+import 'package:ventes/app/api/models/type_model.dart';
 import 'package:ventes/core/api/model.dart';
 
 class ContactPerson extends Model {

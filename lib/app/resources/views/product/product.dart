@@ -6,8 +6,8 @@ import 'package:flutter/material.dart' hide MenuItem;
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:ventes/app/models/prospect_model.dart';
-import 'package:ventes/app/models/prospect_product_model.dart';
+import 'package:ventes/app/api/models/prospect_model.dart';
+import 'package:ventes/app/api/models/prospect_product_model.dart';
 import 'package:ventes/app/resources/widgets/handler_container.dart';
 import 'package:ventes/app/resources/widgets/icon_input.dart';
 import 'package:ventes/app/resources/widgets/pop_up_item.dart';
@@ -20,7 +20,7 @@ import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/constants/strings/prospect_string.dart';
 import 'package:ventes/core/view/view.dart';
-import 'package:ventes/helpers/function_helpers.dart';
+import 'package:ventes/utils/utils.dart';
 
 part 'package:ventes/app/resources/views/product/components/_product_list.dart';
 

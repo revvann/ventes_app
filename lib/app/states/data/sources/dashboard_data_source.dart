@@ -1,14 +1,14 @@
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ventes/app/api/presenters/dashboard_presenter.dart';
-import 'package:ventes/app/models/bp_customer_model.dart';
-import 'package:ventes/app/models/maps_loc.dart';
-import 'package:ventes/app/models/user_detail_model.dart';
+import 'package:ventes/app/api/models/bp_customer_model.dart';
+import 'package:ventes/app/api/models/maps_loc.dart';
+import 'package:ventes/app/api/models/user_detail_model.dart';
 import 'package:ventes/app/resources/views/started_page.dart';
 import 'package:ventes/core/api/handler.dart';
 import 'package:ventes/core/states/state_data_source.dart';
 import 'package:ventes/helpers/auth_helper.dart';
-import 'package:ventes/helpers/function_helpers.dart';
+import 'package:ventes/utils/utils.dart';
 import 'package:ventes/app/states/typedefs/dashboard_typedef.dart';
 import 'package:ventes/helpers/task_helper.dart';
 
@@ -42,20 +42,12 @@ class DashboardDataSource extends StateDataSource<DashboardPresenter> with DataS
 
   BpCustomer _filterBpCustomer(BpCustomer element, LatLng currentCoordinates) {
     LatLng coords1 = LatLng(element.sbccstm?.cstmlatitude ?? 0.0, element.sbccstm?.cstmlongitude ?? 0.0);
-    double radius = calculateDistance(coords1, currentCoordinates);
+    double radius = Utils.calculateDistance(coords1, currentCoordinates);
     element.radius = radius;
     return element;
   }
 
   bool _isBpCustomer100Meters(BpCustomer element) => element.radius != null ? element.radius! <= 100 : false;
-
-  void _showError(String id, String message) {
-    Get.find<TaskHelper>().errorPush(Task(id, message: message));
-  }
-
-  void _showFailed(String id, String message, [bool snackbar = true]) {
-    Get.find<TaskHelper>().failedPush(Task(id, message: message, snackbar: snackbar));
-  }
 
   List<UserDetail> _usersSuccess(List data) {
     List<UserDetail> accounts = data.map<UserDetail>((e) => UserDetail.fromJson(e)).toList();
@@ -92,8 +84,8 @@ class DashboardDataSource extends StateDataSource<DashboardPresenter> with DataS
       currentPositionID,
       initialValue: null,
       fetcher: presenter.fetchPosition,
-      onError: (message) => _showError(currentPositionID, message),
-      onFailed: (message) => _showFailed(currentPositionID, message),
+      onError: (message) => Utils.showError(currentPositionID, message),
+      onFailed: (message) => Utils.showFailed(currentPositionID, message),
       onSuccess: (data) => MapsLoc.fromJson(data),
     );
 
@@ -101,8 +93,8 @@ class DashboardDataSource extends StateDataSource<DashboardPresenter> with DataS
       usersID,
       initialValue: [],
       fetcher: presenter.fetchUsers,
-      onError: (message) => _showError(usersID, message),
-      onFailed: (message) => _showFailed(usersID, message),
+      onError: (message) => Utils.showError(usersID, message),
+      onFailed: (message) => Utils.showFailed(usersID, message),
       onSuccess: _usersSuccess,
     );
 
@@ -110,8 +102,8 @@ class DashboardDataSource extends StateDataSource<DashboardPresenter> with DataS
       userID,
       initialValue: null,
       fetcher: presenter.fetchUser,
-      onError: (message) => _showError(userID, message),
-      onFailed: (message) => _showFailed(userID, message),
+      onError: (message) => Utils.showError(userID, message),
+      onFailed: (message) => Utils.showFailed(userID, message),
       onSuccess: _userSuccess,
     );
 
@@ -119,8 +111,8 @@ class DashboardDataSource extends StateDataSource<DashboardPresenter> with DataS
       customersID,
       initialValue: [],
       fetcher: presenter.fetchCustomers,
-      onError: (message) => _showError(customersID, message),
-      onFailed: (message) => _showFailed(customersID, message),
+      onError: (message) => Utils.showError(customersID, message),
+      onFailed: (message) => Utils.showFailed(customersID, message),
       onSuccess: _customerSuccess,
     );
 
@@ -128,8 +120,8 @@ class DashboardDataSource extends StateDataSource<DashboardPresenter> with DataS
       scheduleCountID,
       initialValue: 0,
       fetcher: presenter.fetchScheduleCount,
-      onError: (message) => _showError(scheduleCountID, message),
-      onFailed: (message) => _showFailed(scheduleCountID, message),
+      onError: (message) => Utils.showError(scheduleCountID, message),
+      onFailed: (message) => Utils.showFailed(scheduleCountID, message),
       onSuccess: (data) => data['count'],
     );
 
@@ -138,8 +130,8 @@ class DashboardDataSource extends StateDataSource<DashboardPresenter> with DataS
       initialValue: null,
       fetcher: presenter.logout,
       onStart: () => Get.find<TaskHelper>().loaderPush(Task(logoutID)),
-      onError: (message) => _showError(logoutID, message),
-      onFailed: (message) => _showFailed(logoutID, message, false),
+      onError: (message) => Utils.showError(logoutID, message),
+      onFailed: (message) => Utils.showFailed(logoutID, message, false),
       onSuccess: (data) => _logoutSuccess("Logout Success"),
       onComplete: () => Get.find<TaskHelper>().loaderPop(logoutID),
     );
@@ -147,26 +139,4 @@ class DashboardDataSource extends StateDataSource<DashboardPresenter> with DataS
 
   @override
   DashboardPresenter presenterBuilder() => DashboardPresenter();
-
-  @override
-  onLoadError(String message) {}
-
-  @override
-  onLoadFailed(String message) {}
-
-  @override
-  onLoadSuccess(Map data) async {}
-
-  @override
-  void onLogoutError(String message) {}
-  @override
-  void onLogoutFailed(String message) {}
-  @override
-  void onLogoutSuccess(String message) {}
-
-  @override
-  onLoadComplete() {}
-
-  @override
-  void onLogoutComplete() {}
 }

@@ -4,7 +4,7 @@ import 'dart:async';
 import 'package:flutter/material.dart' hide MenuItem;
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:ventes/app/models/customer_model.dart';
+import 'package:ventes/app/api/models/customer_model.dart';
 import 'package:ventes/app/states/typedefs/customer_fu_typedef.dart';
 import 'package:ventes/app/states/properties/nearby_property.dart';
 import 'package:ventes/constants/regular_size.dart';

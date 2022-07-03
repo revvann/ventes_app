@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
-import 'package:ventes/app/models/schedule_model.dart';
+import 'package:ventes/app/api/models/schedule_model.dart';
 import 'package:ventes/app/resources/widgets/pop_up_item.dart';
 import 'package:ventes/app/resources/widgets/popup_button.dart';
 import 'package:ventes/app/resources/widgets/regular_appointment_card.dart';
@@ -18,7 +18,7 @@ import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/constants/strings/schedule_string.dart';
 import 'package:ventes/core/view/view.dart';
-import 'package:ventes/helpers/function_helpers.dart';
+import 'package:ventes/utils/utils.dart';
 
 part 'package:ventes/app/resources/views/daily_schedule/components/_calendar.dart';
 part 'package:ventes/app/resources/views/daily_schedule/components/_app_bar_menu.dart';
@@ -69,7 +69,7 @@ class DailyScheduleView extends View<Controller> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              formatDate(state.property.date),
+              Utils.formatDate(state.property.date),
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,

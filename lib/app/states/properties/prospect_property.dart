@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:ventes/app/models/prospect_model.dart';
+import 'package:ventes/app/api/models/prospect_model.dart';
 import 'package:ventes/app/resources/widgets/popup_button.dart';
 import 'package:ventes/constants/strings/prospect_string.dart';
 import 'package:ventes/app/states/typedefs/prospect_typedef.dart';

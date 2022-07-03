@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart' hide MenuItem;
 import 'package:get/get.dart';
-import 'package:ventes/app/models/type_model.dart';
+import 'package:ventes/app/api/models/type_model.dart';
 import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
 import 'package:ventes/constants/strings/prospect_string.dart';
 import 'package:ventes/app/states/typedefs/product_fu_typedef.dart';
 import 'package:ventes/core/states/update_form_source.dart';
-import 'package:ventes/helpers/function_helpers.dart';
+import 'package:ventes/utils/utils.dart';
 import 'package:ventes/helpers/task_helper.dart';
 
 class ProductFormUpdateFormSource extends UpdateFormSource with FormSourceMixin {
@@ -61,10 +61,10 @@ class ProductFormUpdateFormSource extends UpdateFormSource with FormSourceMixin 
   @override
   void prepareFormValues() {
     nameTEC.text = dataSource.product?.prosproductproduct?.productname ?? "";
-    priceTEC.text = currencyFormat(dataSource.product?.prosproductprice?.toString().replaceAll('.', ',') ?? "");
+    priceTEC.text = Utils.currencyFormat(dataSource.product?.prosproductprice?.toString().replaceAll('.', ',') ?? "");
     qtyTEC.text = dataSource.product?.prosproductqty?.toString().replaceAll('.', ',') ?? "";
     discTEC.text = dataSource.product?.prosproductdiscount?.toString().replaceAll('.', ',') ?? "";
-    taxTEC.text = currencyFormat(dataSource.product?.prosproducttax?.toString().replaceAll('.', ',') ?? "");
+    taxTEC.text = Utils.currencyFormat(dataSource.product?.prosproducttax?.toString().replaceAll('.', ',') ?? "");
     prosproducttax = dataSource.product?.prosproducttaxtype;
     taxDropdownController.selectedKeys = prosproducttax != null ? [prosproducttax!.typeid!] : [];
   }

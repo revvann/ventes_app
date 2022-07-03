@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 import 'package:ventes/app/api/presenters/regular_presenter.dart';
 import 'package:ventes/app/api/services/schedule_service.dart';
 import 'package:ventes/app/api/services/type_service.dart';
-import 'package:ventes/app/models/auth_model.dart';
+import 'package:ventes/app/api/models/auth_model.dart';
 import 'package:ventes/constants/strings/regular_string.dart';
 import 'package:ventes/constants/strings/schedule_string.dart';
 import 'package:ventes/core/api/fetcher.dart';

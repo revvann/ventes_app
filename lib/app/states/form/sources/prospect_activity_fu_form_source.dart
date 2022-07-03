@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart' hide MenuItem;
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:ventes/app/models/type_model.dart';
+import 'package:ventes/app/api/models/type_model.dart';
 import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
 import 'package:ventes/constants/strings/prospect_string.dart';
 import 'package:ventes/app/states/typedefs/prospect_activity_fu_typedef.dart';
 import 'package:ventes/core/states/update_form_source.dart';
-import 'package:ventes/helpers/function_helpers.dart';
+import 'package:ventes/utils/utils.dart';
 import 'package:ventes/helpers/task_helper.dart';
 
 class ProspectActivityFormUpdateFormSource extends UpdateFormSource with FormSourceMixin {
@@ -33,7 +33,7 @@ class ProspectActivityFormUpdateFormSource extends UpdateFormSource with FormSou
   DBType? get prosdttype => _prosdttype.value;
   set prosdttype(DBType? value) => _prosdttype.value = value;
 
-  String? get dateString => date != null ? formatDate(date!) : null;
+  String? get dateString => date != null ? Utils.formatDate(date!) : null;
 
   @override
   init() {
@@ -62,7 +62,7 @@ class ProspectActivityFormUpdateFormSource extends UpdateFormSource with FormSou
   @override
   void prepareFormValues() async {
     prosdtdescTEC.text = dataSource.prospectactivity!.prospectactivitydesc ?? "";
-    date = dbParseDate(dataSource.prospectactivity!.prospectactivitydate!);
+    date = Utils.dbParseDate(dataSource.prospectactivity!.prospectactivitydate!);
     prosdttype = dataSource.prospectactivity!.prospectactivitytype;
     typeDropdownController.selectedKeys = [prosdttype!.typeid!];
 
@@ -88,7 +88,7 @@ class ProspectActivityFormUpdateFormSource extends UpdateFormSource with FormSou
   Map<String, dynamic> toJson() {
     return {
       'prospectactivitydesc': prosdtdescTEC.text,
-      'prospectactivitydate': dbFormatDate(date!),
+      'prospectactivitydate': Utils.dbDateFormat(date!),
       'prospectactivitytypeid': prosdttype?.typeid.toString(),
     };
   }

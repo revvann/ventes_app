@@ -1,14 +1,14 @@
 import 'package:ventes/app/api/presenters/prospect_dashboard_presenter.dart';
-import 'package:ventes/app/models/bp_customer_model.dart';
-import 'package:ventes/app/models/prospect_assign_model.dart';
-import 'package:ventes/app/models/prospect_activity_model.dart';
-import 'package:ventes/app/models/prospect_model.dart';
-import 'package:ventes/app/models/prospect_product_model.dart';
-import 'package:ventes/app/models/user_detail_model.dart';
+import 'package:ventes/app/api/models/bp_customer_model.dart';
+import 'package:ventes/app/api/models/prospect_assign_model.dart';
+import 'package:ventes/app/api/models/prospect_activity_model.dart';
+import 'package:ventes/app/api/models/prospect_model.dart';
+import 'package:ventes/app/api/models/prospect_product_model.dart';
+import 'package:ventes/app/api/models/user_detail_model.dart';
 import 'package:ventes/app/states/typedefs/prospect_dashboard_typedef.dart';
 import 'package:ventes/core/api/handler.dart';
 import 'package:ventes/core/states/state_data_source.dart';
-import 'package:ventes/helpers/function_helpers.dart';
+import 'package:ventes/utils/utils.dart';
 
 class ProspectDashboardDataSource extends StateDataSource<ProspectDashboardPresenter> with DataSourceMixin {
   final String prospectID = 'prospehdr';
@@ -39,19 +39,19 @@ class ProspectDashboardDataSource extends StateDataSource<ProspectDashboardPrese
 
   List<ProspectActivity> _prospectActivitiesSuccess(data) {
     List<ProspectActivity> activities = data.map<ProspectActivity>((json) => ProspectActivity.fromJson(json)).toList();
-    activities.removeWhere((element) => dbParseDate(element.prospectactivitydate!).isAfter(DateTime.now()));
+    activities.removeWhere((element) => Utils.dbParseDate(element.prospectactivitydate!).isAfter(DateTime.now()));
     return activities;
   }
 
   @override
   void init() {
     super.init();
-    prospectHandler = createDataHandler(prospectID, presenter.fetchProspect, null, Prospect.fromJson, onComplete: _prospectComplete);
-    userHandler = createDataHandler(prospectID, presenter.fetchUser, null, UserDetail.fromJson);
-    bpCustomerHandler = createDataHandler(prospectID, presenter.fetchBpCustomer, null, BpCustomer.fromJson);
-    productsHandler = createDataHandler(productsID, presenter.fetchProducts, [], (data) => data.map((e) => ProspectProduct.fromJson(e)).toList());
-    activitiesHandler = createDataHandler(activitiesID, presenter.fetchDetails, [], _prospectActivitiesSuccess);
-    assignUsersHandler = createDataHandler(assignUsersID, presenter.fetchAssignedUsers, [], (data) => data.map((e) => ProspectAssign.fromJson(e)).toList());
+    prospectHandler = Utils.createDataHandler(prospectID, presenter.fetchProspect, null, Prospect.fromJson, onComplete: _prospectComplete);
+    userHandler = Utils.createDataHandler(prospectID, presenter.fetchUser, null, UserDetail.fromJson);
+    bpCustomerHandler = Utils.createDataHandler(prospectID, presenter.fetchBpCustomer, null, BpCustomer.fromJson);
+    productsHandler = Utils.createDataHandler(productsID, presenter.fetchProducts, [], (data) => data.map((e) => ProspectProduct.fromJson(e)).toList());
+    activitiesHandler = Utils.createDataHandler(activitiesID, presenter.fetchDetails, [], _prospectActivitiesSuccess);
+    assignUsersHandler = Utils.createDataHandler(assignUsersID, presenter.fetchAssignedUsers, [], (data) => data.map((e) => ProspectAssign.fromJson(e)).toList());
   }
 
   @override

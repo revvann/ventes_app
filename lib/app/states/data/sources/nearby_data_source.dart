@@ -1,14 +1,14 @@
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ventes/app/api/presenters/nearby_presenter.dart';
-import 'package:ventes/app/models/bp_customer_model.dart';
-import 'package:ventes/app/models/customer_model.dart';
-import 'package:ventes/app/models/maps_loc.dart';
+import 'package:ventes/app/api/models/bp_customer_model.dart';
+import 'package:ventes/app/api/models/customer_model.dart';
+import 'package:ventes/app/api/models/maps_loc.dart';
 import 'package:ventes/app/states/controllers/nearby_state_controller.dart';
 import 'package:ventes/app/states/typedefs/nearby_typedef.dart';
 import 'package:ventes/core/api/handler.dart';
 import 'package:ventes/core/states/state_data_source.dart';
-import 'package:ventes/helpers/function_helpers.dart';
+import 'package:ventes/utils/utils.dart';
 import 'package:ventes/helpers/task_helper.dart';
 
 class NearbyDataSource extends StateDataSource<NearbyPresenter> with DataSourceMixin {
@@ -48,7 +48,7 @@ class NearbyDataSource extends StateDataSource<NearbyPresenter> with DataSourceM
 
   Customer _mappingBpCustomer(Customer element, LatLng currentCoordinates) {
     LatLng coords1 = LatLng(element.cstmlatitude ?? 0.0, element.cstmlongitude ?? 0.0);
-    double radius = calculateDistance(coords1, currentCoordinates);
+    double radius = Utils.calculateDistance(coords1, currentCoordinates);
     element.radius = radius;
     return element;
   }
@@ -57,14 +57,6 @@ class NearbyDataSource extends StateDataSource<NearbyPresenter> with DataSourceM
 
   String get subdistrictName =>
       mapsLoc?.adresses?.first.addressComponents?.firstWhere((element) => element.types!.contains('administrative_area_level_3')).longName!.replaceAll(RegExp(r'Kecamatan |Kec '), '') ?? "";
-
-  void _showError(String id, String message) {
-    Get.find<TaskHelper>().errorPush(Task(id, message: message));
-  }
-
-  void _showFailed(String id, String message, [bool snackbar = true]) {
-    Get.find<TaskHelper>().failedPush(Task(id, message: message, snackbar: snackbar));
-  }
 
   void _deleteSuccess(String message) {
     Get.find<TaskHelper>().successPush(Task(deleteID, message: message, onFinished: (res) {
@@ -100,8 +92,8 @@ class NearbyDataSource extends StateDataSource<NearbyPresenter> with DataSourceM
       customersID,
       initialValue: [],
       fetcher: presenter.fetchCustomers,
-      onFailed: (message) => _showFailed(customersID, message),
-      onError: (message) => _showError(customersID, message),
+      onFailed: (message) => Utils.showFailed(customersID, message),
+      onError: (message) => Utils.showError(customersID, message),
       onSuccess: _customersSuccess,
     );
 
@@ -109,8 +101,8 @@ class NearbyDataSource extends StateDataSource<NearbyPresenter> with DataSourceM
       locationID,
       initialValue: null,
       fetcher: presenter.fetchLocation,
-      onFailed: (message) => _showFailed(locationID, message),
-      onError: (message) => _showError(locationID, message),
+      onFailed: (message) => Utils.showFailed(locationID, message),
+      onError: (message) => Utils.showError(locationID, message),
       onSuccess: _locationSuccess,
       onComplete: () => customersHandler.fetcher.run(subdistrictName),
     );
@@ -119,8 +111,8 @@ class NearbyDataSource extends StateDataSource<NearbyPresenter> with DataSourceM
       bpCustomersID,
       initialValue: [],
       fetcher: presenter.fetchBpCustomers,
-      onFailed: (message) => _showFailed(bpCustomersID, message),
-      onError: (message) => _showError(bpCustomersID, message),
+      onFailed: (message) => Utils.showFailed(bpCustomersID, message),
+      onError: (message) => Utils.showError(bpCustomersID, message),
       onSuccess: _bpCustomersSucces,
     );
 
@@ -129,8 +121,8 @@ class NearbyDataSource extends StateDataSource<NearbyPresenter> with DataSourceM
       initialValue: null,
       fetcher: presenter.delete,
       onStart: () => Get.find<TaskHelper>().loaderPush(Task(deleteID)),
-      onError: (message) => _showError(deleteID, message),
-      onFailed: (message) => _showFailed(deleteID, message, false),
+      onError: (message) => Utils.showError(deleteID, message),
+      onFailed: (message) => Utils.showFailed(deleteID, message, false),
       onSuccess: (data) => _deleteSuccess("Logout Success"),
       onComplete: () => Get.find<TaskHelper>().loaderPop(deleteID),
     );

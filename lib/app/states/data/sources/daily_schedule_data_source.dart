@@ -1,13 +1,14 @@
 import 'package:get/get.dart';
 import 'package:ventes/app/api/presenters/daily_schedule_presenter.dart';
-import 'package:ventes/app/models/schedule_model.dart';
-import 'package:ventes/app/models/type_model.dart';
+import 'package:ventes/app/api/models/schedule_model.dart';
+import 'package:ventes/app/api/models/type_model.dart';
 import 'package:ventes/app/states/controllers/daily_schedule_state_controller.dart';
 import 'package:ventes/app/states/typedefs/daily_schedule_typedef.dart';
 import 'package:ventes/core/api/fetcher.dart';
 import 'package:ventes/core/api/handler.dart';
 import 'package:ventes/core/states/state_data_source.dart';
 import 'package:ventes/helpers/task_helper.dart';
+import 'package:ventes/utils/utils.dart';
 
 class DailyScheduleDataSource extends StateDataSource<DailySchedulePresenter> with DataSourceMixin {
   final String typesID = 'typeshdr';
@@ -33,27 +34,6 @@ class DailyScheduleDataSource extends StateDataSource<DailySchedulePresenter> wi
     return List<Schedule>.from(value.map((item) => Schedule.fromJson(item)));
   }
 
-  DataHandler<D, R, F> createDataHandler<D, R, F extends Function>(String id, DataFetcher<F, R> fetcher, D initialValue, D Function(R) onSuccess, {Function()? onComplete, Function()? onStart}) {
-    return DataHandler<D, R, F>(
-      id,
-      initialValue: initialValue,
-      fetcher: fetcher,
-      onFailed: (message) => _showFailed(id, message),
-      onError: (message) => _showError(id, message),
-      onSuccess: onSuccess,
-      onComplete: onComplete,
-      onStart: onStart,
-    );
-  }
-
-  void _showError(String id, String message) {
-    Get.find<TaskHelper>().errorPush(Task(id, message: message));
-  }
-
-  void _showFailed(String id, String message, [bool snackbar = true]) {
-    Get.find<TaskHelper>().failedPush(Task(id, message: message, snackbar: snackbar));
-  }
-
   void _deleteSuccess(message) {
     Get.find<TaskHelper>().successPush(
       Task(deleteID, message: message, onFinished: (res) {
@@ -66,10 +46,10 @@ class DailyScheduleDataSource extends StateDataSource<DailySchedulePresenter> wi
   void init() {
     super.init();
 
-    typesHandler = createDataHandler(typesID, presenter.fetchTypes, {}, (data) => listToTypes(data));
-    permissionsHandler = createDataHandler(permissionsID, presenter.fetchPermission, [], (data) => List<DBType>.from(data.map((e) => DBType.fromJson(e))));
+    typesHandler = Utils.createDataHandler(typesID, presenter.fetchTypes, {}, (data) => listToTypes(data));
+    permissionsHandler = Utils.createDataHandler(permissionsID, presenter.fetchPermission, [], (data) => List<DBType>.from(data.map((e) => DBType.fromJson(e))));
 
-    appointmentsHandler = createDataHandler(
+    appointmentsHandler = Utils.createDataHandler(
       schedulesID,
       presenter.fetchSchedules,
       [],
@@ -83,9 +63,9 @@ class DailyScheduleDataSource extends StateDataSource<DailySchedulePresenter> wi
       fetcher: presenter.delete,
       initialValue: null,
       onStart: () => Get.find<TaskHelper>().loaderPush(Task(deleteID)),
-      onError: (message) => _showError(deleteID, message),
+      onError: (message) => Utils.showError(deleteID, message),
       onSuccess: _deleteSuccess,
-      onFailed: (message) => _showFailed(deleteID, message, false),
+      onFailed: (message) => Utils.showFailed(deleteID, message, false),
       onComplete: () => Get.find<TaskHelper>().loaderPop(deleteID),
     );
   }

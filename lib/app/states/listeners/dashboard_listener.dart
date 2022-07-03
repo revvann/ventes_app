@@ -5,7 +5,7 @@ import 'package:ventes/app/resources/views/splash_screen.dart';
 import 'package:ventes/core/states/state_listener.dart';
 import 'package:ventes/helpers/auth_helper.dart';
 import 'package:ventes/app/states/typedefs/dashboard_typedef.dart';
-import 'package:ventes/helpers/function_helpers.dart';
+import 'package:ventes/utils/utils.dart';
 
 class DashboardListener extends StateListener with ListenerMixin {
   void switchAccount(int userdtid) async {
@@ -15,7 +15,7 @@ class DashboardListener extends StateListener with ListenerMixin {
 
   @override
   Future onReady() async {
-    property.position = await getCurrentPosition();
+    property.position = await Utils.getCurrentPosition();
     dataSource.currentPositionHandler.fetcher.run();
     dataSource.customersHandler.fetcher.run();
     dataSource.userHandler.fetcher.run();

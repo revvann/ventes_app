@@ -1,15 +1,15 @@
 import 'package:get/get.dart';
 import 'package:ventes/app/api/presenters/prospect_activity_fc_presenter.dart';
-import 'package:ventes/app/models/maps_loc.dart';
-import 'package:ventes/app/models/prospect_model.dart';
-import 'package:ventes/app/models/type_model.dart';
+import 'package:ventes/app/api/models/maps_loc.dart';
+import 'package:ventes/app/api/models/prospect_model.dart';
+import 'package:ventes/app/api/models/type_model.dart';
 import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
 import 'package:ventes/app/states/controllers/prospect_activity_state_controller.dart';
 import 'package:ventes/app/states/typedefs/prospect_activity_fc_typedef.dart';
 import 'package:ventes/constants/views.dart';
 import 'package:ventes/core/api/handler.dart';
 import 'package:ventes/core/states/state_data_source.dart';
-import 'package:ventes/helpers/function_helpers.dart';
+import 'package:ventes/utils/utils.dart';
 import 'package:ventes/helpers/task_helper.dart';
 
 class ProspectActivityFormCreateDataSource extends StateDataSource<ProspectActivityFormCreatePresenter> with DataSourceMixin {
@@ -60,18 +60,18 @@ class ProspectActivityFormCreateDataSource extends StateDataSource<ProspectActiv
   @override
   void init() {
     super.init();
-    categoriesHandler = createDataHandler(categoriesID, presenter.fetchCategories, {}, _categoriesSuccess);
-    typesHandler = createDataHandler(typesID, presenter.fetchTypes, [], _typesSuccess);
-    locationHandler = createDataHandler(locationID, presenter.fetchLocation, null, MapsLoc.fromJson);
-    prospectHandler = createDataHandler(prospectID, presenter.fetchProspect, null, Prospect.fromJson, onComplete: () => formSource.prospect = prospect);
+    categoriesHandler = Utils.createDataHandler(categoriesID, presenter.fetchCategories, {}, _categoriesSuccess);
+    typesHandler = Utils.createDataHandler(typesID, presenter.fetchTypes, [], _typesSuccess);
+    locationHandler = Utils.createDataHandler(locationID, presenter.fetchLocation, null, MapsLoc.fromJson);
+    prospectHandler = Utils.createDataHandler(prospectID, presenter.fetchProspect, null, Prospect.fromJson, onComplete: () => formSource.prospect = prospect);
     createHandler = DataHandler(
       createID,
       fetcher: presenter.create,
       initialValue: null,
       onStart: () => Get.find<TaskHelper>().loaderPush(Task(createID)),
       onSuccess: _createSuccess,
-      onFailed: (message) => showFailed(createID, message, false),
-      onError: (message) => showError(createID, message),
+      onFailed: (message) => Utils.showFailed(createID, message, false),
+      onError: (message) => Utils.showError(createID, message),
       onComplete: () => Get.find<TaskHelper>().loaderPop(createID),
     );
   }

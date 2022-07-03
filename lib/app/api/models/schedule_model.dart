@@ -1,8 +1,8 @@
-import 'package:ventes/app/models/business_partner_model.dart';
+import 'package:ventes/app/api/models/business_partner_model.dart';
 import 'package:ventes/core/api/model.dart';
-import 'package:ventes/app/models/schedule_guest_model.dart';
-import 'package:ventes/app/models/type_model.dart';
-import 'package:ventes/app/models/user_model.dart';
+import 'package:ventes/app/api/models/schedule_guest_model.dart';
+import 'package:ventes/app/api/models/type_model.dart';
+import 'package:ventes/app/api/models/user_model.dart';
 
 class Schedule extends Model {
   int? scheid;

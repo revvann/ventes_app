@@ -12,7 +12,7 @@ class _UserMenuItem extends StatelessWidget {
     this.onTap,
   });
 
-  String get initialName => getInitials(user.user?.userfullname ?? "");
+  String get initialName => Utils.getInitials(user.user?.userfullname ?? "");
 
   @override
   Widget build(BuildContext context) {

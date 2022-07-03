@@ -6,12 +6,12 @@ import 'package:ventes/app/api/services/bp_customer_service.dart';
 import 'package:ventes/app/api/services/gmaps_service.dart';
 import 'package:ventes/app/api/services/schedule_service.dart';
 import 'package:ventes/app/api/services/user_service.dart';
-import 'package:ventes/app/models/auth_model.dart';
-import 'package:ventes/app/models/user_detail_model.dart';
+import 'package:ventes/app/api/models/auth_model.dart';
+import 'package:ventes/app/api/models/user_detail_model.dart';
 import 'package:ventes/constants/strings/dashboard_string.dart';
 import 'package:ventes/core/api/fetcher.dart';
 import 'package:ventes/helpers/auth_helper.dart';
-import 'package:ventes/helpers/function_helpers.dart';
+import 'package:ventes/utils/utils.dart';
 
 class DashboardPresenter extends RegularPresenter {
   final BpCustomerService _bpCustomerService = Get.find();
@@ -24,13 +24,13 @@ class DashboardPresenter extends RegularPresenter {
     int? userdtid = (await _findActiveUser())?.userdtid;
 
     DateTime now = DateTime.now();
-    DateTime start = firstWeekDate(now);
-    DateTime end = lastWeekDate(now);
+    DateTime start = Utils.firstWeekDate(now);
+    DateTime end = Utils.lastWeekDate(now);
 
     Map<String, dynamic> data = {
       'schetowardid': userdtid.toString(),
-      'startdate': dbFormatDate(start),
-      'enddate': dbFormatDate(end),
+      'startdate': Utils.dbDateFormat(start),
+      'enddate': Utils.dbDateFormat(end),
     };
 
     return _scheduleService.count(data);
@@ -65,15 +65,15 @@ class DashboardPresenter extends RegularPresenter {
     return await _userService.show(authModel!.accountActive!);
   }
 
-  Future<Response> _getCurrentPosition() async {
-    Position position = await getCurrentPosition();
+  Future<Response> getCurrentPosition() async {
+    Position position = await Utils.getCurrentPosition();
     return await _gmapsService.getDetail(position.latitude, position.longitude);
   }
 
   SimpleFetcher get logout => SimpleFetcher(responseBuilder: _authService.signOut, failedMessage: "Logout failed");
 
   SimpleFetcher<Map<String, dynamic>> get fetchPosition => SimpleFetcher(
-        responseBuilder: _getCurrentPosition,
+        responseBuilder: getCurrentPosition,
         failedMessage: DashboardString.fetchFailed,
       );
 

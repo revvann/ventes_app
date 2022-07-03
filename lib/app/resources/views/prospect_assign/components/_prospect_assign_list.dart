@@ -120,7 +120,7 @@ class _UserItem extends StatelessWidget {
           height: 40,
           alignment: Alignment.center,
           child: Text(
-            getInitials(userdt?.user?.userfullname ?? ""),
+            Utils.getInitials(userdt?.user?.userfullname ?? ""),
             style: TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,

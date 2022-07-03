@@ -9,6 +9,7 @@ import 'package:ventes/app/resources/views/prospect/prospect.dart';
 import 'package:ventes/app/resources/views/schedule/schedule.dart';
 import 'package:ventes/constants/views.dart';
 import 'package:ventes/routing/route_pack.dart';
+import 'package:ventes/utils/utils.dart';
 
 class BottomNavigationStateController extends GetxController {
   BottomNavigationStateController() {
@@ -50,6 +51,7 @@ class BottomNavigationStateController extends GetxController {
 
     FirebaseMessaging.instance.onTokenRefresh.listen(Get.find<UserService>().setToken);
     FirebaseMessaging.instance.getToken().then(Get.find<UserService>().setToken);
+    Utils.initSocket();
   }
 
   @override

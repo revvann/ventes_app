@@ -1,5 +1,5 @@
 import 'package:ventes/core/api/model.dart';
-import 'package:ventes/app/models/user_detail_model.dart';
+import 'package:ventes/app/api/models/user_detail_model.dart';
 
 class User extends Model {
   int? userid;

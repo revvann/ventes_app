@@ -6,7 +6,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ventes/constants/strings/prospect_string.dart';
 import 'package:ventes/app/states/typedefs/prospect_activity_fc_typedef.dart';
 import 'package:ventes/core/states/state_property.dart';
-import 'package:ventes/helpers/function_helpers.dart';
+import 'package:ventes/utils/utils.dart';
 import 'package:ventes/helpers/task_helper.dart';
 
 class ProspectActivityFormCreateProperty extends StateProperty with PropertyMixin {
@@ -22,7 +22,7 @@ class ProspectActivityFormCreateProperty extends StateProperty with PropertyMixi
   Task task = Task(ProspectString.formCreateDetailTaskCode);
 
   refresh() async {
-    Position position = await getCurrentPosition();
+    Position position = await Utils.getCurrentPosition();
     dataSource.categoriesHandler.fetcher.run();
     dataSource.typesHandler.fetcher.run();
     dataSource.prospectHandler.fetcher.run(prospectId);

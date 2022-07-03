@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:ventes/app/models/type_model.dart';
+import 'package:ventes/app/api/models/type_model.dart';
 import 'package:ventes/app/resources/widgets/editor_input.dart';
 import 'package:ventes/app/resources/widgets/icon_input.dart';
 import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';

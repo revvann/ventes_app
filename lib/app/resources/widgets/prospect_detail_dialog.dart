@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart' hide MenuItem;
-import 'package:ventes/app/models/prospect_model.dart';
-import 'package:ventes/app/models/type_model.dart';
+import 'package:ventes/app/api/models/prospect_model.dart';
+import 'package:ventes/app/api/models/type_model.dart';
 import 'package:ventes/app/resources/widgets/stage_item.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
-import 'package:ventes/helpers/function_helpers.dart';
+import 'package:ventes/utils/utils.dart';
 
 class ProspectActivityDialog extends StatelessWidget {
   Prospect prospect;
@@ -21,9 +21,9 @@ class ProspectActivityDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String formattedStartDate = startDate != null ? formatDate(dbParseDate(startDate!)) : "";
-    String formattedEndDate = endDate != null ? formatDate(dbParseDate(endDate!)) : "";
-    String formattedExpectedDate = expectedDate != null ? formatDate(dbParseDate(expectedDate!)) : "";
+    String formattedStartDate = startDate != null ? Utils.formatDate(Utils.dbParseDate(startDate!)) : "";
+    String formattedEndDate = endDate != null ? Utils.formatDate(Utils.dbParseDate(endDate!)) : "";
+    String formattedExpectedDate = expectedDate != null ? Utils.formatDate(Utils.dbParseDate(expectedDate!)) : "";
 
     return SingleChildScrollView(
       child: Column(
@@ -74,7 +74,7 @@ class ProspectActivityDialog extends StatelessWidget {
           SizedBox(
             height: RegularSize.m,
           ),
-          _DetailItem(title: "Prospect Value", value: currencyFormat(prospect.prospectvalue?.toString().replaceAll('.', ',') ?? "0")),
+          _DetailItem(title: "Prospect Value", value: Utils.currencyFormat(prospect.prospectvalue?.toString().replaceAll('.', ',') ?? "0")),
           SizedBox(
             height: RegularSize.m,
           ),

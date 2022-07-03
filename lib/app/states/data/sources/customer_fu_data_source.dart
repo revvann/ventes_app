@@ -3,20 +3,20 @@ import 'dart:async';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ventes/app/api/presenters/customer_fu_presenter.dart';
-import 'package:ventes/app/models/bp_customer_model.dart';
-import 'package:ventes/app/models/city_model.dart';
-import 'package:ventes/app/models/country_model.dart';
-import 'package:ventes/app/models/customer_model.dart';
-import 'package:ventes/app/models/province_model.dart';
-import 'package:ventes/app/models/subdistrict_model.dart';
-import 'package:ventes/app/models/type_model.dart';
+import 'package:ventes/app/api/models/bp_customer_model.dart';
+import 'package:ventes/app/api/models/city_model.dart';
+import 'package:ventes/app/api/models/country_model.dart';
+import 'package:ventes/app/api/models/customer_model.dart';
+import 'package:ventes/app/api/models/province_model.dart';
+import 'package:ventes/app/api/models/subdistrict_model.dart';
+import 'package:ventes/app/api/models/type_model.dart';
 import 'package:ventes/app/states/controllers/nearby_state_controller.dart';
 import 'package:ventes/app/states/typedefs/customer_fu_typedef.dart';
 import 'package:ventes/constants/views.dart';
 import 'package:ventes/core/api/fetcher.dart';
 import 'package:ventes/core/api/handler.dart';
 import 'package:ventes/core/states/state_data_source.dart';
-import 'package:ventes/helpers/function_helpers.dart';
+import 'package:ventes/utils/utils.dart';
 import 'package:ventes/helpers/task_helper.dart';
 
 class CustomerFormUpdateDataSource extends StateDataSource<CustomerFormUpdatePresenter> with DataSourceMixin {
@@ -49,7 +49,7 @@ class CustomerFormUpdateDataSource extends StateDataSource<CustomerFormUpdatePre
     LatLng coords2 = LatLng(currentPos.latitude, currentPos.longitude);
     return customers.where((element) {
       LatLng coords1 = LatLng(element.cstmlatitude ?? 0.0, element.cstmlongitude ?? 0.0);
-      double radius = calculateDistance(coords1, coords2);
+      double radius = Utils.calculateDistance(coords1, coords2);
       element.radius = radius;
       return radius <= 100;
     }).toList();
@@ -77,26 +77,6 @@ class CustomerFormUpdateDataSource extends StateDataSource<CustomerFormUpdatePre
   Future<List<Province>> fetchProvinces(int countryId, [String? search]) async => await presenter.fetchProvinces(countryId, search);
   Future<List<City>> fetchCities(int provinceId, [String? search]) async => await presenter.fetchCities(provinceId, search);
   Future<List<Subdistrict>> fetchSubdistricts(int cityId, [String? search]) async => await presenter.fetchSubdistricts(cityId, search);
-
-  void _showError(String id, String message) {
-    Get.find<TaskHelper>().errorPush(Task(id, message: message));
-  }
-
-  void _showFailed(String id, String message, [bool snackbar = true]) {
-    Get.find<TaskHelper>().failedPush(Task(id, message: message, snackbar: snackbar));
-  }
-
-  DataHandler<D, R, F> createDataHandler<D, R, F extends Function>(String id, DataFetcher<F, R> fetcher, D initialValue, D Function(R) onSuccess, {Function()? onComplete}) {
-    return DataHandler<D, R, F>(
-      id,
-      initialValue: initialValue,
-      fetcher: fetcher,
-      onFailed: (message) => _showFailed(id, message),
-      onError: (message) => _showError(id, message),
-      onSuccess: onSuccess,
-      onComplete: onComplete,
-    );
-  }
 
   List<Customer> _customersSuccess(List data) {
     List<Customer> customers = customersFromList(
@@ -129,17 +109,17 @@ class CustomerFormUpdateDataSource extends StateDataSource<CustomerFormUpdatePre
   void init() {
     super.init();
 
-    bpCustomersHandler = createDataHandler(bpCustomersID, presenter.fetchBpCustomers, [], _bpCustomersSucccess);
-    customersHandler = createDataHandler(customersID, presenter.fetchCustomers, [], _customersSuccess);
-    typesHandler = createDataHandler(typesID, presenter.fetchTypes, {}, (data) => typesFromList(data));
-    statusesHandler = createDataHandler(statusesID, presenter.fetchStatuses, {}, (data) => statusesFromList(data));
+    bpCustomersHandler = Utils.createDataHandler(bpCustomersID, presenter.fetchBpCustomers, [], _bpCustomersSucccess);
+    customersHandler = Utils.createDataHandler(customersID, presenter.fetchCustomers, [], _customersSuccess);
+    typesHandler = Utils.createDataHandler(typesID, presenter.fetchTypes, {}, (data) => typesFromList(data));
+    statusesHandler = Utils.createDataHandler(statusesID, presenter.fetchStatuses, {}, (data) => statusesFromList(data));
 
     bpCustomerHandler = DataHandler(
       bpCustomerID,
       initialValue: null,
       fetcher: presenter.fetchBpCustomer,
-      onFailed: (message) => _showFailed(bpCustomerID, message),
-      onError: (message) => _showError(bpCustomerID, message),
+      onFailed: (message) => Utils.showFailed(bpCustomerID, message),
+      onError: (message) => Utils.showError(bpCustomerID, message),
       onSuccess: _bpCustomerSuccess,
       onComplete: _bpCustomerComplete,
     );
@@ -149,8 +129,8 @@ class CustomerFormUpdateDataSource extends StateDataSource<CustomerFormUpdatePre
       initialValue: null,
       fetcher: presenter.update,
       onStart: () => Get.find<TaskHelper>().loaderPush(Task(updateID)),
-      onFailed: (message) => _showFailed(bpCustomerID, message, false),
-      onError: (message) => _showError(bpCustomerID, message),
+      onFailed: (message) => Utils.showFailed(bpCustomerID, message, false),
+      onError: (message) => Utils.showError(bpCustomerID, message),
       onComplete: () => Get.find<TaskHelper>().loaderPop(updateID),
       onSuccess: (data) => Get.find<TaskHelper>().successPush(
         Task(

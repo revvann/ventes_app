@@ -1,6 +1,6 @@
 import 'package:ventes/app/states/typedefs/profile_typedef.dart';
 import 'package:ventes/core/states/state_listener.dart';
-import 'package:ventes/helpers/function_helpers.dart';
+import 'package:ventes/utils/utils.dart';
 
 class ProfileListener extends StateListener with ListenerMixin {
   @override
@@ -9,6 +9,6 @@ class ProfileListener extends StateListener with ListenerMixin {
   }
 
   void goBack() {
-    backToDashboard();
+    Utils.backToDashboard();
   }
 }

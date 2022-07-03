@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart' hide MenuItem;
 import 'package:get/get.dart';
-import 'package:ventes/app/models/bp_customer_model.dart';
-import 'package:ventes/app/models/type_model.dart';
-import 'package:ventes/app/models/user_detail_model.dart';
+import 'package:ventes/app/api/models/bp_customer_model.dart';
+import 'package:ventes/app/api/models/type_model.dart';
+import 'package:ventes/app/api/models/user_detail_model.dart';
 import 'package:ventes/app/resources/widgets/searchable_dropdown.dart';
 import 'package:ventes/constants/formatters/currency_formatter.dart';
 import 'package:ventes/app/states/typedefs/prospect_fc_typedef.dart';
 import 'package:ventes/core/states/state_form_source.dart';
 import 'package:ventes/helpers/auth_helper.dart';
-import 'package:ventes/helpers/function_helpers.dart';
+import 'package:ventes/utils/utils.dart';
 import 'package:ventes/helpers/task_helper.dart';
 
 class ProspectFormCreateFormSource extends StateFormSource with FormSourceMixin {
@@ -52,9 +52,9 @@ class ProspectFormCreateFormSource extends StateFormSource with FormSourceMixin 
   BpCustomer? get proscustomer => _proscustomer.value;
   set proscustomer(BpCustomer? value) => _proscustomer.value = value;
 
-  String? get prosstartdateString => prosstartdate == null ? null : formatDate(prosstartdate!);
-  String? get prosenddateString => prosenddate == null ? null : formatDate(prosenddate!);
-  String? get prosexpenddateString => prosexpenddate == null ? null : formatDate(prosexpenddate!);
+  String? get prosstartdateString => prosstartdate == null ? null : Utils.formatDate(prosstartdate!);
+  String? get prosenddateString => prosenddate == null ? null : Utils.formatDate(prosenddate!);
+  String? get prosexpenddateString => prosexpenddate == null ? null : Utils.formatDate(prosexpenddate!);
   String? get prosname => prosnameTEC.text.isBlank ?? true ? null : prosnameTEC.text;
   String? get prosvalue => prosvalueTEC.text.isBlank ?? true ? null : prosvalueTEC.text.replaceAll(RegExp(r'[,.]'), '');
   String? get prosdesc => prosdescTEC.text.isBlank ?? true ? null : prosdescTEC.text;

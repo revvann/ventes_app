@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:get/get.dart';
 import 'package:ventes/app/api/presenters/schedule_fu_presenter.dart';
-import 'package:ventes/app/models/auth_model.dart';
-import 'package:ventes/app/models/schedule_model.dart';
-import 'package:ventes/app/models/type_model.dart';
-import 'package:ventes/app/models/user_detail_model.dart';
+import 'package:ventes/app/api/models/auth_model.dart';
+import 'package:ventes/app/api/models/schedule_model.dart';
+import 'package:ventes/app/api/models/type_model.dart';
+import 'package:ventes/app/api/models/user_detail_model.dart';
 import 'package:ventes/app/states/controllers/daily_schedule_state_controller.dart';
 import 'package:ventes/app/states/typedefs/schedule_fu_typedef.dart';
 import 'package:ventes/constants/strings/schedule_string.dart';
@@ -13,7 +13,7 @@ import 'package:ventes/constants/views.dart';
 import 'package:ventes/core/api/handler.dart';
 import 'package:ventes/core/states/state_data_source.dart';
 import 'package:ventes/helpers/auth_helper.dart';
-import 'package:ventes/helpers/function_helpers.dart';
+import 'package:ventes/utils/utils.dart';
 import 'package:ventes/helpers/task_helper.dart';
 
 class ScheduleFormUpdateDataSource extends StateDataSource<ScheduleFormUpdatePresenter> with DataSourceMixin {
@@ -87,22 +87,22 @@ class ScheduleFormUpdateDataSource extends StateDataSource<ScheduleFormUpdatePre
   @override
   void init() {
     super.init();
-    typesHandler = createDataHandler(
+    typesHandler = Utils.createDataHandler(
       typesID,
       presenter.fetchTypes,
       [],
       insertTypes,
       onComplete: () => formSource.prepareFormValues(),
     );
-    scheduleHandler = createDataHandler(scheduleID, presenter.fetchSchedule, null, Schedule.fromJson, onComplete: _scheduleComplete);
+    scheduleHandler = Utils.createDataHandler(scheduleID, presenter.fetchSchedule, null, Schedule.fromJson, onComplete: _scheduleComplete);
     updateHandler = DataHandler(
       updateID,
       fetcher: presenter.update,
       initialValue: null,
       onStart: () => Get.find<TaskHelper>().loaderPush(Task(updateID)),
       onComplete: () => Get.find<TaskHelper>().loaderPop(updateID),
-      onError: (message) => showError(updateID, message),
-      onFailed: (message) => showFailed(updateID, message),
+      onError: (message) => Utils.showError(updateID, message),
+      onFailed: (message) => Utils.showFailed(updateID, message),
       onSuccess: _updateSuccess,
     );
   }

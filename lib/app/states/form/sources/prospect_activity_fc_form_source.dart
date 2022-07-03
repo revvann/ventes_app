@@ -2,13 +2,13 @@ import 'package:flutter/material.dart' hide MenuItem;
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:ventes/app/models/prospect_model.dart';
-import 'package:ventes/app/models/type_model.dart';
+import 'package:ventes/app/api/models/prospect_model.dart';
+import 'package:ventes/app/api/models/type_model.dart';
 import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
 import 'package:ventes/constants/strings/prospect_string.dart';
 import 'package:ventes/app/states/typedefs/prospect_activity_fc_typedef.dart';
 import 'package:ventes/core/states/state_form_source.dart';
-import 'package:ventes/helpers/function_helpers.dart';
+import 'package:ventes/utils/utils.dart';
 import 'package:ventes/helpers/task_helper.dart';
 
 class ProspectActivityFormCreateFormSource extends StateFormSource with FormSourceMixin {
@@ -46,7 +46,7 @@ class ProspectActivityFormCreateFormSource extends StateFormSource with FormSour
   int? get prosdtcategory => _prosdtcategory.value;
   set prosdtcategory(int? value) => _prosdtcategory.value = value;
 
-  String? get dateString => date != null ? formatDate(date!) : null;
+  String? get dateString => date != null ? Utils.formatDate(date!) : null;
 
   bool get isOnSite => dataSource.categoryItems[prosdtcategory] == "On Site";
 
@@ -64,7 +64,7 @@ class ProspectActivityFormCreateFormSource extends StateFormSource with FormSour
 
     date = DateTime.now();
 
-    Position pos = await getCurrentPosition();
+    Position pos = await Utils.getCurrentPosition();
     prosdtlat = pos.latitude;
     prosdtlong = pos.longitude;
     prosdtloc = "https://maps.google.com?q=$prosdtlat,$prosdtlong";
@@ -99,7 +99,7 @@ class ProspectActivityFormCreateFormSource extends StateFormSource with FormSour
     Map<String, dynamic> json = {
       'prospectactivityprospectid': prospect?.prospectid?.toString(),
       'prospectactivitydesc': prosdtdescTEC.text,
-      'prospectactivitydate': dbFormatDate(date!),
+      'prospectactivitydate': Utils.dbformatDate(date!),
       'prospectactivitycatid': prosdtcategory?.toString(),
       'prospectactivitytypeid': prosdttype?.typeid.toString(),
     };

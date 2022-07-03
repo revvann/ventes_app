@@ -42,7 +42,7 @@ class _DetailList extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      formatDate(dbParseDate(_prospectActivity.prospectactivitydate!)),
+                      Utils.formatDate(Utils.dbParseDate(_prospectActivity.prospectactivitydate!)),
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,

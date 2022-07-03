@@ -1,14 +1,14 @@
 import 'package:get/get.dart';
 import 'package:ventes/app/api/presenters/contact_person_fc_presenter.dart';
-import 'package:ventes/app/models/customer_model.dart';
-import 'package:ventes/app/models/type_model.dart';
+import 'package:ventes/app/api/models/customer_model.dart';
+import 'package:ventes/app/api/models/type_model.dart';
 import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
 import 'package:ventes/app/states/controllers/contact_person_state_controller.dart';
 import 'package:ventes/app/states/typedefs/contact_person_fc_typedef.dart';
 import 'package:ventes/constants/views.dart';
 import 'package:ventes/core/api/handler.dart';
 import 'package:ventes/core/states/state_data_source.dart';
-import 'package:ventes/helpers/function_helpers.dart';
+import 'package:ventes/utils/utils.dart';
 import 'package:ventes/helpers/task_helper.dart';
 
 class ContactPersonFormCreateDataSource extends StateDataSource<ContactPersonFormCreatePresenter> with DataSourceMixin {
@@ -39,16 +39,16 @@ class ContactPersonFormCreateDataSource extends StateDataSource<ContactPersonFor
   @override
   void init() {
     super.init();
-    typesHandler = createDataHandler(typesID, presenter.fetchTypes, [], _typesSuccess);
-    customerHandler = createDataHandler(customerID, presenter.fetchCustomer, null, Customer.fromJson, onComplete: () => formSource.customerid = customer?.cstmid);
+    typesHandler = Utils.createDataHandler(typesID, presenter.fetchTypes, [], _typesSuccess);
+    customerHandler = Utils.createDataHandler(customerID, presenter.fetchCustomer, null, Customer.fromJson, onComplete: () => formSource.customerid = customer?.cstmid);
     createHandler = DataHandler(
       createID,
       fetcher: presenter.create,
       initialValue: null,
       onStart: () => Get.find<TaskHelper>().loaderPush(Task(createID)),
       onComplete: () => Get.find<TaskHelper>().loaderPop(createID),
-      onFailed: (message) => showFailed(createID, message),
-      onError: (message) => showError(createID, message),
+      onFailed: (message) => Utils.showFailed(createID, message),
+      onError: (message) => Utils.showError(createID, message),
       onSuccess: _createSuccess,
     );
   }

@@ -9,10 +9,10 @@ class _DetailList extends StatelessWidget {
         handlers: [state.dataSource.prospectHandler],
         width: RegularSize.xl,
         builder: (prospect) {
-          String startDate = prospect?.prospectstartdate != null ? formatDate(dbParseDate(prospect!.prospectstartdate!)) : "";
-          String endDate = prospect?.prospectenddate != null ? formatDate(dbParseDate(prospect!.prospectenddate!)) : "";
-          String expCloseDate = prospect?.prospectexpclosedate != null ? formatDate(dbParseDate(prospect!.prospectexpclosedate!)) : "";
-          String value = currencyFormat(prospect?.prospectvalue?.toString() ?? "0");
+          String startDate = prospect?.prospectstartdate != null ? Utils.formatDate(Utils.dbParseDate(prospect!.prospectstartdate!)) : "";
+          String endDate = prospect?.prospectenddate != null ? Utils.formatDate(Utils.dbParseDate(prospect!.prospectenddate!)) : "";
+          String expCloseDate = prospect?.prospectexpclosedate != null ? Utils.formatDate(Utils.dbParseDate(prospect!.prospectexpclosedate!)) : "";
+          String value = Utils.currencyFormat(prospect?.prospectvalue?.toString() ?? "0");
           return Column(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.start,

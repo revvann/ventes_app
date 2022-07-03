@@ -1,15 +1,15 @@
 import 'package:get/get.dart';
 import 'package:ventes/app/api/presenters/prospect_activity_fu_presenter.dart';
-import 'package:ventes/app/models/maps_loc.dart';
-import 'package:ventes/app/models/prospect_activity_model.dart';
-import 'package:ventes/app/models/type_model.dart';
+import 'package:ventes/app/api/models/maps_loc.dart';
+import 'package:ventes/app/api/models/prospect_activity_model.dart';
+import 'package:ventes/app/api/models/type_model.dart';
 import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
 import 'package:ventes/app/states/controllers/prospect_activity_state_controller.dart';
 import 'package:ventes/app/states/typedefs/prospect_activity_fu_typedef.dart';
 import 'package:ventes/constants/views.dart';
 import 'package:ventes/core/api/handler.dart';
 import 'package:ventes/core/states/state_data_source.dart';
-import 'package:ventes/helpers/function_helpers.dart';
+import 'package:ventes/utils/utils.dart';
 import 'package:ventes/helpers/task_helper.dart';
 
 class ProspectActivityFormUpdateDataSource extends StateDataSource<ProspectActivityFormUpdatePresenter> with DataSourceMixin {
@@ -60,10 +60,10 @@ class ProspectActivityFormUpdateDataSource extends StateDataSource<ProspectActiv
   @override
   void init() {
     super.init();
-    typesHandler = createDataHandler(typesID, presenter.fetchTypes, [], _typesSuccess);
-    prospectActivityHandler = createDataHandler(prospectActivityID, presenter.fetchProspectActivity, null, ProspectActivity.fromJson, onComplete: _prospectActivityComplete);
-    locationHandler = createDataHandler(locationID, presenter.fetchLocation, null, MapsLoc.fromJson);
-    updateHandler = createDataHandler(updateID, presenter.update, null, _updateSuccess);
+    typesHandler = Utils.createDataHandler(typesID, presenter.fetchTypes, [], _typesSuccess);
+    prospectActivityHandler = Utils.createDataHandler(prospectActivityID, presenter.fetchProspectActivity, null, ProspectActivity.fromJson, onComplete: _prospectActivityComplete);
+    locationHandler = Utils.createDataHandler(locationID, presenter.fetchLocation, null, MapsLoc.fromJson);
+    updateHandler = Utils.createDataHandler(updateID, presenter.update, null, _updateSuccess);
   }
 
   @override

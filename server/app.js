@@ -1,36 +1,33 @@
 const admin = require("firebase-admin");
+const createMessaging = require('./firebase/messaging.js');
+const express = require('express');
+const app = express();
+const http = require('http');
+const server = http.createServer(app);
+const { Server } = require("socket.io");
+const io = new Server(server);
 
-async function sendMessage() {
-    admin.initializeApp({
-        credential: admin.credential.cert(require("./service-account-file.json")),
+admin.initializeApp({
+    credential: admin.credential.cert(require("./service-account-file.json")),
+});
+const firebaseMessaging = createMessaging(admin);
+
+let messages = [];
+
+io.on('connection', (socket) => {
+    console.log(`${socket.handshake.auth.username}`);
+
+    socket.on('message', (data) => {
+        socket.broadcast.to(socket.id).emit('message', "testes");
+        console.log(data);
     });
 
-    let token = 'cYowJNUxRdSln69ROopDg3:APA91bFkFHy1RqL3qWqLxlk_3c_aiInfkYodmfxDck0uRIhEiNNmG3CdVC2_l4x9Be25uP63CRpyzKoIEkGRBLYrlx5-O_qrCiJIBMTiCdhoZFjOTVXGGpFXP3vTvZA-jlCT_xT9veDl';
-    const message = {
-        data: {
-            type: "chat",
-            menu: "0",
-            route: "/chatroom",
+    socket.on('disconnect', reason => {
+        console.log(reason);
+        console.log("you are about to disconnect from socket.io");
+    });
+});
 
-        },
-        notification: {
-            title: "My Tytyd",
-            body: "My Body",
-        },
-        token: token,
-    };
-    console.log(message);
-
-    admin
-        .messaging()
-        .send(message)
-        .then((response) => {
-            console.log("Successfully sent message:", response);
-        })
-        .catch((error) => {
-            console.log("Error sending message:", error);
-        });
-}
-
-sendMessage();
-
+server.listen(3000, () => {
+    console.log('listening on *:3000');
+});
