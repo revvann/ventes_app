@@ -165,7 +165,6 @@ values (
         true
     );
 select *
-from msuser
-where userpassword = '$2y$10$0F3ZDiCV1uK/Spm41Fne7.i2k7OvYFLmGewf.bI/BxPO6Vz/5sRmi';
+from vtchat;
 update msuser
 set userdeviceid = null;

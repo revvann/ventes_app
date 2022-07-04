@@ -17,7 +17,7 @@ class _ChatHeader extends StatelessWidget {
           vertical: RegularSize.xs,
         ),
         decoration: BoxDecoration(
-          color: RegularColor.secondary,
+          color: RegularColor.primary,
           borderRadius: BorderRadius.circular(RegularSize.s),
         ),
         child: Text(

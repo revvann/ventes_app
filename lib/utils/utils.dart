@@ -12,6 +12,7 @@ import 'package:timezone/timezone.dart';
 import 'package:ventes/app/api/models/auth_model.dart';
 import 'package:ventes/app/api/services/auth_service.dart';
 import 'package:ventes/app/api/services/bp_customer_service.dart';
+import 'package:ventes/app/api/services/chat_service.dart';
 import 'package:ventes/app/api/services/contact_person_service.dart';
 import 'package:ventes/app/api/services/customer_service.dart';
 import 'package:ventes/app/api/services/gmaps_service.dart';
@@ -109,6 +110,10 @@ class Utils {
     return DateFormat('MMMM dd, yyyy HH:mm:ss').parse(dateTime);
   }
 
+  static DateTime dbParseDateTime(String dateTime) {
+    return DateFormat('yyyy-MM-dd HH:mm:ss').parse(dateTime);
+  }
+
   static String dbformatDate(DateTime date) {
     return DateFormat('yyyy-MM-dd').format(date);
   }
@@ -131,6 +136,10 @@ class Utils {
 
   static String dbDateFormat(DateTime date) {
     return DateFormat('yyyy-MM-dd').format(date);
+  }
+
+  static String dbFormatDateTime(DateTime dateTime) {
+    return DateFormat('yyyy-MM-dd HH:mm:ss').format(dateTime);
   }
 
   static DateTime firstWeekDate(DateTime date) {
@@ -277,6 +286,7 @@ class Utils {
     Get.lazyPut(() => AuthService(), fenix: true);
     Get.lazyPut(() => AuthService(), fenix: true);
     Get.lazyPut(() => UserService(), fenix: true);
+    Get.lazyPut(() => ChatService(), fenix: true);
     Get.lazyPut(() => BpCustomerService(), fenix: true);
     Get.lazyPut(() => CustomerService(), fenix: true);
     Get.lazyPut(() => GmapsService(), fenix: true);

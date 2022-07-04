@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:socket_io_client/socket_io_client.dart';
+import 'package:ventes/app/api/models/chat_model.dart';
 import 'package:ventes/app/states/typedefs/chat_room_typedef.dart';
 import 'package:ventes/core/states/state_property.dart';
 
@@ -14,17 +15,16 @@ class ChatRoomProperty extends StateProperty with PropertyMixin {
 
   TextEditingController messageTEC = TextEditingController();
 
-  @override
-  void init() {
-    super.init();
-    socket.on('message', (data) {
-      print(data);
-    });
+  void sendMessage(Map<String, dynamic> data) {
+    socket.emit('message', data);
   }
 
+  @override
   void ready() {
     super.ready();
-    socket.emit('message', "testes");
+    socket.on('message', listener.onMessage);
+    socket.on('messagefailed', listener.onMessageFailed);
+    socket.on('messageerror', listener.onMessageError);
   }
 
   @override
@@ -33,11 +33,4 @@ class ChatRoomProperty extends StateProperty with PropertyMixin {
     messageTEC.dispose();
     socket.off('message');
   }
-}
-
-class Chat {
-  String message;
-  DateTime date;
-  String deviceid;
-  Chat(this.message, this.date, this.deviceid);
 }

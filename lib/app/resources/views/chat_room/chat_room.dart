@@ -5,10 +5,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:grouped_list/grouped_list.dart';
+import 'package:ventes/app/api/models/chat_model.dart';
 import 'package:ventes/app/api/models/user_detail_model.dart';
 import 'package:ventes/app/resources/widgets/handler_container.dart';
 import 'package:ventes/app/resources/widgets/top_navigation.dart';
-import 'package:ventes/app/states/properties/chat_room_property.dart';
 import 'package:ventes/app/states/typedefs/chat_room_typedef.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
@@ -98,10 +98,10 @@ class ChatRoomView extends View<Controller> {
                     reverse: true,
                     padding: EdgeInsets.symmetric(horizontal: RegularSize.s),
                     elements: state.property.chats,
-                    groupBy: (chat) => DateTime(chat.date.year, chat.date.month, chat.date.day),
-                    groupHeaderBuilder: (Chat chat) => _ChatHeader(Utils.formatDate(chat.date)),
+                    groupBy: (chat) => DateTime(Utils.dbParseDate(chat.createddate!).year, Utils.dbParseDate(chat.createddate!).month, Utils.dbParseDate(chat.createddate!).day),
+                    groupHeaderBuilder: (Chat chat) => _ChatHeader(Utils.formatDate(Utils.dbParseDate(chat.createddate!))),
                     itemBuilder: (_, chat) {
-                      return _ChatBody(chat.message, isMe: chat.deviceid == state.dataSource.userDetail?.user?.userdeviceid);
+                      return _ChatBody(chat.chatmessage ?? "", time: Utils.formatTime12(Utils.dbParseDateTime(chat.createddate!)), isMe: chat.createdby == state.dataSource.userDetail?.user?.userid);
                     },
                   ),
                 );
@@ -112,7 +112,7 @@ class ChatRoomView extends View<Controller> {
                 ),
                 padding: EdgeInsets.symmetric(
                   horizontal: RegularSize.m,
-                  vertical: RegularSize.m,
+                  vertical: RegularSize.s,
                 ),
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -136,12 +136,15 @@ class ChatRoomView extends View<Controller> {
                         controller: state.property.messageTEC,
                       ),
                     ),
-                    Container(
-                      padding: EdgeInsets.all(RegularSize.s),
-                      child: SvgPicture.asset(
-                        'assets/svg/send.svg',
-                        color: RegularColor.gray,
-                        width: RegularSize.l,
+                    GestureDetector(
+                      onTap: state.listener.sendMessage,
+                      child: Container(
+                        padding: EdgeInsets.all(RegularSize.s),
+                        child: SvgPicture.asset(
+                          'assets/svg/send.svg',
+                          color: RegularColor.gray,
+                          width: RegularSize.l,
+                        ),
                       ),
                     ),
                   ],

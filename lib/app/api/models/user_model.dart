@@ -10,6 +10,7 @@ class User extends Model {
   String? userphone;
   String? userdeviceid;
   String? userfcmtoken;
+  String? usersocketid;
   List<UserDetail>? userdetails;
 
   User({
@@ -20,6 +21,7 @@ class User extends Model {
     this.useremail,
     this.userphone,
     this.userdeviceid,
+    this.usersocketid,
     this.userfcmtoken,
     int? createdby,
     String? createddate,
@@ -44,6 +46,7 @@ class User extends Model {
     userphone = json['userphone'];
     userdeviceid = json['userdeviceid'];
     userfcmtoken = json['userfcmtoken'];
+    usersocketid = json['usersocketid'];
     if (json['userdetails'] != null) {
       userdetails = <UserDetail>[];
       json['userdetails'].forEach((v) {
@@ -64,6 +67,7 @@ class User extends Model {
     data['userphone'] = userphone;
     data['userdeviceid'] = userdeviceid;
     data['userfcmtoken'] = userfcmtoken;
+    data['usersocketid'] = usersocketid;
     if (userdetails != null) {
       data['userdetails'] = userdetails!.map((v) => v.toJson()).toList();
     }
