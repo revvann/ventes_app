@@ -49,9 +49,9 @@ class _ProspectList extends StatelessWidget {
                     onTap: () => state.listener.onCloseWonClicked(prospect.prospectid!),
                   ),
                   MenuItem(
-                    title: "Closed Lose",
+                    title: "Closed Lost",
                     color: RegularColor.red,
-                    onTap: () => state.listener.onCloseLoseClicked(prospect.prospectid!),
+                    onTap: () => onCloseLoseClicked(prospect.prospectid!),
                   ),
                 ],
               ),
@@ -60,5 +60,15 @@ class _ProspectList extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void onCloseLoseClicked(id) async {
+    if (state.dataSource.closeLoseStatus != null) {
+      Map<String, dynamic>? data = await _LostReasonForm().show();
+      if (data != null) {
+        data["prospectstatusid"] = state.dataSource.closeLoseStatus?.typeid;
+        state.dataSource.prospectUpdateHandler.fetcher.run(id, data);
+      }
+    }
   }
 }

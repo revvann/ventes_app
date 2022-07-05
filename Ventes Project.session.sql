@@ -165,6 +165,6 @@ values (
         true
     );
 select *
-from vtchat;
+from msuser;
 update msuser
 set userdeviceid = null;

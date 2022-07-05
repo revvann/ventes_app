@@ -9,8 +9,14 @@ class ChatHomeListener extends StateListener with ListenerMixin {
     Get.back(id: Views.dashboard.index);
   }
 
-  void navigateToRoom(id) {
-    Get.toNamed(ChatRoomView.route, id: Views.dashboard.index, arguments: {'user': id});
+  void onChatClick(id) {
+    Get.toNamed(
+      ChatRoomView.route,
+      id: Views.dashboard.index,
+      arguments: {
+        'user': id,
+      },
+    );
   }
 
   @override

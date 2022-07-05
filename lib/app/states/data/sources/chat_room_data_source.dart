@@ -28,7 +28,7 @@ class ChatRoomDataSource extends StateDataSource<ChatRoomPresenter> with DataSou
       UserDetail.fromJson,
       onComplete: () {
         if (receiverDetail != null) {
-          chatsHandler.fetcher.run(receiverDetail!.userid!);
+          chatsHandler.fetcher.run(receiverDetail!.userdtid!);
         }
       },
     );

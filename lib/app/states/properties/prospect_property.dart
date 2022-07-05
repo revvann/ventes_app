@@ -14,6 +14,7 @@ class ProspectProperty extends StateProperty with PropertyMixin {
   void refresh() {
     dataSource.prospectsHandler.fetcher.run();
     dataSource.statusesHandler.fetcher.run();
+    dataSource.lostReasonsHandler.fetcher.run();
   }
 
   PopupMenuController createPopupController([int id = 0]) {

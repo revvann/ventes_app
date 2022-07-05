@@ -32,4 +32,16 @@ module.exports = class ChatServices {
    fetchChats(params) {
       return this.#networkUtils.select(`${this.url}/conversation`, params);
    }
+
+   /**
+    * @param {int} userId
+    * @return {Promise<import('axios').AxiosResponse>} response
+    */
+   readChats(userId) {
+      return this.#networkUtils.get(`${this.url}/read`, {
+         params: {
+            'userid': userId,
+         },
+      });
+   }
 }

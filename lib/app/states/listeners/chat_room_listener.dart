@@ -15,7 +15,6 @@ class ChatRoomListener extends StateListener with ListenerMixin {
       chatbpid: dataSource.userDetail?.userdtbpid,
       chatmessage: property.messageTEC.text,
       chatreceiverid: dataSource.receiverDetail?.userid,
-      createdby: dataSource.userDetail?.userid,
     );
     property.sendMessage({
       "to": dataSource.receiverDetail?.user?.usersocketid,
@@ -24,15 +23,24 @@ class ChatRoomListener extends StateListener with ListenerMixin {
     property.messageTEC.clear();
   }
 
-  void onMessage(chats) {
-    property.chats = chats.map<Chat>((item) => Chat.fromJson(item)).toList();
+  void onMessage(data) {
+    List chats = data['chats'];
+    if (data['from'] != dataSource.userDetail?.user?.usersocketid) {
+      property.chats = chats.map<Chat>((item) => Chat.fromJson(item)).toList();
+    } else {
+      Map data = {
+        'userid': dataSource.receiverDetail?.userid,
+        'to': dataSource.receiverDetail?.user?.usersocketid,
+      };
+      property.socket.emit('readmessage', data);
+    }
   }
 
-  void onMessageFailed(message) {
+  void onFailed(message) {
     Get.find<TaskHelper>().failedPush(Task('messagefailed', message: message, snackbar: true));
   }
 
-  void onMessageError(message) {
+  void onError(message) {
     Get.find<TaskHelper>().errorPush(Task('messageerror', message: message));
   }
 

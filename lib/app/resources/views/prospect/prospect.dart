@@ -6,12 +6,14 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:ventes/app/api/models/prospect_model.dart';
 import 'package:ventes/app/api/models/type_model.dart';
+import 'package:ventes/app/resources/widgets/editor_input.dart';
 import 'package:ventes/app/resources/widgets/handler_container.dart';
 import 'package:ventes/app/resources/widgets/icon_input.dart';
 import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
 import 'package:ventes/app/resources/widgets/pop_up_item.dart';
 import 'package:ventes/app/resources/widgets/prospect_card.dart';
 import 'package:ventes/app/resources/widgets/regular_date_picker.dart';
+import 'package:ventes/app/resources/widgets/regular_dialog.dart';
 import 'package:ventes/app/resources/widgets/regular_input.dart';
 import 'package:ventes/app/resources/widgets/top_navigation.dart';
 import 'package:ventes/app/states/controllers/prospect_state_controller.dart';
@@ -23,7 +25,9 @@ import 'package:ventes/core/view/view.dart';
 
 part 'package:ventes/app/resources/views/prospect/components/_prospect_list.dart';
 part 'package:ventes/app/resources/views/prospect/components/_status_dropdown.dart';
+part 'package:ventes/app/resources/views/prospect/components/_reason_dropdown.dart';
 part 'package:ventes/app/resources/views/prospect/components/_twin_datepicker.dart';
+part 'package:ventes/app/resources/views/prospect/components/_lost_reason_form.dart';
 
 class ProspectView extends View<Controller> {
   static const String route = "/history";

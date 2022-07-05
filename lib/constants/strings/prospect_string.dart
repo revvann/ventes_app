@@ -26,6 +26,7 @@ class ProspectString {
   static String taxTypeCode = 'taxtype';
   static String contactTypeCode = 'contact';
   static String localContactCode = 'localcontact';
+  static String lostReasonTypeCode = 'prlost';
 
   static String fetchDataFailed = "Failed to fetch prospect data";
   static String fetchContactFailed = "Failed to fetch contact data";
@@ -68,6 +69,7 @@ class ProspectString {
   static String categoryDropdownTag = "category";
   static String detailTypeDropdownTag = "detailtype";
   static String statusDropdownTag = "status";
+  static String reasonDropdownTag = "reason";
   static String taxDropdownTag = "tax";
 
   static String prospectTag = "prospect";

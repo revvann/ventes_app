@@ -9,12 +9,15 @@ import 'package:ventes/utils/utils.dart';
 
 class ProspectFormSource extends StateFormSource with FormSourceMixin {
   KeyableDropdownController<int, DBType> statusDropdownController = Get.put(KeyableDropdownController<int, DBType>(), tag: ProspectString.statusDropdownTag);
+  KeyableDropdownController<int, DBType> reasonDropdownController = Get.put(KeyableDropdownController<int, DBType>(), tag: ProspectString.reasonDropdownTag);
 
   final Rx<DateTime?> _prosstartdate = Rx<DateTime?>(null);
   final Rx<DateTime?> _prosenddate = Rx<DateTime?>(null);
   final Rx<DBType?> _prosstatus = Rx<DBType?>(null);
+  final Rx<DBType?> _lostReason = Rx<DBType?>(null);
 
   TextEditingController searchTEC = TextEditingController();
+  TextEditingController lostDescriptionTEC = TextEditingController();
 
   DateTime? get prosstartdate => _prosstartdate.value;
   set prosstartdate(DateTime? value) => _prosstartdate.value = value;
@@ -24,6 +27,8 @@ class ProspectFormSource extends StateFormSource with FormSourceMixin {
 
   DBType? get prosstatus => _prosstatus.value;
   set prosstatus(DBType? value) => _prosstatus.value = value;
+  DBType? get lostReason => _lostReason.value;
+  set lostReason(DBType? value) => _lostReason.value = value;
 
   String? get prosstartdateString => prosstartdate == null ? null : Utils.formatDate(prosstartdate!);
   String? get prosenddateString => prosenddate == null ? null : Utils.formatDate(prosenddate!);

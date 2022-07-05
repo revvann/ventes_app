@@ -30,7 +30,8 @@ class ProspectFormCreateDataSource extends StateDataSource<ProspectFormCreatePre
 
   List<DBType> _statusesSuccess(data) {
     List<DBType> statusList = data.map<DBType>((item) => DBType.fromJson(item)).toList();
-    formSource.prosstatus = statusList.isEmpty ? null : statusList.first.typeid!;
+    DBType? openStatus = statusList.firstWhereOrNull((element) => element.typename == "Open");
+    formSource.prosstatus = openStatus?.typeid;
     return statusList;
   }
 
@@ -79,28 +80,4 @@ class ProspectFormCreateDataSource extends StateDataSource<ProspectFormCreatePre
 
   @override
   ProspectFormCreatePresenter presenterBuilder() => ProspectFormCreatePresenter();
-
-  @override
-  onLoadError(String message) {}
-
-  @override
-  onLoadFailed(String message) {}
-
-  @override
-  onLoadSuccess(Map data) {}
-
-  @override
-  void onCreateError(String message) {}
-
-  @override
-  void onCreateFailed(String message) {}
-
-  @override
-  void onCreateSuccess(String message) {}
-
-  @override
-  void onCreateComplete() {}
-
-  @override
-  onLoadComplete() {}
 }

@@ -15,16 +15,13 @@ class ChatRoomPresenter extends RegularPresenter {
   }
 
   Future<Response> _getUserDetail() async {
-    int? id = Get.find<AuthHelper>().userId.val;
+    int? id = Get.find<AuthHelper>().accountActive.val;
     return await _userService.show(id!);
   }
 
   Future<Response> _getChats(int receiverid) async {
     int? id = Get.find<AuthHelper>().userId.val;
-    return await _chatService.select({
-      'user1': id?.toString(),
-      'user2': receiverid.toString(),
-    });
+    return await _chatService.getConversation(id!, receiverid);
   }
 
   DataFetcher<Function(int), Map<String, dynamic>> get fetchReceiverDetail => DataFetcher(builder: (handler) {

@@ -101,7 +101,7 @@ class ChatRoomView extends View<Controller> {
                     groupBy: (chat) => DateTime(Utils.dbParseDate(chat.createddate!).year, Utils.dbParseDate(chat.createddate!).month, Utils.dbParseDate(chat.createddate!).day),
                     groupHeaderBuilder: (Chat chat) => _ChatHeader(Utils.formatDate(Utils.dbParseDate(chat.createddate!))),
                     itemBuilder: (_, chat) {
-                      return _ChatBody(chat.chatmessage ?? "", time: Utils.formatTime12(Utils.dbParseDateTime(chat.createddate!)), isMe: chat.createdby == state.dataSource.userDetail?.user?.userid);
+                      return _ChatBody(chat, userid: state.dataSource.userDetail?.user?.userid);
                     },
                   ),
                 );

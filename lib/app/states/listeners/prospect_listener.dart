@@ -40,15 +40,6 @@ class ProspectListener extends StateListener with ListenerMixin {
     }
   }
 
-  void onCloseLoseClicked(int id) {
-    if (dataSource.closeLoseStatus != null) {
-      Map<String, dynamic> data = {
-        "prospectstatusid": dataSource.closeLoseStatus?.typeid,
-      };
-      dataSource.prospectUpdateHandler.fetcher.run(id, data);
-    }
-  }
-
   void onDateEndSelected(DateTime? value) {
     if (value != null) {
       formSource.prosenddate = value;
@@ -63,6 +54,14 @@ class ProspectListener extends StateListener with ListenerMixin {
       formSource.prosstatus = null;
     }
     onFilterChanged();
+  }
+
+  void onReasonSelected(selectedItem) {
+    if (selectedItem != null) {
+      formSource.lostReason = (selectedItem as KeyableDropdownItem<int, DBType>).value;
+    } else {
+      formSource.lostReason = null;
+    }
   }
 
   void onAddButtonClicked() {

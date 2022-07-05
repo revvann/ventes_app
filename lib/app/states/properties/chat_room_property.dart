@@ -23,8 +23,10 @@ class ChatRoomProperty extends StateProperty with PropertyMixin {
   void ready() {
     super.ready();
     socket.on('message', listener.onMessage);
-    socket.on('messagefailed', listener.onMessageFailed);
-    socket.on('messageerror', listener.onMessageError);
+    socket.on('messagefailed', listener.onFailed);
+    socket.on('messageerror', listener.onError);
+    socket.on('readmessagefailed', listener.onFailed);
+    socket.on('readmessageerror', listener.onError);
   }
 
   @override

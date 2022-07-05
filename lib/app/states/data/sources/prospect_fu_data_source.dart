@@ -37,7 +37,7 @@ class ProspectFormUpdateDataSource extends StateDataSource<ProspectFormUpdatePre
 
   List<KeyableDropdownItem<int, DBType>> _statusesSuccess(data) {
     List<DBType> statusList = data.map<DBType>((item) => DBType.fromJson(item)).toList();
-    statusList.removeWhere((element) => element.typename?.contains(RegExp(r'Closed Won|Closed Lose')) ?? false);
+    statusList.removeWhere((element) => element.typename?.contains(RegExp(r'Closed Won|Closed Lost')) ?? false);
     formSource.prosstatus = statusList.isEmpty ? null : statusList.first;
     return statusList.map<KeyableDropdownItem<int, DBType>>((type) => KeyableDropdownItem<int, DBType>(key: type.typeid!, value: type)).toList();
   }

@@ -6,6 +6,10 @@ class NetworkUtils {
     * @type {import('axios').AxiosInstance}
     */
    #axios;
+   get;
+   post;
+   put;
+   delete;
 
    /**
     * @param {string} token
@@ -13,9 +17,14 @@ class NetworkUtils {
    constructor(token = "") {
       this.#axios = axios.create({
          baseURL: NetworkConstant.baseUrl,
-         timeout: 1000,
+         timeout: 10000,
          headers: { 'Authorization': `Bearer ${token}` }
       });
+
+      this.get = this.#axios.get;
+      this.post = this.#axios.post;
+      this.put = this.#axios.put;
+      this.delete = this.#axios.delete;
    }
 
    /**
@@ -24,7 +33,7 @@ class NetworkUtils {
     * @returns {Promise<import('axios').AxiosResponse>} response
     */
    select(url, params) {
-      return this.#axios.get(url, { params: params });
+      return this.get(url, { params: params });
    }
 
    /**
@@ -33,7 +42,7 @@ class NetworkUtils {
     * @returns {Promise<import('axios').AxiosResponse>} response
     */
    show(url, id) {
-      return this.#axios.get(`${url}/${id}`);
+      return this.get(`${url}/${id}`);
    }
 
    /**
@@ -42,7 +51,7 @@ class NetworkUtils {
     * @returns {Promise<import('axios').AxiosResponse>} response
     */
    store(url, data) {
-      return this.#axios.post(url, data);
+      return this.post(url, data);
    }
 
    /**
@@ -51,7 +60,7 @@ class NetworkUtils {
     * @returns {Promise<import('axios').AxiosResponse>} response
     */
    update(url, data) {
-      return this.#axios.put(url, data);
+      return this.put(url, data);
    }
 
    /**
@@ -60,7 +69,7 @@ class NetworkUtils {
     * @returns {Promise<import('axios').AxiosResponse>} response
     */
    delete(url, data) {
-      return this.#axios.delete(url, { params: data });
+      return this.delete(url, { params: data });
    }
 }
 

@@ -28,6 +28,10 @@ class ProspectPresenter extends RegularPresenter {
     return await _typeService.byCode({'typecd': ProspectString.statusTypeCode});
   }
 
+  Future<Response> _getReasons() async {
+    return await _typeService.byCode({'typecd': ProspectString.lostReasonTypeCode});
+  }
+
   Future<Response> _getProspects([Map<String, dynamic> additionParams = const {}]) async {
     UserDetail? userDetail = await findActiveUser();
     Map<String, dynamic> params = {
@@ -39,6 +43,11 @@ class ProspectPresenter extends RegularPresenter {
 
   SimpleFetcher<List> get fetchStatuses => SimpleFetcher(
         responseBuilder: _getStatusses,
+        failedMessage: ProspectString.fetchDataFailed,
+      );
+
+  SimpleFetcher<List> get fetchReasons => SimpleFetcher(
+        responseBuilder: _getReasons,
         failedMessage: ProspectString.fetchDataFailed,
       );
 

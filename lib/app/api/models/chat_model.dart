@@ -51,9 +51,9 @@ class Chat extends Model {
     chatreadat = json['chatreadat'];
     chatreceiverid = json['chatreceiverid'];
 
-    chatbp = BusinessPartner.fromJson(json['chatbp']);
-    chatreceiver = User.fromJson(json['chatreceiver']);
-    createdbyuser = User.fromJson(json['createdbyuser']);
+    if (json['chatbp'] != null) chatbp = BusinessPartner.fromJson(json['chatbp']);
+    if (json['chatreceiver'] != null) chatreceiver = User.fromJson(json['chatreceiver']);
+    if (json['createdbyuser'] != null) createdbyuser = User.fromJson(json['createdbyuser']);
     super.fromJson(json);
   }
 

@@ -9,33 +9,52 @@ const ChatModel = require("../models/chatModel.js");
 function socketController(socket) {
    const chatServices = new ChatServices(socket.handshake.auth.jwtToken);
 
-   socket.on('message', async (data) => {
+   socket.on('message', onMessage);
+   socket.on('readmessage', onReadMessage);
+   socket.on('disconnect', onDisconnect);
+
+   function onDisconnect(reason) {
+      console.log(`Socket disconnect: ${reason}`);
+   }
+
+   async function onMessage(data) {
       try {
-         const chat = ChatModel.fromJson(data.chat);
          const response = await chatServices.storeChat(data.chat);
-
          if (response.status == 200) {
-            const chats = await chatServices.fetchChats({
-               user1: chat.createdby,
-               user2: chat.chatreceiverid,
-            });
-
-            if (chats.status == 200) {
-               socket.broadcast.to(data.to).emit('message', chats.data);
-               socket.emit('message', chats.data);
-               return;
-            }
+            const messageData = {
+               chats: response.data,
+               from: socket.id,
+            };
+            socket.emit('message', messageData);
+            socket.broadcast.to(data.to).emit('message', messageData);
+            return;
          }
          socket.emit('messagefailed', "Cannot Send message");
       } catch (e) {
          console.log(e);
          socket.emit('messageerror', "Send message returned error")
       }
-   });
+   }
 
-   socket.on('disconnect', reason => {
-      console.log(`Socket disconnect: ${reason}`);
-   });
+   async function onReadMessage(data) {
+      const userId = data.userid;
+      try {
+         const response = await chatServices.readChats(userId);
+         if (response.status == 200) {
+            const messageData = {
+               chats: response.data,
+               from: socket.id,
+            }
+            socket.emit('message', messageData);
+            socket.broadcast.to(data.to).emit('message', messageData);
+            return;
+         }
+         socket.emit("readmessagefailed", "Cannot read message");
+      } catch (e) {
+         console.log(e);
+         socket.emit("readmessageerror", "Read message returned error");
+      }
+   }
 }
 
 module.exports = socketController;

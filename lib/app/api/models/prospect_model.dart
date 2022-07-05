@@ -17,9 +17,12 @@ class Prospect extends Model {
   String? prospectdescription;
   int? prospectcustid;
   int? prospectrefid;
+  int? prospectlostreasonid;
+  String? prospectlostdesc;
   UserDetail? prospectowneruser;
   DBType? prospectstage;
   DBType? prospectstatus;
+  DBType? prospectlostreason;
   BpCustomer? prospectcust;
 
   Prospect({
@@ -39,6 +42,7 @@ class Prospect extends Model {
     this.prospectowneruser,
     this.prospectstage,
     this.prospectstatus,
+    this.prospectlostreason,
     this.prospectcust,
     String? createddate,
     String? updateddate,
@@ -67,6 +71,8 @@ class Prospect extends Model {
     prospectdescription = json['prospectdescription'];
     prospectcustid = json['prospectcustid'];
     prospectrefid = json['prospectrefid'];
+    prospectlostreasonid = json['prospectlostreasonid'];
+    prospectlostdesc = json['prospectlostdesc'];
 
     if (json['prospectowneruser'] != null) {
       prospectowneruser = UserDetail.fromJson(json['prospectowneruser']);
@@ -78,6 +84,10 @@ class Prospect extends Model {
 
     if (json['prospectstatus'] != null) {
       prospectstatus = DBType.fromJson(json['prospectstatus']);
+    }
+
+    if (json['prospectlostreason'] != null) {
+      prospectlostreason = DBType.fromJson(json['prospectlostreason']);
     }
 
     if (json['prospectcust'] != null) {
@@ -103,6 +113,8 @@ class Prospect extends Model {
     data['prospectdescription'] = prospectdescription;
     data['prospectcustid'] = prospectcustid;
     data['prospectrefid'] = prospectrefid;
+    data['prospectlostreasonid'] = prospectlostreasonid;
+    data['prospectlostdesc'] = prospectlostdesc;
 
     if (prospectowneruser != null) {
       data['prospectowneruser'] = prospectowneruser?.toJson();
@@ -114,6 +126,10 @@ class Prospect extends Model {
 
     if (prospectstatus != null) {
       data['prospectstatus'] = prospectstatus?.toJson();
+    }
+
+    if (prospectlostreason != null) {
+      data['prospectlostreason'] = prospectlostreason?.toJson();
     }
 
     if (prospectcust != null) {

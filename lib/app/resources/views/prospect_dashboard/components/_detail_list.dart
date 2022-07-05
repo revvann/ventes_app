@@ -27,6 +27,12 @@ class _DetailList extends StatelessWidget {
               _DetailItem(title: "Value", value: value),
               SizedBox(height: RegularSize.s),
               _DetailItem(title: "Description", value: prospect?.prospectdescription ?? "-"),
+              SizedBox(height: RegularSize.s),
+              if (prospect?.prospectlostreason != null) ...[
+                _DetailItem(title: "Lost Reason", value: prospect?.prospectlostreason?.typename ?? "-"),
+                SizedBox(height: RegularSize.s),
+                _DetailItem(title: "Lost Description", value: prospect?.prospectlostdesc ?? "-"),
+              ],
             ],
           );
         });

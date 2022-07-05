@@ -204,9 +204,9 @@ class SigninView extends GetView<SigninStateController> implements AuthContract,
   void onAuthSuccess(Map data) async {
     controller.dataSource.isLoading = false;
     User user = User.fromJson(data['user']);
-    String deviceid = (await Utils.getDeviceId())!;
+    String? deviceid = await Utils.getDeviceId();
     if (user.userdeviceid == null) {
-      controller.dataSource.attachDevice(data['userid'], deviceid);
+      controller.dataSource.attachDevice(data['userid'], deviceid ?? "");
       Get.find<TaskHelper>().loaderPush(Task(SigninString.taskCode));
     } else {
       if (user.userdeviceid != deviceid) {

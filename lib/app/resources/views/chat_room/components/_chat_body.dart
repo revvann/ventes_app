@@ -1,14 +1,16 @@
 part of 'package:ventes/app/resources/views/chat_room/chat_room.dart';
 
 class _ChatBody extends StatelessWidget {
-  String text;
-  String time;
-  bool isMe;
+  int? userid;
+  Chat chat;
   _ChatBody(
-    this.text, {
-    required this.time,
-    this.isMe = true,
+    this.chat, {
+    required this.userid,
   });
+  String get text => chat.chatmessage ?? "";
+  String get time => Utils.formatTime12(Utils.dbParseDateTime(chat.createddate!));
+  bool get isMe => chat.createdby == userid;
+  bool get hasRead => chat.chatreadat != null;
 
   @override
   Widget build(BuildContext context) {
@@ -40,12 +42,32 @@ class _ChatBody extends StatelessWidget {
         SizedBox(
           height: RegularSize.xs,
         ),
-        Text(
-          time,
-          style: TextStyle(
-            color: RegularColor.gray,
-            fontSize: 10,
-          ),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              time,
+              style: TextStyle(
+                color: RegularColor.gray,
+                fontSize: 10,
+              ),
+            ),
+            if (isMe) ...[
+              SizedBox(
+                width: RegularSize.xs,
+              ),
+              Container(
+                height: RegularSize.s,
+                width: RegularSize.s,
+                decoration: BoxDecoration(
+                  color: hasRead ? RegularColor.green : RegularColor.gray,
+                  shape: BoxShape.circle,
+                ),
+              ),
+            ],
+            SizedBox(width: 2),
+          ],
         ),
         SizedBox(
           height: RegularSize.s,

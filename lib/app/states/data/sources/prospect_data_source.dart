@@ -13,20 +13,33 @@ class ProspectDataSource extends StateDataSource<ProspectPresenter> with DataSou
   final String statusesID = "stshdr";
   final String prospectsID = 'prshdr';
   final String prospectUpdateID = 'prosupdatehdr';
+  final String lostReasonsID = "lostreasonhdr";
 
   late DataHandler<List<KeyableDropdownItem<int, DBType>>, List, Function()> statusesHandler;
   late DataHandler<List<Prospect>, List, Function([Map<String, dynamic>?])> prospectsHandler;
   late DataHandler<dynamic, String, Function(int, Map<String, dynamic>)> prospectUpdateHandler;
+  late DataHandler<List<KeyableDropdownItem<int, DBType>>, List, Function()> lostReasonsHandler;
 
+  List<KeyableDropdownItem<int, DBType>> get lostReasonsItems => lostReasonsHandler.value;
   List<KeyableDropdownItem<int, DBType>> get statusItems => statusesHandler.value;
   DBType? get closeWonStatus => statusItems.firstWhereOrNull((e) => e.value.typename == "Closed Won")?.value;
-  DBType? get closeLoseStatus => statusItems.firstWhereOrNull((e) => e.value.typename == "Closed Lose")?.value;
+  DBType? get closeLoseStatus => statusItems.firstWhereOrNull((e) => e.value.typename == "Closed Lost")?.value;
 
   List<Prospect> get prospects => prospectsHandler.value;
 
   List<KeyableDropdownItem<int, DBType>> _statusesSuccess(List data) {
     List<DBType> statusses = List<DBType>.from(data.map((e) => DBType.fromJson(e)));
     return statusses
+        .map((e) => KeyableDropdownItem<int, DBType>(
+              value: e,
+              key: e.typeid!,
+            ))
+        .toList();
+  }
+
+  List<KeyableDropdownItem<int, DBType>> _lostReasonsSuccess(List data) {
+    List<DBType> reasons = List<DBType>.from(data.map((e) => DBType.fromJson(e)));
+    return reasons
         .map((e) => KeyableDropdownItem<int, DBType>(
               value: e,
               key: e.typeid!,
@@ -45,6 +58,15 @@ class ProspectDataSource extends StateDataSource<ProspectPresenter> with DataSou
       onFailed: (message) => Utils.showFailed(statusesID, message),
       onError: (message) => Utils.showError(statusesID, message),
       onSuccess: _statusesSuccess,
+    );
+
+    lostReasonsHandler = DataHandler(
+      lostReasonsID,
+      initialValue: [],
+      fetcher: presenter.fetchReasons,
+      onFailed: (message) => Utils.showFailed(lostReasonsID, message),
+      onError: (message) => Utils.showError(lostReasonsID, message),
+      onSuccess: _lostReasonsSuccess,
     );
 
     prospectsHandler = DataHandler(
