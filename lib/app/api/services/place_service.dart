@@ -26,7 +26,21 @@ class PlaceService extends Service {
     return this;
   }
 
+  PlaceService village() {
+    place = '/village';
+    return this;
+  }
+
   Future<Response> byName(String name) {
     return get('$api/by-name', query: {'name': name});
+  }
+
+  Future<Response> placesByName(String village, String subdistrict, String city, String province) {
+    return get('$api/by-name', query: {
+      'village': village,
+      'subdistrict': subdistrict,
+      'city': city,
+      'province': province,
+    });
   }
 }

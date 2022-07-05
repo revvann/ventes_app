@@ -1,10 +1,4 @@
 import 'package:get/get.dart';
-import 'package:ventes/app/api/presenters/regular_presenter.dart';
-import 'package:ventes/app/api/services/bp_customer_service.dart';
-import 'package:ventes/app/api/services/customer_service.dart';
-import 'package:ventes/app/api/services/place_service.dart';
-import 'package:ventes/app/api/services/type_service.dart';
-import 'package:ventes/app/api/services/user_service.dart';
 import 'package:ventes/app/api/models/auth_model.dart';
 import 'package:ventes/app/api/models/bp_customer_model.dart';
 import 'package:ventes/app/api/models/city_model.dart';
@@ -12,6 +6,13 @@ import 'package:ventes/app/api/models/country_model.dart';
 import 'package:ventes/app/api/models/province_model.dart';
 import 'package:ventes/app/api/models/subdistrict_model.dart';
 import 'package:ventes/app/api/models/user_detail_model.dart';
+import 'package:ventes/app/api/models/village_model.dart';
+import 'package:ventes/app/api/presenters/regular_presenter.dart';
+import 'package:ventes/app/api/services/bp_customer_service.dart';
+import 'package:ventes/app/api/services/customer_service.dart';
+import 'package:ventes/app/api/services/place_service.dart';
+import 'package:ventes/app/api/services/type_service.dart';
+import 'package:ventes/app/api/services/user_service.dart';
 import 'package:ventes/constants/strings/nearby_string.dart';
 import 'package:ventes/core/api/fetcher.dart';
 import 'package:ventes/helpers/auth_helper.dart';
@@ -87,11 +88,6 @@ class CustomerFormUpdatePresenter extends RegularPresenter {
                   bpCustomer.sbccstm?.cstmprovince = Province.fromJson(provinceResponse.body);
                 }
 
-                Response countryResponse = await _placeService.country().show(bpCustomer.sbccstm?.cstmprovince?.provcountryid ?? 0);
-                if (countryResponse.statusCode == 200) {
-                  bpCustomer.sbccstm?.cstmcountry = Country.fromJson(countryResponse.body);
-                }
-
                 Response cityResponse = await _placeService.city().show(bpCustomer.sbccstm?.cstmcityid ?? 0);
                 if (cityResponse.statusCode == 200) {
                   bpCustomer.sbccstm?.cstmcity = City.fromJson(cityResponse.body);
@@ -100,6 +96,11 @@ class CustomerFormUpdatePresenter extends RegularPresenter {
                 Response subdistrictResponse = await _placeService.subdistrict().show(bpCustomer.sbccstm?.cstmsubdistrictid ?? 0);
                 if (subdistrictResponse.statusCode == 200) {
                   bpCustomer.sbccstm?.cstmsubdistrict = Subdistrict.fromJson(subdistrictResponse.body);
+                }
+
+                Response villageResponse = await _placeService.village().show(bpCustomer.sbccstm?.cstmuvid ?? 0);
+                if (villageResponse.statusCode == 200) {
+                  bpCustomer.sbccstm?.cstmuv = Village.fromJson(villageResponse.body);
                 }
 
                 handler.success(bpCustomer.toJson());
@@ -136,55 +137,4 @@ class CustomerFormUpdatePresenter extends RegularPresenter {
           };
         },
       );
-
-  Future<List<Country>> fetchCountries([String? search]) async {
-    Map<String, dynamic> params = {
-      'search': search,
-    };
-
-    Response response = await _placeService.country().select(params);
-    if (response.statusCode == 200) {
-      return List<Country>.from(response.body.map((item) => Country.fromJson(item)));
-    }
-    return [];
-  }
-
-  Future<List<Province>> fetchProvinces(int countryId, [String? search]) async {
-    Map<String, dynamic> params = {
-      'search': search,
-      'provcountryid': countryId.toString(),
-    };
-
-    Response response = await _placeService.province().select(params);
-    if (response.statusCode == 200) {
-      return List<Province>.from(response.body.map((item) => Province.fromJson(item)));
-    }
-    return [];
-  }
-
-  Future<List<City>> fetchCities(int provinceId, [String? search]) async {
-    Map<String, dynamic> params = {
-      'search': search,
-      'cityprovid': provinceId.toString(),
-    };
-
-    Response response = await _placeService.city().select(params);
-    if (response.statusCode == 200) {
-      return List<City>.from(response.body.map((item) => City.fromJson(item)));
-    }
-    return [];
-  }
-
-  Future<List<Subdistrict>> fetchSubdistricts(int cityId, [String? search]) async {
-    Map<String, dynamic> params = {
-      'search': search,
-      'subdistrictcityid': cityId.toString(),
-    };
-
-    Response response = await _placeService.subdistrict().select(params);
-    if (response.statusCode == 200) {
-      return List<Subdistrict>.from(response.body.map((item) => Subdistrict.fromJson(item)));
-    }
-    return [];
-  }
 }

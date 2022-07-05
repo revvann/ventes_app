@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:ventes/app/api/presenters/customer_fu_presenter.dart';
 import 'package:ventes/app/api/models/bp_customer_model.dart';
 import 'package:ventes/app/api/models/city_model.dart';
 import 'package:ventes/app/api/models/country_model.dart';
@@ -10,14 +9,14 @@ import 'package:ventes/app/api/models/customer_model.dart';
 import 'package:ventes/app/api/models/province_model.dart';
 import 'package:ventes/app/api/models/subdistrict_model.dart';
 import 'package:ventes/app/api/models/type_model.dart';
+import 'package:ventes/app/api/presenters/customer_fu_presenter.dart';
 import 'package:ventes/app/states/controllers/nearby_state_controller.dart';
 import 'package:ventes/app/states/typedefs/customer_fu_typedef.dart';
 import 'package:ventes/constants/views.dart';
-import 'package:ventes/core/api/fetcher.dart';
 import 'package:ventes/core/api/handler.dart';
 import 'package:ventes/core/states/state_data_source.dart';
-import 'package:ventes/utils/utils.dart';
 import 'package:ventes/helpers/task_helper.dart';
+import 'package:ventes/utils/utils.dart';
 
 class CustomerFormUpdateDataSource extends StateDataSource<CustomerFormUpdatePresenter> with DataSourceMixin {
   final String bpCustomersID = 'bpcusthdr';
@@ -72,11 +71,6 @@ class CustomerFormUpdateDataSource extends StateDataSource<CustomerFormUpdatePre
     }
     return statusesData;
   }
-
-  Future<List<Country>> fetchCountries([String? search]) async => await presenter.fetchCountries(search);
-  Future<List<Province>> fetchProvinces(int countryId, [String? search]) async => await presenter.fetchProvinces(countryId, search);
-  Future<List<City>> fetchCities(int provinceId, [String? search]) async => await presenter.fetchCities(provinceId, search);
-  Future<List<Subdistrict>> fetchSubdistricts(int cityId, [String? search]) async => await presenter.fetchSubdistricts(cityId, search);
 
   List<Customer> _customersSuccess(List data) {
     List<Customer> customers = customersFromList(

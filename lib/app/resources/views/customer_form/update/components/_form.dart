@@ -63,16 +63,6 @@ class _CustomerForm extends StatelessWidget {
             ),
             Obx(() {
               return RegularInput(
-                label: "Customer country",
-                value: state.dataSource.bpCustomer?.sbccstm?.cstmcountry?.countryname,
-                enabled: false,
-              );
-            }),
-            SizedBox(
-              height: RegularSize.m,
-            ),
-            Obx(() {
-              return RegularInput(
                 label: "Customer province",
                 value: state.dataSource.bpCustomer?.sbccstm?.cstmprovince?.provname,
                 enabled: false,
@@ -95,6 +85,16 @@ class _CustomerForm extends StatelessWidget {
               return RegularInput(
                 label: "Customer subdistrict",
                 value: state.dataSource.bpCustomer?.sbccstm?.cstmsubdistrict?.subdistrictname,
+                enabled: false,
+              );
+            }),
+            SizedBox(
+              height: RegularSize.m,
+            ),
+            Obx(() {
+              return RegularInput(
+                label: "Customer village",
+                value: state.dataSource.bpCustomer?.sbccstm?.cstmuv?.villagename,
                 enabled: false,
               );
             }),

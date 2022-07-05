@@ -1,2 +1,2 @@
 select *
-from msvillage;
+from trprospect;

@@ -2,6 +2,7 @@ import 'package:ventes/app/api/models/city_model.dart';
 import 'package:ventes/app/api/models/country_model.dart';
 import 'package:ventes/app/api/models/province_model.dart';
 import 'package:ventes/app/api/models/subdistrict_model.dart';
+import 'package:ventes/app/api/models/village_model.dart';
 import 'package:ventes/core/api/model.dart';
 import 'package:ventes/app/api/models/type_model.dart';
 
@@ -21,10 +22,10 @@ class Customer extends Model {
   double? cstmlongitude;
   String? referalcode;
   DBType? cstmtype;
-  Country? cstmcountry;
   Province? cstmprovince;
   City? cstmcity;
   Subdistrict? cstmsubdistrict;
+  Village? cstmuv;
   double? radius;
 
   Customer({
@@ -43,10 +44,10 @@ class Customer extends Model {
     this.cstmlongitude,
     this.referalcode,
     this.cstmtype,
-    this.cstmcountry,
     this.cstmprovince,
     this.cstmcity,
     this.cstmsubdistrict,
+    this.cstmuv,
     this.radius,
     String? createddate,
     String? updateddate,
@@ -90,10 +91,6 @@ class Customer extends Model {
       cstmtype = DBType.fromJson(json['cstmtype']);
     }
 
-    if (json['cstmcountry'] != null) {
-      cstmcountry = Country.fromJson(json['cstmcountry']);
-    }
-
     if (json['cstmprovince'] != null) {
       cstmprovince = Province.fromJson(json['cstmprovince']);
     }
@@ -104,6 +101,10 @@ class Customer extends Model {
 
     if (json['cstmsubdistrict'] != null) {
       cstmsubdistrict = Subdistrict.fromJson(json['cstmsubdistrict']);
+    }
+
+    if (json['cstmuv'] != null) {
+      cstmuv = Village.fromJson(json['cstmuv']);
     }
     super.fromJson(json);
   }
@@ -130,10 +131,6 @@ class Customer extends Model {
       data['cstmtype'] = cstmtype!.toJson();
     }
 
-    if (cstmcountry != null) {
-      data['cstmcountry'] = cstmcountry!.toJson();
-    }
-
     if (cstmprovince != null) {
       data['cstmprovince'] = cstmprovince!.toJson();
     }
@@ -144,6 +141,10 @@ class Customer extends Model {
 
     if (cstmsubdistrict != null) {
       data['cstmsubdistrict'] = cstmsubdistrict!.toJson();
+    }
+
+    if (cstmuv != null) {
+      data['cstmuv'] = cstmuv!.toJson();
     }
     return data;
   }

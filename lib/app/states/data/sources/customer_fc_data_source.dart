@@ -1,25 +1,22 @@
-import 'dart:async';
-
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:ventes/app/api/presenters/customer_fc_presenter.dart';
 import 'package:ventes/app/api/models/bp_customer_model.dart';
 import 'package:ventes/app/api/models/city_model.dart';
-import 'package:ventes/app/api/models/country_model.dart';
 import 'package:ventes/app/api/models/customer_model.dart';
 import 'package:ventes/app/api/models/maps_loc.dart';
 import 'package:ventes/app/api/models/province_model.dart';
 import 'package:ventes/app/api/models/subdistrict_model.dart';
 import 'package:ventes/app/api/models/type_model.dart';
 import 'package:ventes/app/api/models/user_detail_model.dart';
+import 'package:ventes/app/api/models/village_model.dart';
+import 'package:ventes/app/api/presenters/customer_fc_presenter.dart';
 import 'package:ventes/app/states/controllers/nearby_state_controller.dart';
 import 'package:ventes/app/states/typedefs/customer_fc_typedef.dart';
 import 'package:ventes/constants/views.dart';
-import 'package:ventes/core/api/fetcher.dart';
 import 'package:ventes/core/api/handler.dart';
 import 'package:ventes/core/states/state_data_source.dart';
-import 'package:ventes/utils/utils.dart';
 import 'package:ventes/helpers/task_helper.dart';
+import 'package:ventes/utils/utils.dart';
 
 class CustomerFormCreateDataSource extends StateDataSource<CustomerFormCreatePresenter> with DataSourceMixin {
   final String userID = "usrhdr";
@@ -38,7 +35,7 @@ class CustomerFormCreateDataSource extends StateDataSource<CustomerFormCreatePre
   late DataHandler<Map<int, String>, List, Function()> statusesHandler;
   late DataHandler<Map<int, String>, List, Function()> typesHandler;
   late DataHandler<MapsLoc?, Map<String, dynamic>, Function(double, double)> locationHandler;
-  late DataHandler<dynamic, Map<String, dynamic>, Function(String)> placesHandler;
+  late DataHandler<dynamic, Map<String, dynamic>, Function(String, String, String, String)> placesHandler;
   late DataHandler<Customer?, Map<String, dynamic>, Function(int)> customerHandler;
   late DataHandler<dynamic, List, Function(int)> nearbyCustomersHandler;
   late DataHandler<dynamic, List, Function(int)> bpCustomersHandler;
@@ -115,6 +112,16 @@ class CustomerFormCreateDataSource extends StateDataSource<CustomerFormCreatePre
     return null;
   }
 
+  String? getVillageName() {
+    List<AddressComponents>? addresses = mapsLoc?.adresses?.first.addressComponents;
+    if (addresses != null) {
+      String subdistrict = addresses.firstWhere((element) => element.types!.contains('administrative_area_level_4')).longName ?? "";
+
+      return subdistrict.replaceAll(RegExp(r'Desa |Kelurahan |Kel '), '');
+    }
+    return null;
+  }
+
   String? getPostalCodeName() {
     List<AddressComponents>? addresses = mapsLoc?.adresses?.first.addressComponents;
     if (addresses != null) {
@@ -164,11 +171,6 @@ class CustomerFormCreateDataSource extends StateDataSource<CustomerFormCreatePre
     }
   }
 
-  Future<List<Country>> fetchCountries([String? search]) async => await presenter.fetchCountries(search);
-  Future<List<Province>> fetchProvinces(int countryId, [String? search]) async => await presenter.fetchProvinces(countryId, search);
-  Future<List<City>> fetchCities(int provinceId, [String? search]) async => await presenter.fetchCities(provinceId, search);
-  Future<List<Subdistrict>> fetchSubdistricts(int cityId, [String? search]) async => await presenter.fetchSubdistricts(cityId, search);
-
   List<BpCustomer> _customersSuccess(List data) {
     List<BpCustomer> customers = _customersFromList(
       data,
@@ -184,14 +186,11 @@ class CustomerFormCreateDataSource extends StateDataSource<CustomerFormCreatePre
   }
 
   void _placesSuccess(Map<String, dynamic> data) {
-    if (data['province'] != null && data['city'] != null && data['subdistrict'] != null) {
+    if (data['province'] != null && data['city'] != null && data['subdistrict'] != null && data['village'] != null) {
       formSource.provinceid = Province.fromJson(data['province']).provid;
       formSource.cityid = City.fromJson(data['city']).cityid;
       formSource.subdistrictid = Subdistrict.fromJson(data['subdistrict']).subdistrictid;
-
-      if (customer != null) {
-        customer!.cstmcountry = Province.fromJson(data['province']).provcountry;
-      }
+      formSource.villageid = Village.fromJson(data['village']).villageid;
     } else {
       throw "The selected location is not available";
     }
@@ -205,7 +204,11 @@ class CustomerFormCreateDataSource extends StateDataSource<CustomerFormCreatePre
 
   void _customerComplete() {
     if (customer?.cstmsubdistrict != null) {
-      placesHandler.fetcher.run(customer!.cstmsubdistrict!.subdistrictname!);
+      String province = customer!.cstmprovince!.provname!;
+      String city = customer!.cstmcity!.cityname!;
+      String subdistrict = customer!.cstmsubdistrict!.subdistrictname!;
+      String village = customer!.cstmuv!.villagename!;
+      placesHandler.fetcher.run(village, subdistrict, city, province);
     }
   }
 
@@ -249,7 +252,13 @@ class CustomerFormCreateDataSource extends StateDataSource<CustomerFormCreatePre
     customersHandler = Utils.createDataHandler(customersID, presenter.fetchCustomers, [], _customersSuccess);
     statusesHandler = Utils.createDataHandler(statusesID, presenter.fetchStatuses, {}, (data) => statusesFromList(data));
     typesHandler = Utils.createDataHandler(typesID, presenter.fetchTypes, {}, (data) => typesFromList(data));
-    locationHandler = Utils.createDataHandler(locationID, presenter.fetchLocation, null, _locationSuccess, onComplete: () => placesHandler.fetcher.run(getSubdistrictName()!));
+    locationHandler = Utils.createDataHandler(locationID, presenter.fetchLocation, null, _locationSuccess,
+        onComplete: () => placesHandler.fetcher.run(
+              getVillageName()!,
+              getSubdistrictName()!,
+              getCityName()!,
+              getProvinceName()!,
+            ));
     placesHandler = Utils.createDataHandler(placesID, presenter.fetchPlaces, null, _placesSuccess);
     customerHandler = Utils.createDataHandler(customerID, presenter.fetchCustomer, null, _customerSuccess, onComplete: _customerComplete);
 
@@ -289,28 +298,4 @@ class CustomerFormCreateDataSource extends StateDataSource<CustomerFormCreatePre
 
   @override
   CustomerFormCreatePresenter presenterBuilder() => CustomerFormCreatePresenter();
-
-  @override
-  onLoadError(String message) {}
-
-  @override
-  onLoadFailed(String message) {}
-
-  @override
-  onLoadSuccess(Map data) {}
-
-  @override
-  void onCreateError(String message) {}
-
-  @override
-  void onCreateFailed(String message) {}
-
-  @override
-  void onCreateSuccess(String message) {}
-
-  @override
-  void onCreateComplete() {}
-
-  @override
-  onLoadComplete() {}
 }

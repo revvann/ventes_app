@@ -51,11 +51,6 @@ class CustomerFormCreateListener extends StateListener with ListenerMixin {
     }
   }
 
-  Future onCountryFilter(String? search) async {
-    List<Country> countries = await dataSource.fetchCountries(search);
-    return countries;
-  }
-
   void onPicturePicked() async {
     ImagePicker _picker = ImagePicker();
     final XFile? image = await _picker.pickImage(

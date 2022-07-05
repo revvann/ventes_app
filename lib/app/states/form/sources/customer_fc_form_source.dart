@@ -32,6 +32,7 @@ class CustomerFormCreateFormSource extends UpdateFormSource with FormSourceMixin
   int? provinceid;
   int? cityid;
   int? subdistrictid;
+  int? villageid;
 
   final Rx<int?> _cstmtypeid = Rx<int?>(null);
   final Rx<String?> _cstmaddress = Rx<String?>(null);
@@ -80,6 +81,7 @@ class CustomerFormCreateFormSource extends UpdateFormSource with FormSourceMixin
     provinceid = dataSource.customer!.cstmprovinceid;
     cityid = dataSource.customer!.cstmcityid;
     subdistrictid = dataSource.customer!.cstmsubdistrictid;
+    villageid = dataSource.customer!.cstmuvid;
     cstmid = dataSource.customer!.cstmid;
     latitudeTEC.text = dataSource.customer!.cstmlatitude!.toString();
     longitudeTEC.text = dataSource.customer!.cstmlongitude!.toString();
@@ -116,6 +118,7 @@ class CustomerFormCreateFormSource extends UpdateFormSource with FormSourceMixin
       'cstmprovinceid': provinceid.toString(),
       'cstmcityid': cityid.toString(),
       'cstmsubdistrictid': subdistrictid.toString(),
+      'cstmuvid': villageid,
       'cstmtypeid': cstmtypeid?.toString(),
       'cstmlatitude': cstmlatitude,
       'cstmlongitude': cstmlongitude,

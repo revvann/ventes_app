@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:ventes/app/api/models/village_model.dart';
 import 'package:ventes/app/api/presenters/regular_presenter.dart';
 import 'package:ventes/app/api/services/bp_customer_service.dart';
 import 'package:ventes/app/api/services/customer_service.dart';
@@ -44,16 +45,8 @@ class CustomerFormCreatePresenter extends RegularPresenter {
     return await _gmapsService.getDetail(latitude, longitude);
   }
 
-  Future<Response> _getProvince(int idProv) async {
-    return await _placeService.province().show(idProv);
-  }
-
-  Future<Response> _getCity(int idCity) async {
-    return await _placeService.city().show(idCity);
-  }
-
-  Future<Response> _getSubdistrict(String name) async {
-    return await _placeService.subdistrict().byName(name);
+  Future<Response> _getPlacesByName(String village, String subdistrict, String city, String province) async {
+    return await _placeService.village().placesByName(village, subdistrict, city, province);
   }
 
   Future<Response> _getTypes() async {
@@ -73,48 +66,36 @@ class CustomerFormCreatePresenter extends RegularPresenter {
         builder: (handler) {
           return (latitude, longitude) async {
             handler.start();
-            // try {
-            Response locResponse = await _getLocDetail(latitude, longitude);
-            if (locResponse.statusCode == 200) {
-              handler.success(locResponse.body);
-            } else {
-              handler.failed(NearbyString.fetchFailed);
+            try {
+              Response locResponse = await _getLocDetail(latitude, longitude);
+              if (locResponse.statusCode == 200) {
+                handler.success(locResponse.body);
+              } else {
+                handler.failed(NearbyString.fetchFailed);
+              }
+            } catch (e) {
+              handler.error(e.toString());
             }
-            // } catch (e) {
-            //   handler.error(e.toString());
-            // }
             handler.complete();
           };
         },
       );
 
-  DataFetcher<Function(String), Map<String, dynamic>> get fetchPlaces => DataFetcher(
+  DataFetcher<Function(String, String, String, String), Map<String, dynamic>> get fetchPlaces => DataFetcher(
         builder: (handler) {
-          return (subdistrictname) async {
+          return (village, subdistrict, city, province) async {
             handler.start();
             try {
               Map<String, dynamic> data = {};
-              Response subdistrictResponse = await _getSubdistrict(subdistrictname);
+              Response placesResponse = await _getPlacesByName(village, subdistrict, city, province);
 
-              if (subdistrictResponse.statusCode == 200) {
-                Subdistrict subdistrict = Subdistrict.fromJson(subdistrictResponse.body ?? {});
-                Response cityResponse = await _getCity(subdistrict.subdistrictcityid ?? 0);
-
-                if (cityResponse.statusCode == 200) {
-                  City city = City.fromJson(cityResponse.body);
-                  Response provinceResponse = await _getProvince(city.cityprovid ?? 0);
-
-                  if (provinceResponse.statusCode == 200) {
-                    data['province'] = provinceResponse.body;
-                    data['city'] = cityResponse.body;
-                    data['subdistrict'] = subdistrictResponse.body;
-                    handler.success(data);
-                  } else {
-                    handler.failed(NearbyString.fetchFailed);
-                  }
-                } else {
-                  handler.failed(NearbyString.fetchFailed);
-                }
+              if (placesResponse.statusCode == 200) {
+                Village village = Village.fromJson(List<Map<String, dynamic>>.from(placesResponse.body).firstWhereOrNull((element) => true) ?? {});
+                data['province'] = village.villagesubdistrict?.subdistrictcity?.cityprov?.toJson();
+                data['city'] = village.villagesubdistrict?.subdistrictcity?.toJson();
+                data['subdistrict'] = village.villagesubdistrict?.toJson();
+                data['village'] = village.toJson();
+                handler.success(data);
               } else {
                 handler.failed(NearbyString.fetchFailed);
               }
@@ -210,55 +191,4 @@ class CustomerFormCreatePresenter extends RegularPresenter {
           };
         },
       );
-
-  Future<List<Country>> fetchCountries([String? search]) async {
-    Map<String, dynamic> params = {
-      'search': search,
-    };
-
-    Response response = await _placeService.country().select(params);
-    if (response.statusCode == 200) {
-      return List<Country>.from(response.body.map((item) => Country.fromJson(item)));
-    }
-    return [];
-  }
-
-  Future<List<Province>> fetchProvinces(int countryId, [String? search]) async {
-    Map<String, dynamic> params = {
-      'search': search,
-      'provcountryid': countryId.toString(),
-    };
-
-    Response response = await _placeService.province().select(params);
-    if (response.statusCode == 200) {
-      return List<Province>.from(response.body.map((item) => Province.fromJson(item)));
-    }
-    return [];
-  }
-
-  Future<List<City>> fetchCities(int provinceId, [String? search]) async {
-    Map<String, dynamic> params = {
-      'search': search,
-      'cityprovid': provinceId.toString(),
-    };
-
-    Response response = await _placeService.city().select(params);
-    if (response.statusCode == 200) {
-      return List<City>.from(response.body.map((item) => City.fromJson(item)));
-    }
-    return [];
-  }
-
-  Future<List<Subdistrict>> fetchSubdistricts(int cityId, [String? search]) async {
-    Map<String, dynamic> params = {
-      'search': search,
-      'subdistrictcityid': cityId.toString(),
-    };
-
-    Response response = await _placeService.subdistrict().select(params);
-    if (response.statusCode == 200) {
-      return List<Subdistrict>.from(response.body.map((item) => Subdistrict.fromJson(item)));
-    }
-    return [];
-  }
 }

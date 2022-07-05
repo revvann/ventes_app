@@ -88,6 +88,16 @@ class _CustomerForm extends StatelessWidget {
             height: RegularSize.m,
           ),
           Obx(() {
+            return RegularInput(
+              label: "Customer village",
+              value: state.dataSource.getVillageName() ?? state.dataSource.customer?.cstmuv?.villagename,
+              enabled: false,
+            );
+          }),
+          SizedBox(
+            height: RegularSize.m,
+          ),
+          Obx(() {
             return KeyableSelectBox<int>(
               label: "Customer type",
               onSelected: state.listener.onTypeSelected,
