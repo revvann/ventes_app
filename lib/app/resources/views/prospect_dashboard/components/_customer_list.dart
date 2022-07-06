@@ -15,12 +15,12 @@ class _CustomerList extends StatelessWidget {
         children: [
           Row(
             children: [
-              if (bpCustomer?.sbccstmpic != null) ...[
+              if (bpCustomer?.sbccstmpics != null) ...[
                 Container(
                   width: 75,
                   height: 75,
                   alignment: Alignment.center,
-                  child: Image.network(bpCustomer!.sbccstmpic!),
+                  child: Image.network(bpCustomer?.sbccstmpics?.isNotEmpty ?? false ? bpCustomer!.sbccstmpics!.first.url! : ""),
                   decoration: BoxDecoration(
                     color: RegularColor.green,
                     shape: BoxShape.circle,

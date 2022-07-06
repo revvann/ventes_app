@@ -3,6 +3,7 @@ import 'package:ventes/app/resources/views/contact/contact.dart';
 import 'package:ventes/app/resources/views/product/product.dart';
 import 'package:ventes/app/resources/views/prospect_activity/prospect_activity.dart';
 import 'package:ventes/app/resources/views/prospect_assign/prospect_assign.dart';
+import 'package:ventes/app/resources/views/prospect_competitor/prospect_competitor.dart';
 import 'package:ventes/app/resources/views/prospect_form/update/prospect_fu.dart';
 import 'package:ventes/app/states/typedefs/prospect_dashboard_typedef.dart';
 import 'package:ventes/constants/views.dart';
@@ -50,6 +51,17 @@ class ProspectDashboardListener extends StateListener with ListenerMixin {
     await property.menuController.toggleDropdown(close: true);
     Get.toNamed(
       ProspectActivityView.route,
+      id: Views.prospect.index,
+      arguments: {
+        'prospect': property.prospectid,
+      },
+    );
+  }
+
+  void navigateToProspectCompetitor() async {
+    await property.menuController.toggleDropdown(close: true);
+    Get.toNamed(
+      ProspectCompetitorView.route,
       id: Views.prospect.index,
       arguments: {
         'prospect': property.prospectid,

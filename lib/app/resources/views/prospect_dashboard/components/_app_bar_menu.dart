@@ -40,6 +40,11 @@ class _AppBarMenu extends StatelessWidget {
                 icon: "assets/svg/activity-check.svg",
                 onTap: state.listener.navigateToProspectActivity,
               ),
+              MenuItem(
+                title: "Competitors",
+                icon: "assets/svg/competitors.svg",
+                onTap: state.listener.navigateToProspectCompetitor,
+              ),
             ],
           ),
         ),

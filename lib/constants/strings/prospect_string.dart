@@ -13,6 +13,7 @@ class ProspectString {
   static String formUpdateDetailTaskCode = 'detailcreateprospect';
   static String contactPersonTaskCode = 'contactperson';
   static String formCreateContactTaskCode = 'contactcreate';
+  static String formCreateCompetitorTaskCode = 'competitorcreate';
   static String formUpdateContactTaskCode = 'contactupdate';
   static String formUpdateProductTaskCode = 'productupdate';
   static String prospectAssignTaskCode = 'prospectassign';
@@ -87,4 +88,6 @@ class ProspectString {
   static String prospectAssignTag = 'prospectassign';
   static String statusTag = "status";
   static String stageTag = "stage";
+  static String prospectCompetitorTag = 'prospectcompetitor';
+  static String competitorCreateTag = 'competitorcreate';
 }

@@ -185,7 +185,7 @@ class DashboardView extends View<Controller> {
                                       mRight = 16;
                                     }
                                     return CustomerCard(
-                                      image: NetworkImage(customer.sbccstmpic ?? ""),
+                                      image: NetworkImage(customer.sbccstmpics?.isNotEmpty ?? false ? customer.sbccstmpics!.first.url! : ""),
                                       margin: EdgeInsets.only(
                                         left: 16,
                                         right: mRight,

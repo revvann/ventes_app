@@ -1,5 +1,6 @@
 import 'package:ventes/app/api/models/business_partner_model.dart';
 import 'package:ventes/app/api/models/customer_model.dart';
+import 'package:ventes/app/api/models/files_model.dart';
 import 'package:ventes/app/api/models/type_model.dart';
 import 'package:ventes/core/api/model.dart';
 
@@ -10,11 +11,11 @@ class BpCustomer extends Model {
   String? sbccstmname;
   String? sbccstmphone;
   String? sbccstmaddress;
-  String? sbccstmpic;
   int? sbccstmstatusid;
   DBType? sbccstmstatus;
   BusinessPartner? sbcbp;
   Customer? sbccstm;
+  List<Files>? sbccstmpics;
 
   ///
   /// radus in meter
@@ -27,7 +28,7 @@ class BpCustomer extends Model {
     this.sbccstmname,
     this.sbccstmphone,
     this.sbccstmaddress,
-    this.sbccstmpic,
+    this.sbccstmpics,
     this.sbcbp,
     this.sbccstm,
     this.radius,
@@ -53,7 +54,6 @@ class BpCustomer extends Model {
     sbccstmname = json['sbccstmname'];
     sbccstmphone = json['sbccstmphone'];
     sbccstmaddress = json['sbccstmaddress'];
-    sbccstmpic = json['sbccstmpic'];
     sbccstmstatusid = json['sbccstmstatusid'];
 
     if (json['sbcbp'] != null) {
@@ -68,6 +68,10 @@ class BpCustomer extends Model {
       sbccstmstatus = DBType.fromJson(json['sbccstmstatus']);
     }
 
+    if (json['sbccstmpics'] != null && json['sbccstmpics'].isNotEmpty) {
+      sbccstmpics = json['sbccstmpics'].map<Files>((e) => Files.fromJson(e)).toList();
+    }
+
     super.fromJson(json);
   }
 
@@ -80,7 +84,6 @@ class BpCustomer extends Model {
     data['sbccstmname'] = sbccstmname;
     data['sbccstmphone'] = sbccstmphone;
     data['sbccstmaddress'] = sbccstmaddress;
-    data['sbccstmpic'] = sbccstmpic;
     data['sbccstmstatusid'] = sbccstmstatusid;
 
     if (sbcbp != null) {
@@ -93,6 +96,10 @@ class BpCustomer extends Model {
 
     if (sbccstmstatus != null) {
       data['sbccstmstatus'] = sbccstmstatus?.toJson();
+    }
+
+    if (sbccstmpics != null) {
+      data['sbccstmpics'] = sbccstmpics?.map((e) => e.toJson());
     }
 
     return data;

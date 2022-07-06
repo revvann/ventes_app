@@ -73,8 +73,8 @@ class CustomerFormUpdateFormSource extends UpdateFormSource with FormSourceMixin
 
       cstmtypeid = dataSource.bpCustomer!.sbccstm!.cstmtypeid;
 
-      if (dataSource.bpCustomer!.sbccstmpic != null) {
-        defaultPicture.value = Image.network(dataSource.bpCustomer!.sbccstmpic!);
+      if (dataSource.bpCustomer!.sbccstmpics != null) {
+        defaultPicture.value = Image.network(dataSource.bpCustomer!.sbccstmpics!.first.url!);
       }
     }
   }
