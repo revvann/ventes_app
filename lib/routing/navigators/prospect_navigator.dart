@@ -10,6 +10,7 @@ import 'package:ventes/app/resources/views/product_form/update/product_fu.dart';
 import 'package:ventes/app/resources/views/prospect_assign/prospect_assign.dart';
 import 'package:ventes/app/resources/views/prospect_competitor/prospect_competitor.dart';
 import 'package:ventes/app/resources/views/prospect_competitor_form/create/prospect_competitor_fc.dart';
+import 'package:ventes/app/resources/views/prospect_competitor_form/update/prospect_competitor_fu.dart';
 import 'package:ventes/app/resources/views/prospect_dashboard/prospect_dashboard.dart';
 import 'package:ventes/app/resources/views/prospect_activity/prospect_activity.dart';
 import 'package:ventes/app/resources/views/prospect_activity_form/create/prospect_activity_fc.dart';
@@ -23,6 +24,7 @@ import 'package:ventes/app/states/controllers/product_fu_state_controller.dart';
 import 'package:ventes/app/states/controllers/product_state_controller.dart';
 import 'package:ventes/app/states/controllers/prospect_assign_state_controller.dart';
 import 'package:ventes/app/states/controllers/prospect_competitor_fc_state_controller.dart';
+import 'package:ventes/app/states/controllers/prospect_competitor_fu_state_controller.dart';
 import 'package:ventes/app/states/controllers/prospect_competitor_state_controller.dart';
 import 'package:ventes/app/states/controllers/prospect_dashboard_state_controller.dart';
 import 'package:ventes/app/states/controllers/prospect_activity_fc_state_controller.dart';
@@ -131,6 +133,12 @@ class ProspectNavigator extends ViewNavigator {
               page: () => ProspectCompetitorFormCreateView(args!['prospect']),
               binding: BindingsBuilder(() {
                 Get.put(ProspectCompetitorFormCreateStateController());
+              }),
+            ),
+        ProspectCompetitorFormUpdateView.route: (args) => ViewRoute(
+              page: () => ProspectCompetitorFormUpdateView(args!['competitor']),
+              binding: BindingsBuilder(() {
+                Get.put(ProspectCompetitorFormUpdateStateController());
               }),
             ),
       };

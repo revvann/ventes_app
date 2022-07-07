@@ -28,6 +28,7 @@ class ProspectString {
   static String contactTypeCode = 'contact';
   static String localContactCode = 'localcontact';
   static String lostReasonTypeCode = 'prlost';
+  static String comptRefTypeCode = 'comptref';
 
   static String fetchDataFailed = "Failed to fetch prospect data";
   static String fetchContactFailed = "Failed to fetch contact data";
@@ -40,12 +41,17 @@ class ProspectString {
   static String createContactFailed = "Failed to create contact";
   static String createContactSuccess = "Contact created successfully";
 
+  static String createCompetitorFailed = "Failed to competitor contact";
+  static String createCompetitorSuccess = "Competitor created successfully";
+
   static String updateDataFailed = "Failed to update prospect";
   static String updateDataSuccess = "Prospect updated successfully";
   static String updateContactFailed = "Failed to update contact";
   static String updateContactSuccess = "Contact updated successfully";
   static String updateProductFailed = "Failed to update product";
   static String updateProductSuccess = "Product updated successfully";
+  static String updateCompetitorFailed = "Failed to update competitor";
+  static String updateCompetitorSuccess = "Competitor updated successfully";
 
   static String deleteContactSuccess = "Contact deleted successfully";
   static String deleteContactFailed = "Failed to delete contact";
@@ -62,6 +68,8 @@ class ProspectString {
   static String updateDetailConfirm = "Are you sure you want to update this detail?";
   static String createProspectConfirm = "Are you sure you want to create this prospect?";
   static String updateProspectConfirm = "Are you sure you want to update this prospect?";
+  static String createCompetitorConfirm = "Are you sure you want to create this competitor?";
+  static String updateCompetitorConfirm = "Are you sure you want to update this competitor?";
 
   static String deleteContactConfirm = "Are you sure you want to delete this contact?";
   static String deleteProductConfirm = "Are you sure you want to delete this product?";
@@ -90,4 +98,5 @@ class ProspectString {
   static String stageTag = "stage";
   static String prospectCompetitorTag = 'prospectcompetitor';
   static String competitorCreateTag = 'competitorcreate';
+  static String competitorUpdateTag = 'competitorupdate';
 }

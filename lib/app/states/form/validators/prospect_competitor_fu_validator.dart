@@ -1,4 +1,4 @@
-class ProspectCompetitorFormCreateValidator {
+class ProspectCompetitorFormUpdateValidator {
   String? comptname(String? value) {
     if (value == null) {
       return 'Competitor name is required';

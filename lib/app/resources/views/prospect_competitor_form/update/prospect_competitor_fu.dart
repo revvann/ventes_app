@@ -1,30 +1,27 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'dart:io';
-
 import 'package:flutter/material.dart' hide MenuItem;
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:ventes/app/resources/widgets/editor_input.dart';
-import 'package:ventes/app/resources/widgets/regular_button.dart';
 import 'package:ventes/app/resources/widgets/regular_input.dart';
 import 'package:ventes/app/resources/widgets/top_navigation.dart';
-import 'package:ventes/app/states/typedefs/prospect_competitor_fc_typedef.dart';
+import 'package:ventes/app/states/typedefs/prospect_competitor_fu_typedef.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/constants/strings/prospect_string.dart';
 import 'package:ventes/core/view/view.dart';
 
-class ProspectCompetitorFormCreateView extends View<Controller> {
-  static const String route = "/prospectcompetitor/create";
-  int prospectid;
+class ProspectCompetitorFormUpdateView extends View<Controller> {
+  static const String route = "/prospectcompetitor/update";
+  int competitorid;
 
-  ProspectCompetitorFormCreateView(this.prospectid);
+  ProspectCompetitorFormUpdateView(this.competitorid);
 
   @override
   void onBuild(state) {
-    state.property.prospectid = prospectid;
+    state.property.competitorid = competitorid;
   }
 
   @override
@@ -97,7 +94,6 @@ class ProspectCompetitorFormCreateView extends View<Controller> {
                   child: Form(
                     key: state.formSource.formKey,
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Container(
                           alignment: Alignment.centerLeft,
@@ -147,54 +143,6 @@ class ProspectCompetitorFormCreateView extends View<Controller> {
                         ),
                         SizedBox(
                           height: RegularSize.m,
-                        ),
-                        Text(
-                          "Images",
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
-                            color: RegularColor.primary,
-                          ),
-                        ),
-                        RegularButton(
-                          label: "Choose Images",
-                          primary: RegularColor.green,
-                          height: RegularSize.xl,
-                          onPressed: state.listener.pickImage,
-                        ),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Expanded(child: Obx(
-                              () {
-                                return ListView.builder(
-                                  itemCount: state.formSource.firstHalfImages.length,
-                                  shrinkWrap: true,
-                                  physics: NeverScrollableScrollPhysics(),
-                                  itemBuilder: (_, index) {
-                                    File file = state.formSource.firstHalfImages[index];
-                                    return Image.file(file);
-                                  },
-                                );
-                              },
-                            )),
-                            SizedBox(
-                              width: RegularSize.s,
-                            ),
-                            Expanded(
-                              child: Obx(() {
-                                return ListView.builder(
-                                  itemCount: state.formSource.secondHalfImages.length,
-                                  shrinkWrap: true,
-                                  physics: NeverScrollableScrollPhysics(),
-                                  itemBuilder: (_, index) {
-                                    File file = state.formSource.secondHalfImages[index];
-                                    return Image.file(file);
-                                  },
-                                );
-                              }),
-                            ),
-                          ],
                         ),
                       ],
                     ),

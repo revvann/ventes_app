@@ -77,6 +77,7 @@ class AuthHelper {
 
   Future<bool> destroy() async {
     userId.val = null;
+    accountActive.val = null;
     jwtToken.val = null;
     username.val = null;
     password.val = null;

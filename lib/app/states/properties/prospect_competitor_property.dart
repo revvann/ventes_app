@@ -10,6 +10,7 @@ class ProspectCompetitorProperty extends StateProperty with PropertyMixin {
 
   void refresh() {
     dataSource.prospectHandler.fetcher.run(prospectid);
+    dataSource.refTypesHandler.fetcher.run();
   }
 
   PopupMenuController createPopupController([int id = 0]) {

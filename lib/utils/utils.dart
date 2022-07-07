@@ -13,6 +13,7 @@ import 'package:ventes/app/api/models/auth_model.dart';
 import 'package:ventes/app/api/services/auth_service.dart';
 import 'package:ventes/app/api/services/bp_customer_service.dart';
 import 'package:ventes/app/api/services/chat_service.dart';
+import 'package:ventes/app/api/services/competitor_service.dart';
 import 'package:ventes/app/api/services/contact_person_service.dart';
 import 'package:ventes/app/api/services/customer_service.dart';
 import 'package:ventes/app/api/services/gmaps_service.dart';
@@ -287,6 +288,7 @@ class Utils {
     Get.lazyPut(() => AuthService(), fenix: true);
     Get.lazyPut(() => UserService(), fenix: true);
     Get.lazyPut(() => ChatService(), fenix: true);
+    Get.lazyPut(() => CompetitorService(), fenix: true);
     Get.lazyPut(() => BpCustomerService(), fenix: true);
     Get.lazyPut(() => CustomerService(), fenix: true);
     Get.lazyPut(() => GmapsService(), fenix: true);
