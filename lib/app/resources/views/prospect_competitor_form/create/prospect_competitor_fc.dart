@@ -165,21 +165,21 @@ class ProspectCompetitorFormCreateView extends View<Controller> {
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Expanded(child: Obx(
-                              () {
+                            Expanded(
+                              child: Obx(() {
                                 return ListView.builder(
                                   itemCount: state.formSource.firstHalfImages.length,
                                   shrinkWrap: true,
                                   physics: NeverScrollableScrollPhysics(),
                                   itemBuilder: (_, index) {
                                     File file = state.formSource.firstHalfImages[index];
-                                    return Image.file(file);
+                                    return Padding(
+                                      padding: EdgeInsets.all(RegularSize.xs),
+                                      child: Image.file(file),
+                                    );
                                   },
                                 );
-                              },
-                            )),
-                            SizedBox(
-                              width: RegularSize.s,
+                              }),
                             ),
                             Expanded(
                               child: Obx(() {
@@ -189,7 +189,10 @@ class ProspectCompetitorFormCreateView extends View<Controller> {
                                   physics: NeverScrollableScrollPhysics(),
                                   itemBuilder: (_, index) {
                                     File file = state.formSource.secondHalfImages[index];
-                                    return Image.file(file);
+                                    return Padding(
+                                      padding: EdgeInsets.all(RegularSize.xs),
+                                      child: Image.file(file),
+                                    );
                                   },
                                 );
                               }),

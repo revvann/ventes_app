@@ -6,6 +6,7 @@ import 'package:ventes/app/api/models/type_model.dart';
 import 'package:ventes/app/states/typedefs/prospect_competitor_fc_typedef.dart';
 import 'package:ventes/core/states/state_form_source.dart';
 import 'package:ventes/helpers/task_helper.dart';
+import 'package:path/path.dart' as path;
 
 class ProspectCompetitorFormCreateFormSource extends StateFormSource with FormSourceMixin {
   Validator validator = Validator();
@@ -26,15 +27,20 @@ class ProspectCompetitorFormCreateFormSource extends StateFormSource with FormSo
   set images(List<File> images) => _images.value = images;
   List<File> get firstHalfImages {
     int start = 0;
-    int length = images.length ~/ 2;
-    return images.sublist(start, length);
+    int end = start + images.length ~/ 2;
+    return images.sublist(start, end);
   }
 
   List<File> get secondHalfImages {
     int start = images.length ~/ 2;
-    int length = (images.length ~/ 2) + (images.length % 2);
-    return images.sublist(start, length);
+    int end = start + (images.length ~/ 2 + images.length % 2);
+    return images.sublist(start, end);
   }
+
+  List<MultipartFile> get multiparts => images.map<MultipartFile>((e) {
+        String filename = path.basename(e.path);
+        return MultipartFile(e, filename: filename);
+      }).toList();
 
   @override
   Map<String, dynamic> toJson() {
@@ -45,6 +51,7 @@ class ProspectCompetitorFormCreateFormSource extends StateFormSource with FormSo
       'comptname': comptnameTEC.text,
       'comptproductname': comptproductnameTEC.text,
       'description': descriptionTEC.text,
+      'comptpics': multiparts,
     };
   }
 
