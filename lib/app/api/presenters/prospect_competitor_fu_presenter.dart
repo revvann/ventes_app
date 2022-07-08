@@ -17,8 +17,12 @@ class ProspectCompetitorFormUpdatePresenter extends RegularPresenter {
     return _competitorService.show(id);
   }
 
-  Future<Response> _updateCompetitor(int id, Map<String, dynamic> data) {
-    return _competitorService.update(id, data);
+  Future<Response> _updateCompetitor(int id, FormData data) {
+    return _competitorService.postUpdate(
+      id,
+      data,
+      contentType: "multipart/form-data",
+    );
   }
 
   DataFetcher<Function(int), Map<String, dynamic>> get fetchProspect => DataFetcher(builder: (handler) {
@@ -54,7 +58,7 @@ class ProspectCompetitorFormUpdatePresenter extends RegularPresenter {
         };
       });
 
-  DataFetcher<Function(int, Map<String, dynamic>), String> get update => DataFetcher(builder: (handler) {
+  DataFetcher<Function(int, FormData), String> get update => DataFetcher(builder: (handler) {
         return (id, data) async {
           handler.start();
           try {

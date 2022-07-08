@@ -1,5 +1,4 @@
 import 'package:ventes/app/api/models/business_partner_model.dart';
-import 'package:ventes/app/api/models/user_detail_model.dart';
 import 'package:ventes/app/api/models/user_model.dart';
 import 'package:ventes/core/api/model.dart';
 

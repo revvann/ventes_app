@@ -6,6 +6,7 @@ import 'package:ventes/app/resources/views/contact/contact.dart';
 import 'package:ventes/app/resources/views/contact_form/create/contact_person_fc.dart';
 import 'package:ventes/app/resources/views/contact_form/update/contact_person_fu.dart';
 import 'package:ventes/app/resources/views/product/product.dart';
+import 'package:ventes/app/resources/views/product_form/create/product_fc.dart';
 import 'package:ventes/app/resources/views/product_form/update/product_fu.dart';
 import 'package:ventes/app/resources/views/prospect_assign/prospect_assign.dart';
 import 'package:ventes/app/resources/views/prospect_competitor/prospect_competitor.dart';
@@ -20,6 +21,7 @@ import 'package:ventes/app/resources/views/prospect_form/update/prospect_fu.dart
 import 'package:ventes/app/states/controllers/contact_person_fc_state_controller.dart';
 import 'package:ventes/app/states/controllers/contact_person_fu_state_controller.dart';
 import 'package:ventes/app/states/controllers/contact_person_state_controller.dart';
+import 'package:ventes/app/states/controllers/product_fc_state_controller.dart';
 import 'package:ventes/app/states/controllers/product_fu_state_controller.dart';
 import 'package:ventes/app/states/controllers/product_state_controller.dart';
 import 'package:ventes/app/states/controllers/prospect_assign_state_controller.dart';
@@ -109,6 +111,12 @@ class ProspectNavigator extends ViewNavigator {
               page: () => ProductFormUpdateView(args!['product']),
               binding: BindingsBuilder(() {
                 Get.put(ProductFormUpdateStateController());
+              }),
+            ),
+        ProductFormCreateView.route: (args) => ViewRoute(
+              page: () => ProductFormCreateView(args!['prospect']),
+              binding: BindingsBuilder(() {
+                Get.put(ProductFormCreateStateController());
               }),
             ),
         ProspectAssignView.route: (args) => ViewRoute(

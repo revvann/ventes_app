@@ -1,4 +1,5 @@
 import 'package:ventes/app/api/models/bp_customer_model.dart';
+import 'package:ventes/app/api/models/prospect_custom_field_model.dart';
 import 'package:ventes/app/api/models/type_model.dart';
 import 'package:ventes/app/api/models/user_detail_model.dart';
 import 'package:ventes/core/api/model.dart';
@@ -24,6 +25,7 @@ class Prospect extends Model {
   DBType? prospectstatus;
   DBType? prospectlostreason;
   BpCustomer? prospectcust;
+  List<ProspectCustomField>? prospectcustomfield;
 
   Prospect({
     this.prospectid,
@@ -92,6 +94,10 @@ class Prospect extends Model {
 
     if (json['prospectcust'] != null) {
       prospectcust = BpCustomer.fromJson(json['prospectcust']);
+    }
+
+    if (json['prospectcustomfield'] != null) {
+      prospectcustomfield = json['prospectcustomfield'].map<ProspectCustomField>((e) => ProspectCustomField.fromJson(e)).toList();
     }
 
     super.fromJson(json);

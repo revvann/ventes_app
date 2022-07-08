@@ -2,7 +2,6 @@ import 'package:get/get.dart';
 import 'package:ventes/app/api/models/auth_model.dart';
 import 'package:ventes/app/api/models/bp_customer_model.dart';
 import 'package:ventes/app/api/models/city_model.dart';
-import 'package:ventes/app/api/models/country_model.dart';
 import 'package:ventes/app/api/models/province_model.dart';
 import 'package:ventes/app/api/models/subdistrict_model.dart';
 import 'package:ventes/app/api/models/user_detail_model.dart';

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:get/get.dart';
+import 'package:ventes/app/resources/views/product_form/create/product_fc.dart';
 import 'package:ventes/app/resources/views/product_form/update/product_fu.dart';
 import 'package:ventes/app/states/typedefs/product_typedef.dart';
 import 'package:ventes/constants/strings/prospect_string.dart';
@@ -19,6 +20,16 @@ class ProductListener extends StateListener with ListenerMixin {
       id: Views.prospect.index,
       arguments: {
         "product": id,
+      },
+    );
+  }
+
+  void navigateToFormCreate() {
+    Get.toNamed(
+      ProductFormCreateView.route,
+      id: Views.prospect.index,
+      arguments: {
+        "prospect": property.prospectid,
       },
     );
   }

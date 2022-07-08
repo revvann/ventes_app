@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:ventes/app/api/models/competitor_model.dart';
+import 'package:ventes/app/api/models/files_model.dart';
 import 'package:ventes/app/api/models/prospect_model.dart';
 import 'package:ventes/app/api/presenters/prospect_competitor_fu_presenter.dart';
 import 'package:ventes/app/states/controllers/prospect_competitor_state_controller.dart';
@@ -17,7 +18,7 @@ class ProspectCompetitorFormUpdateDataSource extends StateDataSource<ProspectCom
 
   late DataHandler<Competitor?, Map<String, dynamic>, Function(int)> competitorHandler;
   late DataHandler<Prospect?, Map<String, dynamic>, Function(int)> prospectHandler;
-  late DataHandler<dynamic, String, Function(int, Map<String, dynamic>)> updateHandler;
+  late DataHandler<dynamic, String, Function(int, FormData)> updateHandler;
 
   Prospect? get prospect => prospectHandler.value;
   Competitor? get competitor => competitorHandler.value;
@@ -38,6 +39,18 @@ class ProspectCompetitorFormUpdateDataSource extends StateDataSource<ProspectCom
   void _competitorComplete() {
     prospectHandler.fetcher.run(competitor!.comptrefid!);
     formSource.prepareFormValues();
+  }
+
+  List<Files> get secondHalfImages {
+    int start = 0;
+    int end = start + (competitor?.comptpics?.length ?? 0) ~/ 2;
+    return competitor?.comptpics?.sublist(start, end) ?? [];
+  }
+
+  List<Files> get firstHalfImages {
+    int start = (competitor?.comptpics?.length ?? 0) ~/ 2;
+    int end = start + ((competitor?.comptpics?.length ?? 0) ~/ 2 + (competitor?.comptpics?.length ?? 0) % 2);
+    return competitor?.comptpics?.sublist(start, end) ?? [];
   }
 
   @override

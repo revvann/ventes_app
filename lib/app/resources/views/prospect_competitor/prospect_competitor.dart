@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/material.dart' hide MenuItem;
@@ -7,9 +8,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:ventes/app/api/models/competitor_model.dart';
+import 'package:ventes/app/api/models/files_model.dart';
 import 'package:ventes/app/resources/widgets/handler_container.dart';
 import 'package:ventes/app/resources/widgets/pop_up_item.dart';
 import 'package:ventes/app/resources/widgets/popup_button.dart';
+import 'package:ventes/app/resources/widgets/regular_dialog.dart';
 import 'package:ventes/app/resources/widgets/top_navigation.dart';
 import 'package:ventes/app/states/typedefs/prospect_competitor_typedef.dart';
 import 'package:ventes/constants/regular_color.dart';
@@ -18,6 +21,7 @@ import 'package:ventes/constants/strings/prospect_string.dart';
 import 'package:ventes/core/view/view.dart';
 
 part 'package:ventes/app/resources/views/prospect_competitor/components/_competitor_list.dart';
+part 'package:ventes/app/resources/views/prospect_competitor/components/_competitor_detail.dart';
 
 class ProspectCompetitorView extends View<Controller> {
   static const String route = "/prospectcompetitor";

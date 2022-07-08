@@ -8,7 +8,7 @@ import 'package:ventes/app/api/models/type_model.dart';
 import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
 import 'package:ventes/app/resources/widgets/regular_input.dart';
 import 'package:ventes/app/resources/widgets/top_navigation.dart';
-import 'package:ventes/app/states/typedefs/product_fu_typedef.dart';
+import 'package:ventes/app/states/typedefs/product_fc_typedef.dart';
 import 'package:ventes/constants/formatters/currency_formatter.dart';
 import 'package:ventes/constants/formatters/range_number_formatter.dart';
 import 'package:ventes/constants/regular_color.dart';
@@ -16,15 +16,15 @@ import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/constants/strings/prospect_string.dart';
 import 'package:ventes/core/view/view.dart';
 
-class ProductFormUpdateView extends View<Controller> {
-  static const String route = "/product/update";
-  int productid;
+class ProductFormCreateView extends View<Controller> {
+  static const String route = "/product/create";
+  int prospectid;
 
-  ProductFormUpdateView(this.productid);
+  ProductFormCreateView(this.prospectid);
 
   @override
   void onBuild(state) {
-    state.property.productid = productid;
+    state.property.prospectid = prospectid;
   }
 
   @override
@@ -93,6 +93,7 @@ class ProductFormUpdateView extends View<Controller> {
                   ),
                 ),
                 child: SingleChildScrollView(
+                  physics: AlwaysScrollableScrollPhysics(),
                   child: Form(
                     key: state.formSource.formKey,
                     child: Column(
@@ -100,7 +101,7 @@ class ProductFormUpdateView extends View<Controller> {
                         Container(
                           alignment: Alignment.centerLeft,
                           child: Text(
-                            "Update Product",
+                            "Create Product",
                             style: TextStyle(
                               color: RegularColor.primary,
                               fontWeight: FontWeight.bold,
@@ -136,7 +137,7 @@ class ProductFormUpdateView extends View<Controller> {
                         Row(children: [
                           Expanded(
                             child: RegularInput(
-                              label: "Tax",
+                              label: "Tax (%)",
                               hintText: "Enter tax",
                               controller: state.formSource.taxTEC,
                               inputType: TextInputType.number,

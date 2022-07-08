@@ -1,14 +1,11 @@
-import 'dart:io';
-
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:ventes/app/states/typedefs/prospect_competitor_fu_typedef.dart';
+import 'package:ventes/app/states/typedefs/product_fc_typedef.dart';
 import 'package:ventes/constants/strings/prospect_string.dart';
 import 'package:ventes/constants/views.dart';
 import 'package:ventes/core/states/state_listener.dart';
 import 'package:ventes/helpers/task_helper.dart';
 
-class ProspectCompetitorFormUpdateListener extends StateListener with ListenerMixin {
+class ProductFormCreateListener extends StateListener with ListenerMixin {
   void goBack() {
     Get.back(
       id: Views.prospect.index,
@@ -17,9 +14,8 @@ class ProspectCompetitorFormUpdateListener extends StateListener with ListenerMi
 
   void onSubmitButtonClicked() {
     Get.find<TaskHelper>().confirmPush(
-      Task<bool>(
-        'submitform',
-        message: ProspectString.updateCompetitorConfirm,
+      property.task.copyWith<bool>(
+        message: ProspectString.createProductConfirm,
         onFinished: (res) {
           if (res) {
             formSource.onSubmit();
@@ -29,12 +25,8 @@ class ProspectCompetitorFormUpdateListener extends StateListener with ListenerMi
     );
   }
 
-  void pickImage() async {
-    ImagePicker _picker = ImagePicker();
-    final List<XFile>? images = await _picker.pickMultiImage();
-    if (images != null) {
-      formSource.images = images.map<File>((e) => File(e.path)).toList();
-    }
+  void onTaxChanged(item) {
+    formSource.prosproducttax = item.value;
   }
 
   @override

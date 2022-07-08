@@ -16,6 +16,7 @@ class ProspectString {
   static String formCreateCompetitorTaskCode = 'competitorcreate';
   static String formUpdateContactTaskCode = 'contactupdate';
   static String formUpdateProductTaskCode = 'productupdate';
+  static String formCreateProductTaskCode = 'productcreate';
   static String prospectAssignTaskCode = 'prospectassign';
 
   static String statusTypeCode = 'prstatus';
@@ -52,6 +53,8 @@ class ProspectString {
   static String updateProductSuccess = "Product updated successfully";
   static String updateCompetitorFailed = "Failed to update competitor";
   static String updateCompetitorSuccess = "Competitor updated successfully";
+  static String createProductFailed = "Failed to create product";
+  static String createProductSuccess = "Product create successfully";
 
   static String deleteContactSuccess = "Contact deleted successfully";
   static String deleteContactFailed = "Failed to delete contact";
@@ -91,6 +94,7 @@ class ProspectString {
   static String contactCreateTag = "contactcreate";
   static String contactUpdateTag = "contactupdate";
   static String productUpdateTag = "productupdate";
+  static String productCreateTag = "productcreate";
   static String detailCreateTag = "detailcreate";
   static String detailUpdateTag = "detailupdate";
   static String prospectAssignTag = 'prospectassign';

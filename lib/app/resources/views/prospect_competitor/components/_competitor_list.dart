@@ -90,6 +90,11 @@ class _CompetitorList extends StatelessWidget {
                               icon: "assets/svg/delete.svg",
                               onTap: () {},
                             ),
+                            MenuItem(
+                              title: "Detail",
+                              icon: "assets/svg/detail.svg",
+                              onTap: () => _CompetitorDetail(_competitor).show(),
+                            ),
                           ],
                         ),
                       ),

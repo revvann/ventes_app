@@ -4,6 +4,7 @@ import 'package:flutter/material.dart' hide MenuItem;
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:ventes/app/api/models/bp_customer_model.dart';
+import 'package:ventes/app/api/models/prospect_custom_field_model.dart';
 import 'package:ventes/app/api/models/prospect_model.dart';
 import 'package:ventes/app/api/models/user_detail_model.dart';
 import 'package:ventes/app/resources/widgets/handler_container.dart';
@@ -16,6 +17,7 @@ import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/core/view/view.dart';
 import 'package:ventes/utils/utils.dart';
 
+part 'package:ventes/app/resources/views/prospect_dashboard/components/_app_bar_menu.dart';
 part 'package:ventes/app/resources/views/prospect_dashboard/components/_customer_list.dart';
 part 'package:ventes/app/resources/views/prospect_dashboard/components/_detail_item.dart';
 part 'package:ventes/app/resources/views/prospect_dashboard/components/_detail_list.dart';
@@ -23,7 +25,6 @@ part 'package:ventes/app/resources/views/prospect_dashboard/components/_horizont
 part 'package:ventes/app/resources/views/prospect_dashboard/components/_mini_stat_card.dart';
 part 'package:ventes/app/resources/views/prospect_dashboard/components/_owner_list.dart';
 part 'package:ventes/app/resources/views/prospect_dashboard/components/_stat_panel.dart';
-part 'package:ventes/app/resources/views/prospect_dashboard/components/_app_bar_menu.dart';
 
 class ProspectDashboardView extends View<Controller> {
   static const String route = "/prospectdashboard";

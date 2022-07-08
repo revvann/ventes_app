@@ -1,4 +1,5 @@
 import 'package:ventes/app/api/models/business_partner_model.dart';
+import 'package:ventes/app/api/models/files_model.dart';
 import 'package:ventes/app/api/models/type_model.dart';
 import 'package:ventes/core/api/model.dart';
 
@@ -12,6 +13,7 @@ class Competitor extends Model {
   String? description;
   BusinessPartner? comptbp;
   DBType? comptreftype;
+  List<Files>? comptpics;
 
   Competitor({
     this.comptid,
@@ -23,6 +25,7 @@ class Competitor extends Model {
     this.description,
     this.comptbp,
     this.comptreftype,
+    this.comptpics,
     String? createddate,
     String? updateddate,
     int? createdby,
@@ -51,6 +54,10 @@ class Competitor extends Model {
 
     if (json['comptreftype'] != null) {
       comptreftype = DBType.fromJson(json['comptreftype']);
+    }
+
+    if (json['comptpics'] != null) {
+      comptpics = json['comptpics'].map<Files>((e) => Files.fromJson(e)).toList();
     }
 
     super.fromJson(json);

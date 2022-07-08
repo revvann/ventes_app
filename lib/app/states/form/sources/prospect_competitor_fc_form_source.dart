@@ -25,13 +25,13 @@ class ProspectCompetitorFormCreateFormSource extends StateFormSource with FormSo
   final Rx<List<File>> _images = Rx([]);
   List<File> get images => _images.value;
   set images(List<File> images) => _images.value = images;
-  List<File> get firstHalfImages {
+  List<File> get secondHalfImages {
     int start = 0;
     int end = start + images.length ~/ 2;
     return images.sublist(start, end);
   }
 
-  List<File> get secondHalfImages {
+  List<File> get firstHalfImages {
     int start = images.length ~/ 2;
     int end = start + (images.length ~/ 2 + images.length % 2);
     return images.sublist(start, end);
@@ -52,7 +52,7 @@ class ProspectCompetitorFormCreateFormSource extends StateFormSource with FormSo
       'comptproductname': comptproductnameTEC.text,
       'description': descriptionTEC.text,
     };
-    if (multiparts.isNotEmpty) data['comptpics'] = multiparts;
+    if (multiparts.isNotEmpty) data['comptpics[]'] = multiparts;
     return data;
   }
 

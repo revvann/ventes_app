@@ -27,6 +27,22 @@ class _DetailList extends StatelessWidget {
               _DetailItem(title: "Value", value: value),
               SizedBox(height: RegularSize.s),
               _DetailItem(title: "Description", value: prospect?.prospectdescription ?? "-"),
+              ListView.builder(
+                itemCount: prospect?.prospectcustomfield?.length ?? 0,
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemBuilder: (_, index) {
+                  ProspectCustomField customField = prospect!.prospectcustomfield![index];
+                  return Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: RegularSize.s),
+                      _DetailItem(title: customField.customfield?.custfname ?? "-", value: customField.prospectcfvalue ?? "-"),
+                    ],
+                  );
+                },
+              ),
               SizedBox(height: RegularSize.s),
               if (prospect?.prospectlostreason != null) ...[
                 _DetailItem(title: "Lost Reason", value: prospect?.prospectlostreason?.typename ?? "-"),
