@@ -18,6 +18,7 @@ function socketController(socket) {
    }
 
    async function onMessage(data) {
+      console.log(data);
       try {
          const response = await chatServices.storeChat(data.chat);
          if (response.status == 200) {

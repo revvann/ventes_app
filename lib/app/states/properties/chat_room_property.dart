@@ -16,7 +16,7 @@ class ChatRoomProperty extends StateProperty with PropertyMixin {
   TextEditingController messageTEC = TextEditingController();
 
   void sendMessage(Map<String, dynamic> data) {
-    socket.emit('message', data);
+    socket.emitWithAck('message', data, binary: true);
   }
 
   @override
