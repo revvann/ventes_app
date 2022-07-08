@@ -19,7 +19,7 @@ class ProspectCompetitorFormCreatePresenter extends RegularPresenter {
     return _prospectService.show(id);
   }
 
-  Future<Response> _storeCompetitor(Map<String, dynamic> data) {
+  Future<Response> _storeCompetitor(FormData data) {
     return _competitorService.store(data);
   }
 
@@ -41,7 +41,7 @@ class ProspectCompetitorFormCreatePresenter extends RegularPresenter {
         };
       });
 
-  DataFetcher<Function(Map<String, dynamic>), String> get create => DataFetcher(builder: (handler) {
+  DataFetcher<Function(FormData), String> get create => DataFetcher(builder: (handler) {
         return (data) async {
           handler.start();
           try {

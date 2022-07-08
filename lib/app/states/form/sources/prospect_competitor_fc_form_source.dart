@@ -44,22 +44,24 @@ class ProspectCompetitorFormCreateFormSource extends StateFormSource with FormSo
 
   @override
   Map<String, dynamic> toJson() {
-    return {
+    Map<String, dynamic> data = {
       'comptbpid': dataSource.prospect?.prospectbpid,
       'comptreftypeid': comptreftype?.typeid,
       'comptrefid': dataSource.prospect?.prospectid,
       'comptname': comptnameTEC.text,
       'comptproductname': comptproductnameTEC.text,
       'description': descriptionTEC.text,
-      'comptpics': multiparts,
     };
+    if (multiparts.isNotEmpty) data['comptpics'] = multiparts;
+    return data;
   }
 
   @override
   void onSubmit() {
     if (isValid) {
       Map<String, dynamic> data = toJson();
-      dataSource.createHandler.fetcher.run(data);
+      FormData formData = FormData(data);
+      dataSource.createHandler.fetcher.run(formData);
     } else {
       Get.find<TaskHelper>().failedPush(Task('failedsubmit', message: "Form is not valid"));
     }

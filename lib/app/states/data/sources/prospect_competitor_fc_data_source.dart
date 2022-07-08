@@ -17,7 +17,7 @@ class ProspectCompetitorFormCreateDataSource extends StateDataSource<ProspectCom
 
   late DataHandler<List<DBType>, List, Function()> refTypesHandler;
   late DataHandler<Prospect?, Map<String, dynamic>, Function(int)> prospectHandler;
-  late DataHandler<dynamic, String, Function(Map<String, dynamic>)> createHandler;
+  late DataHandler<dynamic, String, Function(FormData)> createHandler;
 
   List<DBType> get refTypes => refTypesHandler.value;
   Prospect? get prospect => prospectHandler.value;
