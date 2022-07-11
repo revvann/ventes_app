@@ -1,5 +1,6 @@
 const axios = require('axios').default;
 const NetworkConstant = require('../constants/networkConstants.js');
+const FormData = require('form-data');
 
 class NetworkUtils {
    /**
@@ -18,7 +19,14 @@ class NetworkUtils {
       this.#axios = axios.create({
          baseURL: NetworkConstant.baseUrl,
          timeout: 10000,
-         headers: { 'Authorization': `Bearer ${token}` }
+         headers: { 'Authorization': `Bearer ${token}` },
+      });
+      this.#axios.interceptors.request.use(config => {
+         console.log(config.data instanceof FormData)
+         if (config.data instanceof FormData) {
+            Object.assign(config.headers, config.data.getHeaders());
+         }
+         return config;
       });
 
       this.get = this.#axios.get;

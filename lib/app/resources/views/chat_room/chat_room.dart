@@ -1,10 +1,12 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart' hide MenuItem;
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:grouped_list/grouped_list.dart';
+import 'package:mime/mime.dart';
 import 'package:ventes/app/api/models/chat_model.dart';
 import 'package:ventes/app/api/models/user_detail_model.dart';
 import 'package:ventes/app/resources/widgets/handler_container.dart';
@@ -19,6 +21,7 @@ import 'package:ventes/utils/utils.dart';
 part 'package:ventes/app/resources/views/chat_room/components/_chat_body.dart';
 part 'package:ventes/app/resources/views/chat_room/components/_chat_header.dart';
 part 'package:ventes/app/resources/views/chat_room/components/_chat_input.dart';
+part 'package:ventes/app/resources/views/chat_room/components/_file_card.dart';
 
 class ChatRoomView extends View<Controller> {
   static const String route = "/chatroom";
@@ -110,10 +113,7 @@ class ChatRoomView extends View<Controller> {
                 margin: EdgeInsets.only(
                   top: RegularSize.s,
                 ),
-                padding: EdgeInsets.symmetric(
-                  horizontal: RegularSize.m,
-                  vertical: RegularSize.s,
-                ),
+                padding: EdgeInsets.all(RegularSize.m),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.only(
@@ -128,24 +128,76 @@ class ChatRoomView extends View<Controller> {
                     ),
                   ],
                 ),
-                child: Row(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    Expanded(
-                      child: _ChatInput(
-                        hintText: "Message...",
-                        controller: state.property.messageTEC,
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: state.listener.sendMessage,
-                      child: Container(
-                        padding: EdgeInsets.all(RegularSize.s),
-                        child: SvgPicture.asset(
-                          'assets/svg/send.svg',
-                          color: RegularColor.gray,
-                          width: RegularSize.l,
+                    Obx(() => Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            if (state.property.chatFiles != null) ...[
+                              _FileCard(state.property.chatFiles!.files.first),
+                              SizedBox(height: RegularSize.xs),
+                            ],
+                          ],
+                        )),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Expanded(
+                          child: _ChatInput(
+                            hintText: "Message...",
+                            controller: state.property.messageTEC,
+                          ),
                         ),
-                      ),
+                        Material(
+                          child: InkWell(
+                            customBorder: CircleBorder(),
+                            splashColor: RegularColor.gray.withOpacity(0.1),
+                            highlightColor: RegularColor.gray.withOpacity(0.1),
+                            hoverColor: RegularColor.gray.withOpacity(0.1),
+                            focusColor: RegularColor.gray.withOpacity(0.1),
+                            onTap: state.listener.onPickFileClicked,
+                            child: Ink(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                              ),
+                              width: RegularSize.xl,
+                              height: RegularSize.xl,
+                              padding: EdgeInsets.all(RegularSize.s),
+                              child: SvgPicture.asset(
+                                'assets/svg/file.svg',
+                                color: RegularColor.gray,
+                                width: RegularSize.m,
+                                height: RegularSize.m,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Material(
+                          child: InkWell(
+                            customBorder: CircleBorder(),
+                            splashColor: RegularColor.green.withOpacity(0.1),
+                            highlightColor: RegularColor.green.withOpacity(0.1),
+                            hoverColor: RegularColor.green.withOpacity(0.1),
+                            focusColor: RegularColor.green.withOpacity(0.1),
+                            onTap: state.listener.sendMessage,
+                            child: Ink(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                              ),
+                              width: RegularSize.xl,
+                              height: RegularSize.xl,
+                              padding: EdgeInsets.all(RegularSize.s),
+                              child: SvgPicture.asset(
+                                'assets/svg/send.svg',
+                                color: RegularColor.green,
+                                width: RegularSize.m,
+                                height: RegularSize.m,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),

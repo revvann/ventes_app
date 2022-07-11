@@ -55,12 +55,12 @@ dependencies:
   meta: ^1.7.0
   permission_handler: ^8.3.0
   device_info_plus: ^3.2.3
-  string_similarity: ^2.0.0
   grouped_list: ^5.1.2
   firebase_core: ^1.18.0
-  cloud_firestore: ^3.1.18
   firebase_messaging: ^11.4.2
   socket_io_client: ^2.0.0-beta.4-nullsafety.0
+  file_picker: ^4.6.1
+  mime: ^1.0.2
 
 dev_dependencies:
   flutter_test:

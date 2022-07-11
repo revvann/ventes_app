@@ -1,6 +1,7 @@
 const { Socket } = require("socket.io");
 const ChatServices = require("../services/chatServices.js");
 const ChatModel = require("../models/chatModel.js");
+const FormData = require("form-data");
 
 /**
  * @param {Socket} socket
@@ -18,9 +19,15 @@ function socketController(socket) {
    }
 
    async function onMessage(data) {
-      console.log(data);
       try {
-         const response = await chatServices.storeChat(data.chat);
+         const chatData = new FormData();
+         for (let [key, value] of Object.entries(data.chat)) {
+            if (value != null && value != undefined) {
+               chatData.append(key, value);
+            }
+         }
+         console.log(chatData);
+         const response = await chatServices.storeChat(chatData);
          if (response.status == 200) {
             const messageData = {
                chats: response.data,

@@ -32,44 +32,39 @@ class _ChatInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        TextFormField(
-          key: _key,
-          maxLines: maxLines,
-          minLines: minLines,
-          initialValue: value,
-          enabled: enabled,
-          controller: controller,
-          keyboardType: inputType,
-          obscureText: isPassword,
-          enableSuggestions: !isPassword,
-          autocorrect: !isPassword,
-          validator: validator,
-          inputFormatters: inputFormatters,
-          style: TextStyle(
-            fontSize: 16,
-            color: RegularColor.dark,
-          ),
-          onChanged: (value) {
-            _key.currentState?.validate();
-          },
-          onFieldSubmitted: (value) {
-            _key.currentState?.validate();
-          },
-          decoration: InputDecoration(
-            hintText: hintText,
-            hintStyle: TextStyle(
-              color: RegularColor.gray,
-            ),
-            isDense: true,
-            border: InputBorder.none,
-            enabledBorder: InputBorder.none,
-            focusedBorder: InputBorder.none,
-          ),
+    return TextFormField(
+      key: _key,
+      maxLines: maxLines,
+      minLines: minLines,
+      initialValue: value,
+      enabled: enabled,
+      controller: controller,
+      keyboardType: inputType,
+      obscureText: isPassword,
+      enableSuggestions: !isPassword,
+      autocorrect: !isPassword,
+      validator: validator,
+      inputFormatters: inputFormatters,
+      style: TextStyle(
+        fontSize: 16,
+        color: RegularColor.dark,
+      ),
+      onChanged: (value) {
+        _key.currentState?.validate();
+      },
+      onFieldSubmitted: (value) {
+        _key.currentState?.validate();
+      },
+      decoration: InputDecoration(
+        hintText: hintText,
+        hintStyle: TextStyle(
+          color: RegularColor.gray,
         ),
-      ],
+        isDense: true,
+        border: InputBorder.none,
+        enabledBorder: InputBorder.none,
+        focusedBorder: InputBorder.none,
+      ),
     );
   }
 }
