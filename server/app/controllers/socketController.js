@@ -28,6 +28,7 @@ function socketController(socket) {
          }
          console.log(chatData);
          const response = await chatServices.storeChat(chatData);
+         console.log(response.data);
          if (response.status == 200) {
             const messageData = {
                chats: response.data,

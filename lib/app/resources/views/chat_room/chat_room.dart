@@ -150,6 +150,7 @@ class ChatRoomView extends View<Controller> {
                           ),
                         ),
                         Material(
+                          color: Colors.white,
                           child: InkWell(
                             customBorder: CircleBorder(),
                             splashColor: RegularColor.gray.withOpacity(0.1),
@@ -174,6 +175,7 @@ class ChatRoomView extends View<Controller> {
                           ),
                         ),
                         Material(
+                          color: Colors.white,
                           child: InkWell(
                             customBorder: CircleBorder(),
                             splashColor: RegularColor.green.withOpacity(0.1),

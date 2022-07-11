@@ -22,7 +22,6 @@ class NetworkUtils {
          headers: { 'Authorization': `Bearer ${token}` },
       });
       this.#axios.interceptors.request.use(config => {
-         console.log(config.data instanceof FormData)
          if (config.data instanceof FormData) {
             Object.assign(config.headers, config.data.getHeaders());
          }

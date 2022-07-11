@@ -30,33 +30,37 @@ class _FileCard extends StatelessWidget {
           SizedBox(
             width: RegularSize.m,
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                file.name,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                  color: RegularColor.dark,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  file.name,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: RegularColor.dark,
+                  ),
                 ),
-              ),
-              SizedBox(
-                height: RegularSize.xs,
-              ),
-              Text(
-                lookupMimeType(file.path!) ?? "-",
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  fontSize: 12,
-                  color: RegularColor.dark,
+                SizedBox(
+                  height: RegularSize.xs,
                 ),
-              ),
-            ],
+                Text(
+                  lookupMimeType(file.path!) ?? "-",
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: RegularColor.dark,
+                  ),
+                ),
+              ],
+            ),
           ),
-          Expanded(child: SizedBox()),
+          SizedBox(
+            width: RegularSize.m,
+          ),
           Text(
             state.property.sizeShort(file.size),
             overflow: TextOverflow.ellipsis,
