@@ -15,7 +15,10 @@ admin.initializeApp({
 });
 const firebaseMessaging = createMessaging(admin);
 
-io.on('connection', socketController);
+io.on('connection', (socket) => socketController(socket, io));
+io.on('message', (data) => {
+    console.log("tes");
+});
 
 server.listen(3000, () => {
     console.log('listening on *:3000');

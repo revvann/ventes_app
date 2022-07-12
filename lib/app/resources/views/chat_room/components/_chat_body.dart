@@ -11,68 +11,84 @@ class _ChatBody extends StatelessWidget {
   String get time => Utils.formatTime12(Utils.dbParseDateTime(chat.createddate!));
   bool get isMe => chat.createdby == userid;
   bool get hasRead => chat.chatreadat != null;
+  Files? get file => chat.chatfile;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
-      children: [
-        Container(
-          padding: EdgeInsets.symmetric(
-            horizontal: RegularSize.m,
-            vertical: RegularSize.s,
-          ),
-          decoration: BoxDecoration(
-              color: isMe ? RegularColor.green.withOpacity(0.5) : RegularColor.gray.withOpacity(0.3),
-              borderRadius: BorderRadius.only(
-                topLeft: isMe ? Radius.circular(RegularSize.s) : Radius.zero,
-                topRight: Radius.circular(RegularSize.s),
-                bottomRight: !isMe ? Radius.circular(RegularSize.s) : Radius.zero,
-                bottomLeft: Radius.circular(RegularSize.s),
-              )),
-          child: Text(
-            text,
-            style: TextStyle(
-              color: RegularColor.dark,
-              fontSize: 12,
+    return Padding(
+      padding: EdgeInsets.only(
+        left: isMe ? RegularSize.l : 0,
+        right: !isMe ? RegularSize.l : 0,
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+        children: [
+          if (file != null) ...[
+            _ChatFile(
+              filename: file?.filename ?? "-",
+              filesize: int.tryParse(file?.filesize ?? "0"),
+              mimetype: file?.mimetype,
+              isMe: isMe,
             ),
-          ),
-        ),
-        SizedBox(
-          height: RegularSize.xs,
-        ),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              time,
+            SizedBox(height: RegularSize.xs),
+          ],
+          Container(
+            padding: EdgeInsets.symmetric(
+              horizontal: RegularSize.m,
+              vertical: RegularSize.s,
+            ),
+            decoration: BoxDecoration(
+                color: isMe ? RegularColor.green.withOpacity(0.5) : RegularColor.gray.withOpacity(0.3),
+                borderRadius: BorderRadius.only(
+                  topLeft: isMe ? Radius.circular(RegularSize.s) : Radius.zero,
+                  topRight: Radius.circular(RegularSize.s),
+                  bottomRight: !isMe ? Radius.circular(RegularSize.s) : Radius.zero,
+                  bottomLeft: Radius.circular(RegularSize.s),
+                )),
+            child: Text(
+              text,
               style: TextStyle(
-                color: RegularColor.gray,
-                fontSize: 10,
+                color: RegularColor.dark,
+                fontSize: 12,
               ),
             ),
-            if (isMe) ...[
-              SizedBox(
-                width: RegularSize.xs,
-              ),
-              Container(
-                height: RegularSize.s,
-                width: RegularSize.s,
-                decoration: BoxDecoration(
-                  color: hasRead ? RegularColor.green : RegularColor.gray,
-                  shape: BoxShape.circle,
+          ),
+          SizedBox(
+            height: RegularSize.xs,
+          ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                time,
+                style: TextStyle(
+                  color: RegularColor.gray,
+                  fontSize: 10,
                 ),
               ),
+              if (isMe) ...[
+                SizedBox(
+                  width: RegularSize.xs,
+                ),
+                Container(
+                  height: RegularSize.s,
+                  width: RegularSize.s,
+                  decoration: BoxDecoration(
+                    color: hasRead ? RegularColor.green : RegularColor.gray,
+                    shape: BoxShape.circle,
+                  ),
+                ),
+              ],
+              SizedBox(width: 2),
             ],
-            SizedBox(width: 2),
-          ],
-        ),
-        SizedBox(
-          height: RegularSize.s,
-        ),
-      ],
+          ),
+          SizedBox(
+            height: RegularSize.s,
+          ),
+        ],
+      ),
     );
   }
 }

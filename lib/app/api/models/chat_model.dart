@@ -1,4 +1,5 @@
 import 'package:ventes/app/api/models/business_partner_model.dart';
+import 'package:ventes/app/api/models/files_model.dart';
 import 'package:ventes/app/api/models/user_model.dart';
 import 'package:ventes/core/api/model.dart';
 
@@ -8,12 +9,12 @@ class Chat extends Model {
   String? chatmessage;
   String? chatrefname;
   int? chatrefid;
-  String? chatfile;
   String? chatreadat;
   int? chatreceiverid;
   BusinessPartner? chatbp;
   User? chatreceiver;
   User? createdbyuser;
+  Files? chatfile;
 
   Chat({
     this.chatid,
@@ -46,13 +47,13 @@ class Chat extends Model {
     chatmessage = json['chatmessage'];
     chatrefname = json['chatrefname'];
     chatrefid = json['chatrefid'];
-    chatfile = json['chatfile'];
     chatreadat = json['chatreadat'];
     chatreceiverid = json['chatreceiverid'];
 
     if (json['chatbp'] != null) chatbp = BusinessPartner.fromJson(json['chatbp']);
     if (json['chatreceiver'] != null) chatreceiver = User.fromJson(json['chatreceiver']);
     if (json['createdbyuser'] != null) createdbyuser = User.fromJson(json['createdbyuser']);
+    if (json['chatfile'] != null) chatfile = Files.fromJson(json['chatfile']);
     super.fromJson(json);
   }
 
@@ -80,6 +81,10 @@ class Chat extends Model {
 
     if (createdbyuser != null) {
       data['createdbyuser'] = createdbyuser?.toJson();
+    }
+
+    if (chatfile != null) {
+      data['chatfile'] = chatfile?.toJson();
     }
     return data;
   }

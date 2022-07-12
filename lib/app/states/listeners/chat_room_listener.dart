@@ -1,14 +1,12 @@
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:get/get.dart';
 import 'package:ventes/app/api/models/chat_model.dart';
 import 'package:ventes/app/states/typedefs/chat_room_typedef.dart';
 import 'package:ventes/constants/views.dart';
 import 'package:ventes/core/states/state_listener.dart';
 import 'package:ventes/helpers/task_helper.dart';
-import 'package:flutter/services.dart' show ByteData, rootBundle;
 
 class ChatRoomListener extends StateListener with ListenerMixin {
   void goBack() {
@@ -35,12 +33,13 @@ class ChatRoomListener extends StateListener with ListenerMixin {
       }
 
       property.messageTEC.clear();
+      property.chatFiles = null;
     }
   }
 
   void onMessage(data) {
     List chats = data['chats'];
-    if (data['from'] != dataSource.userDetail?.user?.usersocketid) {
+    if (data['from'] == property.socket.id) {
       property.chats = chats.map<Chat>((item) => Chat.fromJson(item)).toList();
     } else {
       Map data = {

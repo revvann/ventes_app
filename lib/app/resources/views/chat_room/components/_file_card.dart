@@ -4,9 +4,11 @@ part of 'package:ventes/app/resources/views/chat_room/chat_room.dart';
 
 class _FileCard extends StatelessWidget {
   Controller state = Get.find<Controller>();
-  PlatformFile file;
+  String filename;
+  String? mimetype;
+  int? filesize;
 
-  _FileCard(this.file);
+  _FileCard({required this.filename, required this.mimetype, required this.filesize});
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +38,7 @@ class _FileCard extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  file.name,
+                  filename,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     fontSize: 14,
@@ -48,7 +50,7 @@ class _FileCard extends StatelessWidget {
                   height: RegularSize.xs,
                 ),
                 Text(
-                  lookupMimeType(file.path!) ?? "-",
+                  mimetype ?? "-",
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     fontSize: 12,
@@ -62,7 +64,7 @@ class _FileCard extends StatelessWidget {
             width: RegularSize.m,
           ),
           Text(
-            state.property.sizeShort(file.size),
+            state.property.sizeShort(filesize ?? 0),
             overflow: TextOverflow.ellipsis,
             style: TextStyle(
               fontSize: 14,

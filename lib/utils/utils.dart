@@ -326,16 +326,15 @@ class Utils {
 
   static void onSocketConnect(data, socketid) {
     Get.find<UserService>().setSocketId(socketid);
+    printSocket(socketid);
   }
 
   static void onSocketConnectError(data) {
-    printSocket("An error was accured");
-    print(data);
+    printSocket(data);
   }
 
   static void onSocketDisconnect(data) {
-    print("Socket");
-    print(data.runtimeType);
+    printSocket(data);
   }
 
   static void printSocket(dynamic data) {

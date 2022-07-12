@@ -4,7 +4,8 @@ part of 'package:ventes/app/resources/views/chat_home/chat_home.dart';
 
 class _ChatItem extends StatelessWidget {
   String name;
-  _ChatItem({required this.name});
+  String bpname;
+  _ChatItem({required this.name, required this.bpname});
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +62,7 @@ class _ChatItem extends StatelessWidget {
                   height: RegularSize.s,
                 ),
                 Text(
-                  "Chat is empty",
+                  bpname,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     fontSize: 14,

@@ -21,7 +21,7 @@ class _ChatList extends StatelessWidget {
           UserDetail user = users[index];
           return GestureDetector(
             onTap: () => state.listener.onChatClick(user.userid),
-            child: _ChatItem(name: user.user?.userfullname ?? "Unknown"),
+            child: _ChatItem(name: user.user?.userfullname ?? "Unknown", bpname: user.businesspartner?.bpname ?? "-"),
           );
         },
       ),

@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:mime/mime.dart';
 import 'package:ventes/app/api/models/chat_model.dart';
+import 'package:ventes/app/api/models/files_model.dart';
 import 'package:ventes/app/api/models/user_detail_model.dart';
 import 'package:ventes/app/resources/widgets/handler_container.dart';
 import 'package:ventes/app/resources/widgets/top_navigation.dart';
@@ -22,6 +23,7 @@ part 'package:ventes/app/resources/views/chat_room/components/_chat_body.dart';
 part 'package:ventes/app/resources/views/chat_room/components/_chat_header.dart';
 part 'package:ventes/app/resources/views/chat_room/components/_chat_input.dart';
 part 'package:ventes/app/resources/views/chat_room/components/_file_card.dart';
+part 'package:ventes/app/resources/views/chat_room/components/_chat_file.dart';
 
 class ChatRoomView extends View<Controller> {
   static const String route = "/chatroom";
@@ -103,6 +105,8 @@ class ChatRoomView extends View<Controller> {
                     elements: state.property.chats,
                     groupBy: (chat) => DateTime(Utils.dbParseDate(chat.createddate!).year, Utils.dbParseDate(chat.createddate!).month, Utils.dbParseDate(chat.createddate!).day),
                     groupHeaderBuilder: (Chat chat) => _ChatHeader(Utils.formatDate(Utils.dbParseDate(chat.createddate!))),
+                    // sort: false,
+                    itemComparator: (chat1, chat2) => Utils.dbParseDateTime(chat1.createddate!).isAfter(Utils.dbParseDateTime(chat2.createddate!)) ? 1 : 0,
                     itemBuilder: (_, chat) {
                       return _ChatBody(chat, userid: state.dataSource.userDetail?.user?.userid);
                     },
@@ -131,15 +135,18 @@ class ChatRoomView extends View<Controller> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Obx(() => Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            if (state.property.chatFiles != null) ...[
-                              _FileCard(state.property.chatFiles!.files.first),
-                              SizedBox(height: RegularSize.xs),
-                            ],
+                    Obx(() {
+                      PlatformFile? file = state.property.chatFiles?.files.first;
+                      return Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          if (file != null) ...[
+                            _FileCard(filename: file.name, filesize: file.size, mimetype: lookupMimeType(file.path!)),
+                            SizedBox(height: RegularSize.xs),
                           ],
-                        )),
+                        ],
+                      );
+                    }),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [

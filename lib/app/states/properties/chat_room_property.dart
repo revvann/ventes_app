@@ -49,6 +49,7 @@ class ChatRoomProperty extends StateProperty with PropertyMixin {
     socket.on('messageerror', listener.onError);
     socket.on('readmessagefailed', listener.onFailed);
     socket.on('readmessageerror', listener.onError);
+    socket.emit('usersonline', {'userId': 12});
   }
 
   @override
