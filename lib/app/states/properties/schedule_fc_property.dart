@@ -160,12 +160,12 @@ class ScheduleFormCreateProperty extends StateProperty with PropertyMixin {
 
       String message = "${formSource.schenm} will start in ${formSource.scheremind} minutes, be ready!";
 
-      await Get.find<NotificationHelper>().scheduleNotification(
-        title: title,
-        body: message,
-        scheduledDate: date,
-        timeZone: formSource.schetz,
-      );
+      // await Get.find<NotificationHelper>().scheduleNotification(
+      //   title: title,
+      //   body: message,
+      //   scheduledDate: date,
+      //   timeZone: formSource.schetz,
+      // );
     }
   }
 }

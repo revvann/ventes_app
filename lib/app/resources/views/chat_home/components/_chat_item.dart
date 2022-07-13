@@ -5,7 +5,8 @@ part of 'package:ventes/app/resources/views/chat_home/chat_home.dart';
 class _ChatItem extends StatelessWidget {
   String name;
   String bpname;
-  _ChatItem({required this.name, required this.bpname});
+  bool isOnline;
+  _ChatItem({required this.name, required this.bpname, required this.isOnline});
 
   @override
   Widget build(BuildContext context) {
@@ -77,32 +78,13 @@ class _ChatItem extends StatelessWidget {
             children: [
               SizedBox(height: RegularSize.m),
               Text(
-                "22.02 PM",
+                isOnline ? "Online" : "Offline",
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   fontSize: 10,
-                  color: RegularColor.gray,
+                  color: isOnline ? RegularColor.green : RegularColor.gray,
                 ),
               ),
-              // SizedBox(
-              //   height: RegularSize.s,
-              // ),
-              // Container(
-              //   width: 20,
-              //   height: 20,
-              //   alignment: Alignment.center,
-              //   child: Text(
-              //     '1',
-              //     style: TextStyle(
-              //       color: Colors.white,
-              //       fontSize: 12,
-              //     ),
-              //   ),
-              //   decoration: BoxDecoration(
-              //     color: RegularColor.green,
-              //     shape: BoxShape.circle,
-              //   ),
-              // ),
             ],
           ),
         ],

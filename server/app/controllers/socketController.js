@@ -19,13 +19,9 @@ function socketController(socket, io) {
       console.log(`Socket disconnect: ${reason}`);
    }
 
-   function getUsersOnline(auth) {
-      const ids = [];
-      io.sockets.sockets.forEach(e => {
-         if ((Object.entries({ ...e.handshake.auth, ...auth }).every(([key, value]) => value == e.handshake.auth[key]))) {
-            ids.push(e.id);
-         }
-      });
+   function getUsersOnline(users = []) {
+      console.log(users);
+      const ids = users.filter((user) => Object.keys(io.sockets.sockets).includes(user));
       socket.emit('usersonline', ids);
    }
 

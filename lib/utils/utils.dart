@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart' hide MenuItem;
 import 'package:geolocator/geolocator.dart';
@@ -25,8 +26,10 @@ import 'package:ventes/app/api/services/prospect_service.dart';
 import 'package:ventes/app/api/services/schedule_service.dart';
 import 'package:ventes/app/api/services/type_service.dart';
 import 'package:ventes/app/api/services/user_service.dart';
+import 'package:ventes/app/resources/views/splash_screen.dart';
 import 'package:ventes/app/states/controllers/bottom_navigation_state_controller.dart';
 import 'package:ventes/app/states/controllers/keyboard_state_controller.dart';
+import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/strings/regular_string.dart';
 import 'package:ventes/constants/views.dart';
 import 'package:ventes/core/api/fetcher.dart';
@@ -249,37 +252,48 @@ class Utils {
   }
 
   static void goToViewFromNotification(RemoteMessage message) {
-    int menu = int.parse(message.data['menu']);
-    String route = message.data['route'];
-    Map<String, dynamic>? arguments = message.data['arguments'];
-    Get.find<Rx<RoutePack>>().value = RoutePack(Views.values[menu], route, arguments: arguments);
+    printFirebase(message);
   }
 
   static Future initFirebase() async {
-    WidgetsFlutterBinding.ensureInitialized();
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
     FirebaseMessaging.onBackgroundMessage(backgroundHandler);
     FirebaseMessaging.onMessageOpenedApp.listen(goToViewFromNotification);
 
-    await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
-      alert: true,
-      badge: true,
-      sound: true,
-    );
-    await FirebaseMessaging.instance.requestPermission(
-      alert: true,
-      announcement: false,
-      badge: true,
-      carPlay: false,
-      criticalAlert: false,
-      provisional: false,
-      sound: true,
-    );
+    await FirebaseMessaging.instance.requestPermission();
+    FirebaseMessaging.instance.subscribeToTopic('terabithians');
+    FirebaseMessaging.onMessage.listen((event) async {
+      await AwesomeNotifications().createNotification(
+        content: NotificationContent(
+          id: 1,
+          channelKey: 'ventes-123',
+          title: event.data['title'],
+          body: event.data['body'],
+        ),
+      );
+    });
+  }
 
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      Get.find<NotificationHelper>().showNotification(title: message.notification?.title, body: message.notification?.body);
+  static Future initNotification() async {
+    await AwesomeNotifications().initialize(
+      'resource://drawable/logo',
+      [
+        NotificationChannel(
+          channelKey: 'ventes-123',
+          channelName: 'ventes',
+          channelDescription: 'Notification channel for ventes',
+          defaultColor: RegularColor.primary,
+          playSound: true,
+        ),
+      ],
+    );
+    AwesomeNotifications().actionStream.listen(null).onData((notification) {
+      int menu = int.parse(notification.payload!['menu']!);
+      String route = notification.payload!['route']!;
+      Map<String, String>? arguments = notification.payload?..removeWhere((key, value) => ['menu', 'route'].contains(key));
+      Get.find<Rx<RoutePack>>().value = RoutePack(Views.values[menu], route, arguments: arguments);
     });
   }
 
@@ -303,7 +317,6 @@ class Utils {
     Get.lazyPut(() => KeyboardStateController(), fenix: true);
     Get.lazyPut(() => ContactPersonService(), fenix: true);
     Get.lazyPut(() => AuthHelper(), fenix: true);
-    Get.lazyPut(() => NotificationHelper(), fenix: true);
     Get.lazyPut(() => TaskHelper(), fenix: true);
   }
 
@@ -320,7 +333,7 @@ class Utils {
     socket.onConnectError(onSocketConnectError);
     socket.onDisconnect(onSocketDisconnect);
 
-    socket.connect();
+    socket = socket.connect();
     Get.lazyPut<Socket>(() => socket, fenix: true);
   }
 
@@ -340,8 +353,26 @@ class Utils {
   static void printSocket(dynamic data) {
     print("socket: $data");
   }
+
+  static void printFirebase(dynamic data) {
+    print("firebase: $data");
+  }
 }
 
 Future<void> backgroundHandler(RemoteMessage message) async {
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  Map<String, dynamic> arguments = message.data..removeWhere((key, value) => ['menu', 'route', 'title', 'body'].contains(key));
+  await Utils.initNotification();
+  await AwesomeNotifications().createNotification(
+    content: NotificationContent(
+      id: 1,
+      channelKey: 'ventes-123',
+      title: message.data['title'],
+      body: message.data['body'],
+      payload: {
+        'menu': message.data['menu'],
+        'route': message.data['route'],
+        ...arguments,
+      },
+    ),
+  );
 }

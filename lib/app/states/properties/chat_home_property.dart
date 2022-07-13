@@ -5,4 +5,10 @@ import 'package:ventes/core/states/state_property.dart';
 
 class ChatHomeProperty extends StateProperty with PropertyMixin {
   Socket get socket => Get.find<Socket>();
+
+  @override
+  void ready() {
+    super.ready();
+    socket.on('usersonline', (data) => dataSource.usersActive = data);
+  }
 }

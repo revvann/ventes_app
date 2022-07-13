@@ -51,7 +51,7 @@ class NearbyProperty extends StateProperty with PropertyMixin {
   List<Customer> get selectedCustomer => _selectedCustomer.value;
 
   void deployCustomers(List<Customer> data) async {
-    List<Marker> markersList = [markers.first];
+    List<Marker> markersList = [markers.first]; // bug no element
     for (var element in data) {
       bool isInBp = dataSource.bpCustomersHas(element);
       Marker marker = Marker(

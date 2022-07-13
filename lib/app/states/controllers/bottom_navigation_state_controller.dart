@@ -60,7 +60,7 @@ class BottomNavigationStateController extends GetxController {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       List<String> initialRoutes = [DashboardView.route, NearbyView.route, ScheduleView.route, ProspectView.route, ProfileView.route];
       if (!initialRoutes.contains(routePack.value.route)) {
-        // Get.toNamed(routePack.value.route, id: routePack.value.menu.index, arguments: routePack.value.arguments);
+        Get.toNamed(routePack.value.route, id: routePack.value.menu.index, arguments: routePack.value.arguments);
       }
     });
   }

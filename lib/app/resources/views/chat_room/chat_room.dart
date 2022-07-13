@@ -105,7 +105,6 @@ class ChatRoomView extends View<Controller> {
                     elements: state.property.chats,
                     groupBy: (chat) => DateTime(Utils.dbParseDate(chat.createddate!).year, Utils.dbParseDate(chat.createddate!).month, Utils.dbParseDate(chat.createddate!).day),
                     groupHeaderBuilder: (Chat chat) => _ChatHeader(Utils.formatDate(Utils.dbParseDate(chat.createddate!))),
-                    // sort: false,
                     itemComparator: (chat1, chat2) => Utils.dbParseDateTime(chat1.createddate!).isAfter(Utils.dbParseDateTime(chat2.createddate!)) ? 1 : 0,
                     itemBuilder: (_, chat) {
                       return _ChatBody(chat, userid: state.dataSource.userDetail?.user?.userid);

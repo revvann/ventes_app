@@ -14,9 +14,11 @@ import 'package:ventes/routing/routes/routes.dart';
 import 'package:ventes/utils/utils.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   Rx<RoutePack> routePack = Rx<RoutePack>(RoutePack(Views.dashboard, DashboardView.route));
   Get.put(routePack);
 
+  await Utils.initNotification();
   Utils.initServices();
   tz.initializeTimeZones();
   await Utils.initFirebase();

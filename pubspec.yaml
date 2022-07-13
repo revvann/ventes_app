@@ -50,7 +50,6 @@ dependencies:
   path: ^1.8.0
   flutter_keyboard_visibility: ^5.2.0
   flutter_speed_dial: ^6.0.0
-  flutter_local_notifications: ^9.5.3+1
   contacts_service: ^0.6.3
   meta: ^1.7.0
   permission_handler: ^8.3.0
@@ -61,6 +60,7 @@ dependencies:
   socket_io_client: ^2.0.0-beta.4-nullsafety.0
   file_picker: ^4.6.1
   mime: ^1.0.2
+  awesome_notifications: ^0.6.21
 
 dev_dependencies:
   flutter_test:

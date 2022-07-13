@@ -12,6 +12,14 @@ class ChatHomeDataSource extends StateDataSource<ChatHomePresenter> with DataSou
 
   late DataHandler<List<UserDetail>, List, Function()> usersHandler;
 
+  final Rx<List<String>> _usersActive = Rx([]);
+  List<String> get usersActive => _usersActive.value;
+  set usersActive(List<String> value) => _usersActive.value = value;
+
+  void _usersComplete() {
+    property.socket.emit('usersonline', usersHandler.value.map<String?>((e) => e.user?.usersocketid).toList());
+  }
+
   @override
   void init() {
     super.init();
@@ -25,6 +33,7 @@ class ChatHomeDataSource extends StateDataSource<ChatHomePresenter> with DataSou
         users.removeWhere((element) => element.user?.userid == id);
         return users;
       },
+      onComplete: _usersComplete,
     );
   }
 
