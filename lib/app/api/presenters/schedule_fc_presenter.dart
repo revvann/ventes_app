@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:ventes/app/api/presenters/regular_presenter.dart';
+import 'package:ventes/app/api/services/notification_service.dart';
 import 'package:ventes/app/api/services/prospect_activity_service.dart';
 import 'package:ventes/app/api/services/prospect_service.dart';
 import 'package:ventes/app/api/services/schedule_service.dart';
@@ -18,6 +19,7 @@ class ScheduleFormCreatePresenter extends RegularPresenter {
   final _typeService = Get.find<TypeService>();
   final _prospectService = Get.find<ProspectService>();
   final _prospectActivityService = Get.find<ProspectActivityService>();
+  final _notificationService = Get.find<NotificationService>();
 
   Future<Response> _create(Map<String, dynamic> data) async {
     return _scheduleService.store(data);
@@ -40,6 +42,10 @@ class ScheduleFormCreatePresenter extends RegularPresenter {
 
   Future<Response> _storeActivity(Map<String, dynamic> data) {
     return _prospectActivityService.store(data);
+  }
+
+  Future<Response> _sendMessage(Map<String, dynamic> data) {
+    return _notificationService.sendMessage(data);
   }
 
   SimpleFetcher<List> get fetchTypes => SimpleFetcher(responseBuilder: _getTypes, failedMessage: ScheduleString.fetchFailed);
@@ -85,6 +91,24 @@ class ScheduleFormCreatePresenter extends RegularPresenter {
                 handler.success(ScheduleString.createSuccess);
               } else {
                 handler.failed(ScheduleString.createFailed);
+              }
+            } catch (e) {
+              handler.error(e.toString());
+            }
+            handler.complete();
+          };
+        },
+      );
+  DataFetcher<Function(Map<String, dynamic>), String> get sendMessage => DataFetcher(
+        builder: (handler) {
+          return (data) async {
+            handler.start();
+            try {
+              Response response = await _sendMessage(data);
+              if (response.statusCode == 200) {
+                handler.success("Notification successfully scheduled");
+              } else {
+                handler.failed("cannot scheduled notification");
               }
             } catch (e) {
               handler.error(e.toString());

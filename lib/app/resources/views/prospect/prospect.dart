@@ -30,7 +30,7 @@ part 'package:ventes/app/resources/views/prospect/components/_twin_datepicker.da
 part 'package:ventes/app/resources/views/prospect/components/_lost_reason_form.dart';
 
 class ProspectView extends View<Controller> {
-  static const String route = "/history";
+  static const String route = "/prospect";
 
   @override
   Widget buildWidget(BuildContext context, state) {

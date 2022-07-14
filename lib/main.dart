@@ -5,19 +5,14 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:timezone/data/latest.dart' as tz;
-import 'package:ventes/app/resources/views/dashboard/dashboard.dart';
 import 'package:ventes/app/resources/views/splash_screen.dart';
 import 'package:ventes/constants/regular_color.dart';
-import 'package:ventes/constants/views.dart';
-import 'package:ventes/routing/route_pack.dart';
 import 'package:ventes/routing/routes/routes.dart';
 import 'package:ventes/utils/utils.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  Rx<RoutePack> routePack = Rx<RoutePack>(RoutePack(Views.dashboard, DashboardView.route));
-  Get.put(routePack);
-
+  Utils.initRoutePack();
   await Utils.initNotification();
   Utils.initServices();
   tz.initializeTimeZones();

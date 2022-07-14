@@ -1,14 +1,18 @@
 import 'dart:async';
 
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart' hide MenuItem;
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:ventes/app/api/services/notification_service.dart';
+import 'package:ventes/app/resources/views/prospect/prospect.dart';
 import 'package:ventes/app/resources/widgets/regular_bottom_sheet.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/constants/strings/schedule_string.dart';
 import 'package:ventes/app/states/typedefs/schedule_fc_typedef.dart';
+import 'package:ventes/constants/views.dart';
 import 'package:ventes/core/states/state_property.dart';
 import 'package:ventes/utils/utils.dart';
 import 'package:ventes/helpers/notification_helper.dart';
@@ -160,12 +164,18 @@ class ScheduleFormCreateProperty extends StateProperty with PropertyMixin {
 
       String message = "${formSource.schenm} will start in ${formSource.scheremind} minutes, be ready!";
 
-      // await Get.find<NotificationHelper>().scheduleNotification(
-      //   title: title,
-      //   body: message,
-      //   scheduledDate: date,
-      //   timeZone: formSource.schetz,
-      // );
+      Map<String, dynamic> data = {
+        "data": {
+          "menu": Views.prospect.index.toString(),
+          "route": ProspectView.route,
+          "title": title,
+          "body": message,
+          "id": (dataSource.prospectActivity?.prospectactivityid ?? 0).toString(),
+          "date": Utils.dbFormatDateTime(date),
+        },
+        "topic": "terabithians"
+      };
+      dataSource.sendMessageHandler.fetcher.run(data);
     }
   }
 }

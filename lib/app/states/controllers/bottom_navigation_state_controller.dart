@@ -41,7 +41,7 @@ class BottomNavigationStateController extends GetxController {
 
   void goToRoutePack(RoutePack routePack) {
     currentIndex = routePack.menu;
-    Get.toNamed(routePack.route, id: routePack.menu.index, arguments: routePack.arguments);
+    Get.offAllNamed(routePack.route, id: routePack.menu.index, arguments: routePack.arguments);
   }
 
   @override

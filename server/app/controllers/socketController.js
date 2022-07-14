@@ -19,8 +19,7 @@ function socketController(socket, io) {
       console.log(`Socket disconnect: ${reason}`);
    }
 
-   function getUsersOnline(users = []) {
-      console.log(users);
+   function getUsersOnline(...users) {
       const ids = users.filter((user) => Object.keys(io.sockets.sockets).includes(user));
       socket.emit('usersonline', ids);
    }

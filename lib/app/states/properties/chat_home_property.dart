@@ -9,6 +9,8 @@ class ChatHomeProperty extends StateProperty with PropertyMixin {
   @override
   void ready() {
     super.ready();
-    socket.on('usersonline', (data) => dataSource.usersActive = data);
+    socket.on('usersonline', (data) {
+      dataSource.usersActive = data;
+    });
   }
 }

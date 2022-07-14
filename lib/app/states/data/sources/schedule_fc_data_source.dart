@@ -21,12 +21,14 @@ class ScheduleFormCreateDataSource extends StateDataSource<ScheduleFormCreatePre
   final String refTypeID = 'reftypehdr';
   final String prospectID = 'refprospecthdr';
   final String createActivityRefID = 'createactrefhdr';
+  final String sendMessageID = 'sendmessagehdr';
 
   late DataHandler<List<Map<String, int>>, List, Function()> typesHandler;
   late DataHandler<dynamic, String, Function(Map<String, dynamic>)> createHandler;
   late DataHandler<DBType?, Map<String, dynamic>, Function(int)> refTypeHandler;
   late DataHandler<Prospect?, Map<String, dynamic>, Function(int)> prospectHandler;
   late DataHandler<ProspectActivity?, Map<String, dynamic>, Function(Map<String, dynamic>)> createActivityRefHandler;
+  late DataHandler<dynamic, String, Function(Map<String, dynamic>)> sendMessageHandler;
 
   List<Map<String, int>> get types => typesHandler.value;
   DBType? get refType => refTypeHandler.value;
@@ -73,7 +75,18 @@ class ScheduleFormCreateDataSource extends StateDataSource<ScheduleFormCreatePre
         createID,
         message: data,
         onFinished: (res) async {
-          await property.scheduleNotification();
+          property.scheduleNotification();
+        },
+      ),
+    );
+  }
+
+  void _sendMessageSuccess(String data) {
+    Get.find<TaskHelper>().successPush(
+      Task(
+        sendMessageID,
+        message: data,
+        onFinished: (res) async {
           Get.back(id: Views.schedule.index);
         },
       ),
@@ -118,6 +131,17 @@ class ScheduleFormCreateDataSource extends StateDataSource<ScheduleFormCreatePre
       onError: (message) => Utils.showError(createID, message),
       onFailed: (message) => Utils.showFailed(createID, message),
       onSuccess: _createSuccess,
+    );
+
+    sendMessageHandler = DataHandler(
+      sendMessageID,
+      fetcher: presenter.sendMessage,
+      initialValue: null,
+      onStart: () => Get.find<TaskHelper>().loaderPush(Task(sendMessageID)),
+      onComplete: () => Get.find<TaskHelper>().loaderPop(sendMessageID),
+      onError: (message) => Utils.showError(sendMessageID, message),
+      onFailed: (message) => Utils.showFailed(sendMessageID, message),
+      onSuccess: _sendMessageSuccess,
     );
 
     refTypeHandler = Utils.createDataHandler(refTypeID, presenter.fetchRefType, null, DBType.fromJson, onComplete: _refTypeComplete);

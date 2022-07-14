@@ -1,7 +1,10 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart' hide MenuItem;
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
@@ -18,6 +21,7 @@ import 'package:ventes/app/api/services/competitor_service.dart';
 import 'package:ventes/app/api/services/contact_person_service.dart';
 import 'package:ventes/app/api/services/customer_service.dart';
 import 'package:ventes/app/api/services/gmaps_service.dart';
+import 'package:ventes/app/api/services/notification_service.dart';
 import 'package:ventes/app/api/services/place_service.dart';
 import 'package:ventes/app/api/services/prospect_activity_service.dart';
 import 'package:ventes/app/api/services/prospect_assign_service.dart';
@@ -26,10 +30,9 @@ import 'package:ventes/app/api/services/prospect_service.dart';
 import 'package:ventes/app/api/services/schedule_service.dart';
 import 'package:ventes/app/api/services/type_service.dart';
 import 'package:ventes/app/api/services/user_service.dart';
-import 'package:ventes/app/resources/views/splash_screen.dart';
+import 'package:ventes/app/resources/views/dashboard/dashboard.dart';
 import 'package:ventes/app/states/controllers/bottom_navigation_state_controller.dart';
 import 'package:ventes/app/states/controllers/keyboard_state_controller.dart';
-import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/strings/regular_string.dart';
 import 'package:ventes/constants/views.dart';
 import 'package:ventes/core/api/fetcher.dart';
@@ -38,8 +41,6 @@ import 'package:ventes/firebase_options.dart';
 import 'package:ventes/helpers/auth_helper.dart';
 import 'package:ventes/helpers/notification_helper.dart';
 import 'package:ventes/helpers/task_helper.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:ventes/routing/route_pack.dart';
 
 class Utils {
@@ -251,50 +252,54 @@ class Utils {
     );
   }
 
-  static void goToViewFromNotification(RemoteMessage message) {
-    printFirebase(message);
-  }
-
   static Future initFirebase() async {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
     FirebaseMessaging.onBackgroundMessage(backgroundHandler);
-    FirebaseMessaging.onMessageOpenedApp.listen(goToViewFromNotification);
 
     await FirebaseMessaging.instance.requestPermission();
     FirebaseMessaging.instance.subscribeToTopic('terabithians');
+
     FirebaseMessaging.onMessage.listen((event) async {
-      await AwesomeNotifications().createNotification(
+      Map<String, String> payload = event.data.map((key, value) => MapEntry(key, value.toString()))..removeWhere((key, value) => ['title', 'body', 'id', 'date'].contains(key));
+      NotificationSchedule? schedule;
+
+      if (event.data['date'] != null) {
+        DateTime date = dbParseDateTime(event.data['date']);
+        schedule = NotificationCalendar.fromDate(date: date);
+      }
+
+      await Get.find<NotificationHelper>().create(
         content: NotificationContent(
-          id: 1,
-          channelKey: 'ventes-123',
+          id: int.tryParse(event.data['id']) ?? 0,
+          channelKey: NotificationString.channelKey,
           title: event.data['title'],
           body: event.data['body'],
+          payload: payload,
         ),
+        schedule: schedule,
       );
     });
   }
 
+  static void initRoutePack() {
+    try {
+      Get.find<Rx<RoutePack>>();
+    } catch (e) {
+      Rx<RoutePack> routePack = Rx<RoutePack>(RoutePack(Views.dashboard, DashboardView.route));
+      Get.put(routePack);
+    }
+  }
+
   static Future initNotification() async {
-    await AwesomeNotifications().initialize(
-      'resource://drawable/logo',
-      [
-        NotificationChannel(
-          channelKey: 'ventes-123',
-          channelName: 'ventes',
-          channelDescription: 'Notification channel for ventes',
-          defaultColor: RegularColor.primary,
-          playSound: true,
-        ),
-      ],
-    );
-    AwesomeNotifications().actionStream.listen(null).onData((notification) {
-      int menu = int.parse(notification.payload!['menu']!);
-      String route = notification.payload!['route']!;
-      Map<String, String>? arguments = notification.payload?..removeWhere((key, value) => ['menu', 'route'].contains(key));
-      Get.find<Rx<RoutePack>>().value = RoutePack(Views.values[menu], route, arguments: arguments);
-    });
+    try {
+      Get.find<NotificationHelper>();
+    } catch (e) {
+      NotificationHelper notificationHelper = NotificationHelper();
+      await notificationHelper.init();
+      Get.put(notificationHelper);
+    }
   }
 
   static void initServices() {
@@ -314,6 +319,7 @@ class Utils {
     Get.lazyPut(() => ProspectProductService(), fenix: true);
     Get.lazyPut(() => ContactPersonService(), fenix: true);
     Get.lazyPut(() => ProspectAssignService(), fenix: true);
+    Get.lazyPut(() => NotificationService(), fenix: true);
     Get.lazyPut(() => KeyboardStateController(), fenix: true);
     Get.lazyPut(() => ContactPersonService(), fenix: true);
     Get.lazyPut(() => AuthHelper(), fenix: true);
@@ -328,7 +334,7 @@ class Utils {
     optionsBuilder.setAuth(authModel!.toJson());
     Map<String, dynamic> options = optionsBuilder.build();
 
-    Socket socket = io(RegularString.chatServer, options);
+    Socket socket = io(RegularString.nodeServer, options);
     socket.onConnect((data) => onSocketConnect(data, socket.id));
     socket.onConnectError(onSocketConnectError);
     socket.onDisconnect(onSocketDisconnect);
@@ -360,19 +366,16 @@ class Utils {
 }
 
 Future<void> backgroundHandler(RemoteMessage message) async {
-  Map<String, dynamic> arguments = message.data..removeWhere((key, value) => ['menu', 'route', 'title', 'body'].contains(key));
+  Map<String, String> payload = message.data.map((key, value) => MapEntry(key, value.toString()))..removeWhere((key, value) => ['title', 'body'].contains(key));
+  Utils.initRoutePack();
   await Utils.initNotification();
-  await AwesomeNotifications().createNotification(
+  await Get.find<NotificationHelper>().create(
     content: NotificationContent(
       id: 1,
       channelKey: 'ventes-123',
       title: message.data['title'],
       body: message.data['body'],
-      payload: {
-        'menu': message.data['menu'],
-        'route': message.data['route'],
-        ...arguments,
-      },
+      payload: payload,
     ),
   );
 }
