@@ -1,54 +1,42 @@
+// import: web-server
 const express = require('express');
 const http = require('http');
-const { Server } = require("socket.io");
-
 const app = express();
-app.use(express.json());
 const server = http.createServer(app);
 
+// import: socket-io
+const { Server, Socket } = require("socket.io");
 const io = new Server(server);
-const socketController = require('./app/controllers/socketController.js');
 
-const admin = require("firebase-admin");
-const serviceAccount = require('./service-account.json');
+// import: services
+const FirebaseService = require("./app/services/firebaseService");
 
-const AuthService = require("./app/services/authServices");
+// import: controllers
+const registerChatController = require('./app/controllers/chatController');
+const messageController = require('./app/controllers/messageController');
 
-admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount)
-});
+// import: middlewares
+const authMiddleware = require('./app/middlewares/authMiddleware');
 
-io.on('connection', (socket) => socketController(socket, io));
+// section: init-firebase-service
+const firebaseService = new FirebaseService();
+messageController.setFirebaseService(firebaseService);
 
-app.use('/', async (req, res, next) => {
-    const authService = new AuthService(req.headers.authorization.replace('Bearer ', ''));
-    try {
-        const response = await authService.verify();
-        if (response.status == 200) {
-            next();
-        } else {
-            res.status(401).send("not authorized");
-        }
-    } catch (e) {
-        res.status(401).send("not authorized");
-    }
-});
+// section: socket-io
+/**
+ * @param {Socket} socket
+ */
+const onConnection = (socket) => {
+    registerChatController(io, socket);
+}
+io.on('connection', onConnection);
 
-app.post('/send-message', async (req, res) => {
-    try {
-        const response = await admin.messaging().send(req.body);
-        res.status(200);
-        res.json({
-            "message": "message successfully sent",
-        });
-    } catch (e) {
-        res.status(400);
-        res.json({
-            "error": e
-        });
-    }
-});
+// section: express
+app.use(express.json());
+app.use(authMiddleware);
+app.use(messageController.router);
 
+// section: server
 server.listen(3000, () => {
     console.log('listening on *:3000');
 });

@@ -48,6 +48,12 @@ class ScheduleFormCreatePresenter extends RegularPresenter {
     return _notificationService.sendMessage(data);
   }
 
+  Future<Response> _getUserDetail() async {
+    AuthModel? authModel = await Get.find<AuthHelper>().get();
+    return await _userService.show(authModel!.accountActive!);
+  }
+
+  SimpleFetcher<Map<String, dynamic>> get fetchUserDetail => SimpleFetcher(responseBuilder: _getUserDetail, failedMessage: ScheduleString.fetchFailed);
   SimpleFetcher<List> get fetchTypes => SimpleFetcher(responseBuilder: _getTypes, failedMessage: ScheduleString.fetchFailed);
   DataFetcher<Function(int), Map<String, dynamic>> get fetchRefType => DataFetcher(builder: (handler) {
         return (id) async {

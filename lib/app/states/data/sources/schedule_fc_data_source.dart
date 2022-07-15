@@ -22,6 +22,7 @@ class ScheduleFormCreateDataSource extends StateDataSource<ScheduleFormCreatePre
   final String prospectID = 'refprospecthdr';
   final String createActivityRefID = 'createactrefhdr';
   final String sendMessageID = 'sendmessagehdr';
+  final String userID = 'userhdr';
 
   late DataHandler<List<Map<String, int>>, List, Function()> typesHandler;
   late DataHandler<dynamic, String, Function(Map<String, dynamic>)> createHandler;
@@ -29,11 +30,13 @@ class ScheduleFormCreateDataSource extends StateDataSource<ScheduleFormCreatePre
   late DataHandler<Prospect?, Map<String, dynamic>, Function(int)> prospectHandler;
   late DataHandler<ProspectActivity?, Map<String, dynamic>, Function(Map<String, dynamic>)> createActivityRefHandler;
   late DataHandler<dynamic, String, Function(Map<String, dynamic>)> sendMessageHandler;
+  late DataHandler<UserDetail?, Map<String, dynamic>, Function()> userHandler;
 
   List<Map<String, int>> get types => typesHandler.value;
   DBType? get refType => refTypeHandler.value;
   ProspectActivity? get prospectActivity => createActivityRefHandler.value;
   Prospect? get prospect => prospectHandler.value;
+  UserDetail? get userDetail => userHandler.value;
 
   String? typeName(int index) => types.isNotEmpty ? types[index].keys.first : null;
   List<String> typeNames() => types.map((type) => type.keys.first).toList();
@@ -120,6 +123,15 @@ class ScheduleFormCreateDataSource extends StateDataSource<ScheduleFormCreatePre
       onError: (message) => Utils.showError(typesID, message),
       onFailed: (message) => Utils.showFailed(typesID, message),
       onSuccess: (data) => insertTypes(List<Map<String, dynamic>>.from(data)),
+    );
+
+    userHandler = DataHandler(
+      userID,
+      fetcher: presenter.fetchUserDetail,
+      initialValue: null,
+      onError: (message) => Utils.showError(userID, message),
+      onFailed: (message) => Utils.showFailed(userID, message),
+      onSuccess: UserDetail.fromJson,
     );
 
     createHandler = DataHandler(

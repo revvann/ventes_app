@@ -175,7 +175,7 @@ class ScheduleFormCreateProperty extends StateProperty with PropertyMixin {
             "prospect": (dataSource.prospect?.prospectid ?? 0).toString(),
             "date": Utils.dbFormatDateTime(date),
           },
-          "topic": "terabithians"
+          "topic": dataSource.userDetail?.user?.userfcmtoken,
         };
       } else {
         notificationData = {
@@ -187,7 +187,7 @@ class ScheduleFormCreateProperty extends StateProperty with PropertyMixin {
             "id": 1,
             "date": Utils.dbFormatDateTime(date),
           },
-          "topic": "terabithians"
+          "topic": dataSource.userDetail?.user?.userfcmtoken,
         };
       }
 
