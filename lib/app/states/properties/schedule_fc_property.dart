@@ -1,22 +1,20 @@
 import 'dart:async';
 
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart' hide MenuItem;
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:ventes/app/api/services/notification_service.dart';
-import 'package:ventes/app/resources/views/prospect/prospect.dart';
+import 'package:ventes/app/resources/views/prospect_dashboard/prospect_dashboard.dart';
+import 'package:ventes/app/resources/views/schedule/schedule.dart';
 import 'package:ventes/app/resources/widgets/regular_bottom_sheet.dart';
+import 'package:ventes/app/states/typedefs/schedule_fc_typedef.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/constants/strings/schedule_string.dart';
-import 'package:ventes/app/states/typedefs/schedule_fc_typedef.dart';
 import 'package:ventes/constants/views.dart';
 import 'package:ventes/core/states/state_property.dart';
-import 'package:ventes/utils/utils.dart';
-import 'package:ventes/helpers/notification_helper.dart';
 import 'package:ventes/helpers/task_helper.dart';
+import 'package:ventes/utils/utils.dart';
 
 class ScheduleFormCreateProperty extends StateProperty with PropertyMixin {
   final Completer<GoogleMapController> mapsController = Completer();
@@ -164,18 +162,36 @@ class ScheduleFormCreateProperty extends StateProperty with PropertyMixin {
 
       String message = "${formSource.schenm} will start in ${formSource.scheremind} minutes, be ready!";
 
-      Map<String, dynamic> data = {
-        "data": {
-          "menu": Views.prospect.index.toString(),
-          "route": ProspectView.route,
-          "title": title,
-          "body": message,
-          "id": (dataSource.prospectActivity?.prospectactivityid ?? 0).toString(),
-          "date": Utils.dbFormatDateTime(date),
-        },
-        "topic": "terabithians"
-      };
-      dataSource.sendMessageHandler.fetcher.run(data);
+      Map<String, dynamic> notificationData = {};
+
+      if (dataSource.prospectActivity != null) {
+        notificationData = {
+          "data": {
+            "menu": Views.prospect.index.toString(),
+            "route": ProspectDashboardView.route,
+            "title": title,
+            "body": message,
+            "id": (dataSource.prospectActivity?.prospectactivityid ?? 0).toString(),
+            "prospect": (dataSource.prospect?.prospectid ?? 0).toString(),
+            "date": Utils.dbFormatDateTime(date),
+          },
+          "topic": "terabithians"
+        };
+      } else {
+        notificationData = {
+          "data": {
+            "menu": Views.schedule.index.toString(),
+            "route": ScheduleView.route,
+            "title": title,
+            "body": message,
+            "id": 1,
+            "date": Utils.dbFormatDateTime(date),
+          },
+          "topic": "terabithians"
+        };
+      }
+
+      dataSource.sendMessageHandler.fetcher.run(notificationData);
     }
   }
 }

@@ -28,9 +28,15 @@ part 'package:ventes/app/resources/views/prospect_dashboard/components/_stat_pan
 
 class ProspectDashboardView extends View<Controller> {
   static const String route = "/prospectdashboard";
-  int prospectid;
+  late int prospectid;
 
-  ProspectDashboardView(this.prospectid);
+  ProspectDashboardView(dynamic prospectid) {
+    if (prospectid is int) {
+      this.prospectid = prospectid;
+    } else if (prospectid is String) {
+      prospectid = int.parse(prospectid);
+    }
+  }
 
   @override
   void onBuild(state) {

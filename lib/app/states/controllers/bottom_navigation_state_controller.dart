@@ -41,7 +41,12 @@ class BottomNavigationStateController extends GetxController {
 
   void goToRoutePack(RoutePack routePack) {
     currentIndex = routePack.menu;
-    Get.offAllNamed(routePack.route, id: routePack.menu.index, arguments: routePack.arguments);
+    List<String> initialRoutes = [DashboardView.route, NearbyView.route, ScheduleView.route, ProspectView.route, ProfileView.route];
+    if (!initialRoutes.contains(routePack.route)) {
+      Get.toNamed(routePack.route, id: routePack.menu.index, arguments: routePack.arguments);
+    } else {
+      Get.offAllNamed(routePack.route, id: routePack.menu.index, arguments: routePack.arguments);
+    }
   }
 
   @override
