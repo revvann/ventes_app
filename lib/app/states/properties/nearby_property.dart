@@ -67,6 +67,7 @@ class NearbyProperty extends StateProperty with PropertyMixin {
 
   void refresh() async {
     Position position = await Utils.getCurrentPosition();
+    markerLatLng = LatLng(position.latitude, position.longitude);
     GoogleMapController controller = await mapsController.future;
     await controller.animateCamera(
       CameraUpdate.newLatLng(LatLng(position.latitude, position.longitude)),

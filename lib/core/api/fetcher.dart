@@ -32,7 +32,7 @@ class SimpleFetcher<R> extends DataFetcher<Function(), R> {
                 if (response.statusCode == 200) {
                   handler.success(response.body);
                 } else {
-                  handler.failed(failedMessage);
+                  handler.failed(response.body);
                 }
               } catch (e) {
                 handler.error(e.toString());
