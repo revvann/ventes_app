@@ -185,6 +185,16 @@ class ScheduleView extends View<Controller> {
           ),
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: state.listener.navigateToScheduleForm,
+        backgroundColor: RegularColor.primary,
+        child: SvgPicture.asset(
+          'assets/svg/plus.svg',
+          color: Colors.white,
+          width: RegularSize.l,
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 }

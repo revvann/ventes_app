@@ -21,15 +21,10 @@ class _AppBarMenu extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               MenuItem(
-                title: "Detail",
+                title: "Daily View",
                 icon: "assets/svg/detail.svg",
                 onTap: state.listener.onDetailClick,
               ),
-              MenuItem(
-                title: "Add",
-                icon: "assets/svg/plus.svg",
-                onTap: state.listener.navigateToScheduleForm,
-              )
             ],
           ),
         ),

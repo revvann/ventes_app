@@ -148,7 +148,7 @@ class ProspectActivityFormUpdateView extends View<Controller> {
                           () => Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              if (state.dataSource.prospectactivity?.prospectactivitycat?.typename == "On Site") ...[
+                              if (state.dataSource.categoryItems[state.formSource.prosdtcatid] == "On Site") ...[
                                 _MapPreview(),
                                 SizedBox(
                                   height: RegularSize.m,
