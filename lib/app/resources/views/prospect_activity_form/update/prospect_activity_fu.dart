@@ -9,6 +9,7 @@ import 'package:ventes/app/api/models/type_model.dart';
 import 'package:ventes/app/resources/widgets/editor_input.dart';
 import 'package:ventes/app/resources/widgets/icon_input.dart';
 import 'package:ventes/app/resources/widgets/keyable_dropdown.dart';
+import 'package:ventes/app/resources/widgets/keyable_selectbar.dart';
 import 'package:ventes/app/resources/widgets/regular_date_picker.dart';
 import 'package:ventes/app/resources/widgets/regular_input.dart';
 import 'package:ventes/app/resources/widgets/top_navigation.dart';
@@ -20,7 +21,7 @@ import 'package:ventes/constants/strings/prospect_string.dart';
 import 'package:ventes/core/view/view.dart';
 
 part 'package:ventes/app/resources/views/prospect_activity_form/update/components/_type_dropdown.dart';
-part 'package:ventes/app/resources/views/prospect_activity_form/update/components/_category_dropdown.dart';
+part 'package:ventes/app/resources/views/prospect_activity_form/update/components/_category_selectbar.dart';
 part 'package:ventes/app/resources/views/prospect_activity_form/update/components/_date_picker.dart';
 part 'package:ventes/app/resources/views/prospect_activity_form/update/components/_map_preview.dart';
 
@@ -125,15 +126,7 @@ class ProspectActivityFormUpdateView extends View<Controller> {
                         SizedBox(
                           height: RegularSize.m,
                         ),
-                        Obx(
-                          () {
-                            return RegularInput(
-                              label: "Category",
-                              value: state.dataSource.prospectactivity?.prospectactivitycat?.typename ?? "-",
-                              enabled: false,
-                            );
-                          },
-                        ),
+                        _CategorySelectbar(),
                         SizedBox(
                           height: RegularSize.m,
                         ),

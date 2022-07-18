@@ -21,6 +21,7 @@ class ProspectActivityFormUpdateProperty extends StateProperty with PropertyMixi
 
   refresh() {
     dataSource.typesHandler.fetcher.run();
+    dataSource.categoriesHandler.fetcher.run();
     dataSource.prospectActivityHandler.fetcher.run(prospectActivityId);
   }
 }

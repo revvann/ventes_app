@@ -20,13 +20,13 @@ class ProspectActivityFormUpdateDataSource extends StateDataSource<ProspectActiv
   final String updateID = 'updatehdr';
 
   late DataHandler<List<KeyableDropdownItem<int, DBType>>, List, Function()> typesHandler;
-  late DataHandler<List<KeyableDropdownItem<int, DBType>>, List, Function()> categoriesHandler;
+  late DataHandler<Map<int, String>, List, Function()> categoriesHandler;
   late DataHandler<ProspectActivity?, Map<String, dynamic>, Function(int)> prospectActivityHandler;
   late DataHandler<MapsLoc?, Map<String, dynamic>, Function(double, double)> locationHandler;
   late DataHandler<dynamic, String, Function(int, Map<String, dynamic>)> updateHandler;
 
   List<KeyableDropdownItem<int, DBType>> get typeItems => typesHandler.value;
-  List<KeyableDropdownItem<int, DBType>> get categoryItems => categoriesHandler.value;
+  Map<int, String> get categoryItems => categoriesHandler.value;
   ProspectActivity? get prospectactivity => prospectActivityHandler.value;
   MapsLoc? get mapsLoc => locationHandler.value;
 
@@ -37,9 +37,10 @@ class ProspectActivityFormUpdateDataSource extends StateDataSource<ProspectActiv
     return types.map<KeyableDropdownItem<int, DBType>>((item) => KeyableDropdownItem<int, DBType>(key: item.typeid!, value: item)).toList();
   }
 
-  List<KeyableDropdownItem<int, DBType>> _categoriesSuccess(data) {
-    List<DBType> categories = data.map<DBType>((item) => DBType.fromJson(item)).toList();
-    return categories.map<KeyableDropdownItem<int, DBType>>((item) => KeyableDropdownItem<int, DBType>(key: item.typeid!, value: item)).toList();
+  Map<int, String> _categoriesSuccess(List data) {
+    List<DBType> categoriesList = data.map<DBType>((item) => DBType.fromJson(item)).toList();
+    formSource.prosdtcatid = categoriesList.isEmpty ? null : categoriesList.first.typeid!;
+    return categoriesList.asMap().map((index, item) => MapEntry(item.typeid!, item.typename!));
   }
 
   void _updateSuccess(message) {
@@ -68,7 +69,7 @@ class ProspectActivityFormUpdateDataSource extends StateDataSource<ProspectActiv
   @override
   void init() {
     super.init();
-    categoriesHandler = Utils.createDataHandler(categoriesID, presenter.fetchCategories, [], _categoriesSuccess);
+    categoriesHandler = Utils.createDataHandler(categoriesID, presenter.fetchCategories, {}, _categoriesSuccess);
     typesHandler = Utils.createDataHandler(typesID, presenter.fetchTypes, [], _typesSuccess);
     prospectActivityHandler = Utils.createDataHandler(prospectActivityID, presenter.fetchProspectActivity, null, ProspectActivity.fromJson, onComplete: _prospectActivityComplete);
     locationHandler = Utils.createDataHandler(locationID, presenter.fetchLocation, null, MapsLoc.fromJson);

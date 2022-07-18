@@ -22,8 +22,8 @@ class ProspectActivityFormUpdateListener extends StateListener with ListenerMixi
     formSource.prosdttype = type.value;
   }
 
-  void onCategorySelected(category) {
-    formSource.prosdtcategory = category.value;
+  void onFollowUpSelected(dynamic key) {
+    formSource.prosdtcatid = key;
   }
 
   void onSubmitButtonClicked() {
