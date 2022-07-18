@@ -11,7 +11,7 @@ import 'package:ventes/app/states/typedefs/daily_schedule_typedef.dart';
 
 class DailyScheduleProperty extends StateProperty with PropertyMixin {
   Task task = Task(ScheduleString.dailyScheduleTaskCode);
-  PopupMenuController popupMenuController = Get.put(PopupMenuController(), tag: "SchedulePopup");
+  PopupMenuController popupMenuController = Get.put(PopupMenuController(), tag: "dailyschedulemenupopup");
 
   final Rx<DateTime> _date = Rx<DateTime>(DateTime.now());
   DateTime get date => _date.value;
@@ -39,8 +39,9 @@ class DailyScheduleProperty extends StateProperty with PropertyMixin {
     return color;
   }
 
+  @override
   void close() {
     super.close();
-    Get.delete<PopupMenuController>(tag: "SchedulePopup");
+    Get.delete<PopupMenuController>(tag: "dailyschedulemenupopup");
   }
 }

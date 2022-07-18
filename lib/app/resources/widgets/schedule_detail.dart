@@ -4,7 +4,7 @@ import 'package:flutter/material.dart' hide MenuItem;
 import 'package:ventes/app/api/models/schedule_guest_model.dart';
 import 'package:ventes/app/api/models/schedule_model.dart';
 import 'package:ventes/app/api/models/type_model.dart';
-import 'package:ventes/constants/gestures/copy_gesture_recognizer.dart';
+import 'package:ventes/constants/gestures/launch_url_gesture_recognizer.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/utils/utils.dart';
@@ -107,11 +107,11 @@ class ScheduleDetail extends StatelessWidget {
               ),
               children: [
                 TextSpan(
-                  text: " Copy",
+                  text: " Follow",
                   style: TextStyle(
                     color: RegularColor.primary,
                   ),
-                  recognizer: CopyGestureRecognizer(schedule.scheloc!),
+                  recognizer: LaunchUrlGestureRecognizer(schedule.scheloc!),
                 ),
               ],
             ),
@@ -141,11 +141,11 @@ class ScheduleDetail extends StatelessWidget {
               ),
               children: [
                 TextSpan(
-                  text: " Copy",
+                  text: " Follow",
                   style: TextStyle(
                     color: RegularColor.primary,
                   ),
-                  recognizer: CopyGestureRecognizer(schedule.scheonlink!),
+                  recognizer: LaunchUrlGestureRecognizer(schedule.scheonlink!),
                 ),
               ],
             ),

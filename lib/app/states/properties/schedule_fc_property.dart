@@ -4,7 +4,7 @@ import 'package:flutter/material.dart' hide MenuItem;
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:ventes/app/resources/views/prospect_dashboard/prospect_dashboard.dart';
+import 'package:ventes/app/resources/views/prospect_activity_form/update/prospect_activity_fu.dart';
 import 'package:ventes/app/resources/views/schedule/schedule.dart';
 import 'package:ventes/app/resources/widgets/regular_bottom_sheet.dart';
 import 'package:ventes/app/states/typedefs/schedule_fc_typedef.dart';
@@ -71,6 +71,7 @@ class ScheduleFormCreateProperty extends StateProperty with PropertyMixin {
     });
     markerLatLng = LatLng(pos.latitude, pos.longitude);
     dataSource.typesHandler.fetcher.run();
+    dataSource.userHandler.fetcher.run();
     if (formSource.schereftypeid != null) {
       dataSource.refTypeHandler.fetcher.run(formSource.schereftypeid!);
     }
@@ -159,35 +160,31 @@ class ScheduleFormCreateProperty extends StateProperty with PropertyMixin {
       }
 
       date = date.subtract(Duration(minutes: formSource.scheremind));
-
       String message = "${formSource.schenm} will start in ${formSource.scheremind} minutes, be ready!";
 
-      Map<String, dynamic> notificationData = {};
+      Map<String, dynamic> notificationData = {
+        "data": {
+          "title": title,
+          "body": message,
+          "date": Utils.dbFormatDateTime(date),
+        },
+        "token": dataSource.userDetail?.user?.userfcmtoken,
+      };
 
       if (dataSource.prospectActivity != null) {
-        notificationData = {
-          "data": {
-            "menu": Views.prospect.index.toString(),
-            "route": ProspectDashboardView.route,
-            "title": title,
-            "body": message,
-            "id": (dataSource.prospectActivity?.prospectactivityid ?? 0).toString(),
-            "prospect": (dataSource.prospect?.prospectid ?? 0).toString(),
-            "date": Utils.dbFormatDateTime(date),
-          },
-          "topic": dataSource.userDetail?.user?.userfcmtoken,
+        notificationData['data'] = {
+          "menu": Views.prospect.index.toString(),
+          "route": ProspectActivityFormUpdateView.route,
+          "id": (dataSource.prospectActivity?.prospectactivityid ?? 0).toString(),
+          "prospectactivity": (dataSource.prospectActivity?.prospectactivityid ?? 0).toString(),
+          ...notificationData['data'],
         };
       } else {
-        notificationData = {
-          "data": {
-            "menu": Views.schedule.index.toString(),
-            "route": ScheduleView.route,
-            "title": title,
-            "body": message,
-            "id": 1,
-            "date": Utils.dbFormatDateTime(date),
-          },
-          "topic": dataSource.userDetail?.user?.userfcmtoken,
+        notificationData['data'] = {
+          "menu": Views.schedule.index.toString(),
+          "route": ScheduleView.route,
+          "id": 1,
+          ...notificationData['data'],
         };
       }
 

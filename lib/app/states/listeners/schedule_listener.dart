@@ -2,12 +2,23 @@ import 'package:flutter/material.dart' hide MenuItem;
 import 'package:get/get.dart';
 import 'package:ventes/app/api/models/schedule_model.dart';
 import 'package:ventes/app/resources/views/daily_schedule/daily_schedule.dart';
+import 'package:ventes/app/resources/views/schedule_form/create/schedule_fc.dart';
 import 'package:ventes/app/states/typedefs/schedule_typedef.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/views.dart';
 import 'package:ventes/core/states/state_listener.dart';
 
 class ScheduleListener extends StateListener with ListenerMixin {
+  void navigateToScheduleForm() {
+    Get.toNamed(
+      ScheduleFormCreateView.route,
+      id: Views.schedule.index,
+      arguments: {
+        'startDate': property.selectedDate,
+      },
+    );
+  }
+
   void onDateShownChanged(String data) {
     if (data == 'displayDate') {
       if (property.calendarController.displayDate != null) {

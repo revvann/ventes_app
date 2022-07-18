@@ -42,6 +42,7 @@ import 'package:ventes/helpers/auth_helper.dart';
 import 'package:ventes/helpers/notification_helper.dart';
 import 'package:ventes/helpers/task_helper.dart';
 import 'package:ventes/routing/route_pack.dart';
+import 'package:url_launcher/url_launcher.dart' as url_launcher;
 
 class Utils {
   static MaterialColor createSwatch(Color color) {
@@ -67,9 +68,19 @@ class Utils {
     });
   }
 
+  static Future<void> launchUrl(String url) async {
+    Uri uri = Uri.parse(url);
+    if (!await url_launcher.canLaunchUrl(uri)) {
+      Get.find<TaskHelper>().failedPush(Task('lauchurl', message: "Cannot launch url", snackbar: true));
+    } else {
+      url_launcher.launchUrl(uri);
+    }
+  }
+
   static Future requestPermission() async {
     await Permission.contacts.request();
     await Permission.location.request();
+    await Permission.storage.request();
   }
 
   static List<Location> getTimezoneLocation() {

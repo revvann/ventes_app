@@ -1,11 +1,13 @@
 import 'package:get/get.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
+import 'package:ventes/app/resources/widgets/popup_button.dart';
 import 'package:ventes/constants/strings/schedule_string.dart';
 import 'package:ventes/app/states/typedefs/schedule_typedef.dart';
 import 'package:ventes/core/states/state_property.dart';
 import 'package:ventes/helpers/task_helper.dart';
 
 class ScheduleProperty extends StateProperty with PropertyMixin {
+  PopupMenuController popupMenuController = Get.put(PopupMenuController(), tag: "SchedulePopup");
   final CalendarController calendarController = CalendarController();
   Task task = Task(ScheduleString.taskCode);
 
@@ -41,5 +43,6 @@ class ScheduleProperty extends StateProperty with PropertyMixin {
   void close() {
     super.close();
     calendarController.dispose();
+    Get.delete<PopupMenuController>(tag: "SchedulePopup");
   }
 }

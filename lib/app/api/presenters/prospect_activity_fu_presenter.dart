@@ -15,6 +15,10 @@ class ProspectActivityFormUpdatePresenter extends RegularPresenter {
     return await _typeService.byCode({'typecd': ProspectString.detailTypeCode});
   }
 
+  Future<Response> _getCategories() async {
+    return await _typeService.byCode({'typecd': ProspectString.categoryTypeCode});
+  }
+
   Future<Response> _getLocationDetail(double latitude, double longitude) async {
     return await _gmapService.getDetail(latitude, longitude);
   }
@@ -28,6 +32,7 @@ class ProspectActivityFormUpdatePresenter extends RegularPresenter {
   }
 
   SimpleFetcher<List> get fetchTypes => SimpleFetcher(responseBuilder: _getTypes, failedMessage: ProspectString.fetchDataFailed);
+  SimpleFetcher<List> get fetchCategories => SimpleFetcher(responseBuilder: _getCategories, failedMessage: ProspectString.fetchDataFailed);
   DataFetcher<Function(int), Map<String, dynamic>> get fetchProspectActivity => DataFetcher(builder: (handler) {
         return (id) async {
           handler.start();

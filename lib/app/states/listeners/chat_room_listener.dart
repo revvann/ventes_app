@@ -51,7 +51,9 @@ class ChatRoomListener extends StateListener with ListenerMixin {
   }
 
   void onPickFileClicked() async {
-    property.chatFiles = await FilePicker.platform.pickFiles();
+    try {
+      property.chatFiles = await FilePicker.platform.pickFiles();
+    } catch (e) {}
   }
 
   void onDeleteFileClicked() {

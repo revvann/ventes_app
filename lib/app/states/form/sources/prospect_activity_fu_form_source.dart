@@ -16,12 +16,18 @@ class ProspectActivityFormUpdateFormSource extends UpdateFormSource with FormSou
 
   KeyableDropdownController<int, DBType> typeDropdownController = Get.put(
     KeyableDropdownController<int, DBType>(),
-    tag: ProspectString.detailTypeCode,
+    tag: ProspectString.detailTypeDropdownTag,
+  );
+
+  KeyableDropdownController<int, DBType> categoryDropdownController = Get.put(
+    KeyableDropdownController<int, DBType>(),
+    tag: ProspectString.categoryDropdownTag,
   );
 
   TextEditingController prosdtdescTEC = TextEditingController();
 
   final Rx<DBType?> _prosdttype = Rx<DBType?>(null);
+  final Rx<DBType?> _prosdtcategory = Rx<DBType?>(null);
 
   final Rx<DateTime?> _date = Rx<DateTime?>(null);
 
@@ -32,6 +38,9 @@ class ProspectActivityFormUpdateFormSource extends UpdateFormSource with FormSou
 
   DBType? get prosdttype => _prosdttype.value;
   set prosdttype(DBType? value) => _prosdttype.value = value;
+
+  DBType? get prosdtcategory => _prosdtcategory.value;
+  set prosdtcategory(DBType? value) => _prosdtcategory.value = value;
 
   String? get dateString => date != null ? Utils.formatDate(date!) : null;
 
@@ -46,6 +55,7 @@ class ProspectActivityFormUpdateFormSource extends UpdateFormSource with FormSou
     super.ready();
     prosdtdescTEC.clear();
     typeDropdownController.reset();
+    categoryDropdownController.reset();
 
     date = DateTime.now();
   }
@@ -55,16 +65,25 @@ class ProspectActivityFormUpdateFormSource extends UpdateFormSource with FormSou
     super.close();
     prosdtdescTEC.dispose();
     Get.delete<KeyableDropdownController<int, DBType>>(
+      tag: ProspectString.detailTypeDropdownTag,
+    );
+    Get.delete<KeyableDropdownController<int, DBType>>(
       tag: ProspectString.categoryDropdownTag,
     );
   }
 
   @override
   void prepareFormValues() async {
-    prosdtdescTEC.text = dataSource.prospectactivity!.prospectactivitydesc ?? "";
-    date = Utils.dbParseDate(dataSource.prospectactivity!.prospectactivitydate!);
-    prosdttype = dataSource.prospectactivity!.prospectactivitytype;
-    typeDropdownController.selectedKeys = [prosdttype!.typeid!];
+    if (dataSource.prospectactivity!.prospectactivitydesc != null) prosdtdescTEC.text = dataSource.prospectactivity!.prospectactivitydesc ?? "";
+    if (dataSource.prospectactivity!.prospectactivitydate != null) date = Utils.dbParseDate(dataSource.prospectactivity!.prospectactivitydate!);
+    if (dataSource.prospectactivity!.prospectactivitytype != null) {
+      prosdttype = dataSource.prospectactivity!.prospectactivitytype;
+      typeDropdownController.selectedKeys = [prosdttype!.typeid!];
+    }
+    if (dataSource.prospectactivity!.prospectactivitycat != null) {
+      prosdtcategory = dataSource.prospectactivity!.prospectactivitycat;
+      categoryDropdownController.selectedKeys = [prosdtcategory!.typeid!];
+    }
 
     if (dataSource.prospectactivity?.prospectactivitylatitude != null && dataSource.prospectactivity?.prospectactivitylongitude != null) {
       double latitude = dataSource.prospectactivity!.prospectactivitylatitude!;
@@ -90,6 +109,7 @@ class ProspectActivityFormUpdateFormSource extends UpdateFormSource with FormSou
       'prospectactivitydesc': prosdtdescTEC.text,
       'prospectactivitydate': Utils.dbDateFormat(date!),
       'prospectactivitytypeid': prosdttype?.typeid.toString(),
+      'prospectactivitycatid': prosdtcategory?.typeid.toString(),
     };
   }
 

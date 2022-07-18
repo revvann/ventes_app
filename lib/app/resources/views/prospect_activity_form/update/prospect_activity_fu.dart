@@ -20,14 +20,21 @@ import 'package:ventes/constants/strings/prospect_string.dart';
 import 'package:ventes/core/view/view.dart';
 
 part 'package:ventes/app/resources/views/prospect_activity_form/update/components/_type_dropdown.dart';
+part 'package:ventes/app/resources/views/prospect_activity_form/update/components/_category_dropdown.dart';
 part 'package:ventes/app/resources/views/prospect_activity_form/update/components/_date_picker.dart';
 part 'package:ventes/app/resources/views/prospect_activity_form/update/components/_map_preview.dart';
 
 class ProspectActivityFormUpdateView extends View<Controller> {
   static const String route = "/prospect/detail/update";
-  int prospectActivityId;
+  late int prospectActivityId;
 
-  ProspectActivityFormUpdateView(this.prospectActivityId);
+  ProspectActivityFormUpdateView(dynamic prospectActivityId) {
+    if (prospectActivityId is int) {
+      this.prospectActivityId = prospectActivityId;
+    } else if (prospectActivityId is String) {
+      this.prospectActivityId = int.parse(prospectActivityId);
+    }
+  }
 
   @override
   void onBuild(state) {

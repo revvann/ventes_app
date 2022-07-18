@@ -37,7 +37,7 @@ class ProspectActivityDataSource extends StateDataSource<ProspectActivityPresent
 
   List<ProspectActivity> _prospectActivitiesComplete(data) {
     List<ProspectActivity> activities = data.map<ProspectActivity>((json) => ProspectActivity.fromJson(json)).toList();
-    activities.removeWhere((element) => Utils.dbParseDate(element.prospectactivitydate!).isAfter(DateTime.now()));
+    activities.removeWhere((element) => Utils.dbParseDate(element.prospectactivitydate!).isAfter(DateTime.now()) || element.prospectactivitytypeid == null);
     return activities;
   }
 

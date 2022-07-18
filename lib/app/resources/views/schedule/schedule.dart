@@ -7,6 +7,8 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:ventes/app/api/models/schedule_model.dart';
+import 'package:ventes/app/resources/widgets/pop_up_item.dart';
+import 'package:ventes/app/resources/widgets/popup_button.dart';
 import 'package:ventes/app/resources/widgets/regular_appointment_card.dart';
 import 'package:ventes/app/resources/widgets/regular_dialog.dart';
 import 'package:ventes/app/resources/widgets/regular_outlined_button.dart';
@@ -23,6 +25,7 @@ import 'package:ventes/utils/utils.dart';
 part 'package:ventes/app/resources/views/schedule/components/_appointment_item.dart';
 part 'package:ventes/app/resources/views/schedule/components/_calendar.dart';
 part 'package:ventes/app/resources/views/schedule/components/_month_cell.dart';
+part 'package:ventes/app/resources/views/schedule/components/_app_bar_menu.dart';
 
 class ScheduleView extends View<Controller> {
   static const String route = "/schedule";
@@ -52,17 +55,8 @@ class ScheduleView extends View<Controller> {
           onTap: Utils.backToDashboard,
         ),
         actions: [
-          GestureDetector(
-            onTap: state.listener.onDetailClick,
-            child: Container(
-              padding: EdgeInsets.all(RegularSize.xs),
-              child: SvgPicture.asset(
-                "assets/svg/detail.svg",
-                width: RegularSize.l,
-                color: Colors.white,
-              ),
-            ),
-          ),
+          _AppBarMenu(),
+          SizedBox(width: RegularSize.xs),
         ],
         below: Container(
           margin: EdgeInsets.only(

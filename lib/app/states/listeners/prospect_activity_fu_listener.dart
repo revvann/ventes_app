@@ -22,6 +22,10 @@ class ProspectActivityFormUpdateListener extends StateListener with ListenerMixi
     formSource.prosdttype = type.value;
   }
 
+  void onCategorySelected(category) {
+    formSource.prosdtcategory = category.value;
+  }
+
   void onSubmitButtonClicked() {
     Get.find<TaskHelper>().confirmPush(
       property.task.copyWith<bool>(
