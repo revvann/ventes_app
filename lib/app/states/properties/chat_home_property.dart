@@ -10,7 +10,7 @@ class ChatHomeProperty extends StateProperty with PropertyMixin {
   void ready() {
     super.ready();
     socket.on('usersonline', (data) {
-      dataSource.usersActive = data;
+      dataSource.usersActive = data.map<String>((e) => e.toString()).toList();
     });
   }
 }

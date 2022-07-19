@@ -20,6 +20,7 @@ import 'package:ventes/app/api/services/chat_service.dart';
 import 'package:ventes/app/api/services/competitor_service.dart';
 import 'package:ventes/app/api/services/contact_person_service.dart';
 import 'package:ventes/app/api/services/customer_service.dart';
+import 'package:ventes/app/api/services/files_service.dart';
 import 'package:ventes/app/api/services/gmaps_service.dart';
 import 'package:ventes/app/api/services/notification_service.dart';
 import 'package:ventes/app/api/services/place_service.dart';
@@ -326,6 +327,7 @@ class Utils {
     Get.lazyPut(() => ProspectService(), fenix: true);
     Get.lazyPut(() => ScheduleService(), fenix: true);
     Get.lazyPut(() => TypeService(), fenix: true);
+    Get.lazyPut(() => FilesService(), fenix: true);
     Get.lazyPut(() => ProspectActivityService(), fenix: true);
     Get.lazyPut(() => ProspectProductService(), fenix: true);
     Get.lazyPut(() => ContactPersonService(), fenix: true);

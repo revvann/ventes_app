@@ -4,12 +4,13 @@ part of 'package:ventes/app/resources/views/chat_room/chat_room.dart';
 
 class _ChatFile extends StatelessWidget {
   Controller state = Get.find<Controller>();
+  String? url;
   String filename;
   String? mimetype;
   int? filesize;
   bool isMe;
 
-  _ChatFile({required this.filename, required this.mimetype, required this.filesize, required this.isMe});
+  _ChatFile({required this.filename, required this.mimetype, required this.filesize, required this.isMe, required this.url});
 
   @override
   Widget build(BuildContext context) {
@@ -82,35 +83,43 @@ class _ChatFile extends StatelessWidget {
               color: RegularColor.dark,
             ),
           ),
-          // SizedBox(
-          //   width: RegularSize.s,
-          // ),
-          // Material(
-          //   shape: CircleBorder(),
-          //   child: InkWell(
-          //     customBorder: CircleBorder(),
-          //     splashColor: Colors.white.withOpacity(0.1),
-          //     highlightColor: Colors.white.withOpacity(0.1),
-          //     hoverColor: Colors.white.withOpacity(0.1),
-          //     focusColor: Colors.white.withOpacity(0.1),
-          //     onTap: state.listener.onDeleteFileClicked,
-          //     child: Ink(
-          //       decoration: BoxDecoration(
-          //         shape: BoxShape.circle,
-          //         color: RegularColor.green,
-          //       ),
-          //       width: RegularSize.l,
-          //       height: RegularSize.l,
-          //       padding: EdgeInsets.all(RegularSize.s),
-          //       child: SvgPicture.asset(
-          //         'assets/svg/close.svg',
-          //         color: Colors.white,
-          //         width: RegularSize.m,
-          //         height: RegularSize.m,
-          //       ),
-          //     ),
-          //   ),
-          // ),
+          if (!state.property.isFileDownloaded(filename)) ...[
+            SizedBox(
+              width: RegularSize.s,
+            ),
+            Material(
+              shape: CircleBorder(),
+              child: InkWell(
+                customBorder: CircleBorder(),
+                splashColor: Colors.white.withOpacity(0.1),
+                highlightColor: Colors.white.withOpacity(0.1),
+                hoverColor: Colors.white.withOpacity(0.1),
+                focusColor: Colors.white.withOpacity(0.1),
+                onTap: () async {
+                  await state.property.saveFile(url!);
+                },
+                child: Ink(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: RegularColor.green,
+                  ),
+                  width: RegularSize.l,
+                  height: RegularSize.l,
+                  padding: EdgeInsets.all(RegularSize.s),
+                  child: LoadingContainer(
+                    width: 10,
+                    isLoading: !state.property.isFileLoading(filename),
+                    child: SvgPicture.asset(
+                      'assets/svg/download.svg',
+                      color: Colors.white,
+                      width: RegularSize.m,
+                      height: RegularSize.m,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
         ],
       ),
     );

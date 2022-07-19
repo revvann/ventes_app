@@ -11,6 +11,7 @@ import 'package:ventes/app/api/models/chat_model.dart';
 import 'package:ventes/app/api/models/files_model.dart';
 import 'package:ventes/app/api/models/user_detail_model.dart';
 import 'package:ventes/app/resources/widgets/handler_container.dart';
+import 'package:ventes/app/resources/widgets/loading_container.dart';
 import 'package:ventes/app/resources/widgets/top_navigation.dart';
 import 'package:ventes/app/states/typedefs/chat_room_typedef.dart';
 import 'package:ventes/constants/regular_color.dart';
@@ -20,10 +21,10 @@ import 'package:ventes/core/view/view.dart';
 import 'package:ventes/utils/utils.dart';
 
 part 'package:ventes/app/resources/views/chat_room/components/_chat_body.dart';
+part 'package:ventes/app/resources/views/chat_room/components/_chat_file.dart';
 part 'package:ventes/app/resources/views/chat_room/components/_chat_header.dart';
 part 'package:ventes/app/resources/views/chat_room/components/_chat_input.dart';
 part 'package:ventes/app/resources/views/chat_room/components/_file_card.dart';
-part 'package:ventes/app/resources/views/chat_room/components/_chat_file.dart';
 
 class ChatRoomView extends View<Controller> {
   static const String route = "/chatroom";

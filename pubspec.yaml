@@ -62,6 +62,7 @@ dependencies:
   mime: ^1.0.2
   awesome_notifications: ^0.6.21
   url_launcher: ^6.1.5
+  flutter_downloader: ^1.8.1
 
 dev_dependencies:
   flutter_test:

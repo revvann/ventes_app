@@ -30,6 +30,7 @@ class _ChatBody extends StatelessWidget {
               filesize: int.tryParse(file?.filesize ?? "0"),
               mimetype: file?.mimetype,
               isMe: isMe,
+              url: file?.url,
             ),
             SizedBox(height: RegularSize.xs),
           ],
