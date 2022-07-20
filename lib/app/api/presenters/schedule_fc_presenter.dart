@@ -87,14 +87,14 @@ class ScheduleFormCreatePresenter extends RegularPresenter {
           handler.complete();
         };
       });
-  DataFetcher<Function(Map<String, dynamic>), String> get create => DataFetcher(
+  DataFetcher<Function(Map<String, dynamic>), Map<String, dynamic>> get create => DataFetcher(
         builder: (handler) {
           return (data) async {
             handler.start();
             try {
               Response response = await _create(data);
               if (response.statusCode == 200) {
-                handler.success(ScheduleString.createSuccess);
+                handler.success(response.body);
               } else {
                 handler.failed(ScheduleString.createFailed);
               }

@@ -83,43 +83,51 @@ class _ChatFile extends StatelessWidget {
               color: RegularColor.dark,
             ),
           ),
-          if (!state.property.isFileDownloaded(filename)) ...[
-            SizedBox(
-              width: RegularSize.s,
-            ),
-            Material(
-              shape: CircleBorder(),
-              child: InkWell(
-                customBorder: CircleBorder(),
-                splashColor: Colors.white.withOpacity(0.1),
-                highlightColor: Colors.white.withOpacity(0.1),
-                hoverColor: Colors.white.withOpacity(0.1),
-                focusColor: Colors.white.withOpacity(0.1),
-                onTap: () async {
-                  await state.property.saveFile(url!);
-                },
-                child: Ink(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: RegularColor.green,
+          Obx(() {
+            bool isLoading = state.property.isFileLoading(filename);
+            return Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (!state.property.isFileDownloaded(filename)) ...[
+                  SizedBox(
+                    width: RegularSize.s,
                   ),
-                  width: RegularSize.l,
-                  height: RegularSize.l,
-                  padding: EdgeInsets.all(RegularSize.s),
-                  child: LoadingContainer(
-                    width: 10,
-                    isLoading: !state.property.isFileLoading(filename),
-                    child: SvgPicture.asset(
-                      'assets/svg/download.svg',
-                      color: Colors.white,
-                      width: RegularSize.m,
-                      height: RegularSize.m,
+                  Material(
+                    shape: CircleBorder(),
+                    child: InkWell(
+                      customBorder: CircleBorder(),
+                      splashColor: Colors.white.withOpacity(0.1),
+                      highlightColor: Colors.white.withOpacity(0.1),
+                      hoverColor: Colors.white.withOpacity(0.1),
+                      focusColor: Colors.white.withOpacity(0.1),
+                      onTap: () async {
+                        await state.property.saveFile(url!, filename);
+                      },
+                      child: Ink(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: RegularColor.green,
+                        ),
+                        width: RegularSize.l,
+                        height: RegularSize.l,
+                        padding: EdgeInsets.all(RegularSize.s),
+                        child: LoadingContainer(
+                          width: 10,
+                          isLoading: isLoading,
+                          child: SvgPicture.asset(
+                            'assets/svg/download.svg',
+                            color: Colors.white,
+                            width: RegularSize.m,
+                            height: RegularSize.m,
+                          ),
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              ),
-            ),
-          ],
+                ],
+              ],
+            );
+          }),
         ],
       ),
     );

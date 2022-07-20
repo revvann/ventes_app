@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:ventes/app/api/presenters/regular_presenter.dart';
+import 'package:ventes/app/api/services/notification_service.dart';
 import 'package:ventes/app/api/services/schedule_service.dart';
 import 'package:ventes/app/api/services/type_service.dart';
 import 'package:ventes/app/api/services/user_service.dart';
@@ -14,6 +15,7 @@ class ScheduleFormUpdatePresenter extends RegularPresenter {
   final _userService = Get.find<UserService>();
   final _scheduleService = Get.find<ScheduleService>();
   final _typeService = Get.find<TypeService>();
+  final _notificationService = Get.find<NotificationService>();
 
   Future<Response> _getTypes() {
     Map<String, dynamic> params = {
@@ -22,6 +24,16 @@ class ScheduleFormUpdatePresenter extends RegularPresenter {
     return _typeService.byCode(params);
   }
 
+  Future<Response> _updateMessage(Map<String, dynamic> data) {
+    return _notificationService.updateMessage(data);
+  }
+
+  Future<Response> _getUserDetail() async {
+    AuthModel? authModel = await Get.find<AuthHelper>().get();
+    return await _userService.show(authModel!.accountActive!);
+  }
+
+  SimpleFetcher<Map<String, dynamic>> get fetchUserDetail => SimpleFetcher(responseBuilder: _getUserDetail, failedMessage: ScheduleString.fetchFailed);
   SimpleFetcher<List> get fetchTypes => SimpleFetcher(responseBuilder: _getTypes, failedMessage: ScheduleString.fetchFailed);
   DataFetcher<Function(int), Map<String, dynamic>> get fetchSchedule => DataFetcher(
         builder: (handler) {
@@ -51,6 +63,25 @@ class ScheduleFormUpdatePresenter extends RegularPresenter {
                 handler.success(ScheduleString.updateSuccess);
               } else {
                 handler.failed(ScheduleString.updateFailed);
+              }
+            } catch (e) {
+              handler.error(e.toString());
+            }
+            handler.complete();
+          };
+        },
+      );
+
+  DataFetcher<Function(Map<String, dynamic>), String> get updateMessage => DataFetcher(
+        builder: (handler) {
+          return (data) async {
+            handler.start();
+            try {
+              Response response = await _updateMessage(data);
+              if (response.statusCode == 200) {
+                handler.success("Notification successfully scheduled");
+              } else {
+                handler.failed("cannot scheduled notification");
               }
             } catch (e) {
               handler.error(e.toString());

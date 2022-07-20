@@ -1,33 +1,37 @@
 import 'dart:async';
 
 import 'package:get/get.dart';
-import 'package:ventes/app/api/presenters/schedule_fu_presenter.dart';
 import 'package:ventes/app/api/models/auth_model.dart';
 import 'package:ventes/app/api/models/schedule_model.dart';
 import 'package:ventes/app/api/models/type_model.dart';
 import 'package:ventes/app/api/models/user_detail_model.dart';
+import 'package:ventes/app/api/presenters/schedule_fu_presenter.dart';
 import 'package:ventes/app/states/controllers/daily_schedule_state_controller.dart';
 import 'package:ventes/app/states/typedefs/schedule_fu_typedef.dart';
-import 'package:ventes/constants/strings/schedule_string.dart';
 import 'package:ventes/constants/views.dart';
 import 'package:ventes/core/api/handler.dart';
 import 'package:ventes/core/states/state_data_source.dart';
 import 'package:ventes/helpers/auth_helper.dart';
-import 'package:ventes/utils/utils.dart';
 import 'package:ventes/helpers/task_helper.dart';
+import 'package:ventes/utils/utils.dart';
 
 class ScheduleFormUpdateDataSource extends StateDataSource<ScheduleFormUpdatePresenter> with DataSourceMixin {
   final String typesID = 'typshdr';
   final String scheduleID = 'schehdr';
   final String updateID = 'updatehdr';
+  final String updateMessageID = 'updatemessagehdr';
+  final String userID = 'userhdr';
 
   late DataHandler<List<Map<String, int>>, List, Function()> typesHandler;
   late DataHandler<Schedule?, Map<String, dynamic>, Function(int)> scheduleHandler;
   late DataHandler<dynamic, String, Function(Map<String, dynamic>)> updateHandler;
+  late DataHandler<dynamic, String, Function(Map<String, dynamic>)> updateMessageHandler;
+  late DataHandler<UserDetail?, Map<String, dynamic>, Function()> userHandler;
 
   late int scheduleId;
 
   List<Map<String, int>> get types => typesHandler.value;
+  UserDetail? get userDetail => userHandler.value;
 
   String? typeName(int index) => types.isNotEmpty ? types[index].keys.first : null;
   List<String> typeNames() => types.map((type) => type.keys.first).toList();
@@ -67,12 +71,12 @@ class ScheduleFormUpdateDataSource extends StateDataSource<ScheduleFormUpdatePre
     return userDetails;
   }
 
-  void _updateSuccess(data) {
+  void _updateMessageSuccess(String data) {
     Get.find<TaskHelper>().successPush(
       Task(
-        updateID,
-        message: ScheduleString.updateSuccess,
-        onFinished: (res) {
+        updateMessageID,
+        message: data,
+        onFinished: (res) async {
           Get.find<DailyScheduleStateController>().refreshStates();
           Get.back(id: Views.schedule.index);
         },
@@ -82,6 +86,11 @@ class ScheduleFormUpdateDataSource extends StateDataSource<ScheduleFormUpdatePre
 
   void _scheduleComplete() {
     typesHandler.fetcher.run();
+  }
+
+  void _updateComplete() {
+    property.updateNotification();
+    Get.find<TaskHelper>().loaderPop(updateID);
   }
 
   @override
@@ -94,16 +103,38 @@ class ScheduleFormUpdateDataSource extends StateDataSource<ScheduleFormUpdatePre
       insertTypes,
       onComplete: () => formSource.prepareFormValues(),
     );
+
     scheduleHandler = Utils.createDataHandler(scheduleID, presenter.fetchSchedule, null, Schedule.fromJson, onComplete: _scheduleComplete);
+
     updateHandler = DataHandler(
       updateID,
       fetcher: presenter.update,
       initialValue: null,
       onStart: () => Get.find<TaskHelper>().loaderPush(Task(updateID)),
-      onComplete: () => Get.find<TaskHelper>().loaderPop(updateID),
+      onComplete: _updateComplete,
       onError: (message) => Utils.showError(updateID, message),
       onFailed: (message) => Utils.showFailed(updateID, message),
-      onSuccess: _updateSuccess,
+      onSuccess: (data) {},
+    );
+
+    userHandler = DataHandler(
+      userID,
+      fetcher: presenter.fetchUserDetail,
+      initialValue: null,
+      onError: (message) => Utils.showError(userID, message),
+      onFailed: (message) => Utils.showFailed(userID, message),
+      onSuccess: UserDetail.fromJson,
+    );
+
+    updateMessageHandler = DataHandler(
+      updateMessageID,
+      fetcher: presenter.updateMessage,
+      initialValue: null,
+      onStart: () => Get.find<TaskHelper>().loaderPush(Task(updateMessageID)),
+      onComplete: () => Get.find<TaskHelper>().loaderPop(updateMessageID),
+      onError: (message) => Utils.showError(updateMessageID, message),
+      onFailed: (message) => Utils.showFailed(updateMessageID, message),
+      onSuccess: _updateMessageSuccess,
     );
   }
 

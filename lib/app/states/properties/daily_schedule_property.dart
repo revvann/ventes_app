@@ -25,6 +25,7 @@ class DailyScheduleProperty extends StateProperty with PropertyMixin {
     dataSource.appointmentsHandler.fetcher.run(Utils.dbDateFormat(date));
     dataSource.typesHandler.fetcher.run();
     dataSource.permissionsHandler.fetcher.run();
+    dataSource.userHandler.fetcher.run();
   }
 
   Color getAppointmentColor(Schedule appointment) {

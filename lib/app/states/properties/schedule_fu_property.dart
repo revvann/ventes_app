@@ -4,11 +4,14 @@ import 'package:flutter/material.dart' hide MenuItem;
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:ventes/app/resources/views/prospect_activity_form/update/prospect_activity_fu.dart';
+import 'package:ventes/app/resources/views/schedule/schedule.dart';
 import 'package:ventes/app/resources/widgets/regular_bottom_sheet.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/constants/strings/schedule_string.dart';
 import 'package:ventes/app/states/typedefs/schedule_fu_typedef.dart';
+import 'package:ventes/constants/views.dart';
 import 'package:ventes/core/states/state_property.dart';
 import 'package:ventes/utils/utils.dart';
 import 'package:ventes/helpers/task_helper.dart';
@@ -34,6 +37,7 @@ class ScheduleFormUpdateProperty extends StateProperty with PropertyMixin {
 
   void refresh() async {
     dataSource.scheduleHandler.fetcher.run(dataSource.scheduleId);
+    dataSource.userHandler.fetcher.run();
   }
 
   void showMapBottomSheet() {
@@ -103,6 +107,42 @@ class ScheduleFormUpdateProperty extends StateProperty with PropertyMixin {
         onCameraMove: listener.onCameraMove,
       );
     });
+  }
+
+  void updateNotification() {
+    if (formSource.isEvent && formSource.scheremind != 0) {
+      String title = "Ventes Schedule";
+      DateTime? startTime = formSource.schestarttime;
+      DateTime? startDate = formSource.schestartdate;
+      DateTime date;
+
+      if (!formSource.scheallday) {
+        date = DateTime(startDate.year, startDate.month, startDate.day, startTime!.hour, startTime.minute);
+      } else {
+        date = DateTime(startDate.year, startDate.month, startDate.day, 0, 0);
+      }
+
+      date = date.subtract(Duration(minutes: formSource.scheremind));
+      String message = "${formSource.schenm} will start in ${formSource.scheremind} minutes, be ready!";
+
+      Map<String, dynamic> notificationData = {
+        "data": {
+          "title": title,
+          "body": message,
+          "date": Utils.dbFormatDateTime(date),
+          "id": (dataSource.schedule?.scheid ?? 0).toString(),
+        },
+        "token": dataSource.userDetail?.user?.userfcmtoken,
+      };
+
+      notificationData['data'] = {
+        "menu": Views.schedule.index.toString(),
+        "route": ScheduleView.route,
+        ...notificationData['data'],
+      };
+
+      dataSource.updateMessageHandler.fetcher.run(notificationData);
+    }
   }
 
   @override

@@ -146,7 +146,7 @@ class ScheduleFormCreateProperty extends StateProperty with PropertyMixin {
     });
   }
 
-  Future scheduleNotification() async {
+  void scheduleNotification() {
     if (formSource.isEvent && formSource.scheremind != 0) {
       String title = "Ventes Schedule";
       DateTime? startTime = formSource.schestarttime;
@@ -167,6 +167,7 @@ class ScheduleFormCreateProperty extends StateProperty with PropertyMixin {
           "title": title,
           "body": message,
           "date": Utils.dbFormatDateTime(date),
+          "id": (dataSource.schedule?.scheid ?? 0).toString(),
         },
         "token": dataSource.userDetail?.user?.userfcmtoken,
       };
@@ -175,7 +176,6 @@ class ScheduleFormCreateProperty extends StateProperty with PropertyMixin {
         notificationData['data'] = {
           "menu": Views.prospect.index.toString(),
           "route": ProspectActivityFormUpdateView.route,
-          "id": (dataSource.prospectActivity?.prospectactivityid ?? 0).toString(),
           "prospectactivity": (dataSource.prospectActivity?.prospectactivityid ?? 0).toString(),
           ...notificationData['data'],
         };
@@ -183,7 +183,6 @@ class ScheduleFormCreateProperty extends StateProperty with PropertyMixin {
         notificationData['data'] = {
           "menu": Views.schedule.index.toString(),
           "route": ScheduleView.route,
-          "id": 1,
           ...notificationData['data'],
         };
       }

@@ -33,11 +33,24 @@ class NotificationHelper {
     }
   }
 
+  Future delete(int id) {
+    return notification.cancel(id);
+  }
+
   Future<bool> create({
     required NotificationContent content,
     NotificationSchedule? schedule,
     List<NotificationActionButton>? actionButtons,
   }) {
+    return notification.createNotification(content: content, schedule: schedule, actionButtons: actionButtons);
+  }
+
+  Future<bool> update({
+    required NotificationContent content,
+    NotificationSchedule? schedule,
+    List<NotificationActionButton>? actionButtons,
+  }) async {
+    await notification.cancel(content.id!);
     return notification.createNotification(content: content, schedule: schedule, actionButtons: actionButtons);
   }
 }

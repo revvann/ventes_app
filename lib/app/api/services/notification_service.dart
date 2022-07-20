@@ -6,6 +6,7 @@ import 'package:ventes/helpers/auth_helper.dart';
 class NotificationService extends GetConnect {
   @override
   void onInit() {
+    httpClient.baseUrl = RegularString.nodeServer;
     httpClient.addRequestModifier<dynamic>((request) async {
       AuthModel? session = await Get.find<AuthHelper>().get();
       if (session?.jwtToken != null) request.headers['Authorization'] = "Bearer ${session?.jwtToken}";
@@ -15,6 +16,14 @@ class NotificationService extends GetConnect {
   }
 
   Future<Response> sendMessage(Map<String, dynamic> data) async {
-    return await post("${RegularString.nodeServer}/send-message", data);
+    return await post("/send-message", data);
+  }
+
+  Future<Response> deleteMessage(Map<String, dynamic> data) async {
+    return await post("/delete-message", data);
+  }
+
+  Future<Response> updateMessage(Map<String, dynamic> data) async {
+    return await post("/update-message", data);
   }
 }

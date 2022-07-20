@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:get/get.dart';
+import 'package:ventes/app/api/models/schedule_model.dart';
 import 'package:ventes/app/api/presenters/schedule_fc_presenter.dart';
 import 'package:ventes/app/api/models/auth_model.dart';
 import 'package:ventes/app/api/models/prospect_activity_model.dart';
@@ -25,7 +26,7 @@ class ScheduleFormCreateDataSource extends StateDataSource<ScheduleFormCreatePre
   final String userID = 'userhdr';
 
   late DataHandler<List<Map<String, int>>, List, Function()> typesHandler;
-  late DataHandler<dynamic, String, Function(Map<String, dynamic>)> createHandler;
+  late DataHandler<Schedule?, Map<String, dynamic>, Function(Map<String, dynamic>)> createHandler;
   late DataHandler<DBType?, Map<String, dynamic>, Function(int)> refTypeHandler;
   late DataHandler<Prospect?, Map<String, dynamic>, Function(int)> prospectHandler;
   late DataHandler<ProspectActivity?, Map<String, dynamic>, Function(Map<String, dynamic>)> createActivityRefHandler;
@@ -37,6 +38,7 @@ class ScheduleFormCreateDataSource extends StateDataSource<ScheduleFormCreatePre
   ProspectActivity? get prospectActivity => createActivityRefHandler.value;
   Prospect? get prospect => prospectHandler.value;
   UserDetail? get userDetail => userHandler.value;
+  Schedule? get schedule => createHandler.value;
 
   String? typeName(int index) => types.isNotEmpty ? types[index].keys.first : null;
   List<String> typeNames() => types.map((type) => type.keys.first).toList();
@@ -72,18 +74,6 @@ class ScheduleFormCreateDataSource extends StateDataSource<ScheduleFormCreatePre
     return userDetails;
   }
 
-  void _createSuccess(String data) {
-    Get.find<TaskHelper>().successPush(
-      Task(
-        createID,
-        message: data,
-        onFinished: (res) async {
-          property.scheduleNotification();
-        },
-      ),
-    );
-  }
-
   void _sendMessageSuccess(String data) {
     Get.find<TaskHelper>().successPush(
       Task(
@@ -113,6 +103,11 @@ class ScheduleFormCreateDataSource extends StateDataSource<ScheduleFormCreatePre
     Get.find<TaskHelper>().loaderPop(createActivityRefID);
   }
 
+  void _createComplete() {
+    property.scheduleNotification();
+    Get.find<TaskHelper>().loaderPop(createID);
+  }
+
   @override
   void init() {
     super.init();
@@ -139,10 +134,10 @@ class ScheduleFormCreateDataSource extends StateDataSource<ScheduleFormCreatePre
       fetcher: presenter.create,
       initialValue: null,
       onStart: () => Get.find<TaskHelper>().loaderPush(Task(createID)),
-      onComplete: () => Get.find<TaskHelper>().loaderPop(createID),
+      onComplete: _createComplete,
       onError: (message) => Utils.showError(createID, message),
       onFailed: (message) => Utils.showFailed(createID, message),
-      onSuccess: _createSuccess,
+      onSuccess: Schedule.fromJson,
     );
 
     sendMessageHandler = DataHandler(

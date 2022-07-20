@@ -17,11 +17,20 @@ class ChatRoomProperty extends StateProperty with PropertyMixin {
   late String downloadPath;
 
   final Rx<List<Map<String, dynamic>>> _fileLoading = Rx([]);
+  set addFileLoading(Map<String, dynamic> value) {
+    _fileLoading.value = [
+      value,
+      ...fileLoading,
+    ];
+  }
+
   List<Map<String, dynamic>> get fileLoading => _fileLoading.value;
   Map<String, dynamic>? getFileProgress(String filename) => fileLoading.firstWhereOrNull((element) => element['filename'] == filename);
   bool isFileLoading(String filename) {
     Map<String, dynamic>? data = getFileProgress(filename);
-    return !(data?['status'] == DownloadTaskStatus.complete || data?['status'] == DownloadTaskStatus.failed);
+    print('filedownload' '$data');
+    if (data == null) return false;
+    return !(data['status'] == DownloadTaskStatus.complete || data['status'] == DownloadTaskStatus.failed);
   }
 
   bool isFileDownloaded(String filename) => File("$downloadPath/$filename").existsSync();
@@ -53,17 +62,16 @@ class ChatRoomProperty extends StateProperty with PropertyMixin {
       final status = data[1] as DownloadTaskStatus;
       final progress = data[2] as int;
 
-      _fileLoading.update((val) {
-        try {
-          Map<String, dynamic>? data = val?.firstWhereOrNull((element) => element.containsValue(taskId));
-          if (data != null) {
-            data['status'] = status;
-            data['progress'] = progress;
-          }
-        } catch (e) {
-          print(e);
+      try {
+        Map<String, dynamic>? data = fileLoading.firstWhereOrNull((element) => element.containsValue(taskId));
+        if (data != null) {
+          data['status'] = status;
+          data['progress'] = progress;
+          addFileLoading = data;
         }
-      });
+      } catch (e) {
+        print(e);
+      }
     });
   }
 
@@ -94,12 +102,8 @@ class ChatRoomProperty extends StateProperty with PropertyMixin {
   Future<String?> _findLocalPath() async {
     Directory? directory;
     try {
-      if (Platform.isIOS) {
-        directory = await getApplicationDocumentsDirectory();
-      } else {
-        directory = Directory('/storage/emulated/0/Download');
-        if (!await directory.exists()) directory = await getExternalStorageDirectory();
-      }
+      directory = Directory('/storage/emulated/0/Download');
+      if (!await directory.exists()) directory = await getExternalStorageDirectory();
     } catch (err) {
       print("Cannot get download folder path");
     }
@@ -115,21 +119,29 @@ class ChatRoomProperty extends StateProperty with PropertyMixin {
     }
   }
 
-  Future saveFile(String url) async {
-    return FlutterDownloader.enqueue(
+  Future saveFile(String url, String filename) async {
+    String? id = await FlutterDownloader.enqueue(
       url: url,
       savedDir: downloadPath,
       showNotification: true,
       openFileFromNotification: true,
       saveInPublicStorage: true,
     );
+
+    addFileLoading = {
+      'taskid': id,
+      'filename': filename,
+    };
   }
 
+  @pragma('vm:entry-point')
   static void downloadCallback(
     String id,
     DownloadTaskStatus status,
     int progress,
-  ) async {}
+  ) {
+    IsolateNameServer.lookupPortByName('downloader_send_port')?.send([id, status, progress]);
+  }
 
   @override
   void init() {

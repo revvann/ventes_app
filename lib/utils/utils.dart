@@ -271,28 +271,40 @@ class Utils {
     FirebaseMessaging.onBackgroundMessage(backgroundHandler);
 
     await FirebaseMessaging.instance.requestPermission();
-    FirebaseMessaging.instance.subscribeToTopic('terabithians');
 
-    FirebaseMessaging.onMessage.listen((event) async {
-      Map<String, String> payload = event.data.map((key, value) => MapEntry(key, value.toString()))..removeWhere((key, value) => ['title', 'body', 'id', 'date'].contains(key));
+    FirebaseMessaging.onMessage.listen(messageHandler);
+  }
+
+  static Future messageHandler(RemoteMessage message) async {
+    if (['create', 'update'].contains(message.data['type'])) {
+      Map<String, String> payload = message.data.map((key, value) => MapEntry(key, value.toString()))..removeWhere((key, value) => ['title', 'body', 'id', 'date', 'type'].contains(key));
       NotificationSchedule? schedule;
 
-      if (event.data['date'] != null) {
-        DateTime date = dbParseDateTime(event.data['date']);
+      if (message.data['date'] != null) {
+        DateTime date = dbParseDateTime(message.data['date']);
         schedule = NotificationCalendar.fromDate(date: date);
       }
 
-      await Get.find<NotificationHelper>().create(
+      Future<bool> Function({List<NotificationActionButton>? actionButtons, required NotificationContent content, NotificationSchedule? schedule}) func;
+      if (message.data['type'] == 'create') {
+        func = Get.find<NotificationHelper>().create;
+      } else {
+        func = Get.find<NotificationHelper>().update;
+      }
+
+      await func(
         content: NotificationContent(
-          id: int.tryParse(event.data['id']) ?? 0,
+          id: int.parse(message.data['id']),
           channelKey: NotificationString.channelKey,
-          title: event.data['title'],
-          body: event.data['body'],
+          title: message.data['title'],
+          body: message.data['body'],
           payload: payload,
         ),
         schedule: schedule,
       );
-    });
+    } else if (message.data['type'] == 'delete') {
+      await Get.find<NotificationHelper>().delete(int.parse(message.data['id']));
+    }
   }
 
   static void initRoutePack() {
@@ -379,16 +391,7 @@ class Utils {
 }
 
 Future<void> backgroundHandler(RemoteMessage message) async {
-  Map<String, String> payload = message.data.map((key, value) => MapEntry(key, value.toString()))..removeWhere((key, value) => ['title', 'body'].contains(key));
   Utils.initRoutePack();
   await Utils.initNotification();
-  await Get.find<NotificationHelper>().create(
-    content: NotificationContent(
-      id: 1,
-      channelKey: 'ventes-123',
-      title: message.data['title'],
-      body: message.data['body'],
-      payload: payload,
-    ),
-  );
+  Utils.messageHandler(message);
 }
