@@ -22,50 +22,48 @@ class RegularCheckbox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: GestureDetector(
-        onTap: () {
-          if (enabled) {
-            value.value = !value.value;
-            onChecked?.call(value.value);
-          }
-        },
-        child: Row(
-          children: [
-            Container(
-              width: RegularSize.m,
-              height: RegularSize.m,
-              padding: EdgeInsets.all(1),
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: RegularColor.green,
-                  width: 2,
+    return GestureDetector(
+      onTap: () {
+        if (enabled) {
+          value.value = !value.value;
+          onChecked?.call(value.value);
+        }
+      },
+      child: Row(
+        children: [
+          Container(
+            width: RegularSize.m,
+            height: RegularSize.m,
+            padding: EdgeInsets.all(1),
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: RegularColor.green,
+                width: 2,
+              ),
+              borderRadius: BorderRadius.circular(4),
+            ),
+            child: Obx(() {
+              return Container(
+                width: double.infinity,
+                height: double.infinity,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(2),
+                  color: value.value ? RegularColor.green : Colors.white,
                 ),
-                borderRadius: BorderRadius.circular(4),
-              ),
-              child: Obx(() {
-                return Container(
-                  width: double.infinity,
-                  height: double.infinity,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(2),
-                    color: value.value ? RegularColor.green : Colors.white,
-                  ),
-                );
-              }),
+              );
+            }),
+          ),
+          SizedBox(
+            width: RegularSize.xs,
+          ),
+          Text(
+            label,
+            style: TextStyle(
+              color: enabled ? RegularColor.dark : RegularColor.gray,
+              fontSize: 14,
             ),
-            SizedBox(
-              width: RegularSize.xs,
-            ),
-            Text(
-              label,
-              style: TextStyle(
-                color: enabled ? RegularColor.dark : RegularColor.gray,
-                fontSize: 14,
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

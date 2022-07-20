@@ -6,7 +6,6 @@ import 'package:ventes/app/states/typedefs/product_fc_typedef.dart';
 import 'package:ventes/constants/strings/prospect_string.dart';
 import 'package:ventes/core/states/state_form_source.dart';
 import 'package:ventes/helpers/task_helper.dart';
-import 'package:ventes/utils/utils.dart';
 
 class ProductFormCreateFormSource extends StateFormSource with FormSourceMixin {
   Validator validator = Validator();

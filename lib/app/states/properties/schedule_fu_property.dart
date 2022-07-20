@@ -4,17 +4,16 @@ import 'package:flutter/material.dart' hide MenuItem;
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:ventes/app/resources/views/prospect_activity_form/update/prospect_activity_fu.dart';
 import 'package:ventes/app/resources/views/schedule/schedule.dart';
 import 'package:ventes/app/resources/widgets/regular_bottom_sheet.dart';
+import 'package:ventes/app/states/typedefs/schedule_fu_typedef.dart';
 import 'package:ventes/constants/regular_color.dart';
 import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/constants/strings/schedule_string.dart';
-import 'package:ventes/app/states/typedefs/schedule_fu_typedef.dart';
 import 'package:ventes/constants/views.dart';
 import 'package:ventes/core/states/state_property.dart';
-import 'package:ventes/utils/utils.dart';
 import 'package:ventes/helpers/task_helper.dart';
+import 'package:ventes/utils/utils.dart';
 
 class ScheduleFormUpdateProperty extends StateProperty with PropertyMixin {
   final Completer<GoogleMapController> mapsController = Completer();

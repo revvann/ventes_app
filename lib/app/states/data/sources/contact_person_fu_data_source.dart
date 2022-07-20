@@ -50,28 +50,4 @@ class ContactPersonFormUpdateDataSource extends StateDataSource<ContactPersonFor
 
   @override
   ContactPersonFormUpdatePresenter presenterBuilder() => ContactPersonFormUpdatePresenter();
-
-  @override
-  onLoadError(String message) {}
-
-  @override
-  onLoadFailed(String message) {}
-
-  @override
-  onLoadSuccess(Map data) {}
-
-  @override
-  void onUpdateError(String message) {}
-
-  @override
-  void onUpdateFailed(String message) {}
-
-  @override
-  void onUpdateSuccess(String message) {}
-
-  @override
-  onLoadComplete() {}
-
-  @override
-  void onUpdateComplete() {}
 }

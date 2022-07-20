@@ -25,16 +25,4 @@ class ProspectAssignDataSource extends StateDataSource<ProspectAssignPresenter> 
 
   @override
   ProspectAssignPresenter presenterBuilder() => ProspectAssignPresenter();
-
-  @override
-  onLoadError(String message) {}
-
-  @override
-  onLoadFailed(String message) {}
-
-  @override
-  onLoadSuccess(Map data) {}
-
-  @override
-  onLoadComplete() {}
 }

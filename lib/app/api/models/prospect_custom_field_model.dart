@@ -1,6 +1,5 @@
 import 'package:ventes/app/api/models/custom_field_model.dart';
 import 'package:ventes/app/api/models/prospect_model.dart';
-import 'package:ventes/app/api/models/type_model.dart';
 import 'package:ventes/core/api/model.dart';
 
 class ProspectCustomField extends Model {

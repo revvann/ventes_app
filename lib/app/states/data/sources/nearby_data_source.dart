@@ -130,28 +130,4 @@ class NearbyDataSource extends StateDataSource<NearbyPresenter> with DataSourceM
 
   @override
   NearbyPresenter presenterBuilder() => NearbyPresenter();
-
-  @override
-  onLoadError(String message) {}
-
-  @override
-  onLoadFailed(String message) {}
-
-  @override
-  onLoadSuccess(Map data) {}
-
-  @override
-  void onDeleteError(String message) {}
-
-  @override
-  void onDeleteFailed(String message) {}
-
-  @override
-  void onDeleteSuccess(String message) {}
-
-  @override
-  void onDeleteComplete() {}
-
-  @override
-  onLoadComplete() {}
 }

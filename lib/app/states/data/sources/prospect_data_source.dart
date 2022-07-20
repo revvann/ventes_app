@@ -92,16 +92,4 @@ class ProspectDataSource extends StateDataSource<ProspectPresenter> with DataSou
 
   @override
   ProspectPresenter presenterBuilder() => ProspectPresenter();
-
-  @override
-  onLoadError(String message) {}
-
-  @override
-  onLoadFailed(String message) {}
-
-  @override
-  onLoadSuccess(Map data) {}
-
-  @override
-  onLoadComplete() {}
 }

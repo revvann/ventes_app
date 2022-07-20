@@ -24,7 +24,9 @@ linter:
   rules:
     must_be_immutable: false
     prefer_const_constructors: false
-    # avoid_print: false  # Uncomment to disable the `avoid_print` rule
+    use_key_in_widget_constructors: false
+    avoid_print: false  # Uncomment to disable the `avoid_print` rule
+    prefer_const_constructors_in_immutables: false
     # prefer_single_quotes: true  # Uncomment to enable the `prefer_single_quotes` rule
 analyzer:
   errors:

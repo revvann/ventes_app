@@ -60,7 +60,7 @@ class KeyableSelectBar<K> extends StatelessWidget {
           SizedBox(
             height: RegularSize.s,
           ),
-          Container(
+          SizedBox(
             width: double.infinity,
             height: height,
             child: ListView.builder(

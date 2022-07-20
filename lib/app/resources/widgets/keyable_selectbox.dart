@@ -40,7 +40,7 @@ class KeyableSelectBox<K> extends StatelessWidget {
         SizedBox(
           height: RegularSize.s,
         ),
-        Container(
+        SizedBox(
           width: double.infinity,
           child: Wrap(
             spacing: RegularSize.s,

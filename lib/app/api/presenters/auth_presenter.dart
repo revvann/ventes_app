@@ -16,7 +16,6 @@ class AuthPresenter {
   set updateContract(UpdateContract contract) => _updateContract = contract;
 
   void signIn(Map<String, dynamic> credentials) async {
-    Map<String, dynamic> data = {};
     try {
       Response response = await _authService.signIn(credentials);
       if (response.statusCode == 200) {

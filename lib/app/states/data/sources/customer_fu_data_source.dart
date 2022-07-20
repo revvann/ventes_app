@@ -1,13 +1,7 @@
-import 'dart:async';
-
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ventes/app/api/models/bp_customer_model.dart';
-import 'package:ventes/app/api/models/city_model.dart';
-import 'package:ventes/app/api/models/country_model.dart';
 import 'package:ventes/app/api/models/customer_model.dart';
-import 'package:ventes/app/api/models/province_model.dart';
-import 'package:ventes/app/api/models/subdistrict_model.dart';
 import 'package:ventes/app/api/models/type_model.dart';
 import 'package:ventes/app/api/presenters/customer_fu_presenter.dart';
 import 'package:ventes/app/states/controllers/nearby_state_controller.dart';
@@ -141,28 +135,4 @@ class CustomerFormUpdateDataSource extends StateDataSource<CustomerFormUpdatePre
 
   @override
   CustomerFormUpdatePresenter presenterBuilder() => CustomerFormUpdatePresenter();
-
-  @override
-  onLoadError(String message) {}
-
-  @override
-  onLoadFailed(String message) {}
-
-  @override
-  onLoadSuccess(Map data) {}
-
-  @override
-  void onUpdateError(String message) {}
-
-  @override
-  void onUpdateFailed(String message) {}
-
-  @override
-  void onUpdateSuccess(String message) {}
-
-  @override
-  onLoadComplete() {}
-
-  @override
-  void onUpdateComplete() {}
 }

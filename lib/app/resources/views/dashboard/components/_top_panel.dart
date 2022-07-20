@@ -84,45 +84,43 @@ class _TopPanelItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: Container(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SvgPicture.asset(
-                  icon,
-                  width: RegularSize.l,
-                  color: RegularColor.green,
-                ),
-                SizedBox(
-                  width: RegularSize.s,
-                ),
-                Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                    color: RegularColor.dark,
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: RegularSize.xs,
-            ),
-            Text(
-              subtitle,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: RegularColor.gray,
-                fontSize: 16,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SvgPicture.asset(
+                icon,
+                width: RegularSize.l,
+                color: RegularColor.green,
               ),
-            )
-          ],
-        ),
+              SizedBox(
+                width: RegularSize.s,
+              ),
+              Text(
+                title,
+                style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: RegularColor.dark,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(
+            height: RegularSize.xs,
+          ),
+          Text(
+            subtitle,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: RegularColor.gray,
+              fontSize: 16,
+            ),
+          )
+        ],
       ),
     );
   }

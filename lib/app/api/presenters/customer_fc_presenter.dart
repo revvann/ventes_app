@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:ventes/app/api/models/auth_model.dart';
 import 'package:ventes/app/api/models/village_model.dart';
 import 'package:ventes/app/api/presenters/regular_presenter.dart';
 import 'package:ventes/app/api/services/bp_customer_service.dart';
@@ -7,11 +8,6 @@ import 'package:ventes/app/api/services/gmaps_service.dart';
 import 'package:ventes/app/api/services/place_service.dart';
 import 'package:ventes/app/api/services/type_service.dart';
 import 'package:ventes/app/api/services/user_service.dart';
-import 'package:ventes/app/api/models/auth_model.dart';
-import 'package:ventes/app/api/models/city_model.dart';
-import 'package:ventes/app/api/models/country_model.dart';
-import 'package:ventes/app/api/models/province_model.dart';
-import 'package:ventes/app/api/models/subdistrict_model.dart';
 import 'package:ventes/constants/strings/nearby_string.dart';
 import 'package:ventes/core/api/fetcher.dart';
 import 'package:ventes/helpers/auth_helper.dart';

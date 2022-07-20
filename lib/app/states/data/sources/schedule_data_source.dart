@@ -1,10 +1,9 @@
 // ignore_for_file: prefer_const_constructors
 import 'package:get/get.dart';
-import 'package:ventes/app/api/presenters/schedule_presenter.dart';
 import 'package:ventes/app/api/models/schedule_model.dart';
 import 'package:ventes/app/api/models/type_model.dart';
+import 'package:ventes/app/api/presenters/schedule_presenter.dart';
 import 'package:ventes/app/states/typedefs/schedule_typedef.dart';
-import 'package:ventes/core/api/fetcher.dart';
 import 'package:ventes/core/api/handler.dart';
 import 'package:ventes/core/states/state_data_source.dart';
 import 'package:ventes/helpers/task_helper.dart';

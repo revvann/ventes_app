@@ -1,6 +1,5 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
-import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/material.dart' hide MenuItem;
@@ -20,8 +19,8 @@ import 'package:ventes/constants/regular_size.dart';
 import 'package:ventes/constants/strings/prospect_string.dart';
 import 'package:ventes/core/view/view.dart';
 
-part 'package:ventes/app/resources/views/prospect_competitor/components/_competitor_list.dart';
 part 'package:ventes/app/resources/views/prospect_competitor/components/_competitor_detail.dart';
+part 'package:ventes/app/resources/views/prospect_competitor/components/_competitor_list.dart';
 
 class ProspectCompetitorView extends View<Controller> {
   static const String route = "/prospectcompetitor";

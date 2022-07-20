@@ -1,10 +1,9 @@
 import 'package:ventes/app/api/models/city_model.dart';
-import 'package:ventes/app/api/models/country_model.dart';
 import 'package:ventes/app/api/models/province_model.dart';
 import 'package:ventes/app/api/models/subdistrict_model.dart';
+import 'package:ventes/app/api/models/type_model.dart';
 import 'package:ventes/app/api/models/village_model.dart';
 import 'package:ventes/core/api/model.dart';
-import 'package:ventes/app/api/models/type_model.dart';
 
 class Customer extends Model {
   int? cstmid;

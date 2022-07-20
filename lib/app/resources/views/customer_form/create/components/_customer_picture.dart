@@ -11,7 +11,7 @@ class _CustomerPicture extends StatelessWidget {
       Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Container(
+          SizedBox(
             width: 100,
             height: 100,
             child: Stack(
