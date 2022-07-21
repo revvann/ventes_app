@@ -37,12 +37,13 @@ class DashboardView extends View<Controller> {
       bottomNavigationBar: BottomNavigation(),
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: RefreshIndicator(
-          onRefresh: () async => state.refreshStates(),
-          child: CustomScrollView(
-            slivers: [
-              SliverFillRemaining(
+        child: CustomScrollView(
+          slivers: [
+            SliverFillRemaining(
+              child: RefreshIndicator(
+                onRefresh: () async => state.refreshStates(),
                 child: SingleChildScrollView(
+                  physics: AlwaysScrollableScrollPhysics(),
                   child: Column(
                     children: [
                       SizedBox(
@@ -228,8 +229,8 @@ class DashboardView extends View<Controller> {
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
